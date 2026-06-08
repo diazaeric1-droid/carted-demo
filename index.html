@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Carted" />
+<meta name="theme-color" content="#0b0b10" />
+<title>Carted · fill your cart, ghost the check</title>
+<style>
+  :root {
+    --bg: #0b0b10; --screen: #14141c; --card: #1c1c26; --card-hi: #23232f; --line: #2a2a37;
+    --text: #f5f5f7; --muted: #8e8e9e; --accent: #ff6b3d; --accent2: #ffd24a; --hot: #ff5a5f; --go: #34d399;
+    --grad: linear-gradient(135deg, #ff7a45, #ff5a5f);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; height: 100%;
+    background: radial-gradient(1200px 800px at 50% -10%, #1a1320, #07070b 60%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    color: var(--text); display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .phone { position: relative; width: 390px; height: 844px; background: #000; border-radius: 52px; padding: 12px;
+    box-shadow: 0 40px 120px rgba(0,0,0,.7), 0 0 0 2px #1d1d24, inset 0 0 0 1px #000; }
+  .notch { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); width: 124px; height: 30px; background: #000; border-radius: 0 0 18px 18px; z-index: 50; }
+  .screen { position: relative; width: 100%; height: 100%; background: var(--screen); border-radius: 42px; overflow: hidden; display: flex; flex-direction: column; }
+  .statusbar { height: 50px; flex: 0 0 50px; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 26px 6px; font-size: 14px; font-weight: 600; letter-spacing: .3px; z-index: 40; }
+  .statusbar .dim { color: var(--muted); font-weight: 500; }
+  .body { flex: 1; overflow-y: auto; overflow-x: hidden; position: relative; }
+  .body::-webkit-scrollbar { display: none; }
+  .view { display: none; padding: 4px 18px 120px; animation: fade .25s ease; position: relative; }
+  .view > *:not(.foodfall) { position: relative; z-index: 1; }
+  .view.active { display: block; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .brand { padding: 6px 2px 12px; position: relative; }
+  .brand h1 { margin: 0; font-size: 32px; font-weight: 800; letter-spacing: -.8px; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .brand .sub { color: var(--muted); font-size: 12.5px; margin-top: 3px; }
+
+  .presence { margin: 2px 0 14px; padding: 12px 14px; background: linear-gradient(135deg, rgba(52,211,153,.10), rgba(255,107,61,.06)); border: 1px solid rgba(52,211,153,.25); border-radius: 16px; }
+  .presence .live { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--go); box-shadow: 0 0 0 0 rgba(52,211,153,.6); animation: pulse 1.8s infinite; }
+  @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(52,211,153,.55);} 70%{box-shadow:0 0 0 10px rgba(52,211,153,0);} 100%{box-shadow:0 0 0 0 rgba(52,211,153,0);} }
+  .ticker { margin-top: 8px; height: 18px; overflow: hidden; position: relative; }
+  .ticker .msg { font-size: 12.5px; color: var(--muted); position: absolute; white-space: nowrap; transition: opacity .5s, transform .5s; }
+
+  .city-bar { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 14px; }
+  .city-bar::-webkit-scrollbar { display: none; }
+  .city-chip { white-space: nowrap; background: var(--card); border: 1px solid var(--line); color: var(--muted); border-radius: 20px; padding: 8px 14px; font-size: 13px; font-weight: 700; cursor: pointer; flex: 0 0 auto; transition: transform .1s; }
+  .city-chip:active { transform: scale(.95); }
+  .city-chip.on { background: var(--grad); color: #fff; border-color: transparent; }
+  .city-chip.add { border-style: dashed; color: var(--accent); }
+
+  .tally { display: flex; gap: 10px; margin-bottom: 14px; }
+  .tally .box { flex: 1; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; }
+  .tally .box .k { font-size: 11px; color: var(--muted); }
+  .tally .box .v { font-size: 17px; font-weight: 800; margin-top: 2px; }
+  .tally .v.green { color: var(--go); }
+
+  .seg { display: flex; gap: 6px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 4px; margin-bottom: 16px; }
+  .seg button { flex: 1; background: none; border: none; color: var(--muted); font-weight: 700; font-size: 13px; padding: 9px; border-radius: 9px; cursor: pointer; }
+  .seg button.on { background: var(--card-hi); color: var(--text); }
+
+  .section-label { font-size: 13px; color: var(--muted); font-weight: 700; margin: 4px 2px 10px; text-transform: uppercase; letter-spacing: .6px; }
+
+  .card { position: relative; display: flex; gap: 14px; padding: 12px; margin-bottom: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; cursor: pointer; transition: transform .12s ease, background .15s; }
+  .card:active { transform: scale(.975); background: var(--card-hi); }
+  .thumb { width: 86px; height: 86px; flex: 0 0 86px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 44px; background: radial-gradient(circle at 30% 25%, #2c2c3a, #181820); overflow: hidden; }
+  .thumb .ph-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .hero .ph-img { width: 100%; height: 100%; object-fit: cover; border-radius: 22px; display: block; }
+  .meta { flex: 1; min-width: 0; padding-right: 34px; }
+  .meta .name { font-size: 16px; font-weight: 700; }
+  .meta .name .en { color: var(--muted); font-weight: 500; font-size: 12px; text-transform: capitalize; }
+  .meta .shop { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+  .meta .row { display: flex; align-items: center; gap: 10px; margin-top: 8px; font-size: 12.5px; color: var(--muted); }
+  .meta .row .rate { color: var(--accent2); font-weight: 700; }
+  .meta .price { margin-top: 8px; font-size: 15px; font-weight: 800; }
+  .fav { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 50%; border: none; background: rgba(0,0,0,.28); color: var(--muted); font-size: 19px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform .12s, color .15s; }
+  .fav:active { transform: scale(.85); }
+  .fav.on { color: var(--hot); }
+
+  .loading { text-align: center; padding: 50px 20px; color: var(--text); font-weight: 600; }
+  .spinner { width: 34px; height: 34px; border: 3px solid var(--line); border-top-color: var(--accent); border-radius: 50%; margin: 0 auto 16px; animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .osm-credit { text-align: center; color: var(--muted); font-size: 11px; padding: 14px 0 4px; opacity: .8; }
+
+  .back { background: none; border: none; color: var(--accent); font-size: 15px; font-weight: 600; padding: 6px 0; cursor: pointer; }
+  .hero { height: 200px; border-radius: 22px; margin: 6px 0 16px; position: relative; display: flex; align-items: center; justify-content: center; font-size: 110px; background: radial-gradient(circle at 35% 25%, #33333f, #16161e); border: 1px solid var(--line); }
+  .hero .city-tag { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,.45); border-radius: 20px; padding: 6px 12px; font-size: 12.5px; font-weight: 700; }
+  .d-name { font-size: 24px; font-weight: 800; }
+  .d-shop { color: var(--muted); margin-top: 3px; font-size: 14px; }
+  .d-stats { display: flex; gap: 16px; margin: 14px 0; font-size: 13px; color: var(--muted); }
+  .d-stats b { color: var(--text); }
+  .savebtn { background: var(--card); border: 1px solid var(--line); color: var(--text); font-weight: 700; font-size: 13.5px; padding: 10px 16px; border-radius: 12px; cursor: pointer; margin-bottom: 14px; }
+  .savebtn.on { border-color: var(--hot); color: var(--hot); }
+  .reviews { margin-top: 6px; }
+  .review { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; }
+  .review .top { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--muted); margin-bottom: 6px; }
+  .review .stars { color: var(--accent2); }
+  .review .text { font-size: 14px; line-height: 1.45; }
+
+  .cta { position: sticky; bottom: 0; width: 100%; border: none; cursor: pointer; background: var(--grad); color: #fff; font-size: 16px; font-weight: 800; padding: 16px; border-radius: 16px; margin-top: 8px; box-shadow: 0 10px 30px rgba(255,90,95,.35); transition: transform .1s; }
+  .cta:active { transform: scale(.97); }
+  .cta.secondary { background: var(--card); color: var(--text); border: 1px solid var(--line); box-shadow: none; }
+
+  .cart-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .cart-item .ic { font-size: 30px; width: 44px; text-align: center; }
+  .cart-item .nm { flex: 1; font-size: 14.5px; font-weight: 600; }
+  .cart-item .pr { font-weight: 700; font-size: 14px; }
+  .cart-item .rm { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; padding: 4px 8px; }
+  .summary { margin: 18px 0 8px; }
+  .summary .line { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; color: var(--muted); }
+  .summary .line.total { color: var(--text); font-weight: 800; font-size: 18px; border-top: 1px solid var(--line); margin-top: 6px; padding-top: 12px; }
+  .fee-callout { text-align: center; color: var(--accent2); font-size: 12.5px; font-weight: 700; margin: 4px 0 2px; }
+  .empty { text-align: center; color: var(--muted); padding: 60px 20px; }
+  .empty .big { font-size: 54px; margin-bottom: 12px; }
+
+  .track-wrap { text-align: center; padding-top: 10px; }
+  .map { height: 180px; border-radius: 22px; margin: 6px 0 20px; position: relative; overflow: hidden;
+    background: linear-gradient(rgba(20,20,28,.4), rgba(20,20,28,.4)), repeating-linear-gradient(0deg, #1a1a24 0 24px, #16161e 24px 25px), repeating-linear-gradient(90deg, #1a1a24 0 24px, #16161e 24px 25px); border: 1px solid var(--line); }
+  .road { position: absolute; top: 50%; left: 8%; right: 8%; height: 4px; background: #2f2f3d; border-radius: 4px; transform: translateY(-50%); }
+  .road .done { position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: var(--grad); border-radius: 4px; transition: width .8s ease; }
+  .pin { position: absolute; top: 50%; font-size: 24px; transform: translate(-50%,-60%); }
+  .pin.shop { left: 8%; } .pin.home { right: 8%; transform: translate(50%,-60%); }
+  .rider { position: absolute; top: 50%; left: 8%; font-size: 30px; transform: translate(-50%,-62%); transition: left .8s ease, opacity .6s ease; filter: drop-shadow(0 4px 6px rgba(0,0,0,.5)); }
+  .eta { font-size: 40px; font-weight: 800; letter-spacing: -1px; }
+  .eta .u { font-size: 16px; color: var(--muted); font-weight: 600; }
+  .stage { color: var(--muted); font-size: 15px; margin-top: 6px; min-height: 22px; }
+  .track-presence { margin-top: 16px; font-size: 12.5px; color: var(--muted); }
+  .reveal { animation: fade .4s ease; }
+  .reveal .moon { font-size: 56px; }
+  .reveal .punch { font-size: 19px; font-weight: 800; margin: 12px 0 6px; line-height: 1.4; }
+  .reveal .saved { font-size: 32px; font-weight: 800; color: var(--go); margin: 6px 0 4px; }
+  .reveal .sub { color: var(--muted); font-size: 13.5px; }
+
+  .room-head { padding: 6px 2px 12px; }
+  .room-head h1 { margin: 0; font-size: 24px; font-weight: 800; }
+  .room-head .live2 { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); margin-top: 5px; }
+  .composer { display: flex; gap: 8px; margin-bottom: 16px; }
+  .composer input { flex: 1; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 13px 14px; color: var(--text); font-size: 14px; outline: none; }
+  .composer input:focus { border-color: var(--accent); }
+  .composer input::placeholder { color: var(--muted); }
+  .composer button { border: none; background: var(--grad); color: #fff; font-weight: 800; font-size: 14px; padding: 0 20px; border-radius: 14px; cursor: pointer; }
+  .post { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 13px 14px; margin-bottom: 11px; animation: fade .3s ease; }
+  .post.mine { border-color: rgba(255,107,61,.5); background: linear-gradient(135deg, rgba(255,107,61,.10), rgba(255,90,95,.04)); }
+  .post .phead { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
+  .post .pic { font-size: 24px; }
+  .post .pmeta { font-size: 11.5px; color: var(--muted); }
+  .post .pmeta b { color: var(--text); font-weight: 700; }
+  .post .mine-tag { color: var(--accent); font-weight: 700; }
+  .post .ptext { font-size: 14.5px; line-height: 1.45; margin-bottom: 11px; }
+  .reacts { display: flex; gap: 8px; }
+  .chip { flex: 1; background: var(--screen); border: 1px solid var(--line); border-radius: 11px; padding: 8px 4px; font-size: 13px; color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: transform .1s, background .15s, color .15s; }
+  .chip:active { transform: scale(.92); }
+  .chip.on { background: rgba(255,107,61,.16); border-color: var(--accent); color: var(--text); font-weight: 700; }
+  .chip .cnt { font-variant-numeric: tabular-nums; }
+
+  .nav { position: absolute; bottom: 0; left: 0; right: 0; height: 78px; background: rgba(13,13,18,.92); backdrop-filter: blur(14px); border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-around; padding-bottom: 14px; z-index: 30; }
+  .nav button { background: none; border: none; color: var(--muted); font-size: 11px; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; position: relative; }
+  .nav button.on { color: var(--accent); }
+  .nav button .gi { font-size: 21px; }
+  .badge { position: absolute; top: -4px; right: -8px; background: var(--hot); color: #fff; font-size: 10px; font-weight: 800; min-width: 17px; height: 17px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+
+  .toast { position: absolute; left: 50%; bottom: 96px; transform: translateX(-50%) translateY(20px); background: #fff; color: #111; font-weight: 700; font-size: 13.5px; padding: 11px 18px; border-radius: 30px; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 60; box-shadow: 0 10px 30px rgba(0,0,0,.4); max-width: 80%; text-align: center; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .confetti { position: absolute; top: -30px; font-size: 22px; z-index: 55; animation: fall linear forwards; pointer-events: none; }
+  @keyframes fall { to { transform: translateY(900px) rotate(360deg); opacity: 0; } }
+
+  .avatar { position: absolute; top: 4px; right: 0; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); font-size: 19px; cursor: pointer; }
+  .order-real { display: block; width: 100%; text-align: center; background: none; border: none; color: var(--muted); font-size: 12.5px; text-decoration: underline; margin-top: 14px; cursor: pointer; }
+  .modal-bg { position: absolute; inset: 0; background: rgba(0,0,0,.62); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 70; padding: 24px; }
+  .modal { background: var(--screen); border: 1px solid var(--line); border-radius: 22px; padding: 22px; width: 100%; max-width: 322px; text-align: center; animation: fade .2s ease; }
+  .modal .m-emoji { font-size: 44px; }
+  .modal .m-title { font-size: 18px; font-weight: 800; margin: 8px 0; }
+  .modal .m-body { font-size: 13.5px; color: var(--muted); line-height: 1.5; margin-bottom: 16px; }
+  .modal .cta { margin-top: 8px; }
+  .profile-card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px; margin-bottom: 14px; text-align: center; }
+  .profile-card .pa { font-size: 52px; }
+  .profile-card .ph { font-size: 20px; font-weight: 800; margin-top: 6px; }
+  .profile-card .pe { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+  .pstats { display: flex; gap: 10px; margin-bottom: 10px; }
+  .pstat { flex: 1; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 10px; text-align: center; }
+  .pstat .v { font-size: 20px; font-weight: 800; }
+  .pstat .v.green { color: var(--go); } .pstat .v.streak { color: var(--accent2); }
+  .pstat .k { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .signin-btn { width: 100%; padding: 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-weight: 700; font-size: 14.5px; cursor: pointer; margin: 10px 0 0; }
+  .signin-btn.dark { background: #fff; color: #111; border: none; }
+  .tier-card { background: linear-gradient(135deg, rgba(255,107,61,.12), rgba(255,210,74,.06)); border: 1px solid rgba(255,107,61,.3); border-radius: 16px; padding: 14px; margin-bottom: 14px; }
+  .tier-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .tier-ic { font-size: 34px; }
+  .tier-name { font-size: 17px; font-weight: 800; }
+  .tier-sub { font-size: 12px; color: var(--muted); margin-top: 1px; }
+  .tier-bar { height: 8px; background: var(--screen); border-radius: 6px; overflow: hidden; }
+  .tier-fill { height: 100%; background: var(--grad); border-radius: 6px; transition: width .5s; }
+  .milestone { margin-top: 10px; display: inline-block; background: var(--accent2); color: #1a1a1a; font-weight: 800; font-size: 13px; padding: 8px 14px; border-radius: 20px; animation: fade .4s ease; }
+  /* ----- game layer: xp bar, combo, surprise, achievements, food backdrop ----- */
+  .xp-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .xp-lvl { font-size: 12px; font-weight: 800; color: var(--accent2); white-space: nowrap; }
+  .xp-track { flex: 1; height: 8px; background: var(--card); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  .xp-fill { height: 100%; background: linear-gradient(90deg, #ffd24a, #ff6b3d); border-radius: 6px; transition: width .5s ease; }
+  .xp-xp { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .feed-head { display: flex; align-items: center; justify-content: space-between; margin: 4px 2px 10px; }
+  .surprise { background: var(--card); border: 1px solid var(--line); color: var(--accent); font-weight: 800; font-size: 12.5px; padding: 7px 12px; border-radius: 20px; cursor: pointer; transition: transform .1s; }
+  .surprise:active { transform: scale(.94); }
+  .combo { margin-top: 10px; display: inline-block; background: linear-gradient(135deg, #ff7a45, #ffd24a); color: #1a1a1a; font-weight: 800; font-size: 14px; padding: 8px 16px; border-radius: 20px; animation: pop .45s ease; }
+  @keyframes pop { 0%{transform:scale(.5);opacity:0;} 60%{transform:scale(1.15);} 100%{transform:scale(1);opacity:1;} }
+  .lvl-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px; margin-bottom: 14px; }
+  .lvl-top { display: flex; justify-content: space-between; font-weight: 800; font-size: 14px; margin-bottom: 10px; }
+  .achv-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+  .achv { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px 4px; text-align: center; opacity: .42; }
+  .achv.on { opacity: 1; border-color: var(--accent2); }
+  .achv-ic { font-size: 24px; }
+  .achv-name { font-size: 10px; font-weight: 700; margin-top: 4px; }
+  .achv-tip { font-size: 8.5px; color: var(--muted); margin-top: 2px; line-height: 1.2; }
+  .foodfall { position: absolute; top: 0; left: 0; right: 0; height: 180px; overflow: hidden; pointer-events: none; z-index: 0; }
+  .foodfall span { position: absolute; bottom: -44px; font-size: 26px; opacity: .10; animation: drift 9s linear infinite; }
+  .foodfall span:nth-child(1){ left: 8%; animation-delay: 0s; }
+  .foodfall span:nth-child(2){ left: 26%; animation-delay: 1.6s; }
+  .foodfall span:nth-child(3){ left: 44%; animation-delay: 3.1s; }
+  .foodfall span:nth-child(4){ left: 62%; animation-delay: 4.6s; }
+  .foodfall span:nth-child(5){ left: 78%; animation-delay: 2.3s; }
+  .foodfall span:nth-child(6){ left: 90%; animation-delay: 5.6s; }
+  @keyframes drift { 0%{ transform: translateY(0) rotate(0deg); } 100%{ transform: translateY(-220px) rotate(45deg); } }
+
+  @media (max-width: 440px) {
+    body { background: var(--screen); display: block; overflow: hidden; }
+    .phone { width: 100vw; height: 100vh; height: 100dvh; padding: 0; border-radius: 0; box-shadow: none; }
+    .notch, .statusbar { display: none; }
+    .screen { border-radius: 0; }
+    .body { padding-top: env(safe-area-inset-top, 10px); }
+    .confetti { top: env(safe-area-inset-top, 0px); }
+    .nav { height: calc(78px + env(safe-area-inset-bottom, 0px)); padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+    .toast { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+  }
+</style>
+</head>
+<body>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="statusbar"><span>2:14</span><span class="dim">🌙 still up &nbsp; ▟ &nbsp; 🔋 19%</span></div>
+      <div class="body" id="body">
+
+        <!-- FEED -->
+        <section class="view active" id="view-feed">
+          <div class="foodfall" aria-hidden="true"><span>🍕</span><span>🍜</span><span>🌮</span><span>🍔</span><span>🍩</span><span>🍣</span></div>
+          <div class="brand">
+            <button class="avatar" id="avatar-btn" onclick="go('profile')">🙂</button>
+            <h1>Carted</h1>
+            <div class="sub">real places, live worldwide. fill your cart — you just can't order.</div>
+          </div>
+          <div class="presence">
+            <div class="live"><span class="dot"></span> <span id="live-count">1,247</span> people browsing with you right now</div>
+            <div class="ticker"><div class="msg" id="ticker-msg"></div></div>
+          </div>
+          <div class="section-label" style="margin-bottom:8px">📍 pick a city</div>
+          <div class="city-bar" id="city-bar"></div>
+          <div class="tally">
+            <div class="box"><div class="k">saved here tonight</div><div class="v green" id="saved-tally">$0.00</div></div>
+            <div class="box"><div class="k">window-orders</div><div class="v" id="order-count">0</div></div>
+          </div>
+          <div class="seg">
+            <button id="seg-all" class="on" onclick="setMode('all')">All</button>
+            <button id="seg-saved" onclick="setMode('saved')">♥ Saved <span id="saved-count">0</span></button>
+          </div>
+          <div class="xp-bar" id="xp-bar"></div>
+          <div class="feed-head">
+            <div class="section-label" id="feed-section-label" style="margin:0">🔥 craving right now</div>
+            <button class="surprise" onclick="surpriseMe()">🎲 surprise me</button>
+          </div>
+          <div id="feed-list"></div>
+          <div class="osm-credit">📍 place data © OpenStreetMap contributors</div>
+        </section>
+
+        <!-- DETAIL -->
+        <section class="view" id="view-detail">
+          <button class="back" onclick="go('feed')">‹ back</button>
+          <div class="hero" id="d-hero">🍕<div class="city-tag" id="d-citytag"></div></div>
+          <div class="d-name" id="d-name"></div>
+          <div class="d-shop" id="d-shop"></div>
+          <div class="d-stats" id="d-stats"></div>
+          <button class="savebtn" id="d-fav" onclick="toggleDetailFav()">♡ Save place</button>
+          <div class="section-label">what people say (but didn't eat)</div>
+          <div class="reviews" id="d-reviews"></div>
+          <button class="cta" id="d-add">add to cart</button>
+        </section>
+
+        <!-- CART -->
+        <section class="view" id="view-cart">
+          <div class="brand"><h1 style="font-size:24px">your cart</h1><div class="sub" id="cart-sub">fill it up. don't check out.</div></div>
+          <div id="cart-body"></div>
+        </section>
+
+        <!-- ROOM -->
+        <section class="view" id="view-room">
+          <div class="room-head">
+            <h1>🌙 The 2 AM Room</h1>
+            <div class="live2"><span class="dot"></span> <b id="room-live" style="color:var(--go);font-weight:800">1,247</b>&nbsp;people up late &amp; hungry, worldwide</div>
+          </div>
+          <div class="composer"><input id="composer-input" placeholder="what are you holding back tonight?" maxlength="90" /><button onclick="postFromComposer()">post</button></div>
+          <div id="room-feed"></div>
+        </section>
+
+        <!-- PROFILE -->
+        <section class="view" id="view-profile">
+          <button class="back" onclick="go('feed')">‹ back</button>
+          <div id="profile-body"></div>
+        </section>
+
+        <!-- TRACKING -->
+        <section class="view" id="view-track">
+          <div class="track-wrap">
+            <div class="map">
+              <div class="pin shop">🏪</div><div class="pin home">🏠</div>
+              <div class="road"><div class="done" id="road-done"></div></div>
+              <div class="rider" id="rider">🚗</div>
+            </div>
+            <div id="track-live">
+              <div class="eta"><span id="eta-num">14</span><span class="u"> min</span></div>
+              <div class="stage" id="track-stage">confirming your (non-)order…</div>
+              <div class="track-presence" id="track-presence">🚗 <b id="track-others">241</b> people are waiting on a driver who'll never come</div>
+            </div>
+            <div id="track-reveal" style="display:none"></div>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="nav">
+        <button class="on" id="nav-feed" onclick="go('feed')"><span class="gi">🍜</span>browse</button>
+        <button id="nav-room" onclick="go('room')"><span class="gi">🌙</span>the room</button>
+        <button id="nav-cart" onclick="go('cart')"><span class="gi">🛒</span>cart<span class="badge" id="cart-badge" style="display:none">0</span></button>
+      </div>
+      <div class="modal-bg" id="modal" style="display:none" onclick="if(event.target===this) closeModal()"><div class="modal" id="modal-content"></div></div>
+      <div class="toast" id="toast"></div>
+    </div>
+  </div>
+
+<script>
+/* ----------------------------------------------------------
+   Carted — LIVE real places from OpenStreetMap (Overpass) +
+   co-presence. No API key, no cost, any city on earth.
+   Place identity (name, location, cuisine) is REAL OSM data;
+   ratings/prices/dishes are synthesized (you can't order, so
+   accuracy is irrelevant — and you can't legally mirror
+   DoorDash/UberEats menus anyway). Favorites persist locally.
+---------------------------------------------------------- */
+
+/* cities = real coords + local currency; places fetched live */
+const CITIES = [
+  { id:"nyc", name:"New York",    flag:"🗽", cur:{sym:"$",dec:2},  pf:1,    delivery:5.99, late:2.99, tax:0.0875, lat:40.7280, lng:-73.9990, radius:2200 },
+  { id:"la",  name:"Los Angeles", flag:"🌴", cur:{sym:"$",dec:2},  pf:1,    delivery:5.49, late:2.99, tax:0.095,  lat:34.0760, lng:-118.3700, radius:3000 },
+  { id:"ldn", name:"London",      flag:"🇬🇧", cur:{sym:"£",dec:2},  pf:0.82, delivery:3.50, late:1.99, tax:0.05,   lat:51.5145, lng:-0.1357, radius:2200 },
+  { id:"tyo", name:"Tokyo",       flag:"🗼", cur:{sym:"¥",dec:0},  pf:150,  delivery:400,  late:200,  tax:0.10,   lat:35.6620, lng:139.7000, radius:2200 },
+  { id:"sel", name:"Seoul",       flag:"🇰🇷", cur:{sym:"₩",dec:0},  pf:1350, delivery:4500, late:2000, tax:0.10,   lat:37.5512, lng:126.9882, radius:2500 },
+  { id:"mex", name:"Mexico City", flag:"🇲🇽", cur:{sym:"MX$",dec:0},pf:7,    delivery:35,   late:20,   tax:0.16,   lat:19.4150, lng:-99.1700, radius:2500 },
+  { id:"par", name:"Paris",       flag:"🇫🇷", cur:{sym:"€",dec:2},  pf:0.92, delivery:4.5,  late:2.5,  tax:0.10,   lat:48.8566, lng:2.3522,   radius:2200 },
+  { id:"ber", name:"Berlin",      flag:"🇩🇪", cur:{sym:"€",dec:2},  pf:0.92, delivery:4.5,  late:2.0,  tax:0.07,   lat:52.5200, lng:13.4050,  radius:2400 },
+  { id:"bkk", name:"Bangkok",     flag:"🇹🇭", cur:{sym:"฿",dec:0},  pf:35,   delivery:40,   late:20,   tax:0.07,   lat:13.7563, lng:100.5018, radius:2600 },
+  { id:"syd", name:"Sydney",      flag:"🇦🇺", cur:{sym:"A$",dec:2}, pf:1.5,  delivery:7,    late:3,    tax:0.10,   lat:-33.8688,lng:151.2093, radius:2600 },
+  { id:"tor", name:"Toronto",     flag:"🇨🇦", cur:{sym:"C$",dec:2}, pf:1.35, delivery:6,    late:2.5,  tax:0.13,   lat:43.6532, lng:-79.3832, radius:2600 },
+  { id:"chi", name:"Chicago",     flag:"🌆", cur:{sym:"$",dec:2},  pf:1,    delivery:5.49, late:2.5,  tax:0.1025, lat:41.8781, lng:-87.6298, radius:2600 },
+  { id:"sin", name:"Singapore",   flag:"🇸🇬", cur:{sym:"S$",dec:2}, pf:1.35, delivery:5,    late:2,    tax:0.09,   lat:1.3000,  lng:103.8400, radius:2600 },
+];
+
+/* cuisine tag -> emoji + a plausible signature dish + base price (USD-ish) */
+const CUISINE = {
+  pizza:{ic:"🍕",dish:"Margherita Pizza",base:17}, italian:{ic:"🍝",dish:"Cacio e Pepe",base:22},
+  burger:{ic:"🍔",dish:"Cheeseburger",base:14}, american:{ic:"🍔",dish:"Bacon Cheeseburger",base:16},
+  mexican:{ic:"🌮",dish:"Tacos al Pastor",base:13}, japanese:{ic:"🍱",dish:"Bento Set",base:22},
+  sushi:{ic:"🍣",dish:"Omakase Set",base:32}, ramen:{ic:"🍜",dish:"Tonkotsu Ramen",base:15},
+  noodle:{ic:"🍜",dish:"House Noodles",base:13}, chinese:{ic:"🥡",dish:"General Tso's Chicken",base:18},
+  thai:{ic:"🍜",dish:"Pad Thai",base:15}, vietnamese:{ic:"🍜",dish:"Pho",base:14},
+  korean:{ic:"🍲",dish:"Bibimbap",base:18}, indian:{ic:"🍛",dish:"Butter Chicken",base:17},
+  chicken:{ic:"🍗",dish:"Fried Chicken",base:14}, kebab:{ic:"🥙",dish:"Döner Kebab",base:11},
+  turkish:{ic:"🥙",dish:"Mixed Grill",base:16}, sandwich:{ic:"🥪",dish:"Club Sandwich",base:11},
+  seafood:{ic:"🦐",dish:"Seafood Platter",base:28}, french:{ic:"🥐",dish:"Steak Frites",base:26},
+  cafe:{ic:"☕",dish:"Latte + Pastry",base:8}, coffee_shop:{ic:"☕",dish:"Latte + Pastry",base:8},
+  breakfast:{ic:"🍳",dish:"Big Breakfast",base:13}, bakery:{ic:"🥐",dish:"Fresh Croissant",base:6},
+  dessert:{ic:"🍰",dish:"Slice of Cake",base:8}, ice_cream:{ic:"🍦",dish:"Two Scoops",base:7},
+  barbecue:{ic:"🍖",dish:"BBQ Platter",base:24}, steak_house:{ic:"🥩",dish:"Ribeye",base:30},
+  vegan:{ic:"🥗",dish:"Buddha Bowl",base:15}, vegetarian:{ic:"🥗",dish:"Garden Bowl",base:14},
+  greek:{ic:"🥙",dish:"Gyro Plate",base:14}, spanish:{ic:"🥘",dish:"Paella",base:22},
+  asian:{ic:"🥡",dish:"Wok Special",base:16},
+  lebanese:{ic:"🧆",dish:"Mezze Platter",base:16}, mediterranean:{ic:"🥙",dish:"Mezze Platter",base:16},
+  middle_eastern:{ic:"🧆",dish:"Falafel Plate",base:14}, bagel:{ic:"🥯",dish:"Bagel & Lox",base:9},
+  deli:{ic:"🥪",dish:"Deli Sandwich",base:13}, brunch:{ic:"🍳",dish:"Brunch Plate",base:16},
+  donut:{ic:"🍩",dish:"Half Dozen",base:8}, fish_and_chips:{ic:"🍟",dish:"Fish & Chips",base:15},
+  pub:{ic:"🍺",dish:"Pub Burger",base:16}, bar:{ic:"🍸",dish:"Bar Bites",base:14},
+  wine:{ic:"🍷",dish:"Cheese & Wine",base:24}, tapas:{ic:"🥘",dish:"Tapas Spread",base:20},
+  pasta:{ic:"🍝",dish:"Fresh Pasta",base:18}, grill:{ic:"🍖",dish:"Mixed Grill",base:20},
+  bubble_tea:{ic:"🧋",dish:"Bubble Tea",base:6}, gelato:{ic:"🍨",dish:"Gelato",base:7},
+  dim_sum:{ic:"🥟",dish:"Dim Sum",base:18}, dumpling:{ic:"🥟",dish:"Dumplings",base:13},
+  burrito:{ic:"🌯",dish:"Burrito",base:12}, peruvian:{ic:"🐟",dish:"Ceviche",base:20},
+  ethiopian:{ic:"🍛",dish:"Injera Platter",base:18}, caribbean:{ic:"🍛",dish:"Jerk Chicken",base:16},
+  german:{ic:"🥨",dish:"Schnitzel",base:18}, salad:{ic:"🥗",dish:"Big Salad",base:13},
+  soup:{ic:"🍲",dish:"Soup of the Day",base:11}, hot_pot:{ic:"🍲",dish:"Hot Pot",base:24},
+  portuguese:{ic:"🥘",dish:"Piri-Piri Chicken",base:18}, fast_food:{ic:"🍔",dish:"Combo Meal",base:11},
+  _default:{ic:"🍽️",dish:"House Special",base:15},
+};
+const DEFAULT_POOL = [
+  {ic:"🍝",dish:"Chef's Pasta",base:16}, {ic:"🍛",dish:"House Curry",base:15}, {ic:"🍲",dish:"Daily Special",base:14},
+  {ic:"🥘",dish:"Chef's Plate",base:16}, {ic:"🍳",dish:"Comfort Plate",base:13}, {ic:"🥪",dish:"House Sandwich",base:12},
+  {ic:"🍖",dish:"House Grill",base:18}, {ic:"🥗",dish:"Fresh Bowl",base:13},
+];
+const RV = [
+  "been staring at this for 20 min. craving cured.",
+  "looked, didn't buy, slept great.",
+  "added to cart, closed the app, $0 spent.",
+  "the photos alone fed me 🙏",
+  "ordered this in my heart.",
+  "my bank account said thank you.",
+  "window-shopped it and felt better.",
+  "2am craving, held strong 💪",
+  "calorie-free because it's a photo ^^",
+  "payday's friday — this is dinner (visually).",
+];
+
+/* country code -> currency for the 'any city' geocoder */
+const CCY = {
+  us:{sym:"$",dec:2,pf:1}, gb:{sym:"£",dec:2,pf:.82}, jp:{sym:"¥",dec:0,pf:150}, kr:{sym:"₩",dec:0,pf:1350},
+  mx:{sym:"MX$",dec:0,pf:7}, de:{sym:"€",dec:2,pf:.92}, fr:{sym:"€",dec:2,pf:.92}, es:{sym:"€",dec:2,pf:.92},
+  it:{sym:"€",dec:2,pf:.92}, nl:{sym:"€",dec:2,pf:.92}, th:{sym:"฿",dec:0,pf:35}, br:{sym:"R$",dec:2,pf:5},
+  in:{sym:"₹",dec:0,pf:83}, ca:{sym:"C$",dec:2,pf:1.35}, au:{sym:"A$",dec:2,pf:1.5}, sg:{sym:"S$",dec:2,pf:1.35},
+};
+
+const TICKER = [
+  "🌃 someone in Brooklyn just carted $43 of pastrami and went to bed",
+  "someone in Tokyo is tracking a 🚗 that will never arrive",
+  "1,200 people are not-ordering with you right now 😌",
+  "a stranger in London window-shopped a naan roll and felt better",
+  "tonight we've collectively dodged $84,000 in delivery fees",
+  "someone in Seoul built a ₩60,000 cart and closed the app 🥲",
+  "girl dinner is just looking at the menu, together",
+];
+const ROOM_SEED = [
+  {ic:"🥩", text:"almost DoorDashed $40 of wings. drank water instead 🥲", city:"Brooklyn", ago:"3m", r:{hug:42, me:18, go:7}},
+  {ic:"🍕", text:"staring at Joe's pizza for 20 min. not ordering.", city:"Manhattan", ago:"1m", r:{hug:21, me:55, go:12}},
+  {ic:"🍜", text:"¥980 ramen craving in Shibuya. window-shopped it.", city:"Tokyo", ago:"5m", r:{hug:33, me:29, go:3}},
+  {ic:"🌮", text:"carted MX$200 of tacos and closed the app 💪", city:"Mexico City", ago:"2m", r:{hug:14, me:40, go:9}},
+  {ic:"🍗", text:"chimaek craving at 2am. held back. tell me i'm strong", city:"Seoul", ago:"8m", r:{hug:51, me:11, go:22}},
+  {ic:"🥓", text:"girl dinner = me looking at a Dishoom naan roll", city:"London", ago:"now", r:{hug:67, me:31, go:15}},
+];
+const INCOMING = [
+  {ic:"🍟", text:"just carted cheese fries and bailed", city:"Chicago"},
+  {ic:"🍣", text:"almost spent ¥4000 on sushi. ate cereal.", city:"Tokyo"},
+  {ic:"🍗", text:"no-spend night #2, still up 🎉", city:"Seoul"},
+  {ic:"🍕", text:"window-shopped a whole pizza in Brixton", city:"London"},
+  {ic:"🌯", text:"saved MX$120 on tacos. proud of me.", city:"Mexico City"},
+];
+const REACT_META = { hug:"🫂", me:"😋", go:"🔥" };
+const OVERPASS = ["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter","https://maps.mail.ru/osm/tools/overpass/api/interpreter"];
+
+/* ---- state ---- */
+let cart = [], liveBase = 1247, courierTimers = [], room = [], lastOrderItems = [], pendingOrder = null;
+let curIdx = 0, feedMode = "all", currentDetailKey = null, GEO_SEQ = 0;
+let savedPlaces = {};
+let account = null, stats = { savedUsd:0, orders:0, streak:0, conversions:0, xp:0, cuisines:[], cities:[], maxCombo:0, earned:[] }, handoffTarget = null, combo = 0;
+const statsByCity = {}, placeByKey = {}, CITY_INDEX = {};
+
+/* ---- helpers ---- */
+const $ = (s) => document.querySelector(s);
+const curCity = () => CITIES[curIdx];
+const round2 = (n) => Math.round(n*100)/100;
+function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function hash(s){ let h=0; for(let i=0;i<s.length;i++){ h=(h*31 + s.charCodeAt(i))>>>0; } return h; }
+function money(n, cur){ cur=cur||curCity().cur; return cur.dec===0 ? cur.sym+Math.round(n).toLocaleString("en-US") : cur.sym+(round2(n)).toFixed(2); }
+function etaFor(p){ const m = 15 + (p.name.length % 4)*5; return `${m}–${m+10}`; }
+/* owned-cuisine photo layer: keyed off the dish emoji, deterministic per place, emoji fallback on error.
+   (prototype uses a free keyworded stock source; production = your licensed cuisine pack or Google/Yelp photos) */
+const PHOTO_KW = { "🍕":"pizza","🍔":"burger","🍟":"fries","🌮":"tacos","🌯":"burrito","🍜":"ramen","🍣":"sushi","🍱":"bento-box","🍛":"curry","🥡":"noodles","🍗":"fried-chicken","🥩":"steak","🍖":"barbecue","🥪":"sandwich","🥯":"bagel","🧆":"falafel","🥙":"kebab","🦐":"seafood","🥘":"paella","🍲":"hotpot","🥗":"salad","☕":"coffee","🥐":"croissant","🍩":"donut","🍰":"cake","🍦":"ice-cream","🍨":"gelato","🧋":"bubble-tea","🥟":"dumplings","🐙":"takoyaki","🐟":"grilled-fish","🥨":"pretzel","🍽️":"gourmet-food" };
+function photoUrl(p, big){ const kw = PHOTO_KW[p.ic] || "food"; const s = big?400:200; return `https://loremflickr.com/${s}/${s}/${kw}?lock=${hash(p.name)%997}`; }
+function thumbImg(p, big){ return `<img class="ph-img" src="${photoUrl(p,big)}" alt="" loading="lazy" onerror="this.replaceWith('${p.ic}')">`; }
+/* reward tiers — keyed off money SAVED (rewards restraint, not time-in-app) */
+const TIERS = [
+  {name:"Window Shopper", min:0, ic:"👀"},
+  {name:"Cart Ghost", min:50, ic:"👻"},
+  {name:"Budget Monk", min:200, ic:"🧘"},
+  {name:"Zen Saver", min:500, ic:"🌙"},
+  {name:"Dopamine Sensei", min:1200, ic:"🐉"},
+];
+function tierFor(usd){ let t=TIERS[0], next=null; for(let i=0;i<TIERS.length;i++){ if(usd>=TIERS[i].min){ t=TIERS[i]; next=TIERS[i+1]||null; } } return {t, next}; }
+
+/* ---- game layer: xp/levels, variable reveal, combo, achievements ---- */
+const DRIVERS = ["Marcus","Tyler","Mateo","Jin","Priya","Sofia","Liam","Omar","Chloé","Diego","Aisha","Noah"];
+const PUNCH = [
+  {p:"{n} isn't coming.<br>He was never real.", s:"no driver. no order. no charge."},
+  {p:"{n} ghosted you.<br>(there was never an order.)", s:"$0 moved. craving handled. 🌙"},
+  {p:"plot twist:<br>{n} doesn't exist.", s:"and neither did the charge."},
+  {p:"{n} took the night off.<br>forever.", s:"your wallet stayed full."},
+  {p:"breaking: {n} is a figment.<br>and so is the bill.", s:"nothing left your account."},
+  {p:"{n} vanished into the night.<br>empty-handed.", s:"because there was nothing to bring."},
+];
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+function levelInfo(xp){ let lvl=1, need=60, acc=0; while(xp>=acc+need){ acc+=need; lvl++; need=Math.round(need*1.35); } return {lvl, pct:Math.round((xp-acc)/need*100)}; }
+function renderXpBar(){ const el=$("#xp-bar"); if(!el) return; const L=levelInfo(stats.xp||0); el.innerHTML=`<span class="xp-lvl">LVL ${L.lvl}</span><div class="xp-track"><div class="xp-fill" style="width:${L.pct}%"></div></div><span class="xp-xp">${stats.xp||0} XP</span>`; }
+function addXp(n){ const before=levelInfo(stats.xp||0).lvl; stats.xp=(stats.xp||0)+n; saveStats(); renderXpBar(); if(levelInfo(stats.xp).lvl>before){ toast(`⭐ level ${levelInfo(stats.xp).lvl}!`); burst(); } }
+const ACHV = [
+  {id:"first", ic:"👻", name:"First Ghost", tip:"window-order once", has:s=>s.orders>=1},
+  {id:"fav5", ic:"❤️", name:"Collector", tip:"save 5 places", has:()=>Object.keys(savedPlaces).length>=5},
+  {id:"streak7", ic:"🔥", name:"Week of Will", tip:"7-night streak", has:s=>s.streak>=7},
+  {id:"cities5", ic:"🌍", name:"Globetrotter", tip:"5 cities", has:s=>(s.cities||[]).length>=5},
+  {id:"cuis10", ic:"🍱", name:"Omnivore", tip:"10 cuisines", has:s=>(s.cuisines||[]).length>=10},
+  {id:"combo3", ic:"⚡", name:"Combo King", tip:"3× combo", has:s=>(s.maxCombo||0)>=3},
+  {id:"save100", ic:"💰", name:"Budget Boss", tip:"save $100", has:s=>s.savedUsd>=100},
+  {id:"sensei", ic:"🐉", name:"Sensei", tip:"top rank", has:s=>s.savedUsd>=1200},
+];
+function checkAchv(){ if(!stats.earned) stats.earned=[]; ACHV.forEach(a=>{ if(a.has(stats) && !stats.earned.includes(a.id)){ stats.earned.push(a.id); saveStats(); toast(`🏅 unlocked: ${a.name}`); } }); }
+function uniqPush(arr, v){ if(v && !arr.includes(v)) arr.push(v); }
+function animateMoney(el, target, cur){ if(!el) return; const start=performance.now(), dur=750; (function step(t){ const k=Math.min(1,(t-start)/dur); const v=target*(1-Math.pow(1-k,3)); el.textContent=money(v,cur)+" saved"; if(k<1) requestAnimationFrame(step); else el.textContent=money(target,cur)+" saved"; })(performance.now()); }
+function surpriseMe(){ const list=curCity()._places; if(!list||!list.length){ toast("still loading places…"); return; } addXp(2); openDetail(pick(list)._key); }
+function isFav(key){ return !!savedPlaces[key]; }
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1600); }
+
+/* ---- synthesize a place from one OSM element ---- */
+function synth(el, city){
+  const t = el.tags || {}; const name = t.name; if(!name) return null;
+  const h = hash(name);
+  let cz = (t.cuisine||"").split(";")[0].trim().toLowerCase().replace(/[\s-]/g,"_");
+  let c = CUISINE[cz];
+  if(!c){ if(t.amenity==="cafe") c=CUISINE.cafe; else if(t.amenity==="fast_food") c=CUISINE.fast_food; else c=DEFAULT_POOL[h%DEFAULT_POOL.length]; }
+  const rate = (40 + h%10)/10;                 // 4.0 – 4.9
+  const n = 200 + (h % 9000);
+  let price = c.base * city.pf * (0.85 + ((h>>3)%30)/100);
+  price = city.cur.dec===0 ? Math.round(price) : round2(price);
+  const hood = t["addr:suburb"] || t["addr:neighbourhood"] || t["addr:quarter"] || t["addr:street"] || city.name;
+  const label = cz ? cz.replace(/_/g," ") : (t.amenity||"restaurant").replace(/_/g," ");
+  const key = el.type[0] + el.id;              // n123 / w456 — stable OSM id
+  return { _key:key, _cityId:city.id, _cityName:city.name, _flag:city.flag, _cur:city.cur,
+    ic:c.ic, name, hood, dish:c.dish, en:label, rate, n, price, reviews:pickReviews(h) };
+}
+function pickReviews(h){ const i=h%RV.length; let j=(h>>4)%RV.length; if(j===i) j=(j+1)%RV.length; return [[RV[i],"★★★★★"],[RV[j],"★★★★☆"]]; }
+
+/* ---- Overpass fetch with mirror fallback ---- */
+function overpassFetch(q, i){
+  i = i||0;
+  if(i>=OVERPASS.length) return Promise.reject(new Error("OpenStreetMap is busy"));
+  const ctrl = new AbortController(); const to = setTimeout(()=>ctrl.abort(), 18000);
+  return fetch(OVERPASS[i], {method:"POST", body:q, signal:ctrl.signal})
+    .then(r=>{ clearTimeout(to); if(!r.ok) throw new Error("status "+r.status); return r.json(); })
+    .then(j=> j.elements||[])
+    .catch(()=>{ clearTimeout(to); return overpassFetch(q, i+1); });
+}
+function loadCity(city, force){
+  if(!force && city._places){ city._state="ready"; if(curCity().id===city.id) renderFeed(); return; }
+  city._state="loading"; if(curCity().id===city.id) renderFeed();
+  const q = `[out:json][timeout:25];nwr["amenity"~"^(restaurant|fast_food|cafe)$"]["name"](around:${city.radius},${city.lat},${city.lng});out center 200;`;
+  overpassFetch(q).then(els=>{
+    const seen=new Set(), places=[];
+    for(const el of els){
+      const p = synth(el, city); if(!p) continue;
+      const dk = p.name.toLowerCase(); if(seen.has(dk)) continue; seen.add(dk);
+      placeByKey[p._key]=p; places.push(p);
+      if(places.length>=42) break;
+    }
+    places.sort((a,b)=> b.rate-a.rate || b.n-a.n);
+    city._places = places; city._state = places.length ? "ready" : "empty";
+    if(curCity().id===city.id) renderFeed();
+  }).catch(err=>{ city._state="error"; city._err=String(err.message||err); if(curCity().id===city.id) renderFeed(); });
+}
+
+/* ---- navigation ---- */
+function go(view){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  $("#view-"+view).classList.add("active");
+  $("#body").scrollTop = 0;
+  $("#nav-feed").classList.toggle("on", view==="feed");
+  $("#nav-room").classList.toggle("on", view==="room");
+  $("#nav-cart").classList.toggle("on", view==="cart");
+  if(view==="cart") renderCart();
+  if(view==="room") renderRoom();
+  if(view==="profile") renderProfile();
+  if(view!=="track") stopCourier();
+}
+
+/* ---- city + mode ---- */
+function renderCityBar(){
+  $("#city-bar").innerHTML = `<button class="city-chip add" onclick="nearMe()">📍 Near me</button>`
+    + CITIES.map((c,i)=>`<button class="city-chip${i===curIdx?' on':''}" onclick="setCity(${i})">${c.flag} ${esc(c.name)}</button>`).join("")
+    + `<button class="city-chip add" onclick="addCity()">＋ any city</button>`;
+}
+function setCity(i){
+  if(i===curIdx && curCity()._places){ return; }
+  curIdx=i; cart=[]; updateBadge(); feedMode="all"; setSegUI();
+  renderCityBar(); renderTally(); renderFeed();
+  loadCity(curCity());
+}
+function setMode(m){ feedMode=m; setSegUI(); renderFeed(); $("#body").scrollTop=0; }
+function setSegUI(){ $("#seg-all").classList.toggle("on", feedMode==="all"); $("#seg-saved").classList.toggle("on", feedMode==="saved"); }
+function renderTally(){ const c=curCity(), s=statsByCity[c.id]||{saved:0,orders:0}; $("#saved-tally").textContent=money(s.saved,c.cur); $("#order-count").textContent=s.orders; }
+
+/* ---- any city via OSM Nominatim geocoder ---- */
+function addCity(){
+  const name = prompt("Type any city on earth (e.g. Berlin, Bangkok, Lagos):");
+  if(!name || !name.trim()) return;
+  toast("finding "+name.trim()+"…");
+  fetch(`https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&q=${encodeURIComponent(name.trim())}`)
+    .then(r=>r.json()).then(arr=>{
+      if(!arr || !arr.length){ toast("couldn't find that city"); return; }
+      const g=arr[0]; const cc=(g.address && g.address.country_code) || "";
+      const m = CCY[cc] || {sym:"$",dec:2,pf:1};
+      const city = { id:"geo"+(GEO_SEQ++), name:(g.name || g.display_name.split(",")[0]), flag:"📍",
+        cur:{sym:m.sym,dec:m.dec}, pf:m.pf, tax:0.10,
+        delivery: m.dec===0?Math.round(5*m.pf):round2(5*m.pf), late: m.dec===0?Math.round(2.5*m.pf):round2(2.5*m.pf),
+        lat:parseFloat(g.lat), lng:parseFloat(g.lon), radius:2600 };
+      CITIES.push(city); CITY_INDEX[city.id]=CITIES.length-1; statsByCity[city.id]={saved:0,orders:0};
+      curIdx=CITIES.length-1; cart=[]; updateBadge(); feedMode="all"; setSegUI();
+      renderCityBar(); renderTally(); renderFeed(); loadCity(city);
+    }).catch(()=> toast("geocoder unavailable, try again"));
+}
+
+/* ---- proximity: real food nearest you (needs HTTPS + location permission) ---- */
+function nearMe(){
+  if(!navigator.geolocation){ toast("location isn't supported here"); return; }
+  toast("finding food near you…");
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const lat=pos.coords.latitude, lng=pos.coords.longitude;
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+      .then(r=>r.json()).then(g=>{
+        const cc=(g.address && g.address.country_code) || "";
+        const m=CCY[cc] || {sym:"$",dec:2,pf:1};
+        const a=g.address||{}; const place=a.suburb||a.neighbourhood||a.city||a.town||a.county||"Near You";
+        upsertNearCity(lat,lng,m,place);
+      }).catch(()=> upsertNearCity(lat,lng,{sym:"$",dec:2,pf:1},"Near You"));
+  }, err=>{
+    toast(err.code===1 ? "location permission denied" : "couldn't get your location");
+  }, { timeout:10000, maximumAge:60000, enableHighAccuracy:true });
+}
+function upsertNearCity(lat,lng,m,place){
+  const city={ id:"near", name:place, flag:"📍", cur:{sym:m.sym,dec:m.dec}, pf:m.pf, tax:0.10,
+    delivery:m.dec===0?Math.round(5*m.pf):round2(5*m.pf), late:m.dec===0?Math.round(2.5*m.pf):round2(2.5*m.pf),
+    lat, lng, radius:1500 };
+  if(CITY_INDEX["near"]!=null){ CITIES[CITY_INDEX["near"]]=city; }
+  else { CITIES.push(city); CITY_INDEX["near"]=CITIES.length-1; }
+  statsByCity["near"]=statsByCity["near"]||{saved:0,orders:0};
+  curIdx=CITY_INDEX["near"]; cart=[]; updateBadge(); feedMode="all"; setSegUI();
+  renderCityBar(); renderTally(); renderFeed(); loadCity(city, true);
+}
+
+/* ---- feed ---- */
+function cardHTML(p, saved){
+  const fav=isFav(p._key);
+  const where = saved ? `${p._flag} ${esc(p._cityName)}` : esc(p.en);
+  return `<div class="card" onclick="openDetail('${p._key}')">
+    <div class="thumb">${thumbImg(p)}</div>
+    <div class="meta">
+      <div class="name">${esc(p.dish)} <span class="en">· ${where}</span></div>
+      <div class="shop">${esc(p.name)} · ${esc(p.hood)}</div>
+      <div class="row"><span class="rate">★ ${p.rate.toFixed(1)}</span><span>(${p.n.toLocaleString()})</span><span>· ⏱ ${etaFor(p)} min</span></div>
+      <div class="price">${money(p.price, p._cur)}</div>
+    </div>
+    <button class="fav${fav?' on':''}" onclick="toggleFav('${p._key}',event)">${fav?'♥':'♡'}</button>
+  </div>`;
+}
+function renderFeed(){
+  const c=curCity(), saved=feedMode==="saved";
+  $("#saved-count").textContent = Object.keys(savedPlaces).length;
+  if(saved){
+    $("#feed-section-label").textContent = "♥ your saved places";
+    const list = Object.values(savedPlaces);
+    $("#feed-list").innerHTML = list.length ? list.map(p=>cardHTML(p,true)).join("")
+      : `<div class="empty"><div class="big">♡</div>no saved places yet.<br>tap the heart on anything you crave.</div>`;
+    return;
+  }
+  $("#feed-section-label").textContent = `🔥 craving in ${esc(c.name)} right now`;
+  if(!c._state || c._state==="loading"){ $("#feed-list").innerHTML = `<div class="loading"><div class="spinner"></div>📡 pulling real places in ${esc(c.name)}…<br><span style="color:var(--muted);font-size:12px;font-weight:500">live from OpenStreetMap</span></div>`; return; }
+  if(c._state==="error"){ $("#feed-list").innerHTML = `<div class="empty"><div class="big">📡</div>couldn't reach OpenStreetMap.<br><span style="font-size:12px">${esc(c._err)}</span><br><br><button class="cta secondary" style="position:static" onclick="loadCity(curCity(),true)">retry</button></div>`; return; }
+  if(c._state==="empty"){ $("#feed-list").innerHTML = `<div class="empty"><div class="big">🗺️</div>no places found here.<br>try another city.</div>`; return; }
+  $("#feed-list").innerHTML = c._places.map(p=>cardHTML(p,false)).join("");
+}
+
+/* ---- favorites (snapshot map -> survives reloads & unloaded cities) ---- */
+function loadSaved(){ try { savedPlaces = JSON.parse(localStorage.getItem("carted_saved")||"{}")||{}; } catch(e){ savedPlaces={}; }
+  Object.values(savedPlaces).forEach(p=>{ if(p && p._key) placeByKey[p._key]=placeByKey[p._key]||p; }); }
+function saveSaved(){ try { localStorage.setItem("carted_saved", JSON.stringify(savedPlaces)); } catch(e){} }
+function toggleFav(key, ev){
+  if(ev) ev.stopPropagation();
+  if(savedPlaces[key]){ delete savedPlaces[key]; }
+  else { const p = placeByKey[key]; if(!p) return; savedPlaces[key]=p; toast("saved ♥"); addXp(5); checkAchv(); }
+  saveSaved();
+  if($("#view-feed").classList.contains("active")) renderFeed();
+}
+function toggleDetailFav(){ if(!currentDetailKey) return; toggleFav(currentDetailKey, null); updateDetailFav(); }
+function updateDetailFav(){ const on=isFav(currentDetailKey); const b=$("#d-fav"); b.classList.toggle("on",on); b.textContent= on?"♥ Saved":"♡ Save place"; }
+
+/* ---- account + profile (mock auth; real cross-device sync = backend) ---- */
+function loadAccount(){ try{ account=JSON.parse(localStorage.getItem("carted_account")||"null"); }catch(e){} try{ Object.assign(stats, JSON.parse(localStorage.getItem("carted_stats")||"{}")); }catch(e){} }
+function saveAccount(){ try{ localStorage.setItem("carted_account", JSON.stringify(account)); }catch(e){} }
+function saveStats(){ try{ localStorage.setItem("carted_stats", JSON.stringify(stats)); }catch(e){} }
+function avatarGlyph(){ return account ? "🌙" : "🙂"; }
+function signIn(provider){
+  const h = prompt(`Mock ${provider} sign-in — pick a handle:`, "nightowl");
+  if(!h || !h.trim()) return;
+  account = { handle: h.trim().replace(/^@/,""), provider }; saveAccount();
+  const av=$("#avatar-btn"); if(av) av.textContent=avatarGlyph();
+  renderProfile(); toast("signed in — favorites sync (in prod) ☁️");
+}
+function signOut(){ account=null; saveAccount(); const av=$("#avatar-btn"); if(av) av.textContent=avatarGlyph(); renderProfile(); toast("signed out"); }
+function renderProfile(){
+  const favCount = Object.keys(savedPlaces).length;
+  const head = account
+    ? `<div class="profile-card"><div class="pa">🌙</div><div class="ph">@${esc(account.handle)}</div><div class="pe">signed in with ${esc(account.provider)} · synced</div></div>`
+    : `<div class="profile-card"><div class="pa">🙂</div><div class="ph">browsing as a guest</div><div class="pe">sign in to sync your favorites &amp; streak across devices</div></div>`;
+  const grid = `
+    <div class="pstats">
+      <div class="pstat"><div class="v green">$${Math.round(stats.savedUsd).toLocaleString()}</div><div class="k">saved all-time (≈USD)</div></div>
+      <div class="pstat"><div class="v streak">🔥 ${stats.streak}</div><div class="k">no-spend streak</div></div>
+    </div>
+    <div class="pstats">
+      <div class="pstat"><div class="v">${stats.orders}</div><div class="k">window-orders</div></div>
+      <div class="pstat"><div class="v">${favCount}</div><div class="k">saved places</div></div>
+    </div>`;
+  const auth = account
+    ? `<button class="signin-btn" onclick="signOut()">sign out</button>`
+    : `<button class="signin-btn dark" onclick="signIn('Apple')"> Sign in with Apple</button><button class="signin-btn" onclick="signIn('Google')">Sign in with Google</button>`;
+  const {t,next}=tierFor(stats.savedUsd);
+  const prog = next ? Math.max(5, Math.min(100, Math.round((stats.savedUsd-t.min)/(next.min-t.min)*100))) : 100;
+  const tierCard = `<div class="tier-card"><div class="tier-row"><span class="tier-ic">${t.ic}</span><div><div class="tier-name">${t.name}</div><div class="tier-sub">${next?`$${Math.max(0,Math.round(next.min-stats.savedUsd))} more saved → <b>${next.name}</b> ${next.ic}`:"max rank — legend 🏆"}</div></div></div><div class="tier-bar"><div class="tier-fill" style="width:${prog}%"></div></div></div>`;
+  const L=levelInfo(stats.xp||0);
+  const lvlCard = `<div class="lvl-card"><div class="lvl-top"><span>⭐ Level ${L.lvl}</span><span style="color:var(--muted)">${stats.xp||0} XP</span></div><div class="xp-track"><div class="xp-fill" style="width:${L.pct}%"></div></div></div>`;
+  if(!stats.earned) stats.earned=[];
+  const achv = `<div class="section-label" style="margin:6px 2px 8px">🏅 achievements</div><div class="achv-grid">` + ACHV.map(a=>{ const on=a.has(stats); return `<div class="achv${on?' on':''}"><div class="achv-ic">${on?a.ic:'🔒'}</div><div class="achv-name">${a.name}</div><div class="achv-tip">${on?'unlocked':a.tip}</div></div>`; }).join("") + `</div>`;
+  $("#profile-body").innerHTML = `<div class="brand"><h1 style="font-size:24px">profile</h1></div>` + head + lvlCard + tierCard + grid + achv + auth
+    + `<div style="text-align:center;color:var(--muted);font-size:11.5px;margin-top:14px">mock sign-in. real cross-device sync needs a backend (see roadmap).</div>`;
+}
+
+/* ---- detail ---- */
+function openDetail(key){
+  const p = placeByKey[key] || savedPlaces[key]; if(!p) return;
+  if(p._cityId!==curCity().id && CITY_INDEX[p._cityId]!=null){
+    curIdx=CITY_INDEX[p._cityId]; cart=[]; updateBadge(); renderCityBar(); renderTally(); loadCity(curCity());
+  }
+  currentDetailKey=key;
+  $("#d-hero").innerHTML = thumbImg(p, true) + `<div class="city-tag">${p._flag} ${esc(p._cityName)}</div>`;
+  $("#d-name").innerHTML = `${esc(p.dish)} <span style="color:var(--muted);font-size:15px;font-weight:500;text-transform:capitalize">${esc(p.en)}</span>`;
+  $("#d-shop").textContent = `${p.name} · ${p.hood}`;
+  $("#d-stats").innerHTML = `<span>★ <b>${p.rate.toFixed(1)}</b> (${p.n.toLocaleString()})</span><span>⏱ <b>${etaFor(p)}</b> min</span><span>💸 <b>${money(p.price,p._cur)}</b></span>`;
+  $("#d-reviews").innerHTML = p.reviews.map(r=>`<div class="review"><div class="top"><span class="stars">${r[1]}</span><span>anon · ${(hash(p.name)%23)+1}m ago</span></div><div class="text">${esc(r[0])}</div></div>`).join("");
+  $("#d-add").onclick = ()=>addToCart(key);
+  updateDetailFav(); go("detail");
+}
+
+/* ---- cart ---- */
+function addToCart(key){ const p=placeByKey[key]||savedPlaces[key]; if(!p) return; cart.push(p); updateBadge(); toast(`added — that's ${money(p.price,p._cur)} you didn't spend 😌`); addXp(6); }
+function removeFromCart(i){ cart.splice(i,1); updateBadge(); renderCart(); }
+function updateBadge(){ const b=$("#cart-badge"); if(cart.length){ b.style.display="flex"; b.textContent=cart.length; } else b.style.display="none"; }
+function cartSubtotal(){ return cart.reduce((s,p)=>s+p.price,0); }
+function cartService(){ return cartSubtotal()*0.15; }
+function cartTax(){ return cartSubtotal()*curCity().tax; }
+function cartFees(){ const c=curCity(); return c.delivery + cartService() + c.late + cartTax(); }
+function cartAllIn(){ return cartSubtotal() + cartFees(); }
+function renderCart(){
+  const body=$("#cart-body"), c=curCity();
+  $("#cart-sub").textContent = cart.length ? `from ${c.name} ${c.flag} · don't check out.` : "fill it up. don't check out.";
+  if(!cart.length){ body.innerHTML = `<div class="empty"><div class="big">🛒</div>nothing here yet.<br>go fill it up.<br><br><button class="cta secondary" style="position:static" onclick="go('feed')">browse places</button></div>`; return; }
+  const sub=cartSubtotal();
+  body.innerHTML = `
+    ${cart.map((p,i)=>`<div class="cart-item"><div class="ic">${p.ic}</div><div class="nm">${esc(p.dish)}<div style="font-size:11.5px;color:var(--muted);font-weight:400">${esc(p.name)}</div></div><div class="pr">${money(p.price,c.cur)}</div><button class="rm" onclick="removeFromCart(${i})">✕</button></div>`).join("")}
+    <div class="summary">
+      <div class="line"><span>Subtotal</span><span>${money(sub,c.cur)}</span></div>
+      <div class="line"><span>Delivery fee</span><span>${money(c.delivery,c.cur)}</span></div>
+      <div class="line"><span>Service fee</span><span>${money(cartService(),c.cur)}</span></div>
+      <div class="line"><span>Late-night fee</span><span>${money(c.late,c.cur)}</span></div>
+      <div class="line"><span>Estimated tax</span><span>${money(cartTax(),c.cur)}</span></div>
+      <div class="line total"><span>Total</span><span>${money(cartAllIn(),c.cur)}</span></div>
+    </div>
+    <div class="fee-callout">you're dodging ${money(cartFees(),c.cur)} in fees alone 😮‍💨</div>
+    <button class="cta" onclick="placeOrder()">place order 🚗</button>
+    <button class="cta secondary" onclick="go('feed')">keep browsing</button>
+    <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:12px">the button looks real. nothing gets charged.</div>
+    <button class="order-real" onclick="orderForReal('cart')">…or just order it for real on a delivery app →</button>`;
+}
+
+/* ---- confetti ---- */
+function burst(){ const emo=["🍕","🍔","🍟","🌙","✨","🚗","🌮"]; for(let i=0;i<18;i++){ const c=document.createElement("div"); c.className="confetti"; c.textContent=emo[i%emo.length]; c.style.left=Math.random()*340+20+"px"; c.style.animationDuration=(1.6+Math.random()*1.4)+"s"; c.style.fontSize=(16+Math.random()*16)+"px"; $(".screen").appendChild(c); setTimeout(()=>c.remove(),3200); } }
+
+/* ---- courier sim ---- */
+const STAGES = [
+  { p:8,  txt:"confirming your (non-)order…", eta:14 },
+  { p:30, txt:"🍳 the kitchen is pretending to cook", eta:11 },
+  { p:62, txt:"🚗 {n} picked up your order", eta:6 },
+  { p:88, txt:"almost there… two blocks away", eta:2 },
+  { p:96, txt:"arriving any second now…", eta:1 },
+];
+function placeOrder(){
+  pendingOrder = { items: cart.slice(), total: cartAllIn(), city: curCity(), driver: pick(DRIVERS) };
+  burst();
+  $("#track-reveal").style.display="none"; $("#track-live").style.display="block"; $("#road-done").style.width="0%";
+  const rd=$("#rider"); rd.style.left="8%"; rd.style.opacity="1"; rd.textContent="🚗";
+  $("#track-others").textContent = 220+Math.floor(Math.random()*80);
+  go("track"); stopCourier();
+  let i=0;
+  const step=()=>{ const s=STAGES[i]; $("#road-done").style.width=s.p+"%"; $("#rider").style.left=`calc(8% + ${s.p*0.84}%)`; $("#track-stage").textContent=s.txt.replace("{n}", pendingOrder.driver); $("#eta-num").textContent=s.eta; i++;
+    if(i<STAGES.length){ courierTimers.push(setTimeout(step,2400)); } else { courierTimers.push(setTimeout(revealTruth,2600)); } };
+  step();
+}
+function revealTruth(){
+  const po=pendingOrder; if(!po) return;
+  lastOrderItems=po.items; const st=statsByCity[po.city.id]; st.orders++; st.saved+=po.total;
+  const beforeTier=tierFor(stats.savedUsd).t.name;
+  stats.orders++; stats.streak++; stats.savedUsd += po.total/po.city.pf;
+  combo++; if(combo>(stats.maxCombo||0)) stats.maxCombo=combo;
+  stats.cuisines=stats.cuisines||[]; stats.cities=stats.cities||[];
+  (po.items||[]).forEach(it=> uniqPush(stats.cuisines, it.en));
+  uniqPush(stats.cities, po.city.id);
+  saveStats();
+  const newTier=tierFor(stats.savedUsd).t;
+  let milestone="";
+  if(newTier.name!==beforeTier) milestone=`${newTier.ic} new rank unlocked: ${newTier.name}!`;
+  else if([3,7,14,30,50,100,200].includes(stats.streak)) milestone=`🔥 ${stats.streak}-night streak milestone!`;
+  if(po.city.id===curCity().id) renderTally();
+  const rd=$("#rider"); rd.textContent="🚗💨"; rd.style.left="125%"; rd.style.opacity="0"; $("#road-done").style.width="60%"; $("#track-live").style.display="none";
+  const driver=po.driver||"Marcus", pl=pick(PUNCH);
+  const r=$("#track-reveal"); r.style.display="block"; r.className="reveal";
+  r.innerHTML = `
+    <div class="moon">🌙</div>
+    <div class="punch">${pl.p.replace("{n}",driver)}</div>
+    <div class="sub">${pl.s}</div>
+    <div class="saved" id="reveal-saved">${money(0,po.city.cur)} saved</div>
+    <div class="sub">that's what tonight in ${esc(po.city.name)} would've cost. nice.</div>
+    <div class="sub" style="color:var(--accent2);font-weight:700;margin-top:6px">🔥 ${stats.streak}-night no-spend streak</div>
+    ${combo>=2?`<div class="combo">⚡ ${combo}× dodge combo!</div>`:""}
+    ${milestone?`<div class="milestone">${milestone}</div>`:""}
+    <div style="margin-top:22px">
+      <button class="cta" style="position:static" onclick="shareToRoom()">🌙 share it to the room</button>
+      <button class="cta secondary" style="position:static" onclick="resetCartAndBrowse()">do it again</button>
+    </div>
+    <button class="order-real" onclick="orderForReal('reveal')">actually… order it for real →</button>
+    <div class="track-presence" style="margin-top:14px"><b>${220+Math.floor(Math.random()*80)}</b> people didn't order, with you · <span onclick="go('feed')" style="color:var(--accent);cursor:pointer">I'm good</span></div>`;
+  animateMoney($("#reveal-saved"), po.total, po.city.cur);
+  addXp(30 + (combo>=2?combo*5:0));
+  checkAchv();
+  cart=[]; updateBadge();
+}
+function resetCartAndBrowse(){ go("feed"); toast("ok. let's get hungry again 🌙"); }
+function stopCourier(){ courierTimers.forEach(clearTimeout); courierTimers=[]; }
+
+/* ---- affiliate handoff: the ONLY money path, opt-in, never the default ---- */
+function showModal(html){ $("#modal-content").innerHTML=html; $("#modal").style.display="flex"; }
+function closeModal(){ $("#modal").style.display="none"; }
+function orderForReal(src){
+  let items, total, city;
+  if(src==="reveal" && pendingOrder){ items=pendingOrder.items; total=pendingOrder.total; city=pendingOrder.city; }
+  else { items=cart.slice(); total=cartAllIn(); city=curCity(); }
+  if(!items.length){ toast("cart's empty"); return; }
+  const place=items[0]; handoffTarget={ name:place.name };
+  showModal(`
+    <div class="m-emoji">🛵</div>
+    <div class="m-title">Leave Carted &amp; order for real?</div>
+    <div class="m-body">This opens a real delivery app for <b>${esc(place.name)}</b>${items.length>1?` (+${items.length-1} more)`:""} in ${esc(city.name)}.<br>You'd actually pay about <b>${money(total, city.cur)}</b>.<br><br>Carted's rooting for you to keep the money 💚 — but it's your call.</div>
+    <button class="cta" style="position:static" onclick="closeModal()">nah, I'm good 💚</button>
+    <button class="cta secondary" style="position:static" onclick="confirmOrderReal()">yeah, I'm caving →</button>`);
+}
+function confirmOrderReal(){
+  if(!handoffTarget) return;
+  stats.conversions=(stats.conversions||0)+1; saveStats();      // prod: fire affiliate deep-link with your partner token
+  window.open("https://www.ubereats.com/search?q="+encodeURIComponent(handoffTarget.name), "_blank");
+  closeModal(); toast("opened a delivery app — no judgment 🙂");
+}
+
+/* ---- the 2 AM room ---- */
+function renderRoom(){
+  $("#room-feed").innerHTML = room.map((p,i)=>`
+    <div class="post${p.mine?' mine':''}">
+      <div class="phead"><span class="pic">${p.ic}</span><div class="pmeta">${p.mine?'<span class="mine-tag">you</span>':'<b>anon</b> · '+esc(p.city)} · ${p.ago}</div></div>
+      <div class="ptext">${esc(p.text)}</div>
+      <div class="reacts">${["hug","me","go"].map(t=>`<button class="chip${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')">${REACT_META[t]} <span class="cnt">${p.r[t]}</span></button>`).join("")}</div>
+    </div>`).join("");
+}
+function react(i,t){ const p=room[i]; if(!p) return; if(!p.reacted) p.reacted={}; if(p.reacted[t]) return; p.reacted[t]=true; p.r[t]++; renderRoom(); toast(t==="hug"?"hang in there 🫂":t==="me"?"same 😋":"just send it 🔥"); addXp(3); }
+function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; const post={ic:"🌙",text:v,city:"you",ago:"now",mine:true,r:{hug:0,me:0,go:0},reacted:{}}; room.unshift(post); inp.value=""; renderRoom(); toast("posted to the room 🌙"); beSeen(post); }
+function shareToRoom(){
+  const po=pendingOrder, c=po?po.city:curCity(); const place=lastOrderItems[0];
+  const sum = lastOrderItems.length>1 ? `${place.name} +${lastOrderItems.length-1} more` : (place?place.name:"late-night food");
+  const post={ic:place?place.ic:"🌙", text:`almost spent ${money(po?po.total:0,c.cur)} at ${esc(sum)} in ${esc(c.name)}. closed the app instead 🌙`, city:"you", ago:"now", mine:true, r:{hug:0,me:0,go:0}, reacted:{}};
+  room.unshift(post); go("room"); beSeen(post);
+}
+function beSeen(post){ let n=0; const order=["me","hug","me","go","hug","me","hug"]; const tick=()=>{ if(!post||n>=order.length) return; post.r[order[n]]++; n++; if($("#view-room").classList.contains("active")) renderRoom(); setTimeout(tick, 850+Math.random()*750); }; setTimeout(tick, 650); }
+let lastIncoming=-1;
+function streamIncoming(){ if(!$("#view-room").classList.contains("active")) return; let idx; do { idx=Math.floor(Math.random()*INCOMING.length); } while(idx===lastIncoming && INCOMING.length>1); lastIncoming=idx; const s=INCOMING[idx]; room.unshift({ic:s.ic,text:s.text,city:s.city,ago:"now",r:{hug:Math.floor(Math.random()*6),me:Math.floor(Math.random()*9),go:Math.floor(Math.random()*3)},reacted:{}}); if(room.length>40) room.pop(); renderRoom(); }
+
+/* ---- live count + ticker ---- */
+let tIdx=0;
+function rotateTicker(){ const el=$("#ticker-msg"); el.style.opacity="0"; el.style.transform="translateY(-8px)"; setTimeout(()=>{ el.textContent=TICKER[tIdx%TICKER.length]; tIdx++; el.style.opacity="1"; el.style.transform="translateY(0)"; },420); }
+function driftLive(){ liveBase += Math.floor(Math.random()*17)-7; if(liveBase<1180) liveBase=1180; if(liveBase>1390) liveBase=1390; $("#live-count").textContent=liveBase.toLocaleString(); const rl=$("#room-live"); if(rl) rl.textContent=liveBase.toLocaleString(); const to=$("#track-others"); if($("#view-track").classList.contains("active") && $("#track-live").style.display!=="none"){ to.textContent=Math.max(210, parseInt(to.textContent)+(Math.floor(Math.random()*9)-4)); } }
+
+/* ---- boot ---- */
+CITIES.forEach((c,i)=>{ CITY_INDEX[c.id]=i; statsByCity[c.id]={saved:0,orders:0}; });
+loadSaved(); loadAccount();
+renderCityBar(); renderTally(); renderFeed();
+(function(){ const av=$("#avatar-btn"); if(av) av.textContent=avatarGlyph(); renderXpBar(); })();
+loadCity(CITIES[0]);
+room = ROOM_SEED.map(p=>({...p, reacted:{}}));
+rotateTicker(); setInterval(rotateTicker, 3600); setInterval(driftLive, 2600); setInterval(streamIncoming, 7000);
+document.addEventListener("keydown", e=>{ if(e.key==="Enter" && document.activeElement && document.activeElement.id==="composer-input") postFromComposer(); });
+</script>
+</body>
+</html>
