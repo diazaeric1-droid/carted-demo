@@ -534,7 +534,7 @@ function etaFor(p){ const m = 15 + (p.name.length % 4)*5; return `${m}–${m+10}
 /* owned-cuisine photo layer: keyed off the dish emoji, deterministic per place, emoji fallback on error.
    (prototype uses a free keyworded stock source; production = your licensed cuisine pack or Google/Yelp photos) */
 const PHOTO_KW = { "🍕":"pizza","🍔":"burger","🍟":"fries","🌮":"tacos","🌯":"burrito","🍜":"ramen","🍣":"sushi","🍱":"bento-box","🍛":"curry","🥡":"noodles","🍗":"fried-chicken","🥩":"steak","🍖":"barbecue","🥪":"sandwich","🥯":"bagel","🧆":"falafel","🥙":"kebab","🦐":"seafood","🥘":"paella","🍲":"hotpot","🥗":"salad","☕":"coffee","🥐":"croissant","🍩":"donut","🍰":"cake","🍦":"ice-cream","🍨":"gelato","🧋":"bubble-tea","🥟":"dumplings","🐙":"takoyaki","🐟":"grilled-fish","🥨":"pretzel","🍽️":"gourmet-food" };
-function photoUrl(p, big){ const kw = PHOTO_KW[p.ic] || "food"; const s = big?400:200; return `https://loremflickr.com/${s}/${s}/${kw}?lock=${hash(p.name)%997}`; }
+function photoUrl(p, big){ if(p.photo) return `/carted-demo/${p.photo}`; const kw = PHOTO_KW[p.ic] || "food"; const s = big?400:200; return `https://loremflickr.com/${s}/${s}/${kw}?lock=${hash(p.name)%997}`; }
 function thumbImg(p, big){ return `<img class="ph-img" src="${photoUrl(p,big)}" alt="" loading="lazy" onerror="this.replaceWith('${p.ic}')">`; }
 /* reward tiers — keyed off money SAVED (rewards restraint, not time-in-app) */
 const TIERS = [
@@ -728,6 +728,15 @@ function overpassFetch(q, i){
 function loadCity(city, force){
   if(!force && city._places){ city._state="ready"; if(curCity().id===city.id) renderFeed(); return; }
   city._state="loading"; if(curCity().id===city.id) renderFeed();
+  // try pre-baked static data first; fall through to Overpass on miss
+  fetch(`/carted-demo/places/${city.id}.json`)
+    .then(r=>{ if(!r.ok) throw new Error("no bake"); return r.json(); })
+    .then(places=>{
+      places.forEach(p=>{ placeByKey[p._key]=p; });
+      city._places=places; city._state=places.length?"ready":"empty";
+      if(curCity().id===city.id) renderFeed();
+    })
+    .catch(()=>{
   const q = `[out:json][timeout:25];nwr["amenity"~"^(restaurant|fast_food|cafe)$"]["name"](around:${city.radius},${city.lat},${city.lng});out center 200;`;
   overpassFetch(q).then(els=>{
     const seen=new Set(), places=[];
@@ -741,6 +750,7 @@ function loadCity(city, force){
     city._places = places; city._state = places.length ? "ready" : "empty";
     if(curCity().id===city.id) renderFeed();
   }).catch(err=>{ city._state="error"; city._err=String(err.message||err); if(curCity().id===city.id) renderFeed(); });
+    }); // end Overpass fallback
 }
 
 /* ---- navigation ---- */
