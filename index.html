@@ -7,25 +7,29 @@
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="Carted" />
-<meta name="theme-color" content="#0b0b10" />
+<meta name="theme-color" content="#0a0a1e" />
 <title>Carted · fill your cart, ghost the check</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800;900&display=swap');
   :root {
-    --bg: #0b0b10; --screen: #14141c; --card: #1c1c26; --card-hi: #23232f; --line: #2a2a37;
-    --text: #f5f5f7; --muted: #8e8e9e; --accent: #ff6b3d; --accent2: #ffd24a; --hot: #ff5a5f; --go: #34d399;
-    --grad: linear-gradient(135deg, #ff7a45, #ff5a5f);
+    --bg: #0a0a1e; --screen: #11112a; --card: #1b1b3d; --card-hi: #252550; --line: #30305e;
+    --text: #f8f7ff; --muted: #9d9ac6; --accent: #ff8a3d; --accent2: #ffc83d; --hot: #ff4d6d; --go: #3ddc97; --neon: #a78bfa;
+    --grad: linear-gradient(135deg, #ff8a3d, #ff4d6d 60%, #c44dff);
+    --disp: "Baloo 2", ui-rounded, -apple-system, sans-serif;
+    --bodyf: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
     margin: 0; height: 100%;
-    background: radial-gradient(1200px 800px at 50% -10%, #1a1320, #07070b 60%);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    background: radial-gradient(1200px 800px at 50% -10%, #261c4d, #04040c 60%);
+    font-family: var(--bodyf);
     color: var(--text); display: flex; align-items: center; justify-content: center; overflow: hidden;
   }
   .phone { position: relative; width: 390px; height: 844px; background: #000; border-radius: 52px; padding: 12px;
     box-shadow: 0 40px 120px rgba(0,0,0,.7), 0 0 0 2px #1d1d24, inset 0 0 0 1px #000; }
   .notch { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); width: 124px; height: 30px; background: #000; border-radius: 0 0 18px 18px; z-index: 50; }
-  .screen { position: relative; width: 100%; height: 100%; background: var(--screen); border-radius: 42px; overflow: hidden; display: flex; flex-direction: column; }
+  .screen { position: relative; width: 100%; height: 100%; border-radius: 42px; overflow: hidden; display: flex; flex-direction: column;
+    background: radial-gradient(circle at 18% 12%, rgba(167,139,250,.08), transparent 42%), radial-gradient(circle at 85% 4%, rgba(255,138,61,.07), transparent 36%), var(--screen); }
   .statusbar { height: 50px; flex: 0 0 50px; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 26px 6px; font-size: 14px; font-weight: 600; letter-spacing: .3px; z-index: 40; }
   .statusbar .dim { color: var(--muted); font-weight: 500; }
   .body { flex: 1; overflow-y: auto; overflow-x: hidden; position: relative; }
@@ -36,21 +40,23 @@
   @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
   .brand { padding: 6px 2px 12px; position: relative; }
-  .brand h1 { margin: 0; font-size: 32px; font-weight: 800; letter-spacing: -.8px; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .brand .sub { color: var(--muted); font-size: 12.5px; margin-top: 3px; }
+  .brand h1 { margin: 0; font-size: 34px; font-weight: 800; letter-spacing: -.5px; font-family: var(--disp); background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 2px 12px rgba(255,77,109,.25)); }
+  .brand .sub { color: var(--muted); font-size: 12.5px; margin-top: 3px; font-weight: 700; }
 
-  .presence { margin: 2px 0 14px; padding: 12px 14px; background: linear-gradient(135deg, rgba(52,211,153,.10), rgba(255,107,61,.06)); border: 1px solid rgba(52,211,153,.25); border-radius: 16px; }
-  .presence .live { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; }
-  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--go); box-shadow: 0 0 0 0 rgba(52,211,153,.6); animation: pulse 1.8s infinite; }
-  @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(52,211,153,.55);} 70%{box-shadow:0 0 0 10px rgba(52,211,153,0);} 100%{box-shadow:0 0 0 0 rgba(52,211,153,0);} }
-  .ticker { margin-top: 8px; height: 18px; overflow: hidden; position: relative; }
-  .ticker .msg { font-size: 12.5px; color: var(--muted); position: absolute; white-space: nowrap; transition: opacity .5s, transform .5s; }
+  .presence { margin: 2px 0 14px; padding: 12px 14px; background: linear-gradient(135deg, rgba(61,220,151,.10), rgba(167,139,250,.07)); border: 2px solid rgba(61,220,151,.28); border-radius: 18px; box-shadow: 0 3px 0 rgba(0,0,0,.25); }
+  .presence .live { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 800; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--go); box-shadow: 0 0 0 0 rgba(61,220,151,.6); animation: pulse 1.8s infinite; }
+  @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(61,220,151,.55);} 70%{box-shadow:0 0 0 10px rgba(61,220,151,0);} 100%{box-shadow:0 0 0 0 rgba(61,220,151,0);} }
+  .ghostline { margin-top: 8px; display: flex; gap: 8px; align-items: center; min-height: 24px; overflow: hidden; }
+  .ghost-emo { display: inline-block; font-size: 19px; animation: bob 2.6s ease-in-out infinite; filter: drop-shadow(0 0 8px rgba(167,139,250,.5)); }
+  @keyframes bob { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-5px);} }
+  .ghostline .msg { font-size: 12.5px; color: var(--muted); white-space: nowrap; transition: opacity .5s, transform .5s; font-weight: 700; }
 
   .city-bar { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 14px; }
   .city-bar::-webkit-scrollbar { display: none; }
-  .city-chip { white-space: nowrap; background: var(--card); border: 1px solid var(--line); color: var(--muted); border-radius: 20px; padding: 8px 14px; font-size: 13px; font-weight: 700; cursor: pointer; flex: 0 0 auto; transition: transform .1s; }
-  .city-chip:active { transform: scale(.95); }
-  .city-chip.on { background: var(--grad); color: #fff; border-color: transparent; }
+  .city-chip { white-space: nowrap; background: var(--card); border: 2px solid var(--line); color: var(--muted); border-radius: 20px; padding: 8px 14px; font-size: 13px; font-weight: 800; font-family: var(--disp); cursor: pointer; flex: 0 0 auto; transition: transform .1s; box-shadow: 0 3px 0 rgba(0,0,0,.3); }
+  .city-chip:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,.3); }
+  .city-chip.on { background: var(--grad); color: #fff; border-color: transparent; box-shadow: 0 3px 0 #8f1d3d; }
   .city-chip.add { border-style: dashed; color: var(--accent); }
 
   .tally { display: flex; gap: 10px; margin-bottom: 14px; }
@@ -65,7 +71,7 @@
 
   .section-label { font-size: 13px; color: var(--muted); font-weight: 700; margin: 4px 2px 10px; text-transform: uppercase; letter-spacing: .6px; }
 
-  .card { position: relative; display: flex; gap: 14px; padding: 12px; margin-bottom: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; cursor: pointer; transition: transform .12s ease, background .15s; }
+  .card { position: relative; display: flex; gap: 14px; padding: 12px; margin-bottom: 12px; background: var(--card); border: 2px solid var(--line); border-radius: 22px; cursor: pointer; transition: transform .12s ease, background .15s; box-shadow: 0 4px 0 rgba(0,0,0,.28); }
   .card:active { transform: scale(.975); background: var(--card-hi); }
   .thumb { width: 86px; height: 86px; flex: 0 0 86px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 44px; background: radial-gradient(circle at 30% 25%, #2c2c3a, #181820); overflow: hidden; }
   .thumb .ph-img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -76,7 +82,9 @@
   .meta .shop { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
   .meta .row { display: flex; align-items: center; gap: 10px; margin-top: 8px; font-size: 12.5px; color: var(--muted); }
   .meta .row .rate { color: var(--accent2); font-weight: 700; }
-  .meta .price { margin-top: 8px; font-size: 15px; font-weight: 800; }
+  .meta .price { margin-top: 8px; font-size: 15px; font-weight: 800; font-family: var(--disp); color: var(--accent2); }
+  .qadd { position: absolute; bottom: 10px; right: 10px; width: 38px; height: 38px; border-radius: 14px; border: none; background: var(--grad); color: #fff; font-size: 22px; cursor: pointer; box-shadow: 0 3px 0 #8f1d3d; display: flex; align-items: center; justify-content: center; line-height: 1; transition: transform .1s, box-shadow .1s; }
+  .qadd:active { transform: translateY(2px) scale(.96); box-shadow: 0 1px 0 #8f1d3d; }
   .fav { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 50%; border: none; background: rgba(0,0,0,.28); color: var(--muted); font-size: 19px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform .12s, color .15s; }
   .fav:active { transform: scale(.85); }
   .fav.on { color: var(--hot); }
@@ -101,9 +109,12 @@
   .review .stars { color: var(--accent2); }
   .review .text { font-size: 14px; line-height: 1.45; }
 
-  .cta { position: sticky; bottom: 0; width: 100%; border: none; cursor: pointer; background: var(--grad); color: #fff; font-size: 16px; font-weight: 800; padding: 16px; border-radius: 16px; margin-top: 8px; box-shadow: 0 10px 30px rgba(255,90,95,.35); transition: transform .1s; }
-  .cta:active { transform: scale(.97); }
-  .cta.secondary { background: var(--card); color: var(--text); border: 1px solid var(--line); box-shadow: none; }
+  .cta { position: sticky; bottom: 0; width: 100%; border: none; cursor: pointer; background: var(--grad); color: #fff; font-size: 16.5px; font-weight: 800; font-family: var(--disp); letter-spacing: .2px; padding: 16px; border-radius: 18px; margin-top: 8px; box-shadow: 0 5px 0 #8f1d3d, 0 14px 30px rgba(255,77,109,.35); transition: transform .08s, box-shadow .08s; }
+  .cta:active { transform: translateY(4px); box-shadow: 0 1px 0 #8f1d3d, 0 6px 14px rgba(255,77,109,.3); }
+  .cta.secondary { background: var(--card); color: var(--text); border: 2px solid var(--line); box-shadow: 0 4px 0 rgba(0,0,0,.35); }
+  .cta.secondary:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,.35); }
+  .cta.gold { background: linear-gradient(135deg, #ffc83d, #ff8a3d); color: #2a1500; box-shadow: 0 5px 0 #9a5a14, 0 14px 30px rgba(255,170,61,.3); }
+  .cta.gold:active { transform: translateY(4px); box-shadow: 0 1px 0 #9a5a14, 0 6px 14px rgba(255,170,61,.3); }
 
   .cart-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
   .cart-item .ic { font-size: 30px; width: 44px; text-align: center; }
@@ -157,10 +168,11 @@
   .chip.on { background: rgba(255,107,61,.16); border-color: var(--accent); color: var(--text); font-weight: 700; }
   .chip .cnt { font-variant-numeric: tabular-nums; }
 
-  .nav { position: absolute; bottom: 0; left: 0; right: 0; height: 78px; background: rgba(13,13,18,.92); backdrop-filter: blur(14px); border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-around; padding-bottom: 14px; z-index: 30; }
-  .nav button { background: none; border: none; color: var(--muted); font-size: 11px; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; position: relative; }
-  .nav button.on { color: var(--accent); }
-  .nav button .gi { font-size: 21px; }
+  .nav { position: absolute; bottom: 0; left: 0; right: 0; height: 78px; background: rgba(13,13,32,.94); backdrop-filter: blur(14px); border-top: 2px solid var(--line); display: flex; align-items: center; justify-content: space-around; padding-bottom: 14px; z-index: 30; }
+  .nav button { background: none; border: none; color: var(--muted); font-size: 11px; font-weight: 800; font-family: var(--disp); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; position: relative; transition: transform .15s; }
+  .nav button.on { color: var(--accent); transform: translateY(-2px); }
+  .nav button .gi { font-size: 21px; transition: transform .15s, filter .15s; }
+  .nav button.on .gi { transform: scale(1.2); filter: drop-shadow(0 0 10px rgba(255,138,61,.55)); }
   .badge { position: absolute; top: -4px; right: -8px; background: var(--hot); color: #fff; font-size: 10px; font-weight: 800; min-width: 17px; height: 17px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
 
   .toast { position: absolute; left: 50%; bottom: 96px; transform: translateX(-50%) translateY(20px); background: #fff; color: #111; font-weight: 700; font-size: 13.5px; padding: 11px 18px; border-radius: 30px; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 60; box-shadow: 0 10px 30px rgba(0,0,0,.4); max-width: 80%; text-align: center; }
@@ -209,8 +221,8 @@
   .lvl-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px; margin-bottom: 14px; }
   .lvl-top { display: flex; justify-content: space-between; font-weight: 800; font-size: 14px; margin-bottom: 10px; }
   .achv-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
-  .achv { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px 4px; text-align: center; opacity: .42; }
-  .achv.on { opacity: 1; border-color: var(--accent2); }
+  .achv { background: var(--card); border: 2px solid var(--line); border-radius: 16px; padding: 10px 4px; text-align: center; filter: grayscale(1); opacity: .45; }
+  .achv.on { opacity: 1; filter: none; border-color: var(--accent2); background: linear-gradient(160deg, rgba(255,200,61,.14), var(--card)); box-shadow: 0 0 14px rgba(255,200,61,.22), 0 3px 0 rgba(0,0,0,.3); }
   .achv-ic { font-size: 24px; }
   .achv-name { font-size: 10px; font-weight: 700; margin-top: 4px; }
   .achv-tip { font-size: 8.5px; color: var(--muted); margin-top: 2px; line-height: 1.2; }
@@ -224,12 +236,57 @@
   .foodfall span:nth-child(6){ left: 90%; animation-delay: 5.6s; }
   @keyframes drift { 0%{ transform: translateY(0) rotate(0deg); } 100%{ transform: translateY(-220px) rotate(45deg); } }
 
+  /* ----- game HUD ----- */
+  .hud { flex: 0 0 auto; display: flex; gap: 7px; padding: 4px 14px 10px; z-index: 36; }
+  .hud .pill { display: flex; align-items: center; gap: 5px; background: var(--card); border: 2px solid var(--line); border-radius: 14px; padding: 7px 10px; font-weight: 800; font-size: 12.5px; font-family: var(--disp); color: var(--text); cursor: pointer; box-shadow: 0 3px 0 rgba(0,0,0,.3); flex: 0 0 auto; transition: transform .08s, box-shadow .08s; }
+  .hud .pill:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,.3); }
+  .hud .pill.flame.on { border-color: #ffaa3d; background: linear-gradient(135deg, rgba(255,170,61,.18), var(--card)); box-shadow: 0 3px 0 rgba(0,0,0,.3), 0 0 14px rgba(255,170,61,.28); }
+  .hud .pill .hint { font-size: 9px; color: var(--muted); font-family: var(--bodyf); font-weight: 700; }
+  .hud .pill.lvl { flex: 1 1 auto; min-width: 0; }
+  .minibar { flex: 1; height: 7px; background: var(--screen); border-radius: 5px; overflow: hidden; min-width: 24px; }
+  .minibar i { display: block; height: 100%; background: linear-gradient(90deg, #ffc83d, #ff8a3d); border-radius: 5px; transition: width .4s; }
+  /* ----- nightly missions ----- */
+  .quests { background: var(--card); border: 2px solid var(--line); border-radius: 20px; padding: 14px; margin-bottom: 14px; box-shadow: 0 4px 0 rgba(0,0,0,.25); }
+  .qhead { display: flex; justify-content: space-between; align-items: center; font-family: var(--disp); font-weight: 800; font-size: 15px; margin-bottom: 6px; }
+  .qhead .qday { font-size: 10.5px; color: var(--muted); font-family: var(--bodyf); font-weight: 700; }
+  .quest { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+  .quest .qic { font-size: 22px; width: 30px; text-align: center; }
+  .quest .qmid { flex: 1; min-width: 0; }
+  .quest .qname { font-size: 13px; font-weight: 800; }
+  .quest .qbar { height: 7px; background: var(--screen); border-radius: 5px; margin-top: 5px; overflow: hidden; }
+  .quest .qfill { height: 100%; background: linear-gradient(90deg, #ffc83d, #ff8a3d); transition: width .4s; border-radius: 5px; }
+  .qbtn { border: none; border-radius: 12px; font-family: var(--disp); font-weight: 800; font-size: 12px; padding: 8px 12px; cursor: pointer; background: var(--screen); color: var(--muted); white-space: nowrap; }
+  .qbtn.ready { background: linear-gradient(135deg, #ffc83d, #ff8a3d); color: #231300; box-shadow: 0 3px 0 #9a5a14; animation: pulse2 1.6s infinite; }
+  .qbtn.done2 { color: var(--go); background: rgba(61,220,151,.1); }
+  @keyframes pulse2 { 0%,100%{ transform: scale(1);} 50%{ transform: scale(1.06);} }
+  .chestrow { margin-top: 10px; }
+  .chestbtn { width: 100%; border: none; border-radius: 14px; padding: 12px; font-family: var(--disp); font-weight: 800; font-size: 14px; cursor: pointer; background: linear-gradient(135deg, #c44dff, #ff4d6d); color: #fff; box-shadow: 0 4px 0 #5e1b7e; animation: pulse2 1.5s infinite; }
+  /* ----- level-up overlay ----- */
+  .lvlup { position: absolute; inset: 0; z-index: 90; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 42%, rgba(255,170,61,.30), rgba(8,8,24,.95) 62%); animation: fade .25s ease; text-align: center; padding: 30px; }
+  .lvlup .rays { position: absolute; width: 360px; height: 360px; border-radius: 50%; top: calc(42% - 180px); background: repeating-conic-gradient(rgba(255,200,61,.13) 0 12deg, transparent 12deg 24deg); animation: spinSlow 10s linear infinite; }
+  @keyframes spinSlow { to { transform: rotate(360deg); } }
+  .lvlup .big { font-family: var(--disp); font-size: 62px; font-weight: 800; background: linear-gradient(135deg, #ffc83d, #ff8a3d, #ff4d6d); -webkit-background-clip: text; background-clip: text; color: transparent; animation: pop .5s ease; position: relative; }
+  .lvlup .sub2 { color: var(--muted); margin: 6px 0 26px; font-weight: 800; position: relative; }
+  /* ----- craving roulette ----- */
+  .slot { display: flex; gap: 10px; justify-content: center; margin: 10px 0 14px; }
+  .reel { width: 72px; height: 72px; border-radius: 16px; background: var(--card); border: 2px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 40px; box-shadow: inset 0 -8px 14px rgba(0,0,0,.35); }
+  .reel.stop { border-color: var(--accent2); transform: scale(1.07); box-shadow: 0 0 16px rgba(255,200,61,.3); transition: all .15s; }
+  /* ----- juice: xp floaters + fly-to-cart + ghost reveal + fee boss ----- */
+  .fxp { position: absolute; z-index: 85; font-family: var(--disp); font-weight: 800; color: #ffc83d; text-shadow: 0 2px 8px rgba(0,0,0,.65); pointer-events: none; animation: floatUp .9s ease forwards; font-size: 15px; }
+  @keyframes floatUp { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-48px) scale(1.3); } }
+  .flyer { position: absolute; z-index: 80; font-size: 30px; transition: all .65s cubic-bezier(.5,-0.2,.6,1); pointer-events: none; }
+  .reveal .ghostrise { font-size: 64px; display: inline-block; animation: rise 1.5s ease both; filter: drop-shadow(0 0 18px rgba(167,139,250,.5)); }
+  @keyframes rise { 0%{ transform: translateY(28px) scale(.55); opacity: 0; } 60%{ opacity: 1; } 100%{ transform: translateY(0) scale(1); opacity: 1; } }
+  .boss { display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, rgba(255,77,109,.15), rgba(196,77,255,.10)); border: 2px solid rgba(255,77,109,.4); border-radius: 16px; padding: 10px 12px; font-weight: 800; font-size: 13px; margin: 6px 0 10px; }
+  .boss .bossic { font-size: 26px; }
+
   @media (max-width: 440px) {
     body { background: var(--screen); display: block; overflow: hidden; }
     .phone { width: 100vw; height: 100vh; height: 100dvh; padding: 0; border-radius: 0; box-shadow: none; }
     .notch, .statusbar { display: none; }
     .screen { border-radius: 0; }
-    .body { padding-top: env(safe-area-inset-top, 10px); }
+    .hud { padding-top: calc(env(safe-area-inset-top, 10px) + 4px); }
+    .body { padding-top: 4px; }
     .confetti { top: env(safe-area-inset-top, 0px); }
     .nav { height: calc(78px + env(safe-area-inset-bottom, 0px)); padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
     .toast { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
@@ -241,6 +298,7 @@
     <div class="notch"></div>
     <div class="screen">
       <div class="statusbar"><span>2:14</span><span class="dim">🌙 still up &nbsp; ▟ &nbsp; 🔋 19%</span></div>
+      <div class="hud" id="hud"></div>
       <div class="body" id="body">
 
         <!-- FEED -->
@@ -249,11 +307,11 @@
           <div class="brand">
             <button class="avatar" id="avatar-btn" onclick="go('profile')">🙂</button>
             <h1>Carted</h1>
-            <div class="sub">real places, live worldwide. fill your cart — you just can't order.</div>
+            <div class="sub">browse real places. cart it all. the driver never comes.</div>
           </div>
           <div class="presence">
-            <div class="live"><span class="dot"></span> <span id="live-count">1,247</span> people browsing with you right now</div>
-            <div class="ticker"><div class="msg" id="ticker-msg"></div></div>
+            <div class="live"><span class="dot"></span> <span id="live-count">1,247</span> night owls browsing with you</div>
+            <div class="ghostline"><span class="ghost-emo">👻</span><div class="msg" id="ticker-msg"></div></div>
           </div>
           <div class="section-label" style="margin-bottom:8px">📍 pick a city</div>
           <div class="city-bar" id="city-bar"></div>
@@ -261,11 +319,11 @@
             <div class="box"><div class="k">saved here tonight</div><div class="v green" id="saved-tally">$0.00</div></div>
             <div class="box"><div class="k">window-orders</div><div class="v" id="order-count">0</div></div>
           </div>
+          <div id="quests"></div>
           <div class="seg">
             <button id="seg-all" class="on" onclick="setMode('all')">All</button>
             <button id="seg-saved" onclick="setMode('saved')">♥ Saved <span id="saved-count">0</span></button>
           </div>
-          <div class="xp-bar" id="xp-bar"></div>
           <div class="feed-head">
             <div class="section-label" id="feed-section-label" style="margin:0">🔥 craving right now</div>
             <button class="surprise" onclick="surpriseMe()">🎲 surprise me</button>
@@ -434,6 +492,8 @@ const TICKER = [
   "tonight we've collectively dodged $84,000 in delivery fees",
   "someone in Seoul built a ₩60,000 cart and closed the app 🥲",
   "girl dinner is just looking at the menu, together",
+  "👻 tonight's drivers: imaginary, as always",
+  "somebody just hit a 14-night streak 🔥 unreal",
 ];
 const ROOM_SEED = [
   {ic:"🥩", text:"almost DoorDashed $40 of wings. drank water instead 🥲", city:"Brooklyn", ago:"3m", r:{hug:42, me:18, go:7}},
@@ -457,7 +517,8 @@ const OVERPASS = ["https://overpass-api.de/api/interpreter","https://overpass.ku
 let cart = [], liveBase = 1247, courierTimers = [], room = [], lastOrderItems = [], pendingOrder = null;
 let curIdx = 0, feedMode = "all", currentDetailKey = null, GEO_SEQ = 0;
 let savedPlaces = {};
-let account = null, stats = { savedUsd:0, orders:0, streak:0, conversions:0, xp:0, cuisines:[], cities:[], maxCombo:0, earned:[] }, handoffTarget = null, combo = 0;
+let account = null, stats = { savedUsd:0, orders:0, streak:0, conversions:0, xp:0, cuisines:[], cities:[], maxCombo:0, earned:[], freezes:1, lastNight:null, quests:null }, handoffTarget = null, combo = 0;
+let sndOn = localStorage.getItem("carted_snd")!=="off", lastTap = {x:195, y:420}, lastShare = null;
 const statsByCity = {}, placeByKey = {}, CITY_INDEX = {};
 
 /* ---- helpers ---- */
@@ -495,8 +556,7 @@ const PUNCH = [
 ];
 function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
 function levelInfo(xp){ let lvl=1, need=60, acc=0; while(xp>=acc+need){ acc+=need; lvl++; need=Math.round(need*1.35); } return {lvl, pct:Math.round((xp-acc)/need*100)}; }
-function renderXpBar(){ const el=$("#xp-bar"); if(!el) return; const L=levelInfo(stats.xp||0); el.innerHTML=`<span class="xp-lvl">LVL ${L.lvl}</span><div class="xp-track"><div class="xp-fill" style="width:${L.pct}%"></div></div><span class="xp-xp">${stats.xp||0} XP</span>`; }
-function addXp(n){ const before=levelInfo(stats.xp||0).lvl; stats.xp=(stats.xp||0)+n; saveStats(); renderXpBar(); if(levelInfo(stats.xp).lvl>before){ toast(`⭐ level ${levelInfo(stats.xp).lvl}!`); burst(); } }
+function addXp(n){ const before=levelInfo(stats.xp||0).lvl; stats.xp=(stats.xp||0)+n; saveStats(); renderHud(); floatXp(n); const lvl=levelInfo(stats.xp).lvl; if(lvl>before) showLevelUp(lvl); }
 const ACHV = [
   {id:"first", ic:"👻", name:"First Ghost", tip:"window-order once", has:s=>s.orders>=1},
   {id:"fav5", ic:"❤️", name:"Collector", tip:"save 5 places", has:()=>Object.keys(savedPlaces).length>=5},
@@ -510,9 +570,124 @@ const ACHV = [
 function checkAchv(){ if(!stats.earned) stats.earned=[]; ACHV.forEach(a=>{ if(a.has(stats) && !stats.earned.includes(a.id)){ stats.earned.push(a.id); saveStats(); toast(`🏅 unlocked: ${a.name}`); } }); }
 function uniqPush(arr, v){ if(v && !arr.includes(v)) arr.push(v); }
 function animateMoney(el, target, cur){ if(!el) return; const start=performance.now(), dur=750; (function step(t){ const k=Math.min(1,(t-start)/dur); const v=target*(1-Math.pow(1-k,3)); el.textContent=money(v,cur)+" saved"; if(k<1) requestAnimationFrame(step); else el.textContent=money(target,cur)+" saved"; })(performance.now()); }
-function surpriseMe(){ const list=curCity()._places; if(!list||!list.length){ toast("still loading places…"); return; } addXp(2); openDetail(pick(list)._key); }
+function surpriseMe(){
+  const list=curCity()._places; if(!list||!list.length){ toast("still loading places…"); return; }
+  const target=pick(list); questEvent("spin"); addXp(2); snd("pop");
+  const EMO=["🍕","🍜","🌮","🍔","🍣","🍩","🥙","🍛","🥩","🍲"];
+  showModal(`<div class="m-title" style="margin-top:0">🎰 craving roulette</div><div class="slot"><div class="reel" id="r0">🍕</div><div class="reel" id="r1">🍜</div><div class="reel" id="r2">🌮</div></div><div class="m-body" id="slot-msg">spinning…</div>`);
+  let t=0; const iv=setInterval(()=>{
+    t++;
+    ["r0","r1","r2"].forEach((id,k)=>{ const el=$("#"+id); if(!el) return; if(t<8+k*4) el.textContent=pick(EMO); else if(t===8+k*4){ el.textContent = k===1 ? target.ic : pick(EMO); el.classList.add("stop"); snd("pop"); } });
+    if(t>=18){ clearInterval(iv); const m=$("#slot-msg"); if(m) m.innerHTML=`<b>${esc(target.dish)}</b> at ${esc(target.name)}`; setTimeout(()=>{ if($("#modal").style.display!=="none"){ closeModal(); openDetail(target._key); } }, 700); }
+  }, 90);
+}
 function isFav(key){ return !!savedPlaces[key]; }
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1600); }
+
+/* ---- night clock: a "night" runs 4am→4am so 2am counts as the same night ---- */
+function nightKey(){ const s=new Date(Date.now()-4*3600*1000); const p=n=>String(n).padStart(2,"0"); return `${s.getFullYear()}-${p(s.getMonth()+1)}-${p(s.getDate())}`; }
+function nightShift(key, delta){ const a=key.split("-").map(Number); const dt=new Date(a[0], a[1]-1, a[2]+delta, 12); const p=n=>String(n).padStart(2,"0"); return `${dt.getFullYear()}-${p(dt.getMonth()+1)}-${p(dt.getDate())}`; }
+
+/* ---- tiny synth sounds (no assets) + mute toggle ---- */
+let AC = null;
+function tone(f, t0, dur, type, vol){ const o=AC.createOscillator(), g=AC.createGain(); o.type=type||"sine"; o.frequency.value=f; g.gain.setValueAtTime(.0001, AC.currentTime+t0); g.gain.exponentialRampToValueAtTime(vol||.1, AC.currentTime+t0+.012); g.gain.exponentialRampToValueAtTime(.0001, AC.currentTime+t0+dur); o.connect(g); g.connect(AC.destination); o.start(AC.currentTime+t0); o.stop(AC.currentTime+t0+dur+.05); }
+function snd(kind){ if(!sndOn) return; try{
+  AC = AC || new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==="suspended") AC.resume();
+  if(kind==="pop") tone(740,0,.09,"triangle",.09);
+  else if(kind==="ding") tone(1175,0,.12,"sine",.07);
+  else if(kind==="chime"){ tone(988,0,.1,"sine",.08); tone(1319,.09,.16,"sine",.08); }
+  else if(kind==="fanfare"){ tone(523,0,.12,"triangle",.1); tone(659,.11,.12,"triangle",.1); tone(784,.22,.2,"triangle",.11); tone(1047,.34,.3,"triangle",.11); }
+  else if(kind==="whoosh"){ const o=AC.createOscillator(), g=AC.createGain(); o.type="sawtooth"; o.frequency.setValueAtTime(180,AC.currentTime); o.frequency.exponentialRampToValueAtTime(40,AC.currentTime+.5); g.gain.setValueAtTime(.05,AC.currentTime); g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+.5); o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime+.55); }
+}catch(e){} }
+function toggleSnd(){ sndOn=!sndOn; try{ localStorage.setItem("carted_snd", sndOn?"on":"off"); }catch(e){} renderHud(); if($("#view-profile").classList.contains("active")) renderProfile(); if(sndOn) snd("chime"); toast(sndOn?"🔊 sounds on":"🔇 sounds off"); }
+
+/* ---- game HUD: streak flame · level · money dodged · sound ---- */
+function renderHud(){
+  const el=$("#hud"); if(!el) return;
+  const L=levelInfo(stats.xp||0), done=stats.lastNight===nightKey();
+  el.innerHTML = `
+    <button class="pill flame${done?' on':''}" onclick="go('profile')">🔥 <b>${stats.streak||0}</b>${done?'':'<span class="hint">tonight?</span>'}</button>
+    <button class="pill lvl" onclick="go('profile')"><span>⭐ ${L.lvl}</span><span class="minibar"><i style="width:${L.pct}%"></i></span></button>
+    <button class="pill" onclick="go('profile')">💰 <b>$${Math.round(stats.savedUsd).toLocaleString()}</b></button>
+    <button class="pill" onclick="toggleSnd()">${sndOn?"🔊":"🔇"}</button>`;
+}
+
+/* ---- xp floaters + level-up takeover ---- */
+function floatXp(n){ const sc=$(".screen"); if(!sc) return; const d=document.createElement("div"); d.className="fxp"; d.textContent=`+${n} xp`; d.style.left=Math.max(14, Math.min(330, lastTap.x-14))+"px"; d.style.top=Math.max(60, lastTap.y-26)+"px"; sc.appendChild(d); setTimeout(()=>d.remove(), 950); }
+function showLevelUp(lvl){ snd("fanfare"); burst(); const sc=$(".screen"); const d=document.createElement("div"); d.className="lvlup"; d.innerHTML=`<div class="rays"></div><div class="big">LVL ${lvl}</div><div class="sub2">leveled up, night owl 🌙</div><button class="cta" style="position:static;max-width:240px">keep going</button>`; d.querySelector("button").onclick=()=>d.remove(); d.onclick=(e)=>{ if(e.target===d) d.remove(); }; sc.appendChild(d); }
+
+/* ---- nightly missions: 3 a night, seeded by date, chest when all claimed ---- */
+const QUEST_POOL = [
+  {id:"order1",  ic:"🚗", name:"complete a window-order",   target:1, xp:25, ev:"order"},
+  {id:"add3",    ic:"🛒", name:"cart 3 dishes",             target:3, xp:15, ev:"add"},
+  {id:"fav2",    ic:"❤️", name:"save 2 places",             target:2, xp:15, ev:"fav"},
+  {id:"react3",  ic:"🫂", name:"react to 3 posts",          target:3, xp:15, ev:"react"},
+  {id:"city",    ic:"🌍", name:"browse a different city",   target:1, xp:20, ev:"city"},
+  {id:"spin",    ic:"🎰", name:"spin the craving roulette", target:1, xp:10, ev:"spin"},
+  {id:"post",    ic:"🌙", name:"share in the 2 AM room",    target:1, xp:20, ev:"post"},
+  {id:"dodge25", ic:"💸", name:"dodge a $25+ cart",         target:1, xp:25, ev:"bigdodge"},
+];
+function questsToday(){
+  const day=nightKey();
+  if(!stats.quests || stats.quests.day!==day){
+    let x=hash(day); const pool=QUEST_POOL.slice(), picks=[];
+    for(let k=0;k<3;k++){ x=(x*1103515245+12345)>>>0; picks.push(pool.splice(x%pool.length,1)[0]); }
+    stats.quests={ day, ids:picks.map(q=>q.id), prog:{}, claimed:[], chest:false }; saveStats();
+  }
+  return stats.quests;
+}
+function questEvent(ev, n){
+  n=n||1; const q=questsToday(); let changed=false;
+  q.ids.forEach(id=>{ const d=QUEST_POOL.find(z=>z.id===id); if(!d || d.ev!==ev || q.claimed.includes(id)) return; q.prog[id]=Math.min(d.target,(q.prog[id]||0)+n); changed=true; });
+  if(changed){ saveStats(); renderQuests(); }
+}
+function renderQuests(){
+  const el=$("#quests"); if(!el) return;
+  const q=questsToday(), defs=q.ids.map(id=>QUEST_POOL.find(d=>d.id===id)).filter(Boolean);
+  const allClaimed = defs.every(d=>q.claimed.includes(d.id));
+  el.innerHTML = `<div class="quests"><div class="qhead"><span>🎯 tonight's missions</span><span class="qday">resets at 4am</span></div>`
+    + defs.map(d=>{ const got=Math.min(d.target, q.prog[d.id]||0), done=got>=d.target, claimed=q.claimed.includes(d.id);
+      return `<div class="quest"><div class="qic">${d.ic}</div><div class="qmid"><div class="qname">${d.name}</div><div class="qbar"><div class="qfill" style="width:${Math.round(got/d.target*100)}%"></div></div></div>`
+        + (claimed ? `<button class="qbtn done2">✓ done</button>` : done ? `<button class="qbtn ready" onclick="claimQuest('${d.id}')">claim +${d.xp}</button>` : `<button class="qbtn">${got}/${d.target}</button>`)
+        + `</div>`; }).join("")
+    + (allClaimed ? (q.chest ? `<div class="chestrow"><button class="qbtn done2" style="width:100%">🎁 chest opened — see you tomorrow night 🌙</button></div>`
+                             : `<div class="chestrow"><button class="chestbtn" onclick="openChest()">🎁 open tonight's chest · +40 XP</button></div>`) : "")
+    + `</div>`;
+}
+function claimQuest(id){ const q=questsToday(), d=QUEST_POOL.find(z=>z.id===id); if(!d || q.claimed.includes(id) || (q.prog[id]||0)<d.target) return; q.claimed.push(id); saveStats(); snd("chime"); addXp(d.xp); toast(`🎯 mission complete: +${d.xp} XP`); renderQuests(); }
+function openChest(){ const q=questsToday(); if(q.chest) return; q.chest=true; saveStats(); snd("fanfare"); burst(); addXp(40); toast("🎁 nightly chest: +40 XP"); renderQuests(); }
+
+/* ---- fly-to-cart juice ---- */
+function flyToCart(ev, emo){
+  const sc=$(".screen"); if(!sc || !ev) return; const r=sc.getBoundingClientRect(), c=$("#nav-cart").getBoundingClientRect();
+  const d=document.createElement("div"); d.className="flyer"; d.textContent=emo;
+  d.style.left=(ev.clientX-r.left-15)+"px"; d.style.top=(ev.clientY-r.top-15)+"px"; sc.appendChild(d);
+  requestAnimationFrame(()=>{ d.style.left=(c.left-r.left+c.width/2-15)+"px"; d.style.top=(c.top-r.top+6)+"px"; d.style.transform="scale(.3)"; d.style.opacity="0"; });
+  setTimeout(()=>d.remove(), 720);
+}
+function quickAdd(key, ev){ ev.stopPropagation(); addToCart(key, ev); }
+
+/* ---- shareable win card (canvas → native share / download) ---- */
+function shareWin(){
+  const s=lastShare; if(!s){ toast("nothing to share yet"); return; }
+  const cv=document.createElement("canvas"); cv.width=1080; cv.height=1080; const x=cv.getContext("2d");
+  const g=x.createLinearGradient(0,0,1080,1080); g.addColorStop(0,"#1b1b3d"); g.addColorStop(1,"#0a0a1e"); x.fillStyle=g; x.fillRect(0,0,1080,1080);
+  const rg=x.createRadialGradient(540,430,40,540,430,520); rg.addColorStop(0,"rgba(255,138,61,.28)"); rg.addColorStop(1,"rgba(255,138,61,0)"); x.fillStyle=rg; x.fillRect(0,0,1080,1080);
+  x.textAlign="center";
+  x.font="700 60px 'Baloo 2', sans-serif"; x.fillStyle="#f8f7ff"; x.fillText("👻 the driver was never real", 540, 220);
+  x.font="800 150px 'Baloo 2', sans-serif"; x.fillStyle="#3ddc97"; x.fillText(s.label, 540, 470);
+  x.font="700 42px 'Nunito', sans-serif"; x.fillStyle="#f8f7ff"; x.fillText("dodged tonight in "+s.city, 540, 545);
+  x.font="800 54px 'Baloo 2', sans-serif"; x.fillStyle="#ffc83d"; x.fillText("🔥 "+s.streak+"-night no-spend streak", 540, 690);
+  x.font="700 38px 'Nunito', sans-serif"; x.fillStyle="#9d9ac6"; x.fillText(s.tier.ic+"  "+s.tier.name, 540, 765);
+  x.font="800 56px 'Baloo 2', sans-serif"; x.fillStyle="#ff8a3d"; x.fillText("CARTED", 540, 945);
+  x.font="700 32px 'Nunito', sans-serif"; x.fillStyle="#9d9ac6"; x.fillText("fill the cart. ghost the check.", 540, 995);
+  cv.toBlob(b=>{
+    if(!b){ toast("couldn't build the card"); return; }
+    const f=new File([b],"carted-win.png",{type:"image/png"});
+    if(navigator.canShare && navigator.canShare({files:[f]})){ navigator.share({files:[f], text:"the driver was never real — I kept the money 👻 carted."}).catch(()=>{}); }
+    else { const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="carted-win.png"; a.click(); toast("win card saved 📸 post it"); setTimeout(()=>URL.revokeObjectURL(a.href), 4000); }
+  }, "image/png");
+}
 
 /* ---- synthesize a place from one OSM element ---- */
 function synth(el, city){
@@ -585,7 +760,7 @@ function setCity(i){
   if(i===curIdx && curCity()._places){ return; }
   curIdx=i; cart=[]; updateBadge(); feedMode="all"; setSegUI();
   renderCityBar(); renderTally(); renderFeed();
-  loadCity(curCity());
+  loadCity(curCity()); questEvent("city");
 }
 function setMode(m){ feedMode=m; setSegUI(); renderFeed(); $("#body").scrollTop=0; }
 function setSegUI(){ $("#seg-all").classList.toggle("on", feedMode==="all"); $("#seg-saved").classList.toggle("on", feedMode==="saved"); }
@@ -607,7 +782,7 @@ function addCity(){
         lat:parseFloat(g.lat), lng:parseFloat(g.lon), radius:2600 };
       CITIES.push(city); CITY_INDEX[city.id]=CITIES.length-1; statsByCity[city.id]={saved:0,orders:0};
       curIdx=CITIES.length-1; cart=[]; updateBadge(); feedMode="all"; setSegUI();
-      renderCityBar(); renderTally(); renderFeed(); loadCity(city);
+      renderCityBar(); renderTally(); renderFeed(); loadCity(city); questEvent("city");
     }).catch(()=> toast("geocoder unavailable, try again"));
 }
 
@@ -636,7 +811,7 @@ function upsertNearCity(lat,lng,m,place){
   else { CITIES.push(city); CITY_INDEX["near"]=CITIES.length-1; }
   statsByCity["near"]=statsByCity["near"]||{saved:0,orders:0};
   curIdx=CITY_INDEX["near"]; cart=[]; updateBadge(); feedMode="all"; setSegUI();
-  renderCityBar(); renderTally(); renderFeed(); loadCity(city, true);
+  renderCityBar(); renderTally(); renderFeed(); loadCity(city, true); questEvent("city");
 }
 
 /* ---- feed ---- */
@@ -652,6 +827,7 @@ function cardHTML(p, saved){
       <div class="price">${money(p.price, p._cur)}</div>
     </div>
     <button class="fav${fav?' on':''}" onclick="toggleFav('${p._key}',event)">${fav?'♥':'♡'}</button>
+    <button class="qadd" onclick="quickAdd('${p._key}',event)">＋</button>
   </div>`;
 }
 function renderFeed(){
@@ -665,7 +841,7 @@ function renderFeed(){
     return;
   }
   $("#feed-section-label").textContent = `🔥 craving in ${esc(c.name)} right now`;
-  if(!c._state || c._state==="loading"){ $("#feed-list").innerHTML = `<div class="loading"><div class="spinner"></div>📡 pulling real places in ${esc(c.name)}…<br><span style="color:var(--muted);font-size:12px;font-weight:500">live from OpenStreetMap</span></div>`; return; }
+  if(!c._state || c._state==="loading"){ $("#feed-list").innerHTML = `<div class="loading"><div class="ghost-emo" style="font-size:42px">👻</div><div style="margin-top:10px">summoning real places in ${esc(c.name)}…</div><span style="color:var(--muted);font-size:12px;font-weight:600">live from OpenStreetMap</span></div>`; return; }
   if(c._state==="error"){ $("#feed-list").innerHTML = `<div class="empty"><div class="big">📡</div>couldn't reach OpenStreetMap.<br><span style="font-size:12px">${esc(c._err)}</span><br><br><button class="cta secondary" style="position:static" onclick="loadCity(curCity(),true)">retry</button></div>`; return; }
   if(c._state==="empty"){ $("#feed-list").innerHTML = `<div class="empty"><div class="big">🗺️</div>no places found here.<br>try another city.</div>`; return; }
   $("#feed-list").innerHTML = c._places.map(p=>cardHTML(p,false)).join("");
@@ -678,7 +854,7 @@ function saveSaved(){ try { localStorage.setItem("carted_saved", JSON.stringify(
 function toggleFav(key, ev){
   if(ev) ev.stopPropagation();
   if(savedPlaces[key]){ delete savedPlaces[key]; }
-  else { const p = placeByKey[key]; if(!p) return; savedPlaces[key]=p; toast("saved ♥"); addXp(5); checkAchv(); }
+  else { const p = placeByKey[key]; if(!p) return; savedPlaces[key]=p; toast("saved ♥"); snd("pop"); addXp(5); questEvent("fav"); checkAchv(); }
   saveSaved();
   if($("#view-feed").classList.contains("active")) renderFeed();
 }
@@ -711,10 +887,15 @@ function renderProfile(){
     <div class="pstats">
       <div class="pstat"><div class="v">${stats.orders}</div><div class="k">window-orders</div></div>
       <div class="pstat"><div class="v">${favCount}</div><div class="k">saved places</div></div>
+    </div>
+    <div class="pstats">
+      <div class="pstat"><div class="v">🧊 ${stats.freezes||0}</div><div class="k">streak freezes</div></div>
+      <div class="pstat"><div class="v">⚡ ${stats.maxCombo||0}×</div><div class="k">best dodge combo</div></div>
     </div>`;
-  const auth = account
+  const auth = (account
     ? `<button class="signin-btn" onclick="signOut()">sign out</button>`
-    : `<button class="signin-btn dark" onclick="signIn('Apple')"> Sign in with Apple</button><button class="signin-btn" onclick="signIn('Google')">Sign in with Google</button>`;
+    : `<button class="signin-btn dark" onclick="signIn('Apple')"> Sign in with Apple</button><button class="signin-btn" onclick="signIn('Google')">Sign in with Google</button>`)
+    + `<button class="signin-btn" onclick="toggleSnd()">${sndOn?"🔊 sounds: on":"🔇 sounds: off"}</button>`;
   const {t,next}=tierFor(stats.savedUsd);
   const prog = next ? Math.max(5, Math.min(100, Math.round((stats.savedUsd-t.min)/(next.min-t.min)*100))) : 100;
   const tierCard = `<div class="tier-card"><div class="tier-row"><span class="tier-ic">${t.ic}</span><div><div class="tier-name">${t.name}</div><div class="tier-sub">${next?`$${Math.max(0,Math.round(next.min-stats.savedUsd))} more saved → <b>${next.name}</b> ${next.ic}`:"max rank — legend 🏆"}</div></div></div><div class="tier-bar"><div class="tier-fill" style="width:${prog}%"></div></div></div>`;
@@ -738,12 +919,12 @@ function openDetail(key){
   $("#d-shop").textContent = `${p.name} · ${p.hood}`;
   $("#d-stats").innerHTML = `<span>★ <b>${p.rate.toFixed(1)}</b> (${p.n.toLocaleString()})</span><span>⏱ <b>${etaFor(p)}</b> min</span><span>💸 <b>${money(p.price,p._cur)}</b></span>`;
   $("#d-reviews").innerHTML = p.reviews.map(r=>`<div class="review"><div class="top"><span class="stars">${r[1]}</span><span>anon · ${(hash(p.name)%23)+1}m ago</span></div><div class="text">${esc(r[0])}</div></div>`).join("");
-  $("#d-add").onclick = ()=>addToCart(key);
+  $("#d-add").onclick = (e)=>addToCart(key, e);
   updateDetailFav(); go("detail");
 }
 
 /* ---- cart ---- */
-function addToCart(key){ const p=placeByKey[key]||savedPlaces[key]; if(!p) return; cart.push(p); updateBadge(); toast(`added — that's ${money(p.price,p._cur)} you didn't spend 😌`); addXp(6); }
+function addToCart(key, ev){ const p=placeByKey[key]||savedPlaces[key]; if(!p) return; cart.push(p); updateBadge(); if(ev) flyToCart(ev, p.ic); snd("pop"); toast(`added — that's ${money(p.price,p._cur)} you didn't spend 😌`); addXp(6); questEvent("add"); }
 function removeFromCart(i){ cart.splice(i,1); updateBadge(); renderCart(); }
 function updateBadge(){ const b=$("#cart-badge"); if(cart.length){ b.style.display="flex"; b.textContent=cart.length; } else b.style.display="none"; }
 function cartSubtotal(){ return cart.reduce((s,p)=>s+p.price,0); }
@@ -754,7 +935,7 @@ function cartAllIn(){ return cartSubtotal() + cartFees(); }
 function renderCart(){
   const body=$("#cart-body"), c=curCity();
   $("#cart-sub").textContent = cart.length ? `from ${c.name} ${c.flag} · don't check out.` : "fill it up. don't check out.";
-  if(!cart.length){ body.innerHTML = `<div class="empty"><div class="big">🛒</div>nothing here yet.<br>go fill it up.<br><br><button class="cta secondary" style="position:static" onclick="go('feed')">browse places</button></div>`; return; }
+  if(!cart.length){ body.innerHTML = `<div class="empty"><div class="big">👻</div>your cart is a ghost town.<br>go fill it up.<br><br><button class="cta secondary" style="position:static" onclick="go('feed')">browse places</button></div>`; return; }
   const sub=cartSubtotal();
   body.innerHTML = `
     ${cart.map((p,i)=>`<div class="cart-item"><div class="ic">${p.ic}</div><div class="nm">${esc(p.dish)}<div style="font-size:11.5px;color:var(--muted);font-weight:400">${esc(p.name)}</div></div><div class="pr">${money(p.price,c.cur)}</div><button class="rm" onclick="removeFromCart(${i})">✕</button></div>`).join("")}
@@ -766,7 +947,7 @@ function renderCart(){
       <div class="line"><span>Estimated tax</span><span>${money(cartTax(),c.cur)}</span></div>
       <div class="line total"><span>Total</span><span>${money(cartAllIn(),c.cur)}</span></div>
     </div>
-    <div class="fee-callout">you're dodging ${money(cartFees(),c.cur)} in fees alone 😮‍💨</div>
+    <div class="boss"><span class="bossic">👹</span><span>the FEE BOSS wants <b style="color:var(--hot)">${money(cartFees(),c.cur)}</b> in junk fees.<br>place the order. dodge him.</span></div>
     <button class="cta" onclick="placeOrder()">place order 🚗</button>
     <button class="cta secondary" onclick="go('feed')">keep browsing</button>
     <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:12px">the button looks real. nothing gets charged.</div>
@@ -786,7 +967,7 @@ const STAGES = [
 ];
 function placeOrder(){
   pendingOrder = { items: cart.slice(), total: cartAllIn(), city: curCity(), driver: pick(DRIVERS) };
-  burst();
+  snd("pop"); burst();
   $("#track-reveal").style.display="none"; $("#track-live").style.display="block"; $("#road-done").style.width="0%";
   const rd=$("#rider"); rd.style.left="8%"; rd.style.opacity="1"; rd.textContent="🚗";
   $("#track-others").textContent = 220+Math.floor(Math.random()*80);
@@ -800,7 +981,16 @@ function revealTruth(){
   const po=pendingOrder; if(!po) return;
   lastOrderItems=po.items; const st=statsByCity[po.city.id]; st.orders++; st.saved+=po.total;
   const beforeTier=tierFor(stats.savedUsd).t.name;
-  stats.orders++; stats.streak++; stats.savedUsd += po.total/po.city.pf;
+  /* streak = real calendar nights (4am cutoff), with a freeze to forgive one missed night */
+  const tonight=nightKey(); let streakGrew=false, usedFreeze=false;
+  if(stats.lastNight!==tonight){
+    if(stats.lastNight===nightShift(tonight,-1)){ stats.streak=(stats.streak||0)+1; }
+    else if(stats.lastNight===nightShift(tonight,-2) && (stats.freezes||0)>0){ stats.freezes--; stats.streak=(stats.streak||0)+1; usedFreeze=true; }
+    else if(!stats.lastNight && stats.streak>0){ stats.streak++; }
+    else { stats.streak=1; }
+    streakGrew=true; stats.lastNight=tonight;
+  }
+  stats.orders++; stats.savedUsd += po.total/po.city.pf;
   combo++; if(combo>(stats.maxCombo||0)) stats.maxCombo=combo;
   stats.cuisines=stats.cuisines||[]; stats.cities=stats.cities||[];
   (po.items||[]).forEach(it=> uniqPush(stats.cuisines, it.en));
@@ -808,29 +998,36 @@ function revealTruth(){
   saveStats();
   const newTier=tierFor(stats.savedUsd).t;
   let milestone="";
-  if(newTier.name!==beforeTier) milestone=`${newTier.ic} new rank unlocked: ${newTier.name}!`;
-  else if([3,7,14,30,50,100,200].includes(stats.streak)) milestone=`🔥 ${stats.streak}-night streak milestone!`;
+  if(newTier.name!==beforeTier){ milestone=`${newTier.ic} new rank unlocked: ${newTier.name}!`; stats.freezes=Math.min(3,(stats.freezes||0)+1); saveStats(); }
+  else if(streakGrew && [3,7,14,30,50,100,200].includes(stats.streak)){ milestone=`🔥 ${stats.streak}-night streak milestone!`; if(stats.streak>=7){ stats.freezes=Math.min(3,(stats.freezes||0)+1); saveStats(); } }
   if(po.city.id===curCity().id) renderTally();
+  lastShare = { usd: po.total/po.city.pf, label: money(po.total, po.city.cur), streak: stats.streak, tier: newTier, city: po.city.name };
   const rd=$("#rider"); rd.textContent="🚗💨"; rd.style.left="125%"; rd.style.opacity="0"; $("#road-done").style.width="60%"; $("#track-live").style.display="none";
+  snd("whoosh");
   const driver=po.driver||"Marcus", pl=pick(PUNCH);
   const r=$("#track-reveal"); r.style.display="block"; r.className="reveal";
   r.innerHTML = `
-    <div class="moon">🌙</div>
+    <div class="ghostrise">👻</div>
     <div class="punch">${pl.p.replace("{n}",driver)}</div>
     <div class="sub">${pl.s}</div>
     <div class="saved" id="reveal-saved">${money(0,po.city.cur)} saved</div>
     <div class="sub">that's what tonight in ${esc(po.city.name)} would've cost. nice.</div>
-    <div class="sub" style="color:var(--accent2);font-weight:700;margin-top:6px">🔥 ${stats.streak}-night no-spend streak</div>
+    <div class="sub" style="color:var(--accent2);font-weight:800;margin-top:6px">🔥 ${stats.streak}-night no-spend streak${usedFreeze?' · 🧊 freeze used':''}</div>
     ${combo>=2?`<div class="combo">⚡ ${combo}× dodge combo!</div>`:""}
     ${milestone?`<div class="milestone">${milestone}</div>`:""}
     <div style="margin-top:22px">
       <button class="cta" style="position:static" onclick="shareToRoom()">🌙 share it to the room</button>
+      <button class="cta gold" style="position:static" onclick="shareWin()">📸 share the win</button>
       <button class="cta secondary" style="position:static" onclick="resetCartAndBrowse()">do it again</button>
     </div>
     <button class="order-real" onclick="orderForReal('reveal')">actually… order it for real →</button>
     <div class="track-presence" style="margin-top:14px"><b>${220+Math.floor(Math.random()*80)}</b> people didn't order, with you · <span onclick="go('feed')" style="color:var(--accent);cursor:pointer">I'm good</span></div>`;
   animateMoney($("#reveal-saved"), po.total, po.city.cur);
+  setTimeout(()=>snd("chime"), 850);
   addXp(30 + (combo>=2?combo*5:0));
+  questEvent("order");
+  if(po.total/po.city.pf >= 25) questEvent("bigdodge");
+  renderHud();
   checkAchv();
   cart=[]; updateBadge();
 }
@@ -869,13 +1066,13 @@ function renderRoom(){
       <div class="reacts">${["hug","me","go"].map(t=>`<button class="chip${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')">${REACT_META[t]} <span class="cnt">${p.r[t]}</span></button>`).join("")}</div>
     </div>`).join("");
 }
-function react(i,t){ const p=room[i]; if(!p) return; if(!p.reacted) p.reacted={}; if(p.reacted[t]) return; p.reacted[t]=true; p.r[t]++; renderRoom(); toast(t==="hug"?"hang in there 🫂":t==="me"?"same 😋":"just send it 🔥"); addXp(3); }
-function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; const post={ic:"🌙",text:v,city:"you",ago:"now",mine:true,r:{hug:0,me:0,go:0},reacted:{}}; room.unshift(post); inp.value=""; renderRoom(); toast("posted to the room 🌙"); beSeen(post); }
+function react(i,t){ const p=room[i]; if(!p) return; if(!p.reacted) p.reacted={}; if(p.reacted[t]) return; p.reacted[t]=true; p.r[t]++; renderRoom(); snd("pop"); toast(t==="hug"?"hang in there 🫂":t==="me"?"same 😋":"just send it 🔥"); addXp(3); questEvent("react"); }
+function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; const post={ic:"🌙",text:v,city:"you",ago:"now",mine:true,r:{hug:0,me:0,go:0},reacted:{}}; room.unshift(post); inp.value=""; renderRoom(); snd("chime"); toast("posted to the room 🌙"); addXp(4); questEvent("post"); beSeen(post); }
 function shareToRoom(){
   const po=pendingOrder, c=po?po.city:curCity(); const place=lastOrderItems[0];
   const sum = lastOrderItems.length>1 ? `${place.name} +${lastOrderItems.length-1} more` : (place?place.name:"late-night food");
   const post={ic:place?place.ic:"🌙", text:`almost spent ${money(po?po.total:0,c.cur)} at ${esc(sum)} in ${esc(c.name)}. closed the app instead 🌙`, city:"you", ago:"now", mine:true, r:{hug:0,me:0,go:0}, reacted:{}};
-  room.unshift(post); go("room"); beSeen(post);
+  room.unshift(post); go("room"); questEvent("post"); beSeen(post);
 }
 function beSeen(post){ let n=0; const order=["me","hug","me","go","hug","me","hug"]; const tick=()=>{ if(!post||n>=order.length) return; post.r[order[n]]++; n++; if($("#view-room").classList.contains("active")) renderRoom(); setTimeout(tick, 850+Math.random()*750); }; setTimeout(tick, 650); }
 let lastIncoming=-1;
@@ -890,10 +1087,19 @@ function driftLive(){ liveBase += Math.floor(Math.random()*17)-7; if(liveBase<11
 CITIES.forEach((c,i)=>{ CITY_INDEX[c.id]=i; statsByCity[c.id]={saved:0,orders:0}; });
 loadSaved(); loadAccount();
 renderCityBar(); renderTally(); renderFeed();
-(function(){ const av=$("#avatar-btn"); if(av) av.textContent=avatarGlyph(); renderXpBar(); })();
+(function(){ const av=$("#avatar-btn"); if(av) av.textContent=avatarGlyph(); renderHud(); renderQuests(); })();
 loadCity(CITIES[0]);
 room = ROOM_SEED.map(p=>({...p, reacted:{}}));
 rotateTicker(); setInterval(rotateTicker, 3600); setInterval(driftLive, 2600); setInterval(streamIncoming, 7000);
+document.addEventListener("pointerdown", e=>{ const sc=document.querySelector(".screen"); if(!sc) return; const r=sc.getBoundingClientRect(); lastTap={x:e.clientX-r.left, y:e.clientY-r.top}; }, true);
+if(!localStorage.getItem("carted_onboard")){
+  try{ localStorage.setItem("carted_onboard","1"); }catch(e){}
+  setTimeout(()=>{ showModal(`
+    <div class="m-emoji">👻</div>
+    <div class="m-title">welcome to Carted</div>
+    <div class="m-body" style="text-align:left">🍜 browse <b>real restaurants</b>, live from OpenStreetMap<br><br>🛒 fill your cart like you mean it<br><br>🚗 watch a driver who <b>never arrives</b> — nothing is ever charged<br><br>💰 every "order" banks the money you didn't spend. clear missions, build the streak, climb the ranks.</div>
+    <button class="cta" style="position:static" onclick="closeModal();snd('pop')">let's get hungry 🌙</button>`); }, 800);
+}
 document.addEventListener("keydown", e=>{ if(e.key==="Enter" && document.activeElement && document.activeElement.id==="composer-input") postFromComposer(); });
 </script>
 </body>
