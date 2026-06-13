@@ -781,7 +781,7 @@ function etaStr(p){ if(p._cityId==="konbini") return "⚡ instant"; const fl = f
 const BASE = location.pathname.includes("/carted-demo") ? "/carted-demo/" : "/";
 /* backend (Supabase) — fill after deploying ~/carted-app/supabase (see supabase/BACKEND.md).
    Leave url:"" and the app runs fully, with push as a local-only demo + local buddy. */
-const CARTED_BE = { url: "https://twndjxqdhqcyxfdsteas.supabase.co/functions/v1", vapidPublic: "BIVyED-QXJHMAyRAA1Kk_WTh3APoVGXcUQ5xamY9ymVXYFtEuU16z0FjdPwxwPitZ0xgIt847SLiE25sRlMFQGk" };
+const CARTED_BE = { url: "https://twndjxqdhqcyxfdsteas.supabase.co/functions/v1", vapidPublic: "BAxbaruJEgg_WXoiGgKVTBzxffQxkiitbym8CX9wh8SgROjG9Tsh6C52DM6RPwYjqzmg4e4aEq-442SNBX9y5vM" };
 function beOn(){ return !!(CARTED_BE.url); }
 function deviceId(){ let d=localStorage.getItem("carted_device"); if(!d){ d="d"+Math.random().toString(36).slice(2)+Date.now().toString(36); try{ localStorage.setItem("carted_device", d); }catch(e){} } return d; }
 function bePost(fn, body){ return fetch(CARTED_BE.url+"/"+fn, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)}).then(r=>r.json()).catch(()=>null); }
@@ -1538,7 +1538,8 @@ async function ghostPush(){
     if(beOn() && CARTED_BE.vapidPublic && "serviceWorker" in navigator && "PushManager" in window){
       const reg=await navigator.serviceWorker.ready;
       let sub=await reg.pushManager.getSubscription();
-      if(!sub) sub=await reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey:urlB64ToU8(CARTED_BE.vapidPublic) });
+      if(sub){ try{ await sub.unsubscribe(); }catch(e){} sub=null; } // re-subscribe so it matches the current VAPID key (handles key rotation)
+      sub=await reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey:urlB64ToU8(CARTED_BE.vapidPublic) });
       await bePost("push-subscribe", { device_id:deviceId(), subscription:sub.toJSON(), streak:stats.streak||0, last_night:stats.lastNight, tz:Intl.DateTimeFormat().resolvedOptions().timeZone });
       toast("🔔 ghost texts on — even when Carted's closed"); fireGhostText();
     } else {
