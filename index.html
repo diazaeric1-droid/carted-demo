@@ -1521,7 +1521,14 @@ function ghostNudgeMsgs(){ return ["you up? your streak isn't gonna dodge itself
 function fireGhostText(){ const d=pick(GACHA), body=`${d.n} ${d.e}: ${pick(ghostNudgeMsgs())}`; try{ if(navigator.serviceWorker && navigator.serviceWorker.ready){ navigator.serviceWorker.ready.then(reg=>reg.showNotification("Carted 🌙",{body, icon:BASE+"icon-192.png", badge:BASE+"icon-192.png", tag:"carted-ghost", renotify:true})).catch(()=>{ try{ new Notification("Carted 🌙",{body}); }catch(_){} }); } else new Notification("Carted 🌙",{body}); }catch(e){ try{ new Notification("Carted 🌙",{body}); }catch(_){} } }
 function scheduleGhostNudge(){ clearTimeout(window.__ghostNudge); window.__ghostNudge=setTimeout(fireGhostText, 60000); } // demo cadence while tab is alive
 async function ghostPush(){
-  if(!("Notification" in window)){ toast("notifications aren't supported here"); return; }
+  if(!("Notification" in window) || !("serviceWorker" in navigator)){
+    const iOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
+    const standalone = window.navigator.standalone || matchMedia("(display-mode: standalone)").matches;
+    if(iOS && !standalone){
+      showModal(`<div class="m-emoji">📲</div><div class="m-title">add Carted to your Home Screen first</div><div class="m-body" style="text-align:left">iPhone only lets an app send notifications once it's installed 🍎<br><br>1. tap <b>Share ⬆️</b> at the bottom of Safari<br>2. <b>Add to Home Screen</b> → Add<br>3. open Carted from the new icon, then tap <b>🔔 let the ghost text me</b> again</div><button class="cta" style="position:static" onclick="closeModal()">got it 👻</button>`);
+    } else { toast("this browser doesn't support notifications"); }
+    return;
+  }
   if(Notification.permission==="denied"){ toast("notifications are blocked in browser settings"); return; }
   let perm = Notification.permission;
   if(perm!=="granted") perm = await Notification.requestPermission();
