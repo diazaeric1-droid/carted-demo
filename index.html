@@ -282,6 +282,38 @@
   .boss { display: flex; align-items: center; gap: 10px; background: #ffe8ec; border: 2.5px solid var(--ink); border-radius: 16px; padding: 10px 12px; font-weight: 800; font-size: 13px; margin: 6px 0 10px; box-shadow: 3px 3px 0 var(--ink); }
   .boss .bossic { font-size: 26px; }
 
+  /* ----- 50-city picker modal ----- */
+  .city-search { width: 100%; box-sizing: border-box; background: var(--screen); border: 2px solid var(--ink); border-radius: 12px; padding: 10px 12px; font-family: var(--bodyf); font-weight: 700; font-size: 13.5px; color: var(--text); outline: none; margin-bottom: 10px; }
+  .city-modal-list { max-height: 46vh; overflow-y: auto; text-align: left; }
+  .city-modal-list::-webkit-scrollbar { display: none; }
+  .cm-label { font-size: 11px; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: .5px; margin: 10px 2px 7px; }
+  .cm-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+  .city-chip.cm { font-size: 12.5px; padding: 7px 11px; }
+  /* ----- detail: editorial blurb ----- */
+  .d-desc { color: var(--muted); font-size: 13px; line-height: 1.45; margin-top: 6px; font-style: italic; }
+  /* ----- cart: deliver-to line ----- */
+  .deliver-to { text-align: center; color: var(--muted); font-size: 12.5px; font-weight: 700; margin: 2px 0 10px; }
+  .dt-change { color: var(--accent); text-decoration: underline; cursor: pointer; }
+  /* ----- tracking: ghost driver texts ----- */
+  .dchat { margin: 14px auto 0; max-width: 300px; text-align: left; }
+  .dmsg { background: var(--card); border: 2px solid var(--ink); border-radius: 14px; border-bottom-left-radius: 4px; padding: 9px 12px; font-size: 13px; margin-bottom: 8px; box-shadow: 2px 2px 0 var(--ink); animation: fade .3s ease; }
+  .dmsg b { color: var(--accent); }
+  /* ----- room: podium + confess chips + streak badges ----- */
+  .podium { background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 12px 14px; margin-bottom: 14px; box-shadow: 4px 4px 0 var(--ink); }
+  .pod-title { font-family: var(--disp); font-weight: 600; font-size: 14px; margin-bottom: 8px; }
+  .prow { display: flex; align-items: center; gap: 9px; padding: 5px 0; font-size: 13.5px; font-weight: 700; }
+  .prow .pn { flex: 1; color: var(--muted); }
+  .prow b { font-variant-numeric: tabular-nums; color: var(--go); }
+  .prow.mine { background: #fff4ec; border: 2px dashed var(--accent); border-radius: 10px; padding: 5px 8px; }
+  .prow.mine .pn { color: var(--accent); }
+  .prompts { display: flex; align-items: center; gap: 7px; margin-bottom: 10px; overflow-x: auto; }
+  .prompts::-webkit-scrollbar { display: none; }
+  .plabel { font-size: 11.5px; color: var(--muted); font-weight: 800; white-space: nowrap; }
+  .pchip { background: var(--card); border: 2px solid var(--ink); border-radius: 12px; font-size: 19px; padding: 6px 10px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); transition: transform .1s; flex: 0 0 auto; }
+  .pchip:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
+  .sbadge { background: var(--accent2); border: 1.5px solid var(--ink); border-radius: 8px; padding: 0 5px; font-weight: 800; color: var(--ink); font-size: 10.5px; }
+  .chip.pshare { flex: 0 0 auto; min-width: 46px; }
+
   @media (max-width: 440px) {
     body { background: var(--screen); display: block; overflow: hidden; }
     .phone { width: 100vw; height: 100vh; height: 100dvh; padding: 0; border-radius: 0; box-shadow: none; }
@@ -331,7 +363,7 @@
             <button class="surprise" onclick="surpriseMe()">🎲 surprise me</button>
           </div>
           <div id="feed-list"></div>
-          <div class="osm-credit">📍 place data © OpenStreetMap contributors</div>
+          <div class="osm-credit">📍 places © OpenStreetMap contributors &amp; Google · ratings + photos © Google</div>
         </section>
 
         <!-- DETAIL -->
@@ -340,9 +372,9 @@
           <div class="hero" id="d-hero">🍕<div class="city-tag" id="d-citytag"></div></div>
           <div class="d-name" id="d-name"></div>
           <div class="d-shop" id="d-shop"></div>
+          <div class="d-desc" id="d-desc" style="display:none"></div>
           <div class="d-stats" id="d-stats"></div>
           <button class="savebtn" id="d-fav" onclick="toggleDetailFav()">♡ Save place</button>
-          <div class="section-label">what people say (but didn't eat)</div>
           <div class="reviews" id="d-reviews"></div>
           <button class="cta" id="d-add">add to cart</button>
         </section>
@@ -357,10 +389,13 @@
         <section class="view" id="view-room">
           <div class="room-head">
             <h1>🌙 The 2 AM Room</h1>
-            <div class="live2"><span class="dot"></span> <b id="room-live" style="color:var(--go);font-weight:800">1,247</b>&nbsp;people up late &amp; hungry, worldwide</div>
+            <div class="live2"><span class="dot"></span> <b id="room-live" style="color:var(--go);font-weight:800">1,247</b>&nbsp;up worldwide · <b id="room-dodged" style="color:var(--go)">$—</b>&nbsp;dodged tonight</div>
           </div>
-          <div class="composer"><input id="composer-input" placeholder="what are you holding back tonight?" maxlength="90" /><button onclick="postFromComposer()">post</button></div>
+          <div id="room-podium"></div>
+          <div class="prompts"><span class="plabel">what almost got you?</span><button class="pchip" onclick="quickConfess('🍕')">🍕</button><button class="pchip" onclick="quickConfess('🍜')">🍜</button><button class="pchip" onclick="quickConfess('🍣')">🍣</button><button class="pchip" onclick="quickConfess('🌮')">🌮</button><button class="pchip" onclick="quickConfess('🍔')">🍔</button><button class="pchip" onclick="quickConfess('🍰')">🍰</button></div>
+          <div class="composer"><input id="composer-input" placeholder="or tell the room about it…" maxlength="90" /><button onclick="postFromComposer()">post</button></div>
           <div id="room-feed"></div>
+          <div class="osm-credit">posts burn at sunrise 🌅 nothing here is permanent</div>
         </section>
 
         <!-- PROFILE -->
@@ -381,6 +416,7 @@
               <div class="eta"><span id="eta-num">14</span><span class="u"> min</span></div>
               <div class="stage" id="track-stage">confirming your (non-)order…</div>
               <div class="track-presence" id="track-presence">🚗 <b id="track-others">241</b> people are waiting on a driver who'll never come</div>
+              <div class="dchat" id="dchat"></div>
             </div>
             <div id="track-reveal" style="display:none"></div>
           </div>
@@ -400,30 +436,69 @@
 
 <script>
 /* ----------------------------------------------------------
-   Carted — LIVE real places from OpenStreetMap (Overpass) +
-   co-presence. No API key, no cost, any city on earth.
-   Place identity (name, location, cuisine) is REAL OSM data;
-   ratings/prices/dishes are synthesized (you can't order, so
-   accuracy is irrelevant — and you can't legally mirror
-   DoorDash/UberEats menus anyway). Favorites persist locally.
+   Carted — 50 food capitals, pre-baked from Google Places
+   (real ratings, reviews, price levels, photos — see
+   bake-places.mjs) with live OpenStreetMap fallback for
+   un-baked + custom cities. Cross-city orders show the real
+   flight time to your location. You still can't order —
+   that's the whole point. Favorites persist locally.
 ---------------------------------------------------------- */
 
-/* cities = real coords + local currency; places fetched live */
+/* the 50 food capitals — real coords + local currency; pre-baked Google data with live OSM fallback */
 const CITIES = [
-  { id:"nyc", name:"New York",    flag:"🗽", cur:{sym:"$",dec:2},  pf:1,    delivery:5.99, late:2.99, tax:0.0875, lat:40.7280, lng:-73.9990, radius:2200 },
-  { id:"la",  name:"Los Angeles", flag:"🌴", cur:{sym:"$",dec:2},  pf:1,    delivery:5.49, late:2.99, tax:0.095,  lat:34.0760, lng:-118.3700, radius:3000 },
-  { id:"ldn", name:"London",      flag:"🇬🇧", cur:{sym:"£",dec:2},  pf:0.82, delivery:3.50, late:1.99, tax:0.05,   lat:51.5145, lng:-0.1357, radius:2200 },
-  { id:"tyo", name:"Tokyo",       flag:"🗼", cur:{sym:"¥",dec:0},  pf:150,  delivery:400,  late:200,  tax:0.10,   lat:35.6620, lng:139.7000, radius:2200 },
-  { id:"sel", name:"Seoul",       flag:"🇰🇷", cur:{sym:"₩",dec:0},  pf:1350, delivery:4500, late:2000, tax:0.10,   lat:37.5512, lng:126.9882, radius:2500 },
-  { id:"mex", name:"Mexico City", flag:"🇲🇽", cur:{sym:"MX$",dec:0},pf:7,    delivery:35,   late:20,   tax:0.16,   lat:19.4150, lng:-99.1700, radius:2500 },
-  { id:"par", name:"Paris",       flag:"🇫🇷", cur:{sym:"€",dec:2},  pf:0.92, delivery:4.5,  late:2.5,  tax:0.10,   lat:48.8566, lng:2.3522,   radius:2200 },
-  { id:"ber", name:"Berlin",      flag:"🇩🇪", cur:{sym:"€",dec:2},  pf:0.92, delivery:4.5,  late:2.0,  tax:0.07,   lat:52.5200, lng:13.4050,  radius:2400 },
-  { id:"bkk", name:"Bangkok",     flag:"🇹🇭", cur:{sym:"฿",dec:0},  pf:35,   delivery:40,   late:20,   tax:0.07,   lat:13.7563, lng:100.5018, radius:2600 },
-  { id:"syd", name:"Sydney",      flag:"🇦🇺", cur:{sym:"A$",dec:2}, pf:1.5,  delivery:7,    late:3,    tax:0.10,   lat:-33.8688,lng:151.2093, radius:2600 },
-  { id:"tor", name:"Toronto",     flag:"🇨🇦", cur:{sym:"C$",dec:2}, pf:1.35, delivery:6,    late:2.5,  tax:0.13,   lat:43.6532, lng:-79.3832, radius:2600 },
-  { id:"chi", name:"Chicago",     flag:"🌆", cur:{sym:"$",dec:2},  pf:1,    delivery:5.49, late:2.5,  tax:0.1025, lat:41.8781, lng:-87.6298, radius:2600 },
-  { id:"sin", name:"Singapore",   flag:"🇸🇬", cur:{sym:"S$",dec:2}, pf:1.35, delivery:5,    late:2,    tax:0.09,   lat:1.3000,  lng:103.8400, radius:2600 },
+  { id:"nyc", name:"New York",     flag:"🗽", region:"am", cur:{sym:"$",dec:2},   pf:1,    delivery:5.99, late:2.99, tax:0.0875, lat:40.7280,  lng:-73.9990,  radius:2200 },
+  { id:"la",  name:"Los Angeles",  flag:"🌴", region:"am", cur:{sym:"$",dec:2},   pf:1,    delivery:5.49, late:2.99, tax:0.095,  lat:34.0760,  lng:-118.3700, radius:3000 },
+  { id:"ldn", name:"London",       flag:"🇬🇧", region:"eu", cur:{sym:"£",dec:2},   pf:0.82, delivery:3.50, late:1.99, tax:0.05,   lat:51.5145,  lng:-0.1357,   radius:2200 },
+  { id:"tyo", name:"Tokyo",        flag:"🗼", region:"as", cur:{sym:"¥",dec:0},   pf:150,  delivery:400,  late:200,  tax:0.10,   lat:35.6620,  lng:139.7000,  radius:2200 },
+  { id:"sel", name:"Seoul",        flag:"🇰🇷", region:"as", cur:{sym:"₩",dec:0},   pf:1350, delivery:4500, late:2000, tax:0.10,   lat:37.5512,  lng:126.9882,  radius:2500 },
+  { id:"mex", name:"Mexico City",  flag:"🇲🇽", region:"am", cur:{sym:"MX$",dec:0}, pf:7,    delivery:35,   late:20,   tax:0.16,   lat:19.4150,  lng:-99.1700,  radius:2500 },
+  { id:"par", name:"Paris",        flag:"🇫🇷", region:"eu", cur:{sym:"€",dec:2},   pf:0.92, delivery:4.5,  late:2.5,  tax:0.10,   lat:48.8566,  lng:2.3522,    radius:2200 },
+  { id:"ber", name:"Berlin",       flag:"🇩🇪", region:"eu", cur:{sym:"€",dec:2},   pf:0.92, delivery:4.5,  late:2.0,  tax:0.07,   lat:52.5200,  lng:13.4050,   radius:2400 },
+  { id:"bkk", name:"Bangkok",      flag:"🇹🇭", region:"as", cur:{sym:"฿",dec:0},   pf:35,   delivery:40,   late:20,   tax:0.07,   lat:13.7563,  lng:100.5018,  radius:2600 },
+  { id:"syd", name:"Sydney",       flag:"🇦🇺", region:"oc", cur:{sym:"A$",dec:2},  pf:1.5,  delivery:7,    late:3,    tax:0.10,   lat:-33.8688, lng:151.2093,  radius:2600 },
+  { id:"tor", name:"Toronto",      flag:"🇨🇦", region:"am", cur:{sym:"C$",dec:2},  pf:1.35, delivery:6,    late:2.5,  tax:0.13,   lat:43.6532,  lng:-79.3832,  radius:2600 },
+  { id:"chi", name:"Chicago",      flag:"🌆", region:"am", cur:{sym:"$",dec:2},   pf:1,    delivery:5.49, late:2.5,  tax:0.1025, lat:41.8781,  lng:-87.6298,  radius:2600 },
+  { id:"sin", name:"Singapore",    flag:"🇸🇬", region:"as", cur:{sym:"S$",dec:2},  pf:1.35, delivery:5,    late:2,    tax:0.09,   lat:1.3000,   lng:103.8400,  radius:2600 },
+  { id:"hou", name:"Houston",      flag:"🚀", region:"am", cur:{sym:"$",dec:2},   pf:1,    delivery:4.99, late:2.49, tax:0.0825, lat:29.7426,  lng:-95.3905,  radius:3000 },
+  { id:"sfo", name:"San Francisco",flag:"🌁", region:"am", cur:{sym:"$",dec:2},   pf:1.15, delivery:6.49, late:3.49, tax:0.0863, lat:37.7599,  lng:-122.4148, radius:2400 },
+  { id:"nol", name:"New Orleans",  flag:"🎷", region:"am", cur:{sym:"$",dec:2},   pf:0.95, delivery:4.99, late:2.49, tax:0.0945, lat:29.9584,  lng:-90.0644,  radius:2200 },
+  { id:"oax", name:"Oaxaca",       flag:"🌶️", region:"am", cur:{sym:"MX$",dec:0}, pf:6,    delivery:30,   late:15,   tax:0.16,   lat:17.0606,  lng:-96.7253,  radius:2000 },
+  { id:"lim", name:"Lima",         flag:"🇵🇪", region:"am", cur:{sym:"S/",dec:0},  pf:3,    delivery:8,    late:4,    tax:0.18,   lat:-12.1211, lng:-77.0297,  radius:2400 },
+  { id:"bue", name:"Buenos Aires", flag:"🇦🇷", region:"am", cur:{sym:"AR$",dec:0}, pf:900,  delivery:2200, late:1000, tax:0.21,   lat:-34.5875, lng:-58.4260,  radius:2600 },
+  { id:"sao", name:"São Paulo",    flag:"🇧🇷", region:"am", cur:{sym:"R$",dec:0},  pf:4,    delivery:11,   late:5,    tax:0.12,   lat:-23.5614, lng:-46.6823,  radius:2600 },
+  { id:"rom", name:"Rome",         flag:"🏛️", region:"eu", cur:{sym:"€",dec:2},   pf:0.92, delivery:4,    late:2,    tax:0.10,   lat:41.8950,  lng:12.4740,   radius:2200 },
+  { id:"nap", name:"Naples",       flag:"🍕", region:"eu", cur:{sym:"€",dec:2},   pf:0.92, delivery:3.5,  late:1.8,  tax:0.10,   lat:40.8484,  lng:14.2528,   radius:2000 },
+  { id:"bol", name:"Bologna",      flag:"🍝", region:"eu", cur:{sym:"€",dec:2},   pf:0.92, delivery:3.5,  late:1.8,  tax:0.10,   lat:44.4938,  lng:11.3426,   radius:2000 },
+  { id:"bcn", name:"Barcelona",    flag:"🇪🇸", region:"eu", cur:{sym:"€",dec:2},   pf:0.92, delivery:3.9,  late:2,    tax:0.10,   lat:41.3851,  lng:2.1734,    radius:2200 },
+  { id:"mad", name:"Madrid",       flag:"🐂", region:"eu", cur:{sym:"€",dec:2},   pf:0.92, delivery:3.9,  late:2,    tax:0.10,   lat:40.4200,  lng:-3.7038,   radius:2200 },
+  { id:"sse", name:"San Sebastián",flag:"🍢", region:"eu", cur:{sym:"€",dec:2},   pf:0.92, delivery:3.5,  late:2,    tax:0.10,   lat:43.3224,  lng:-1.9846,   radius:1800 },
+  { id:"lis", name:"Lisbon",       flag:"🇵🇹", region:"eu", cur:{sym:"€",dec:2},   pf:0.92, delivery:3.5,  late:1.8,  tax:0.13,   lat:38.7100,  lng:-9.1400,   radius:2200 },
+  { id:"cph", name:"Copenhagen",   flag:"🇩🇰", region:"eu", cur:{sym:"kr",dec:0},  pf:6.5,  delivery:29,   late:15,   tax:0.25,   lat:55.6800,  lng:12.5800,   radius:2200 },
+  { id:"ams", name:"Amsterdam",    flag:"🇳🇱", region:"eu", cur:{sym:"€",dec:2},   pf:0.92, delivery:4,    late:2,    tax:0.09,   lat:52.3650,  lng:4.8950,    radius:2200 },
+  { id:"vie", name:"Vienna",       flag:"🎻", region:"eu", cur:{sym:"€",dec:2},   pf:0.92, delivery:4,    late:2,    tax:0.10,   lat:48.2082,  lng:16.3738,   radius:2200 },
+  { id:"ath", name:"Athens",       flag:"🏺", region:"eu", cur:{sym:"€",dec:2},   pf:0.92, delivery:3.2,  late:1.6,  tax:0.13,   lat:37.9779,  lng:23.7250,   radius:2200 },
+  { id:"ist", name:"Istanbul",     flag:"🇹🇷", region:"me", cur:{sym:"₺",dec:0},   pf:20,   delivery:35,   late:15,   tax:0.10,   lat:41.0322,  lng:28.9770,   radius:2400 },
+  { id:"tlv", name:"Tel Aviv",     flag:"🇮🇱", region:"me", cur:{sym:"₪",dec:0},   pf:3.7,  delivery:15,   late:7,    tax:0.17,   lat:32.0680,  lng:34.7700,   radius:2200 },
+  { id:"bey", name:"Beirut",       flag:"🇱🇧", region:"me", cur:{sym:"$",dec:2},   pf:1,    delivery:3,    late:1.5,  tax:0.11,   lat:33.8959,  lng:35.5180,   radius:2000 },
+  { id:"dxb", name:"Dubai",        flag:"🏜️", region:"me", cur:{sym:"AED",dec:0}, pf:3.7,  delivery:12,   late:6,    tax:0.05,   lat:25.1972,  lng:55.2744,   radius:3000 },
+  { id:"cai", name:"Cairo",        flag:"🐫", region:"me", cur:{sym:"E£",dec:0},  pf:20,   delivery:30,   late:15,   tax:0.14,   lat:30.0609,  lng:31.2197,   radius:2400 },
+  { id:"rak", name:"Marrakech",    flag:"🇲🇦", region:"me", cur:{sym:"DH",dec:0},  pf:6,    delivery:18,   late:9,    tax:0.10,   lat:31.6258,  lng:-7.9891,   radius:2200 },
+  { id:"cpt", name:"Cape Town",    flag:"🇿🇦", region:"me", cur:{sym:"R",dec:0},   pf:14,   delivery:35,   late:18,   tax:0.15,   lat:-33.9249, lng:18.4241,   radius:2600 },
+  { id:"osa", name:"Osaka",        flag:"🐙", region:"as", cur:{sym:"¥",dec:0},   pf:150,  delivery:350,  late:150,  tax:0.10,   lat:34.6687,  lng:135.5013,  radius:2200 },
+  { id:"kyo", name:"Kyoto",        flag:"⛩️", region:"as", cur:{sym:"¥",dec:0},   pf:150,  delivery:380,  late:160,  tax:0.10,   lat:35.0037,  lng:135.7681,  radius:2200 },
+  { id:"pus", name:"Busan",        flag:"🦀", region:"as", cur:{sym:"₩",dec:0},   pf:1350, delivery:4000, late:1500, tax:0.10,   lat:35.1578,  lng:129.0604,  radius:2400 },
+  { id:"hkg", name:"Hong Kong",    flag:"🥟", region:"as", cur:{sym:"HK$",dec:0}, pf:7.8,  delivery:25,   late:10,   tax:0.00,   lat:22.2819,  lng:114.1556,  radius:2200 },
+  { id:"tpe", name:"Taipei",       flag:"🧋", region:"as", cur:{sym:"NT$",dec:0}, pf:31,   delivery:60,   late:30,   tax:0.05,   lat:25.0420,  lng:121.5070,  radius:2200 },
+  { id:"sgn", name:"Saigon",       flag:"🛵", region:"as", cur:{sym:"₫",dec:0},   pf:6000, delivery:20000,late:10000,tax:0.08,   lat:10.7769,  lng:106.7009,  radius:2400 },
+  { id:"han", name:"Hanoi",        flag:"🍜", region:"as", cur:{sym:"₫",dec:0},   pf:6000, delivery:18000,late:9000, tax:0.08,   lat:21.0338,  lng:105.8500,  radius:2200 },
+  { id:"pen", name:"Penang",       flag:"🦐", region:"as", cur:{sym:"RM",dec:0},  pf:2,    delivery:5,    late:3,    tax:0.06,   lat:5.4164,   lng:100.3327,  radius:2200 },
+  { id:"kul", name:"Kuala Lumpur", flag:"🇲🇾", region:"as", cur:{sym:"RM",dec:0},  pf:2,    delivery:6,    late:3,    tax:0.06,   lat:3.1466,   lng:101.7107,  radius:2400 },
+  { id:"bom", name:"Mumbai",       flag:"🇮🇳", region:"as", cur:{sym:"₹",dec:0},   pf:30,   delivery:40,   late:20,   tax:0.05,   lat:19.0596,  lng:72.8295,   radius:2400 },
+  { id:"del", name:"Delhi",        flag:"🛺", region:"as", cur:{sym:"₹",dec:0},   pf:30,   delivery:40,   late:20,   tax:0.05,   lat:28.6315,  lng:77.2167,   radius:2400 },
+  { id:"mel", name:"Melbourne",    flag:"☕", region:"oc", cur:{sym:"A$",dec:2},  pf:1.5,  delivery:6.5,  late:3,    tax:0.10,   lat:-37.8136, lng:144.9631,  radius:2400 },
 ];
+const REGIONS = { am:"🌎 americas", eu:"🌍 europe", as:"🌏 asia", me:"🌍 middle east & africa", oc:"🌏 oceania" };
+const FEATURED = ["nyc","hou","la","tyo","sel","ldn","par","mex"];
 
 /* cuisine tag -> emoji + a plausible signature dish + base price (USD-ish) */
 const CUISINE = {
@@ -477,6 +552,65 @@ const RV = [
   "calorie-free because it's a photo ^^",
   "payday's friday — this is dinner (visually).",
 ];
+/* cuisine-flavored night-owl reviews, keyed by dish emoji; RV is the generic fallback */
+const RV_POOLS = {
+  "🍕": ["the cheese pull in this photo altered my brain chemistry. closed the app.",
+         "carted a large at 1am. woke up $0 poorer. growth.",
+         "i can taste the char through the screen and that's free",
+         "this slice and i had a moment. then i had cereal.",
+         "10/10 would stare again"],
+  "🍜": ["the broth is glistening AT me",
+         "slurped this with my eyes",
+         "added extra chashu to a cart going nowhere 😌",
+         "instant noodles at home hit different after this",
+         "the steam in the photo = free aromatherapy"],
+  "🍣": ["omakase'd my imagination",
+         "this is what self-control tastes like (nothing)",
+         "the uni stared back. i blinked first. $0 spent.",
+         "carted the whole counter and ascended",
+         "fish this pretty deserves to stay a picture"],
+  "🌮": ["al pastor at 2am is a personality and i have it",
+         "these tacos owe me nothing and i owe them nothing",
+         "carted six. ate zero. legend behavior.",
+         "the salsa verde was calling. i let it ring.",
+         "lime wedge of my dreams. wallet intact."],
+  "🍔": ["the patty glistens with what could've been",
+         "double cheeseburger in the cart, oatmeal in my bowl",
+         "smash burger? more like smash that close-app button",
+         "this burger and my rent had a fight. rent won.",
+         "carted it with extra pickles. dignity intact."],
+  "🍛": ["butter chicken photo cured my seasonal everything",
+         "naan in the cart, nada spent. balance.",
+         "the garlic naan was a siren song. i'm ulysses.",
+         "rice this golden should be illegal. didn't order it anyway.",
+         "curry at 2am is a love language. i just waved."],
+  "☕": ["window-shopped a croissant like it was a rolex",
+         "this latte art deserves a museum and my distance",
+         "espresso'd my dreams instead",
+         "the foam heart hit. my card stayed cold.",
+         "smelled this photo. don't ask how."],
+  "🥐": ["window-shopped a croissant like it was a rolex",
+         "laminated butter is my roman empire",
+         "flaky. golden. unbought. perfect.",
+         "this bakery case is my screensaver now",
+         "carted half the case, kept the whole paycheck"],
+  "🍲": ["chimaek craving defeated at 1:47am. historic.",
+         "tteokbokki red is my favorite color and my biggest threat",
+         "carted the whole pojangmacha. logged off. 무지출 ✓",
+         "stew this bubbly should come with a warning",
+         "hot pot in the cart, cold water in my hand. discipline."],
+  "🥟": ["counted the pleats. eight. didn't order. also eight (out of ten night).",
+         "dumplings are little edible gifts i refuse to buy",
+         "steamer basket of my dreams, cart of my restraint",
+         "soup dumpling physics deserve respect, not money",
+         "carted 24. ate 0. ratio of a champion."],
+};
+function mockFor(p){
+  const pool = RV_POOLS[p.ic] || RV, h = hash(p.name);
+  const i = h % pool.length; let j = (h >> 4) % pool.length; if(j===i) j=(j+1)%pool.length;
+  return [[pool[i],"★★★★★"],[pool[j],"★★★★☆"]];
+}
+function starStr(r){ const f=Math.max(1,Math.min(5,Math.round(r))); return "★★★★★".slice(0,f)+"☆☆☆☆☆".slice(0,5-f); }
 
 /* country code -> currency for the 'any city' geocoder */
 const CCY = {
@@ -498,11 +632,13 @@ const TICKER = [
   "somebody just hit a 14-night streak 🔥 unreal",
 ];
 const ROOM_SEED = [
-  {ic:"🥩", text:"almost DoorDashed $40 of wings. drank water instead 🥲", city:"Brooklyn", ago:"3m", r:{hug:42, me:18, go:7}},
+  {ic:"🥩", text:"almost DoorDashed $40 of wings. drank water instead 🥲", city:"Brooklyn", ago:"3m", streak:4, r:{hug:42, me:18, go:7}},
   {ic:"🍕", text:"staring at Joe's pizza for 20 min. not ordering.", city:"Manhattan", ago:"1m", r:{hug:21, me:55, go:12}},
-  {ic:"🍜", text:"¥980 ramen craving in Shibuya. window-shopped it.", city:"Tokyo", ago:"5m", r:{hug:33, me:29, go:3}},
+  {ic:"🍜", text:"carted pho from Hanoi to Houston. 17h flight ETA. driver no-showed (he's a ghost) 🥲", city:"Houston", ago:"4m", streak:12, r:{hug:48, me:22, go:5}},
+  {ic:"🍜", text:"¥980 ramen craving in Shibuya. window-shopped it.", city:"Tokyo", ago:"5m", streak:7, r:{hug:33, me:29, go:3}},
   {ic:"🌮", text:"carted MX$200 of tacos and closed the app 💪", city:"Mexico City", ago:"2m", r:{hug:14, me:40, go:9}},
-  {ic:"🍗", text:"chimaek craving at 2am. held back. tell me i'm strong", city:"Seoul", ago:"8m", r:{hug:51, me:11, go:22}},
+  {ic:"🍣", text:"ordered omakase from Tokyo. it's boarding a fake 787 right now ✈️", city:"Chicago", ago:"6m", streak:21, r:{hug:38, me:17, go:11}},
+  {ic:"🍗", text:"chimaek craving at 2am. held back. tell me i'm strong", city:"Seoul", ago:"8m", streak:9, r:{hug:51, me:11, go:22}},
   {ic:"🥓", text:"girl dinner = me looking at a Dishoom naan roll", city:"London", ago:"now", r:{hug:67, me:31, go:15}},
 ];
 const INCOMING = [
@@ -531,10 +667,62 @@ function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").repla
 function hash(s){ let h=0; for(let i=0;i<s.length;i++){ h=(h*31 + s.charCodeAt(i))>>>0; } return h; }
 function money(n, cur){ cur=cur||curCity().cur; return cur.dec===0 ? cur.sym+Math.round(n).toLocaleString("en-US") : cur.sym+(round2(n)).toFixed(2); }
 function etaFor(p){ const m = 15 + (p.name.length % 4)*5; return `${m}–${m+10}`; }
-/* owned-cuisine photo layer: keyed off the dish emoji, deterministic per place, emoji fallback on error.
-   (prototype uses a free keyworded stock source; production = your licensed cuisine pack or Google/Yelp photos) */
+
+/* ---- home base + flight-time delivery: ordering from another city shows the real
+   plane time to reach you (great-circle at ~850 km/h + 50 min taxi/climb) ---- */
+const TZ_CITY = {
+  "America/New_York":{lat:40.71,lng:-74.0,label:"New York"}, "America/Detroit":{lat:42.33,lng:-83.05,label:"Detroit"},
+  "America/Chicago":{lat:29.76,lng:-95.36,label:"Houston"}, "America/Denver":{lat:39.74,lng:-104.99,label:"Denver"},
+  "America/Phoenix":{lat:33.45,lng:-112.07,label:"Phoenix"}, "America/Los_Angeles":{lat:34.05,lng:-118.24,label:"Los Angeles"},
+  "America/Toronto":{lat:43.65,lng:-79.38,label:"Toronto"}, "America/Vancouver":{lat:49.28,lng:-123.12,label:"Vancouver"},
+  "America/Mexico_City":{lat:19.43,lng:-99.13,label:"Mexico City"}, "America/Sao_Paulo":{lat:-23.55,lng:-46.63,label:"São Paulo"},
+  "America/Argentina/Buenos_Aires":{lat:-34.6,lng:-58.38,label:"Buenos Aires"}, "America/Lima":{lat:-12.05,lng:-77.04,label:"Lima"},
+  "America/Bogota":{lat:4.71,lng:-74.07,label:"Bogotá"}, "Europe/London":{lat:51.51,lng:-0.13,label:"London"},
+  "Europe/Paris":{lat:48.86,lng:2.35,label:"Paris"}, "Europe/Berlin":{lat:52.52,lng:13.41,label:"Berlin"},
+  "Europe/Madrid":{lat:40.42,lng:-3.7,label:"Madrid"}, "Europe/Rome":{lat:41.9,lng:12.47,label:"Rome"},
+  "Europe/Amsterdam":{lat:52.37,lng:4.9,label:"Amsterdam"}, "Europe/Lisbon":{lat:38.72,lng:-9.14,label:"Lisbon"},
+  "Europe/Vienna":{lat:48.21,lng:16.37,label:"Vienna"}, "Europe/Athens":{lat:37.98,lng:23.73,label:"Athens"},
+  "Europe/Istanbul":{lat:41.01,lng:28.98,label:"Istanbul"}, "Europe/Copenhagen":{lat:55.68,lng:12.57,label:"Copenhagen"},
+  "Europe/Stockholm":{lat:59.33,lng:18.07,label:"Stockholm"}, "Europe/Warsaw":{lat:52.23,lng:21.01,label:"Warsaw"},
+  "Asia/Tokyo":{lat:35.68,lng:139.69,label:"Tokyo"}, "Asia/Seoul":{lat:37.57,lng:126.98,label:"Seoul"},
+  "Asia/Shanghai":{lat:31.23,lng:121.47,label:"Shanghai"}, "Asia/Hong_Kong":{lat:22.32,lng:114.17,label:"Hong Kong"},
+  "Asia/Taipei":{lat:25.03,lng:121.57,label:"Taipei"}, "Asia/Singapore":{lat:1.35,lng:103.82,label:"Singapore"},
+  "Asia/Bangkok":{lat:13.76,lng:100.5,label:"Bangkok"}, "Asia/Ho_Chi_Minh":{lat:10.82,lng:106.63,label:"Saigon"},
+  "Asia/Kolkata":{lat:19.08,lng:72.88,label:"Mumbai"}, "Asia/Dubai":{lat:25.2,lng:55.27,label:"Dubai"},
+  "Asia/Jerusalem":{lat:32.07,lng:34.79,label:"Tel Aviv"}, "Africa/Cairo":{lat:30.04,lng:31.24,label:"Cairo"},
+  "Africa/Johannesburg":{lat:-26.2,lng:28.05,label:"Johannesburg"}, "Africa/Lagos":{lat:6.52,lng:3.38,label:"Lagos"},
+  "Australia/Sydney":{lat:-33.87,lng:151.21,label:"Sydney"}, "Australia/Melbourne":{lat:-37.81,lng:144.96,label:"Melbourne"},
+  "Pacific/Auckland":{lat:-36.85,lng:174.76,label:"Auckland"},
+};
+let HOME = {lat:40.71, lng:-74.0, label:"New York"};
+function loadHome(){
+  try{ const h=JSON.parse(localStorage.getItem("carted_home")||"null"); if(h && h.lat!=null){ HOME=h; return; } }catch(e){}
+  try{ const tz=Intl.DateTimeFormat().resolvedOptions().timeZone; if(TZ_CITY[tz]) HOME={...TZ_CITY[tz]}; }catch(e){}
+}
+function setHome(h, manual){
+  HOME=h;
+  try{ localStorage.setItem("carted_home", JSON.stringify(h)); }catch(e){}
+  if(manual){ toast(`✈️ delivering to ${h.label}`); renderFeed(); if($("#view-cart").classList.contains("active")) renderCart(); }
+}
+function havKm(a, b){
+  const R=6371, dLa=(b.lat-a.lat)*Math.PI/180, dLo=(b.lng-a.lng)*Math.PI/180;
+  const s=Math.sin(dLa/2)**2 + Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLo/2)**2;
+  return 2*R*Math.asin(Math.sqrt(s));
+}
+function flightInfo(city){
+  if(!city || city.lat==null) return null;
+  const km = havKm(city, HOME);
+  if(km < 150) return null;                       // same metro → normal courier
+  const mins = Math.round(km/14.2) + 50;          // ~850 km/h cruise + taxi/takeoff/landing
+  const h = Math.floor(mins/60), m = mins%60;
+  return { km: Math.round(km), mins, label: h ? `${h}h ${String(m).padStart(2,"0")}m` : `${m}m` };
+}
+function cityOf(p){ const i = CITY_INDEX[p._cityId]; return i!=null ? CITIES[i] : curCity(); }
+function etaStr(p){ const fl = flightInfo(cityOf(p)); return fl ? `✈️ ${fl.label}` : `⏱ ${etaFor(p)} min`; }
+/* photo layer: baked Google photo when available, keyworded stock fallback, emoji last resort */
+const BASE = location.pathname.includes("/carted-demo") ? "/carted-demo/" : "/";
 const PHOTO_KW = { "🍕":"pizza","🍔":"burger","🍟":"fries","🌮":"tacos","🌯":"burrito","🍜":"ramen","🍣":"sushi","🍱":"bento-box","🍛":"curry","🥡":"noodles","🍗":"fried-chicken","🥩":"steak","🍖":"barbecue","🥪":"sandwich","🥯":"bagel","🧆":"falafel","🥙":"kebab","🦐":"seafood","🥘":"paella","🍲":"hotpot","🥗":"salad","☕":"coffee","🥐":"croissant","🍩":"donut","🍰":"cake","🍦":"ice-cream","🍨":"gelato","🧋":"bubble-tea","🥟":"dumplings","🐙":"takoyaki","🐟":"grilled-fish","🥨":"pretzel","🍽️":"gourmet-food" };
-function photoUrl(p, big){ if(p.photo) return `/carted-demo/${p.photo}`; const kw = PHOTO_KW[p.ic] || "food"; const s = big?400:200; return `https://loremflickr.com/${s}/${s}/${kw}?lock=${hash(p.name)%997}`; }
+function photoUrl(p, big){ if(p.photo) return BASE + p.photo; const kw = PHOTO_KW[p.ic] || "food"; const s = big?400:200; return `https://loremflickr.com/${s}/${s}/${kw}?lock=${hash(p.name)%997}`; }
 function thumbImg(p, big){ return `<img class="ph-img" src="${photoUrl(p,big)}" alt="" loading="lazy" onerror="this.replaceWith('${p.ic}')">`; }
 /* reward tiers — keyed off money SAVED (rewards restraint, not time-in-app) */
 const TIERS = [
@@ -555,6 +743,12 @@ const PUNCH = [
   {p:"{n} took the night off.<br>forever.", s:"your wallet stayed full."},
   {p:"breaking: {n} is a figment.<br>and so is the bill.", s:"nothing left your account."},
   {p:"{n} vanished into the night.<br>empty-handed.", s:"because there was nothing to bring."},
+];
+const FLIGHT_PUNCH = [
+  {p:"{n} never boarded.<br>the plane was never real.", s:"no flight. no driver. no charge."},
+  {p:"flight CR-404:<br>not found.", s:"{n} waves from a gate that doesn't exist."},
+  {p:"{n} is still at customs.<br>forever.", s:"declaring: nothing. charging: nothing."},
+  {p:"the 787 was a metaphor.<br>so was {n}.", s:"your dinner stayed on its continent. your money stayed home."},
 ];
 function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
 function levelInfo(xp){ let lvl=1, need=60, acc=0; while(xp>=acc+need){ acc+=need; lvl++; need=Math.round(need*1.35); } return {lvl, pct:Math.round((xp-acc)/need*100)}; }
@@ -670,8 +864,10 @@ function flyToCart(ev, emo){
 function quickAdd(key, ev){ ev.stopPropagation(); addToCart(key, ev); }
 
 /* ---- shareable win card (canvas → native share / download) ---- */
-function shareWin(){
-  const s=lastShare; if(!s){ toast("nothing to share yet"); return; }
+function shareWin(mode){
+  let s = lastShare;
+  if(mode==="streak"){ const {t}=tierFor(stats.savedUsd); s={ label:"$"+Math.round(stats.savedUsd).toLocaleString(), streak:stats.streak||0, tier:t, city:"", streakMode:true }; }
+  if(!s){ toast("nothing to share yet"); return; }
   const cv=document.createElement("canvas"); cv.width=1080; cv.height=1080; const x=cv.getContext("2d");
   x.fillStyle="#fbf3e4"; x.fillRect(0,0,1080,1080);
   x.strokeStyle="#221c33"; x.lineWidth=16; x.strokeRect(40,40,1000,1000);
@@ -679,10 +875,10 @@ function shareWin(){
   x.fillStyle="#ff5a3c"; x.beginPath(); x.arc(925,895,36,0,7); x.fill();
   x.fillStyle="#0ca678"; x.beginPath(); x.arc(905,175,24,0,7); x.fill();
   x.textAlign="center";
-  x.font="600 58px 'Fredoka', sans-serif"; x.fillStyle="#221c33"; x.fillText("👻 the driver was never real", 540, 230);
+  x.font="600 58px 'Fredoka', sans-serif"; x.fillStyle="#221c33"; x.fillText(s.streakMode?"👻 i don't order. i dodge.":"👻 the driver was never real", 540, 230);
   x.font="700 150px 'Fredoka', sans-serif"; x.fillStyle="#221c33"; x.fillText(s.label, 547, 477);
   x.fillStyle="#0ca678"; x.fillText(s.label, 540, 470);
-  x.font="700 42px 'Nunito', sans-serif"; x.fillStyle="#221c33"; x.fillText("dodged tonight in "+s.city, 540, 545);
+  x.font="700 42px 'Nunito', sans-serif"; x.fillStyle="#221c33"; x.fillText(s.streakMode?"dodged all-time, and counting":"dodged tonight in "+s.city, 540, 545);
   x.font="600 54px 'Fredoka', sans-serif"; x.fillStyle="#ff5a3c"; x.fillText("🔥 "+s.streak+"-night no-spend streak", 540, 690);
   x.font="700 38px 'Nunito', sans-serif"; x.fillStyle="#6b6580"; x.fillText(s.tier.ic+"  "+s.tier.name, 540, 765);
   x.font="600 60px 'Fredoka', sans-serif"; x.fillStyle="#221c33"; x.fillText("CARTED", 546, 951);
@@ -729,7 +925,7 @@ function loadCity(city, force){
   if(!force && city._places){ city._state="ready"; if(curCity().id===city.id) renderFeed(); return; }
   city._state="loading"; if(curCity().id===city.id) renderFeed();
   // try pre-baked static data first; fall through to Overpass on miss
-  fetch(`/carted-demo/places/${city.id}.json`)
+  fetch(`${BASE}places/${city.id}.json`)
     .then(r=>{ if(!r.ok) throw new Error("no bake"); return r.json(); })
     .then(places=>{
       places.forEach(p=>{ placeByKey[p._key]=p; });
@@ -767,11 +963,34 @@ function go(view){
   if(view!=="track") stopCourier();
 }
 
-/* ---- city + mode ---- */
+/* ---- city + mode: featured chips + searchable 50-city modal ---- */
 function renderCityBar(){
-  $("#city-bar").innerHTML = `<button class="city-chip add" onclick="nearMe()">📍 Near me</button>`
-    + CITIES.map((c,i)=>`<button class="city-chip${i===curIdx?' on':''}" onclick="setCity(${i})">${c.flag} ${esc(c.name)}</button>`).join("")
-    + `<button class="city-chip add" onclick="addCity()">＋ any city</button>`;
+  const cur=curCity();
+  const extra = (!FEATURED.includes(cur.id)) ? `<button class="city-chip on">${cur.flag} ${esc(cur.name)}</button>` : "";
+  $("#city-bar").innerHTML = `<button class="city-chip add" onclick="nearMe()">📍 Near me</button>` + extra
+    + FEATURED.map(id=>{ const i=CITY_INDEX[id], c=CITIES[i]; return `<button class="city-chip${i===curIdx?' on':''}" onclick="setCity(${i})">${c.flag} ${esc(c.name)}</button>`; }).join("")
+    + `<button class="city-chip add" onclick="cityModal(false)">🌍 all 50</button>`;
+}
+function cityModal(homeMode){
+  showModal(`<div class="m-title" style="margin-top:0">${homeMode?'📍 where should the ghost deliver?':'🌍 the 50 food capitals'}</div>
+    <input id="city-search" class="city-search" placeholder="search cities…" oninput="filterCityModal()" autocomplete="off">
+    <div class="city-modal-list" id="city-modal-list">
+      ${Object.entries(REGIONS).map(([k,label])=>`<div class="cm-group"><div class="cm-label">${label}</div><div class="cm-chips">${
+        CITIES.filter(c=>c.region===k).map(c=>`<button class="city-chip cm" data-n="${c.name.toLowerCase()}" onclick="modalPick('${c.id}',${!!homeMode})">${c.flag} ${esc(c.name)}</button>`).join("")
+      }</div></div>`).join("")}
+    </div>
+    ${homeMode?"":`<button class="cta secondary" style="position:static;margin-top:12px" onclick="closeModal();addCity()">＋ any other city (live OSM)</button>`}`);
+}
+function filterCityModal(){
+  const q=($("#city-search").value||"").trim().toLowerCase();
+  document.querySelectorAll("#city-modal-list .cm").forEach(b=>{ b.style.display = !q || b.dataset.n.includes(q) ? "" : "none"; });
+  document.querySelectorAll("#city-modal-list .cm-group").forEach(g=>{ const any=[...g.querySelectorAll(".cm")].some(b=>b.style.display!=="none"); g.style.display=any?"":"none"; });
+}
+function modalPick(id, homeMode){
+  closeModal();
+  const i=CITY_INDEX[id]; if(i==null) return;
+  if(homeMode){ const c=CITIES[i]; setHome({lat:c.lat,lng:c.lng,label:c.name},true); }
+  else setCity(i);
 }
 function setCity(i){
   if(i===curIdx && curCity()._places){ return; }
@@ -821,6 +1040,7 @@ function nearMe(){
   }, { timeout:10000, maximumAge:60000, enableHighAccuracy:true });
 }
 function upsertNearCity(lat,lng,m,place){
+  setHome({lat, lng, label:place}, false);   // geolocation = ground truth for flight ETAs
   const city={ id:"near", name:place, flag:"📍", cur:{sym:m.sym,dec:m.dec}, pf:m.pf, tax:0.10,
     delivery:m.dec===0?Math.round(5*m.pf):round2(5*m.pf), late:m.dec===0?Math.round(2.5*m.pf):round2(2.5*m.pf),
     lat, lng, radius:1500 };
@@ -840,7 +1060,7 @@ function cardHTML(p, saved){
     <div class="meta">
       <div class="name">${esc(p.dish)} <span class="en">· ${where}</span></div>
       <div class="shop">${esc(p.name)} · ${esc(p.hood)}</div>
-      <div class="row"><span class="rate">★ ${p.rate.toFixed(1)}</span><span>(${p.n.toLocaleString()})</span><span>· ⏱ ${etaFor(p)} min</span></div>
+      <div class="row"><span class="rate">★ ${p.rate.toFixed(1)}</span><span>(${p.n.toLocaleString()})</span>${p.lvl?`<span>· ${"$".repeat(p.lvl)}</span>`:""}<span>· ${etaStr(p)}</span></div>
       <div class="price">${money(p.price, p._cur)}</div>
     </div>
     <button class="fav${fav?' on':''}" onclick="toggleFav('${p._key}',event)">${fav?'♥':'♡'}</button>
@@ -912,6 +1132,7 @@ function renderProfile(){
   const auth = (account
     ? `<button class="signin-btn" onclick="signOut()">sign out</button>`
     : `<button class="signin-btn dark" onclick="signIn('Apple')"> Sign in with Apple</button><button class="signin-btn" onclick="signIn('Google')">Sign in with Google</button>`)
+    + `<button class="signin-btn" onclick="shareWin('streak')">📸 flex your streak card</button>`
     + `<button class="signin-btn" onclick="toggleSnd()">${sndOn?"🔊 sounds: on":"🔇 sounds: off"}</button>`;
   const {t,next}=tierFor(stats.savedUsd);
   const prog = next ? Math.max(5, Math.min(100, Math.round((stats.savedUsd-t.min)/(next.min-t.min)*100))) : 100;
@@ -934,8 +1155,13 @@ function openDetail(key){
   $("#d-hero").innerHTML = thumbImg(p, true) + `<div class="city-tag">${p._flag} ${esc(p._cityName)}</div>`;
   $("#d-name").innerHTML = `${esc(p.dish)} <span style="color:var(--muted);font-size:15px;font-weight:500;text-transform:capitalize">${esc(p.en)}</span>`;
   $("#d-shop").textContent = `${p.name} · ${p.hood}`;
-  $("#d-stats").innerHTML = `<span>★ <b>${p.rate.toFixed(1)}</b> (${p.n.toLocaleString()})</span><span>⏱ <b>${etaFor(p)}</b> min</span><span>💸 <b>${money(p.price,p._cur)}</b></span>`;
-  $("#d-reviews").innerHTML = p.reviews.map(r=>`<div class="review"><div class="top"><span class="stars">${r[1]}</span><span>anon · ${(hash(p.name)%23)+1}m ago</span></div><div class="text">${esc(r[0])}</div></div>`).join("");
+  const dd=$("#d-desc"); if(p.desc){ dd.textContent=p.desc; dd.style.display="block"; } else dd.style.display="none";
+  $("#d-stats").innerHTML = `<span>★ <b>${p.rate.toFixed(1)}</b> (${p.n.toLocaleString()})</span>${p.lvl?`<span><b>${"$".repeat(p.lvl)}</b></span>`:""}<span><b>${etaStr(p)}</b></span><span>💸 <b>${money(p.price,p._cur)}</b></span>`;
+  const real = (p.rv||[]).map(r=>`<div class="review"><div class="top"><span class="stars">${starStr(r.r)}</span><span>${esc(r.a||"a local")} · google</span></div><div class="text">${esc(r.t)}</div></div>`).join("");
+  const mocks = mockFor(p).map(r=>`<div class="review"><div class="top"><span class="stars">${r[1]}</span><span>night owl 👻 · ${(hash(p.name)%23)+1}m ago</span></div><div class="text">${esc(r[0])}</div></div>`).join("");
+  $("#d-reviews").innerHTML =
+    (real ? `<div class="section-label">★ real ones (google)</div>${real}` : "")
+    + `<div class="section-label">👻 night owls say (didn't eat)</div>${mocks}`;
   $("#d-add").onclick = (e)=>addToCart(key, e);
   updateDetailFav(); go("detail");
 }
@@ -953,7 +1179,7 @@ function renderCart(){
   const body=$("#cart-body"), c=curCity();
   $("#cart-sub").textContent = cart.length ? `from ${c.name} ${c.flag} · don't check out.` : "fill it up. don't check out.";
   if(!cart.length){ body.innerHTML = `<div class="empty"><div class="big">👻</div>your cart is a ghost town.<br>go fill it up.<br><br><button class="cta secondary" style="position:static" onclick="go('feed')">browse places</button></div>`; return; }
-  const sub=cartSubtotal();
+  const sub=cartSubtotal(), fl=flightInfo(c);
   body.innerHTML = `
     ${cart.map((p,i)=>`<div class="cart-item"><div class="ic">${p.ic}</div><div class="nm">${esc(p.dish)}<div style="font-size:11.5px;color:var(--muted);font-weight:400">${esc(p.name)}</div></div><div class="pr">${money(p.price,c.cur)}</div><button class="rm" onclick="removeFromCart(${i})">✕</button></div>`).join("")}
     <div class="summary">
@@ -961,11 +1187,13 @@ function renderCart(){
       <div class="line"><span>Delivery fee</span><span>${money(c.delivery,c.cur)}</span></div>
       <div class="line"><span>Service fee</span><span>${money(cartService(),c.cur)}</span></div>
       <div class="line"><span>Late-night fee</span><span>${money(c.late,c.cur)}</span></div>
+      ${fl?`<div class="line"><span>✈️ ghost air freight (${esc(c.name)} → ${esc(HOME.label)})</span><span style="color:var(--go);font-weight:800">free</span></div>`:""}
       <div class="line"><span>Estimated tax</span><span>${money(cartTax(),c.cur)}</span></div>
       <div class="line total"><span>Total</span><span>${money(cartAllIn(),c.cur)}</span></div>
     </div>
     <div class="boss"><span class="bossic">👹</span><span>the FEE BOSS wants <b style="color:var(--hot)">${money(cartFees(),c.cur)}</b> in junk fees.<br>place the order. dodge him.</span></div>
-    <button class="cta" onclick="placeOrder()">place order 🚗</button>
+    <div class="deliver-to">${fl?`✈️ flying <b>${esc(c.name)} → ${esc(HOME.label)}</b> · real flight time ${fl.label}`:`🛵 delivering nearby in ${esc(HOME.label)}`} · <span class="dt-change" onclick="cityModal(true)">change</span></div>
+    <button class="cta" onclick="placeOrder()">place order ${fl?"✈️":"🚗"}</button>
     <button class="cta secondary" onclick="go('feed')">keep browsing</button>
     <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:12px">the button looks real. nothing gets charged.</div>
     <button class="order-real" onclick="orderForReal('cart')">…or just order it for real on a delivery app →</button>`;
@@ -974,24 +1202,46 @@ function renderCart(){
 /* ---- confetti ---- */
 function burst(){ const emo=["🍕","🍔","🍟","🌙","✨","🚗","🌮"]; for(let i=0;i<18;i++){ const c=document.createElement("div"); c.className="confetti"; c.textContent=emo[i%emo.length]; c.style.left=Math.random()*340+20+"px"; c.style.animationDuration=(1.6+Math.random()*1.4)+"s"; c.style.fontSize=(16+Math.random()*16)+"px"; $(".screen").appendChild(c); setTimeout(()=>c.remove(),3200); } }
 
-/* ---- courier sim ---- */
+/* ---- courier sim: local scooter or an intercontinental ghost flight ---- */
+const REGION_DRIVERS = { am:["Marcus","Diego","Memo","Sofia","Tyler"], eu:["Marcel","Luca","Ingrid","Amélie","Mateusz"], as:["Jin","Yuki","Minh","Priya","Mei","Arjun"], me:["Omar","Aisha","Yusuf","Leila"], oc:["Liam","Ruby"] };
 const STAGES = [
-  { p:8,  txt:"confirming your (non-)order…", eta:14 },
-  { p:30, txt:"🍳 the kitchen is pretending to cook", eta:11 },
-  { p:62, txt:"🚗 {n} picked up your order", eta:6 },
-  { p:88, txt:"almost there… two blocks away", eta:2 },
-  { p:96, txt:"arriving any second now…", eta:1 },
+  { p:8,  txt:"confirming your (non-)order…", r:"🚗" },
+  { p:30, txt:"🍳 the kitchen is pretending to cook", r:"🚗", say:"got your order. it's warm. i'm not." },
+  { p:62, txt:"🚗 {n} picked up your order", r:"🚗", say:"traffic is imaginary tonight 🙏" },
+  { p:88, txt:"almost there… two blocks away", r:"🚗", say:"almost there (spiritually)" },
+  { p:96, txt:"arriving any second now…", r:"🚗" },
 ];
+const FLIGHT_STAGES = [
+  { p:6,  txt:"confirming your (non-)order…", r:"🛵" },
+  { p:16, txt:"🍳 the kitchen is pretending to cook", r:"🛵", say:"picked it up. heading to the airport." },
+  { p:34, txt:"🛫 {n} boarded flight CR-404", r:"✈️", say:"boarding now. window seat. your food got the middle." },
+  { p:58, txt:"✈️ cruising at 38,000 ft of pure fiction", r:"✈️", say:"seatbelt sign is off. so is reality." },
+  { p:78, txt:"🛬 landed — {n} cleared ghost customs", r:"✈️", say:"customs asked if the food was real. awkward silence." },
+  { p:92, txt:"🚗 final mile to your door…", r:"🚗", say:"i can see your street. i cannot be seen." },
+];
+function fmtMins(mins){ const h=Math.floor(mins/60), m=Math.round(mins%60); return h?`${h}h ${String(m).padStart(2,"0")}m`:`${m}m`; }
+function driverSay(name, msg){ const dc=$("#dchat"); if(!dc) return; const d=document.createElement("div"); d.className="dmsg"; d.innerHTML=`<b>${esc(name)} 👻</b> ${esc(msg)}`; dc.appendChild(d); while(dc.children.length>3) dc.removeChild(dc.firstChild); }
 function placeOrder(){
-  pendingOrder = { items: cart.slice(), total: cartAllIn(), city: curCity(), driver: pick(DRIVERS) };
+  const c=curCity(), fl=flightInfo(c);
+  pendingOrder = { items: cart.slice(), total: cartAllIn(), city: c, flight: fl, driver: pick(REGION_DRIVERS[c.region]||DRIVERS) };
   snd("pop"); burst();
   $("#track-reveal").style.display="none"; $("#track-live").style.display="block"; $("#road-done").style.width="0%";
-  const rd=$("#rider"); rd.style.left="8%"; rd.style.opacity="1"; rd.textContent="🚗";
+  const rd=$("#rider"); rd.style.left="8%"; rd.style.opacity="1"; rd.textContent= fl?"🛵":"🚗";
   $("#track-others").textContent = 220+Math.floor(Math.random()*80);
+  $("#dchat").innerHTML="";
+  const stages = fl ? FLIGHT_STAGES : STAGES;
   go("track"); stopCourier();
+  driverSay(pendingOrder.driver, fl ? `tonight's ghost courier. your order is ${fl.label} away by air. i fly free.` : "tonight's ghost courier. i don't exist, but i'm fast.");
   let i=0;
-  const step=()=>{ const s=STAGES[i]; $("#road-done").style.width=s.p+"%"; $("#rider").style.left=`calc(8% + ${s.p*0.84}%)`; $("#track-stage").textContent=s.txt.replace("{n}", pendingOrder.driver); $("#eta-num").textContent=s.eta; i++;
-    if(i<STAGES.length){ courierTimers.push(setTimeout(step,2400)); } else { courierTimers.push(setTimeout(revealTruth,2600)); } };
+  const step=()=>{ const s=stages[i];
+    $("#road-done").style.width=s.p+"%"; $("#rider").style.left=`calc(8% + ${s.p*0.84}%)`;
+    $("#rider").textContent=s.r;
+    $("#track-stage").textContent=s.txt.replace("{n}", pendingOrder.driver);
+    if(fl){ $("#eta-num").textContent=fmtMins(fl.mins*(1-s.p/100)); $(".eta .u").textContent=" ✈️"; }
+    else { $("#eta-num").textContent=[14,11,6,2,1][i]||1; $(".eta .u").textContent=" min"; }
+    if(s.say) driverSay(pendingOrder.driver, s.say);
+    i++;
+    if(i<stages.length){ courierTimers.push(setTimeout(step,2400)); } else { courierTimers.push(setTimeout(revealTruth,2600)); } };
   step();
 }
 function revealTruth(){
@@ -1008,6 +1258,7 @@ function revealTruth(){
     streakGrew=true; stats.lastNight=tonight;
   }
   stats.orders++; stats.savedUsd += po.total/po.city.pf;
+  bumpTonight(po.total/po.city.pf);
   combo++; if(combo>(stats.maxCombo||0)) stats.maxCombo=combo;
   stats.cuisines=stats.cuisines||[]; stats.cities=stats.cities||[];
   (po.items||[]).forEach(it=> uniqPush(stats.cuisines, it.en));
@@ -1019,16 +1270,16 @@ function revealTruth(){
   else if(streakGrew && [3,7,14,30,50,100,200].includes(stats.streak)){ milestone=`🔥 ${stats.streak}-night streak milestone!`; if(stats.streak>=7){ stats.freezes=Math.min(3,(stats.freezes||0)+1); saveStats(); } }
   if(po.city.id===curCity().id) renderTally();
   lastShare = { usd: po.total/po.city.pf, label: money(po.total, po.city.cur), streak: stats.streak, tier: newTier, city: po.city.name };
-  const rd=$("#rider"); rd.textContent="🚗💨"; rd.style.left="125%"; rd.style.opacity="0"; $("#road-done").style.width="60%"; $("#track-live").style.display="none";
+  const rd=$("#rider"); rd.textContent= po.flight?"✈️💨":"🚗💨"; rd.style.left="125%"; rd.style.opacity="0"; $("#road-done").style.width="60%"; $("#track-live").style.display="none";
   snd("whoosh");
-  const driver=po.driver||"Marcus", pl=pick(PUNCH);
+  const driver=po.driver||"Marcus", pl=pick(po.flight?FLIGHT_PUNCH:PUNCH);
   const r=$("#track-reveal"); r.style.display="block"; r.className="reveal";
   r.innerHTML = `
     <div class="ghostrise">👻</div>
     <div class="punch">${pl.p.replace("{n}",driver)}</div>
     <div class="sub">${pl.s}</div>
     <div class="saved" id="reveal-saved">${money(0,po.city.cur)} saved</div>
-    <div class="sub">that's what tonight in ${esc(po.city.name)} would've cost. nice.</div>
+    <div class="sub">${po.flight?`that's dinner in ${esc(po.city.name)} + a ${po.flight.label} flight that never took off.`:`that's what tonight in ${esc(po.city.name)} would've cost. nice.`}</div>
     <div class="sub" style="color:#d98324;font-weight:800;margin-top:6px">🔥 ${stats.streak}-night no-spend streak${usedFreeze?' · 🧊 freeze used':''}</div>
     ${combo>=2?`<div class="combo">⚡ ${combo}× dodge combo!</div>`:""}
     ${milestone?`<div class="milestone">${milestone}</div>`:""}
@@ -1074,39 +1325,66 @@ function confirmOrderReal(){
   closeModal(); toast("opened a delivery app — no judgment 🙂");
 }
 
-/* ---- the 2 AM room ---- */
+/* ---- the 2 AM room: tonight's tally, podium, one-tap confessions, ephemerality ---- */
+function tonightBest(){ try{ const t=JSON.parse(localStorage.getItem("carted_tonight")||"null"); return (t && t.night===nightKey()) ? t.best : 0; }catch(e){ return 0; } }
+function bumpTonight(usd){ const best=Math.max(tonightBest(), usd); try{ localStorage.setItem("carted_tonight", JSON.stringify({night:nightKey(), best})); }catch(e){} }
+function podiumHTML(){
+  const s=hash(nightKey()); const spots=["Brooklyn","Shibuya","Camden","the Mission","Hongdae","Roma Norte","Montrose","Kreuzberg"];
+  let rows=[ {n:"night owl · "+spots[s%spots.length], v:180+(s%160)},
+             {n:"night owl · "+spots[(s>>3)%spots.length], v:Math.round((180+(s%160))*.78)},
+             {n:"night owl · "+spots[(s>>6)%spots.length], v:Math.round((180+(s%160))*.59)} ];
+  const mine=tonightBest();
+  if(mine>=rows[2].v){ rows.push({n:"you 🫵", v:Math.round(mine), mine:true}); rows.sort((a,b)=>b.v-a.v); rows=rows.slice(0,3); }
+  const medal=["🥇","🥈","🥉"];
+  return `<div class="podium"><div class="pod-title">🏆 tonight's biggest dodges</div>${rows.map((r,i)=>`<div class="prow${r.mine?' mine':''}"><span>${medal[i]}</span><span class="pn">${r.n}</span><b>$${r.v.toLocaleString()}</b></div>`).join("")}</div>`;
+}
 function renderRoom(){
+  $("#room-podium").innerHTML = podiumHTML();
   $("#room-feed").innerHTML = room.map((p,i)=>`
     <div class="post${p.mine?' mine':''}">
-      <div class="phead"><span class="pic">${p.ic}</span><div class="pmeta">${p.mine?'<span class="mine-tag">you</span>':'<b>anon</b> · '+esc(p.city)} · ${p.ago}</div></div>
+      <div class="phead"><span class="pic">${p.ic}</span><div class="pmeta">${p.mine?'<span class="mine-tag">you</span>':'<b>anon</b> · '+esc(p.city)} · ${p.ago}${p.streak?` · <span class="sbadge">🔥${p.streak}</span>`:""}</div></div>
       <div class="ptext">${esc(p.text)}</div>
-      <div class="reacts">${["hug","me","go"].map(t=>`<button class="chip${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')">${REACT_META[t]} <span class="cnt">${p.r[t]}</span></button>`).join("")}</div>
+      <div class="reacts">${["hug","me","go"].map(t=>`<button class="chip${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')">${REACT_META[t]} <span class="cnt">${p.r[t]}</span></button>`).join("")}<button class="chip pshare" onclick="sharePost(${i})">📤</button></div>
     </div>`).join("");
 }
 function react(i,t){ const p=room[i]; if(!p) return; if(!p.reacted) p.reacted={}; if(p.reacted[t]) return; p.reacted[t]=true; p.r[t]++; renderRoom(); snd("pop"); toast(t==="hug"?"hang in there 🫂":t==="me"?"same 😋":"just send it 🔥"); addXp(3); questEvent("react"); }
-function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; const post={ic:"🌙",text:v,city:"you",ago:"now",mine:true,r:{hug:0,me:0,go:0},reacted:{}}; room.unshift(post); inp.value=""; renderRoom(); snd("chime"); toast("posted to the room 🌙"); addXp(4); questEvent("post"); beSeen(post); }
+function sharePost(i){
+  const p=room[i]; if(!p) return;
+  const txt=`"${p.text}" — overheard in the 2AM room 🌙 carted.`;
+  if(navigator.share){ navigator.share({text:txt}).catch(()=>{}); }
+  else if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>toast("copied — go post it 📤")).catch(()=>{}); }
+}
+function saveMinePost(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); all.unshift({ic:post.ic,text:post.text,streak:post.streak||0,night:nightKey()}); localStorage.setItem("carted_room_mine", JSON.stringify(all.slice(0,12))); }catch(e){} }
+function loadMinePosts(){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); return all.filter(p=>p.night===nightKey()).map(p=>({ic:p.ic,text:p.text,streak:p.streak,city:"you",ago:"tonight",mine:true,r:{hug:1+Math.floor(Math.random()*5),me:Math.floor(Math.random()*4),go:Math.floor(Math.random()*2)},reacted:{}})); }catch(e){ return []; } }
+function makeMine(ic, text){ const post={ic, text, city:"you", ago:"now", mine:true, streak:stats.streak||0, r:{hug:0,me:0,go:0}, reacted:{}}; room.unshift(post); saveMinePost(post); renderRoom(); beSeen(post); return post; }
+function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; makeMine("🌙", v); inp.value=""; snd("chime"); toast("posted — burns at sunrise 🌅"); addXp(4); questEvent("post"); }
+const CONFESS = ["almost got me. it didn't. 💪","called my name at 2am. i let it ring.","was THIS close. wallet's still shut.","tempted me for 20 whole minutes. survived."];
+function quickConfess(e){ makeMine(e, `${e} ${pick(CONFESS)}`); snd("chime"); toast("confessed to the room 🌙"); addXp(4); questEvent("post"); }
 function shareToRoom(){
   const po=pendingOrder, c=po?po.city:curCity(); const place=lastOrderItems[0];
   const sum = lastOrderItems.length>1 ? `${place.name} +${lastOrderItems.length-1} more` : (place?place.name:"late-night food");
-  const post={ic:place?place.ic:"🌙", text:`almost spent ${money(po?po.total:0,c.cur)} at ${esc(sum)} in ${esc(c.name)}. closed the app instead 🌙`, city:"you", ago:"now", mine:true, r:{hug:0,me:0,go:0}, reacted:{}};
-  room.unshift(post); go("room"); questEvent("post"); beSeen(post);
+  const flightBit = po&&po.flight ? ` (a ${po.flight.label} flight away)` : "";
+  makeMine(place?place.ic:"🌙", `almost spent ${money(po?po.total:0,c.cur)} at ${sum} in ${c.name}${flightBit}. closed the app instead 🌙`);
+  go("room"); snd("chime"); addXp(4); questEvent("post");
 }
 function beSeen(post){ let n=0; const order=["me","hug","me","go","hug","me","hug"]; const tick=()=>{ if(!post||n>=order.length) return; post.r[order[n]]++; n++; if($("#view-room").classList.contains("active")) renderRoom(); setTimeout(tick, 850+Math.random()*750); }; setTimeout(tick, 650); }
 let lastIncoming=-1;
-function streamIncoming(){ if(!$("#view-room").classList.contains("active")) return; let idx; do { idx=Math.floor(Math.random()*INCOMING.length); } while(idx===lastIncoming && INCOMING.length>1); lastIncoming=idx; const s=INCOMING[idx]; room.unshift({ic:s.ic,text:s.text,city:s.city,ago:"now",r:{hug:Math.floor(Math.random()*6),me:Math.floor(Math.random()*9),go:Math.floor(Math.random()*3)},reacted:{}}); if(room.length>40) room.pop(); renderRoom(); }
+function streamIncoming(){ if(!$("#view-room").classList.contains("active")) return; let idx; do { idx=Math.floor(Math.random()*INCOMING.length); } while(idx===lastIncoming && INCOMING.length>1); lastIncoming=idx; const s=INCOMING[idx]; room.unshift({ic:s.ic,text:s.text,city:s.city,ago:"now",streak:Math.random()<.4?2+Math.floor(Math.random()*19):0,r:{hug:Math.floor(Math.random()*6),me:Math.floor(Math.random()*9),go:Math.floor(Math.random()*3)},reacted:{}}); if(room.length>40) room.pop(); renderRoom(); }
 
 /* ---- live count + ticker ---- */
 let tIdx=0;
 function rotateTicker(){ const el=$("#ticker-msg"); el.style.opacity="0"; el.style.transform="translateY(-8px)"; setTimeout(()=>{ el.textContent=TICKER[tIdx%TICKER.length]; tIdx++; el.style.opacity="1"; el.style.transform="translateY(0)"; },420); }
-function driftLive(){ liveBase += Math.floor(Math.random()*17)-7; if(liveBase<1180) liveBase=1180; if(liveBase>1390) liveBase=1390; $("#live-count").textContent=liveBase.toLocaleString(); const rl=$("#room-live"); if(rl) rl.textContent=liveBase.toLocaleString(); const to=$("#track-others"); if($("#view-track").classList.contains("active") && $("#track-live").style.display!=="none"){ to.textContent=Math.max(210, parseInt(to.textContent)+(Math.floor(Math.random()*9)-4)); } }
+let dodgedTonight = 61000 + (hash(nightKey())%52000);
+function driftLive(){ liveBase += Math.floor(Math.random()*17)-7; if(liveBase<1180) liveBase=1180; if(liveBase>1390) liveBase=1390; $("#live-count").textContent=liveBase.toLocaleString(); const rl=$("#room-live"); if(rl) rl.textContent=liveBase.toLocaleString(); dodgedTonight += Math.floor(Math.random()*120); const rd=$("#room-dodged"); if(rd) rd.textContent="$"+dodgedTonight.toLocaleString(); const to=$("#track-others"); if($("#view-track").classList.contains("active") && $("#track-live").style.display!=="none"){ to.textContent=Math.max(210, parseInt(to.textContent)+(Math.floor(Math.random()*9)-4)); } }
 
 /* ---- boot ---- */
 CITIES.forEach((c,i)=>{ CITY_INDEX[c.id]=i; statsByCity[c.id]={saved:0,orders:0}; });
-loadSaved(); loadAccount();
+loadSaved(); loadAccount(); loadHome();
+room = loadMinePosts();
 renderCityBar(); renderTally(); renderFeed();
 (function(){ const av=$("#avatar-btn"); if(av) av.textContent=avatarGlyph(); renderHud(); renderQuests(); })();
 loadCity(CITIES[0]);
-room = ROOM_SEED.map(p=>({...p, reacted:{}}));
+room = room.concat(ROOM_SEED.map(p=>({...p, reacted:{}})));
 rotateTicker(); setInterval(rotateTicker, 3600); setInterval(driftLive, 2600); setInterval(streamIncoming, 7000);
 document.addEventListener("pointerdown", e=>{ const sc=document.querySelector(".screen"); if(!sc) return; const r=sc.getBoundingClientRect(); lastTap={x:e.clientX-r.left, y:e.clientY-r.top}; }, true);
 if(!localStorage.getItem("carted_onboard")){
@@ -1118,7 +1396,7 @@ if(!localStorage.getItem("carted_onboard")){
     <button class="cta" style="position:static" onclick="closeModal();snd('pop')">let's get hungry 🌙</button>`); }, 800);
 }
 document.addEventListener("keydown", e=>{ if(e.key==="Enter" && document.activeElement && document.activeElement.id==="composer-input") postFromComposer(); });
-if("serviceWorker" in navigator){ navigator.serviceWorker.register("/carted-demo/sw.js").catch(()=>{}); }
+if("serviceWorker" in navigator){ navigator.serviceWorker.register(BASE+"sw.js").catch(()=>{}); }
 </script>
 </body>
 </html>
