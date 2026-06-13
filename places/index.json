@@ -1,0 +1,255 @@
+{
+  "bakedAt": "2026-06-13T04:08:17.654Z",
+  "cities": [
+    {
+      "id": "nyc",
+      "name": "New York",
+      "baked": false
+    },
+    {
+      "id": "la",
+      "name": "Los Angeles",
+      "baked": false
+    },
+    {
+      "id": "ldn",
+      "name": "London",
+      "baked": false
+    },
+    {
+      "id": "tyo",
+      "name": "Tokyo",
+      "baked": false
+    },
+    {
+      "id": "sel",
+      "name": "Seoul",
+      "baked": false
+    },
+    {
+      "id": "mex",
+      "name": "Mexico City",
+      "baked": false
+    },
+    {
+      "id": "par",
+      "name": "Paris",
+      "baked": false
+    },
+    {
+      "id": "ber",
+      "name": "Berlin",
+      "baked": false
+    },
+    {
+      "id": "bkk",
+      "name": "Bangkok",
+      "baked": false
+    },
+    {
+      "id": "syd",
+      "name": "Sydney",
+      "baked": false
+    },
+    {
+      "id": "tor",
+      "name": "Toronto",
+      "baked": false
+    },
+    {
+      "id": "chi",
+      "name": "Chicago",
+      "baked": false
+    },
+    {
+      "id": "sin",
+      "name": "Singapore",
+      "baked": false
+    },
+    {
+      "id": "hou",
+      "name": "Houston",
+      "baked": false
+    },
+    {
+      "id": "sfo",
+      "name": "San Francisco",
+      "baked": false
+    },
+    {
+      "id": "nol",
+      "name": "New Orleans",
+      "baked": false
+    },
+    {
+      "id": "oax",
+      "name": "Oaxaca",
+      "baked": false
+    },
+    {
+      "id": "lim",
+      "name": "Lima",
+      "baked": false
+    },
+    {
+      "id": "bue",
+      "name": "Buenos Aires",
+      "baked": false
+    },
+    {
+      "id": "sao",
+      "name": "São Paulo",
+      "baked": false
+    },
+    {
+      "id": "rom",
+      "name": "Rome",
+      "baked": false
+    },
+    {
+      "id": "nap",
+      "name": "Naples",
+      "baked": false
+    },
+    {
+      "id": "bol",
+      "name": "Bologna",
+      "baked": false
+    },
+    {
+      "id": "bcn",
+      "name": "Barcelona",
+      "baked": false
+    },
+    {
+      "id": "mad",
+      "name": "Madrid",
+      "baked": false
+    },
+    {
+      "id": "sse",
+      "name": "San Sebastián",
+      "baked": false
+    },
+    {
+      "id": "lis",
+      "name": "Lisbon",
+      "baked": false
+    },
+    {
+      "id": "cph",
+      "name": "Copenhagen",
+      "baked": false
+    },
+    {
+      "id": "ams",
+      "name": "Amsterdam",
+      "baked": false
+    },
+    {
+      "id": "vie",
+      "name": "Vienna",
+      "baked": false
+    },
+    {
+      "id": "ath",
+      "name": "Athens",
+      "baked": false
+    },
+    {
+      "id": "ist",
+      "name": "Istanbul",
+      "baked": false
+    },
+    {
+      "id": "tlv",
+      "name": "Tel Aviv",
+      "baked": false
+    },
+    {
+      "id": "bey",
+      "name": "Beirut",
+      "baked": false
+    },
+    {
+      "id": "dxb",
+      "name": "Dubai",
+      "baked": false
+    },
+    {
+      "id": "cai",
+      "name": "Cairo",
+      "baked": false
+    },
+    {
+      "id": "rak",
+      "name": "Marrakech",
+      "baked": false
+    },
+    {
+      "id": "cpt",
+      "name": "Cape Town",
+      "baked": false
+    },
+    {
+      "id": "osa",
+      "name": "Osaka",
+      "baked": false
+    },
+    {
+      "id": "kyo",
+      "name": "Kyoto",
+      "baked": false
+    },
+    {
+      "id": "pus",
+      "name": "Busan",
+      "baked": false
+    },
+    {
+      "id": "hkg",
+      "name": "Hong Kong",
+      "baked": false
+    },
+    {
+      "id": "tpe",
+      "name": "Taipei",
+      "baked": false
+    },
+    {
+      "id": "sgn",
+      "name": "Saigon",
+      "baked": false
+    },
+    {
+      "id": "han",
+      "name": "Hanoi",
+      "baked": false
+    },
+    {
+      "id": "pen",
+      "name": "Penang",
+      "baked": false
+    },
+    {
+      "id": "kul",
+      "name": "Kuala Lumpur",
+      "baked": false
+    },
+    {
+      "id": "bom",
+      "name": "Mumbai",
+      "baked": false
+    },
+    {
+      "id": "del",
+      "name": "Delhi",
+      "baked": false
+    },
+    {
+      "id": "mel",
+      "name": "Melbourne",
+      "baked": false
+    }
+  ]
+}

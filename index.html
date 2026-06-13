@@ -314,6 +314,37 @@
   .sbadge { background: var(--accent2); border: 1.5px solid var(--ink); border-radius: 8px; padding: 0 5px; font-weight: 800; color: var(--ink); font-size: 10.5px; }
   .chip.pshare { flex: 0 0 auto; min-width: 46px; }
 
+  /* ----- event banners (golden hours / seasons) ----- */
+  .ebanner { border: 2.5px solid var(--ink); border-radius: 14px; padding: 9px 12px; margin: 0 0 10px; font-size: 12.5px; font-weight: 700; box-shadow: 3px 3px 0 var(--ink); }
+  .ebanner b { font-weight: 900; }
+  .ebanner.season { background: #fff3d6; }
+  .ebanner.golden { background: var(--neon); color: #fff; }
+  /* ----- feed toy hub ----- */
+  .hub { display: flex; gap: 8px; margin-bottom: 16px; }
+  .hub-tile { flex: 1; background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 12px 6px; font-family: var(--disp); font-weight: 600; font-size: 11.5px; color: var(--text); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; box-shadow: 3px 3px 0 var(--ink); transition: transform .1s, box-shadow .1s; }
+  .hub-tile:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
+  .hub-tile .ht-ic { font-size: 23px; }
+  /* ----- konbini corner store ----- */
+  .kb-head { text-align: center; margin: 4px 0 14px; }
+  .kb-head .kb-title { font-family: var(--disp); font-weight: 700; font-size: 22px; }
+  .kb-head .kb-tag { color: var(--muted); font-size: 12.5px; font-weight: 700; margin-top: 2px; }
+  .kb-item { display: flex; align-items: center; gap: 12px; background: var(--card); border: 2.5px solid var(--ink); border-radius: 14px; padding: 10px 12px; margin-bottom: 10px; box-shadow: 3px 3px 0 var(--ink); }
+  .kb-ic { font-size: 30px; width: 40px; text-align: center; }
+  .kb-mid { flex: 1; min-width: 0; }
+  .kb-n { font-weight: 800; font-size: 14.5px; }
+  .kb-sub { color: var(--muted); font-size: 11.5px; font-weight: 700; }
+  .kb-p { font-family: var(--disp); font-weight: 600; color: var(--accent); font-size: 15px; }
+  .kb-add { width: 36px; height: 36px; border-radius: 12px; border: 2px solid var(--ink); background: var(--go); color: #fff; font-size: 20px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); flex: 0 0 auto; }
+  .kb-add:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
+  /* ----- rate the plate ----- */
+  .rtp { display: flex; align-items: center; gap: 8px; margin: 6px 0 4px; }
+  .rtp-card { flex: 1; background: var(--screen); border: 2.5px solid var(--ink); border-radius: 16px; padding: 10px; cursor: pointer; box-shadow: 3px 3px 0 var(--ink); display: flex; flex-direction: column; align-items: center; gap: 8px; transition: transform .1s; min-width: 0; }
+  .rtp-card:active { transform: scale(.96); }
+  .rtp-img { width: 100%; height: 96px; object-fit: cover; border-radius: 10px; border: 2px solid var(--ink); }
+  .rtp-emo { font-size: 60px; height: 96px; display: flex; align-items: center; justify-content: center; }
+  .rtp-n { font-size: 12px; font-weight: 800; text-align: center; line-height: 1.2; }
+  .rtp-vs { font-family: var(--disp); font-weight: 700; color: var(--muted); font-size: 14px; flex: 0 0 auto; }
+
   @media (max-width: 440px) {
     body { background: var(--screen); display: block; overflow: hidden; }
     .phone { width: 100vw; height: 100vh; height: 100dvh; padding: 0; border-radius: 0; box-shadow: none; }
@@ -347,6 +378,7 @@
             <div class="live"><span class="dot"></span> <span id="live-count">1,247</span> night owls browsing with you</div>
             <div class="ghostline"><span class="ghost-emo">👻</span><div class="msg" id="ticker-msg"></div></div>
           </div>
+          <div id="event-banners"></div>
           <div class="section-label" style="margin-bottom:8px">📍 pick a city</div>
           <div class="city-bar" id="city-bar"></div>
           <div class="tally">
@@ -354,6 +386,11 @@
             <div class="box"><div class="k">window-orders</div><div class="v" id="order-count">0</div></div>
           </div>
           <div id="quests"></div>
+          <div class="hub" id="hub">
+            <button class="hub-tile" onclick="openKonbini()"><span class="ht-ic">🏪</span>corner store</button>
+            <button class="hub-tile" onclick="ratePlate()"><span class="ht-ic">🔥</span>rate the plate</button>
+            <button class="hub-tile" onclick="go('profile')"><span class="ht-ic">👻</span>your drivers</button>
+          </div>
           <div class="seg">
             <button id="seg-all" class="on" onclick="setMode('all')">All</button>
             <button id="seg-saved" onclick="setMode('saved')">♥ Saved <span id="saved-count">0</span></button>
@@ -395,7 +432,7 @@
           <div class="prompts"><span class="plabel">what almost got you?</span><button class="pchip" onclick="quickConfess('🍕')">🍕</button><button class="pchip" onclick="quickConfess('🍜')">🍜</button><button class="pchip" onclick="quickConfess('🍣')">🍣</button><button class="pchip" onclick="quickConfess('🌮')">🌮</button><button class="pchip" onclick="quickConfess('🍔')">🍔</button><button class="pchip" onclick="quickConfess('🍰')">🍰</button></div>
           <div class="composer"><input id="composer-input" placeholder="or tell the room about it…" maxlength="90" /><button onclick="postFromComposer()">post</button></div>
           <div id="room-feed"></div>
-          <div class="osm-credit">posts burn at sunrise 🌅 nothing here is permanent</div>
+          <div class="osm-credit" id="room-burn">🌅 posts burn at sunrise</div>
         </section>
 
         <!-- PROFILE -->
@@ -420,6 +457,14 @@
             </div>
             <div id="track-reveal" style="display:none"></div>
           </div>
+        </section>
+
+        <!-- KONBINI (24h corner store) -->
+        <section class="view" id="view-konbini">
+          <button class="back" onclick="go('feed')">‹ back</button>
+          <div class="kb-head"><div class="kb-title">🏪 the 24h corner store</div><div class="kb-tag">no city. no closing time. no delivery — it's right there.</div></div>
+          <div id="konbini-list"></div>
+          <button class="cta secondary" style="position:static" onclick="go('cart')">see cart</button>
         </section>
 
       </div>
@@ -718,7 +763,7 @@ function flightInfo(city){
   return { km: Math.round(km), mins, label: h ? `${h}h ${String(m).padStart(2,"0")}m` : `${m}m` };
 }
 function cityOf(p){ const i = CITY_INDEX[p._cityId]; return i!=null ? CITIES[i] : curCity(); }
-function etaStr(p){ const fl = flightInfo(cityOf(p)); return fl ? `✈️ ${fl.label}` : `⏱ ${etaFor(p)} min`; }
+function etaStr(p){ if(p._cityId==="konbini") return "⚡ instant"; const fl = flightInfo(cityOf(p)); return fl ? `✈️ ${fl.label}` : `⏱ ${etaFor(p)} min`; }
 /* photo layer: baked Google photo when available, keyworded stock fallback, emoji last resort */
 const BASE = location.pathname.includes("/carted-demo") ? "/carted-demo/" : "/";
 const PHOTO_KW = { "🍕":"pizza","🍔":"burger","🍟":"fries","🌮":"tacos","🌯":"burrito","🍜":"ramen","🍣":"sushi","🍱":"bento-box","🍛":"curry","🥡":"noodles","🍗":"fried-chicken","🥩":"steak","🍖":"barbecue","🥪":"sandwich","🥯":"bagel","🧆":"falafel","🥙":"kebab","🦐":"seafood","🥘":"paella","🍲":"hotpot","🥗":"salad","☕":"coffee","🥐":"croissant","🍩":"donut","🍰":"cake","🍦":"ice-cream","🍨":"gelato","🧋":"bubble-tea","🥟":"dumplings","🐙":"takoyaki","🐟":"grilled-fish","🥨":"pretzel","🍽️":"gourmet-food" };
@@ -752,7 +797,7 @@ const FLIGHT_PUNCH = [
 ];
 function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
 function levelInfo(xp){ let lvl=1, need=60, acc=0; while(xp>=acc+need){ acc+=need; lvl++; need=Math.round(need*1.35); } return {lvl, pct:Math.round((xp-acc)/need*100)}; }
-function addXp(n){ const before=levelInfo(stats.xp||0).lvl; stats.xp=(stats.xp||0)+n; saveStats(); renderHud(); floatXp(n); const lvl=levelInfo(stats.xp).lvl; if(lvl>before) showLevelUp(lvl); }
+function addXp(n){ n=Math.round(n*xpMult()); const before=levelInfo(stats.xp||0).lvl; stats.xp=(stats.xp||0)+n; saveStats(); renderHud(); floatXp(n); const lvl=levelInfo(stats.xp).lvl; if(lvl>before) showLevelUp(lvl); }
 const ACHV = [
   {id:"first", ic:"👻", name:"First Ghost", tip:"window-order once", has:s=>s.orders>=1},
   {id:"fav5", ic:"❤️", name:"Collector", tip:"save 5 places", has:()=>Object.keys(savedPlaces).length>=5},
@@ -1068,6 +1113,7 @@ function cardHTML(p, saved){
   </div>`;
 }
 function renderFeed(){
+  renderBanners();
   const c=curCity(), saved=feedMode==="saved";
   $("#saved-count").textContent = Object.keys(savedPlaces).length;
   if(saved){
@@ -1133,7 +1179,15 @@ function renderProfile(){
     ? `<button class="signin-btn" onclick="signOut()">sign out</button>`
     : `<button class="signin-btn dark" onclick="signIn('Apple')"> Sign in with Apple</button><button class="signin-btn" onclick="signIn('Google')">Sign in with Google</button>`)
     + `<button class="signin-btn" onclick="shareWin('streak')">📸 flex your streak card</button>`
+    + `<button class="signin-btn" onclick="ghostPush()">${stats.pushOptIn?"🔔 ghost texts: on":"🔔 let the ghost text me"}</button>`
+    + `<button class="signin-btn" onclick="toggleAsmr()">${asmrOn?"🍳 kitchen ASMR: on":"🍳 kitchen ASMR: off"}</button>`
     + `<button class="signin-btn" onclick="toggleSnd()">${sndOn?"🔊 sounds: on":"🔇 sounds: off"}</button>`;
+  const owned=stats.drivers||[];
+  const driversCard = `<div class="section-label" style="margin:8px 2px 8px">👻 your ghost couriers <span style="color:var(--muted)">${owned.length}/${GACHA.length}</span></div>`
+    + `<div class="achv-grid">` + GACHA.map(d=>{ const on=owned.includes(d.id); return `<div class="achv${on?' on':''}" title="${esc(d.p)}"><div class="achv-ic">${on?d.e:'❔'}</div><div class="achv-name">${on?esc(d.n):'???'}</div><div class="achv-tip" style="color:${on?RARITY_COLOR[d.r]:'var(--muted)'}">${d.r}</div></div>`; }).join("") + `</div>`;
+  const buddyCard = stats.buddy
+    ? `<div class="tier-card"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">buddy: ${esc(stats.buddy.name)}</div><div class="tier-sub">sharing a 🔥 ${stats.streak||0}-night streak — if one caves, you both reset</div></div></div><button class="signin-btn" onclick="inviteBuddy()" style="margin-top:8px">↗ invite another</button><div style="text-align:center;color:var(--muted);font-size:10.5px;margin-top:6px">prototype — buddy sync goes live with the backend</div></div>`
+    : `<div class="tier-card"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">get a no-spend buddy</div><div class="tier-sub">share one streak with one person — accountability hits harder</div></div></div><button class="signin-btn" onclick="inviteBuddy()" style="margin-top:8px">↗ invite a buddy</button></div>`;
   const {t,next}=tierFor(stats.savedUsd);
   const prog = next ? Math.max(5, Math.min(100, Math.round((stats.savedUsd-t.min)/(next.min-t.min)*100))) : 100;
   const tierCard = `<div class="tier-card"><div class="tier-row"><span class="tier-ic">${t.ic}</span><div><div class="tier-name">${t.name}</div><div class="tier-sub">${next?`$${Math.max(0,Math.round(next.min-stats.savedUsd))} more saved → <b>${next.name}</b> ${next.ic}`:"max rank — legend 🏆"}</div></div></div><div class="tier-bar"><div class="tier-fill" style="width:${prog}%"></div></div></div>`;
@@ -1141,7 +1195,7 @@ function renderProfile(){
   const lvlCard = `<div class="lvl-card"><div class="lvl-top"><span>⭐ Level ${L.lvl}</span><span style="color:var(--muted)">${stats.xp||0} XP</span></div><div class="xp-track"><div class="xp-fill" style="width:${L.pct}%"></div></div></div>`;
   if(!stats.earned) stats.earned=[];
   const achv = `<div class="section-label" style="margin:6px 2px 8px">🏅 achievements</div><div class="achv-grid">` + ACHV.map(a=>{ const on=a.has(stats); return `<div class="achv${on?' on':''}"><div class="achv-ic">${on?a.ic:'🔒'}</div><div class="achv-name">${a.name}</div><div class="achv-tip">${on?'unlocked':a.tip}</div></div>`; }).join("") + `</div>`;
-  $("#profile-body").innerHTML = `<div class="brand"><h1 style="font-size:24px">profile</h1></div>` + head + lvlCard + tierCard + grid + achv + auth
+  $("#profile-body").innerHTML = `<div class="brand"><h1 style="font-size:24px">profile</h1></div>` + head + lvlCard + tierCard + grid + achv + driversCard + buddyCard + auth
     + `<div style="text-align:center;color:var(--muted);font-size:11.5px;margin-top:14px">mock sign-in. real cross-device sync needs a backend (see roadmap).</div>`;
 }
 
@@ -1222,8 +1276,8 @@ const FLIGHT_STAGES = [
 function fmtMins(mins){ const h=Math.floor(mins/60), m=Math.round(mins%60); return h?`${h}h ${String(m).padStart(2,"0")}m`:`${m}m`; }
 function driverSay(name, msg){ const dc=$("#dchat"); if(!dc) return; const d=document.createElement("div"); d.className="dmsg"; d.innerHTML=`<b>${esc(name)} 👻</b> ${esc(msg)}`; dc.appendChild(d); while(dc.children.length>3) dc.removeChild(dc.firstChild); }
 function placeOrder(){
-  const c=curCity(), fl=flightInfo(c);
-  pendingOrder = { items: cart.slice(), total: cartAllIn(), city: c, flight: fl, driver: pick(REGION_DRIVERS[c.region]||DRIVERS) };
+  const c=curCity(), fl=flightInfo(c), gd=rollDriver();
+  pendingOrder = { items: cart.slice(), total: cartAllIn(), city: c, flight: fl, driver: gd.n, gachaDriver: gd };
   snd("pop"); burst();
   $("#track-reveal").style.display="none"; $("#track-live").style.display="block"; $("#road-done").style.width="0%";
   const rd=$("#rider"); rd.style.left="8%"; rd.style.opacity="1"; rd.textContent= fl?"🛵":"🚗";
@@ -1272,6 +1326,8 @@ function revealTruth(){
   lastShare = { usd: po.total/po.city.pf, label: money(po.total, po.city.cur), streak: stats.streak, tier: newTier, city: po.city.name };
   const rd=$("#rider"); rd.textContent= po.flight?"✈️💨":"🚗💨"; rd.style.left="125%"; rd.style.opacity="0"; $("#road-done").style.width="60%"; $("#track-live").style.display="none";
   snd("whoosh");
+  const newDriver = po.gachaDriver ? collectDriver(po.gachaDriver) : false;
+  if(Math.random()<0.22){ const gift=pick(HONORIFICS); addXp(5); setTimeout(()=>toast(gift), 1500); }
   const driver=po.driver||"Marcus", pl=pick(po.flight?FLIGHT_PUNCH:PUNCH);
   const r=$("#track-reveal"); r.style.display="block"; r.className="reveal";
   r.innerHTML = `
@@ -1283,6 +1339,7 @@ function revealTruth(){
     <div class="sub" style="color:#d98324;font-weight:800;margin-top:6px">🔥 ${stats.streak}-night no-spend streak${usedFreeze?' · 🧊 freeze used':''}</div>
     ${combo>=2?`<div class="combo">⚡ ${combo}× dodge combo!</div>`:""}
     ${milestone?`<div class="milestone">${milestone}</div>`:""}
+    ${po.gachaDriver?`<div class="milestone" style="background:${RARITY_COLOR[po.gachaDriver.r]};color:#fff;border-color:var(--ink)">${newDriver?"🆕 new courier":"🛵 courier"}: ${po.gachaDriver.e} ${esc(po.gachaDriver.n)} · ${po.gachaDriver.r}</div>`:""}
     <div style="margin-top:22px">
       <button class="cta" style="position:static" onclick="shareToRoom()">🌙 share it to the room</button>
       <button class="cta gold" style="position:static" onclick="shareWin()">📸 share the win</button>
@@ -1346,6 +1403,7 @@ function renderRoom(){
       <div class="ptext">${esc(p.text)}</div>
       <div class="reacts">${["hug","me","go"].map(t=>`<button class="chip${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')">${REACT_META[t]} <span class="cnt">${p.r[t]}</span></button>`).join("")}<button class="chip pshare" onclick="sharePost(${i})">📤</button></div>
     </div>`).join("");
+  const rb=$("#room-burn"); if(rb) rb.textContent=burnLabel();
 }
 function react(i,t){ const p=room[i]; if(!p) return; if(!p.reacted) p.reacted={}; if(p.reacted[t]) return; p.reacted[t]=true; p.r[t]++; renderRoom(); snd("pop"); toast(t==="hug"?"hang in there 🫂":t==="me"?"same 😋":"just send it 🔥"); addXp(3); questEvent("react"); }
 function sharePost(i){
@@ -1355,7 +1413,7 @@ function sharePost(i){
   else if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>toast("copied — go post it 📤")).catch(()=>{}); }
 }
 function saveMinePost(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); all.unshift({ic:post.ic,text:post.text,streak:post.streak||0,night:nightKey()}); localStorage.setItem("carted_room_mine", JSON.stringify(all.slice(0,12))); }catch(e){} }
-function loadMinePosts(){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); return all.filter(p=>p.night===nightKey()).map(p=>({ic:p.ic,text:p.text,streak:p.streak,city:"you",ago:"tonight",mine:true,r:{hug:1+Math.floor(Math.random()*5),me:Math.floor(Math.random()*4),go:Math.floor(Math.random()*2)},reacted:{}})); }catch(e){ return []; } }
+function loadMinePosts(){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); const live=all.filter(p=>p.night===nightKey()); if(live.length!==all.length){ try{ localStorage.setItem("carted_room_mine", JSON.stringify(live)); }catch(e){} } return live.map(p=>({ic:p.ic,text:p.text,streak:p.streak,city:"you",ago:"tonight",mine:true,r:{hug:1+Math.floor(Math.random()*5),me:Math.floor(Math.random()*4),go:Math.floor(Math.random()*2)},reacted:{}})); }catch(e){ return []; } }
 function makeMine(ic, text){ const post={ic, text, city:"you", ago:"now", mine:true, streak:stats.streak||0, r:{hug:0,me:0,go:0}, reacted:{}}; room.unshift(post); saveMinePost(post); renderRoom(); beSeen(post); return post; }
 function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; makeMine("🌙", v); inp.value=""; snd("chime"); toast("posted — burns at sunrise 🌅"); addXp(4); questEvent("post"); }
 const CONFESS = ["almost got me. it didn't. 💪","called my name at 2am. i let it ring.","was THIS close. wallet's still shut.","tempted me for 20 whole minutes. survived."];
@@ -1377,6 +1435,102 @@ function rotateTicker(){ const el=$("#ticker-msg"); el.style.opacity="0"; el.sty
 let dodgedTonight = 61000 + (hash(nightKey())%52000);
 function driftLive(){ liveBase += Math.floor(Math.random()*17)-7; if(liveBase<1180) liveBase=1180; if(liveBase>1390) liveBase=1390; $("#live-count").textContent=liveBase.toLocaleString(); const rl=$("#room-live"); if(rl) rl.textContent=liveBase.toLocaleString(); dodgedTonight += Math.floor(Math.random()*120); const rd=$("#room-dodged"); if(rd) rd.textContent="$"+dodgedTonight.toLocaleString(); const to=$("#track-others"); if($("#view-track").classList.contains("active") && $("#track-live").style.display!=="none"){ to.textContent=Math.max(210, parseInt(to.textContent)+(Math.floor(Math.random()*9)-4)); } }
 
+/* ============================================================
+   Korea-trend features (도파민 사이트 playbook)
+   1 ghost-driver push · 2 sunrise TTL · 3 golden hours ·
+   4 buddy streak · 5 driver gacha · 6 konbini · 7 rate-the-plate ·
+   8 seasonal events · 9 kitchen ASMR · 10 honorific easter eggs
+   ============================================================ */
+
+/* --- 3 golden hours + 8 seasonal events: the XP multiplier engine --- */
+function isGoldenHour(){ const h=new Date().getHours(); return h>=22 || h<4; }
+const SEASONS = [
+  {id:"nsj",     name:"No-Spend January",         from:[1,1],  to:[1,7],  xp:2,   emoji:"❄️", blurb:"the big one — 2× XP on every dodge"},
+  {id:"ramen",   name:"Ramen Week",               from:[4,1],  to:[4,7],  xp:2,   emoji:"🍜", blurb:"slurp it with your eyes — 2× XP"},
+  {id:"summer",  name:"Midnight Munchies Summer",  from:[6,1], to:[8,31], xp:1.5, emoji:"🌃", blurb:"1.5× XP all season long"},
+  {id:"chicken", name:"Korean Fried Chicken Day",  from:[12,9],to:[12,9], xp:2,   emoji:"🍗", blurb:"치킨데이 — 2× XP, chimaek strong"},
+];
+function currentSeason(){ const d=new Date(), mo=d.getMonth()+1, dy=d.getDate(); const aft=f=>mo>f[0]||(mo===f[0]&&dy>=f[1]); const bef=t=>mo<t[0]||(mo===t[0]&&dy<=t[1]); return SEASONS.find(s=>aft(s.from)&&bef(s.to))||null; }
+function xpMult(){ let m=1; if(isGoldenHour()) m*=2; const s=currentSeason(); if(s) m*=s.xp; return m; }
+function renderBanners(){ const el=$("#event-banners"); if(!el) return; let h=""; const s=currentSeason(); if(s) h+=`<div class="ebanner season">${s.emoji} <b>${esc(s.name)}</b> · ${s.blurb}</div>`; if(isGoldenHour()) h+=`<div class="ebanner golden">🌙 <b>golden hours</b> · 2× XP until 4am — you're up anyway</div>`; el.innerHTML=h; }
+
+/* --- 5 driver gacha: collectible ghost couriers, rolled per order --- */
+const GACHA = [
+  {id:"kim",   n:"Kim",    e:"🛵", p:"texts too much. means well.",             r:"common"},
+  {id:"marco", n:"Marco",  e:"🚲", p:"judges your order. silently.",            r:"common"},
+  {id:"sofia", n:"Sofia",  e:"🛵", p:"always 'almost there'. never is.",        r:"common"},
+  {id:"dee",   n:"Dee",    e:"🚗", p:"takes the scenic route through the void.", r:"common"},
+  {id:"priya", n:"Priya",  e:"🚲", p:"rings the wrong (nonexistent) bell.",      r:"common"},
+  {id:"yuki",  n:"Yuki",   e:"🚗", p:"forever two minutes away.",               r:"rare"},
+  {id:"amelie",n:"Amélie", e:"🚲", p:"delivers poetry, not pizza.",             r:"rare"},
+  {id:"omar",  n:"Omar",   e:"🛵", p:"knows a shortcut. it's imaginary.",        r:"rare"},
+  {id:"ghost", n:"The Original Ghost", e:"👻", p:"the first courier. 0 deliveries, all-time.", r:"legendary"},
+];
+const RARITY_COLOR = {common:"#6b6580", rare:"#7c4dcc", legendary:"#ff5a3c"};
+function rollDriver(){ const x=Math.floor(Math.random()*100), tier = x<6?"legendary": x<33?"rare":"common"; const pool=GACHA.filter(d=>d.r===tier); return pick(pool.length?pool:GACHA); }
+function collectDriver(d){ stats.drivers=stats.drivers||[]; if(stats.drivers.includes(d.id)) return false; stats.drivers.push(d.id); saveStats(); return true; }
+
+/* --- 10 honorific easter eggs: the 사장님 throws in service --- */
+const HONORIFICS = [
+  "사장님 threw in extra banchan 🥬 +5 XP",
+  "the owner says: 잘 참았어 — well held 🙏 +5 XP",
+  "service! 🎁 imaginary mandu on the house +5 XP",
+  "사장님 nodded with quiet respect +5 XP",
+  "extra kimchi, on the house (it's a photo) +5 XP",
+];
+
+/* --- 9 kitchen ASMR: filtered-noise sizzle loop --- */
+let asmrNode=null, asmrOn = localStorage.getItem("carted_asmr")==="on";
+function startAsmr(){ try{ AC = AC || new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==="suspended") AC.resume(); if(asmrNode) return;
+  const sr=AC.sampleRate, buf=AC.createBuffer(1, sr*2, sr), d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*0.5;
+  const src=AC.createBufferSource(); src.buffer=buf; src.loop=true;
+  const hp=AC.createBiquadFilter(); hp.type="highpass"; hp.frequency.value=320;
+  const lp=AC.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=1200;
+  const g=AC.createGain(); g.gain.value=0.035;
+  src.connect(hp); hp.connect(lp); lp.connect(g); g.connect(AC.destination); src.start(); asmrNode={src,g};
+}catch(e){} }
+function stopAsmr(){ if(asmrNode){ try{ asmrNode.src.stop(); }catch(e){} asmrNode=null; } }
+function toggleAsmr(){ asmrOn=!asmrOn; try{ localStorage.setItem("carted_asmr", asmrOn?"on":"off"); }catch(e){} if(asmrOn) startAsmr(); else stopAsmr(); toast(asmrOn?"🍳 kitchen ASMR on":"kitchen ASMR off"); if($("#view-profile").classList.contains("active")) renderProfile(); }
+
+/* --- 1 ghost-driver push (local notifications now; remote/timed = backend, stubbed in sw.js) --- */
+function ghostNudgeMsgs(){ return ["you up? your streak isn't gonna dodge itself 🔥","i'm outside. (i'm not.) 👻","craving incoming in 3… 2… open me instead","banana milk thinks about you too 🥛","2am. the kitchen's 'open'. don't 😌"]; }
+function fireGhostText(){ const d=pick(GACHA), body=`${d.n} ${d.e}: ${pick(ghostNudgeMsgs())}`; try{ if(navigator.serviceWorker && navigator.serviceWorker.ready){ navigator.serviceWorker.ready.then(reg=>reg.showNotification("Carted 🌙",{body, icon:BASE+"icon-192.png", badge:BASE+"icon-192.png", tag:"carted-ghost", renotify:true})).catch(()=>{ try{ new Notification("Carted 🌙",{body}); }catch(_){} }); } else new Notification("Carted 🌙",{body}); }catch(e){ try{ new Notification("Carted 🌙",{body}); }catch(_){} } }
+function scheduleGhostNudge(){ clearTimeout(window.__ghostNudge); window.__ghostNudge=setTimeout(fireGhostText, 60000); } // demo cadence while tab is alive
+function ghostPush(){ if(!("Notification" in window)){ toast("notifications aren't supported here"); return; }
+  if(Notification.permission==="granted"){ stats.pushOptIn=true; saveStats(); fireGhostText(); scheduleGhostNudge(); if($("#view-profile").classList.contains("active")) renderProfile(); return; }
+  if(Notification.permission==="denied"){ toast("notifications are blocked in browser settings"); return; }
+  Notification.requestPermission().then(p=>{ if(p==="granted"){ stats.pushOptIn=true; saveStats(); toast("👻 the ghost has your number"); fireGhostText(); scheduleGhostNudge(); } else toast("no ghost texts then 🤷"); if($("#view-profile").classList.contains("active")) renderProfile(); }); }
+
+/* --- 4 buddy streak (invite link; true two-device sync = backend) --- */
+function buddyCode(){ const base=(account&&account.handle)||"owl"; return base+"-"+hash(base+"carted").toString(36).slice(0,4); }
+function inviteBuddy(){ const link=location.origin+location.pathname+"?buddy="+encodeURIComponent(buddyCode()); const txt=`be my no-spend buddy on Carted 🌙 we share one streak — if either of us caves, we both reset. you in? ${link}`; if(navigator.share){ navigator.share({text:txt}).catch(()=>{}); } else if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>toast("invite copied 👯 send it to one person")); } else toast(link); }
+function acceptBuddyFromUrl(){ const m=location.search.match(/[?&]buddy=([^&]+)/); if(!m) return; const code=decodeURIComponent(m[1]); if((stats.buddy&&stats.buddy.code===code) || code===buddyCode()) return; stats.buddy={code, since:nightKey(), name:code.split("-")[0]}; saveStats(); setTimeout(()=>toast(`👯 you're now ${esc(stats.buddy.name)}'s no-spend buddy`), 1300); }
+
+/* --- 6 konbini: the city-less 24h corner store --- */
+const KONBINI = [
+  {ic:"🍙", dish:"Triangle Kimbap", base:2.5}, {ic:"🥛", dish:"Banana Milk", base:2},
+  {ic:"🍜", dish:"Shin Ramyeon Cup", base:2.5}, {ic:"🍢", dish:"Odeng Skewer", base:3},
+  {ic:"🍗", dish:"Hot Bar", base:3}, {ic:"🥟", dish:"Steamed Bun", base:2.5},
+  {ic:"🍦", dish:"Melona Bar", base:1.5}, {ic:"🧋", dish:"Canned Coffee", base:2},
+  {ic:"🍫", dish:"Choco Pie box", base:4}, {ic:"🥤", dish:"Pocari Sweat", base:2},
+  {ic:"🍡", dish:"Dango", base:3}, {ic:"🍘", dish:"Senbei", base:2.5},
+];
+function konbiniPlaces(){ return KONBINI.map((k,i)=>({ _key:"kb"+i, _cityId:"konbini", _cityName:"corner store", _flag:"🏪", _cur:{sym:"$",dec:2}, ic:k.ic, name:"the 24h corner store", hood:"open all night", dish:k.dish, en:"konbini", rate:Math.round((44+i%6))/10, n:80+i*31, price:k.base, lvl:1, desc:null, maps:null, photo:null, rv:null })); }
+function openKonbini(){ const list=konbiniPlaces(); list.forEach(p=>placeByKey[p._key]=p); $("#konbini-list").innerHTML = list.map(p=>`<div class="kb-item"><div class="kb-ic">${p.ic}</div><div class="kb-mid"><div class="kb-n">${esc(p.dish)}</div><div class="kb-sub">⚡ already in your drawer</div></div><div class="kb-p">$${p.price.toFixed(2)}</div><button class="kb-add" onclick="addToCart('${p._key}',event)">＋</button></div>`).join(""); go("konbini"); }
+
+/* --- 7 rate the plate: hot-or-not, 8 rounds --- */
+let rtpRound=0, rtpScore={};
+function ratePlate(){ if(((curCity()._places||[]).length)<2){ toast("let a city load first 🌙"); return; } rtpRound=0; rtpScore={}; rtpNext(); }
+function rtpThumb(p){ return p.photo ? `<img class="rtp-img" src="${photoUrl(p,true)}" alt="" onerror="this.replaceWith(document.createTextNode('${p.ic}'))">` : `<span class="rtp-emo">${p.ic}</span>`; }
+function rtpNext(){ const list=(curCity()._places||[]).slice(); if(list.length<2 || rtpRound>=8) return rtpResult(); rtpRound++; let a=pick(list), b=pick(list), g=0; while(b===a && g++<12) b=pick(list);
+  showModal(`<div class="m-title" style="margin-top:0">🔥 rate the plate <span style="color:var(--muted);font-size:12px;font-weight:700">${rtpRound}/8</span></div><div class="rtp"><button class="rtp-card" onclick="rtpPick('${a._key}')">${rtpThumb(a)}<div class="rtp-n">${esc(a.dish)}</div></button><div class="rtp-vs">VS</div><button class="rtp-card" onclick="rtpPick('${b._key}')">${rtpThumb(b)}<div class="rtp-n">${esc(b.dish)}</div></button></div><div class="m-body">tap the one you'd (not) order</div>`); }
+function rtpPick(key){ const p=placeByKey[key]; if(p) rtpScore[p.ic]=(rtpScore[p.ic]||0)+1; snd("pop"); rtpNext(); }
+function rtpResult(){ let top="🍽️", max=0; for(const k in rtpScore){ if(rtpScore[k]>max){ max=rtpScore[k]; top=k; } } addXp(6); questEvent("spin"); showModal(`<div class="m-emoji">${top}</div><div class="m-title">tonight you're craving ${top}</div><div class="m-body">your eyes picked it ${max}×. now close the app and don't order it 😌</div><button class="cta" style="position:static" onclick="closeModal()">perfect</button>`); }
+
+/* --- 2 sunrise countdown for the room (TTL enforced by night-key in loadMinePosts) --- */
+function msToSunrise(){ const now=new Date(), r=new Date(now); r.setHours(4,0,0,0); if(now.getHours()>=4) r.setDate(r.getDate()+1); return r-now; }
+function burnLabel(){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); return `🌅 posts burn in ${h}h ${String(m).padStart(2,"0")}m`; }
+
 /* ---- boot ---- */
 CITIES.forEach((c,i)=>{ CITY_INDEX[c.id]=i; statsByCity[c.id]={saved:0,orders:0}; });
 loadSaved(); loadAccount(); loadHome();
@@ -1386,7 +1540,10 @@ renderCityBar(); renderTally(); renderFeed();
 loadCity(CITIES[0]);
 room = room.concat(ROOM_SEED.map(p=>({...p, reacted:{}})));
 rotateTicker(); setInterval(rotateTicker, 3600); setInterval(driftLive, 2600); setInterval(streamIncoming, 7000);
-document.addEventListener("pointerdown", e=>{ const sc=document.querySelector(".screen"); if(!sc) return; const r=sc.getBoundingClientRect(); lastTap={x:e.clientX-r.left, y:e.clientY-r.top}; }, true);
+renderBanners(); setInterval(renderBanners, 60000);
+acceptBuddyFromUrl();
+if(stats.pushOptIn && "Notification" in window && Notification.permission==="granted") scheduleGhostNudge();
+document.addEventListener("pointerdown", e=>{ const sc=document.querySelector(".screen"); if(!sc) return; const r=sc.getBoundingClientRect(); lastTap={x:e.clientX-r.left, y:e.clientY-r.top}; if(asmrOn && !asmrNode) startAsmr(); }, true);
 if(!localStorage.getItem("carted_onboard")){
   try{ localStorage.setItem("carted_onboard","1"); }catch(e){}
   setTimeout(()=>{ showModal(`

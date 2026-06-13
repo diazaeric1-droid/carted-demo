@@ -272,15 +272,37 @@ async function bakeCity(KEY, city, photosDir) {
   return places;
 }
 
+async function checkKey(KEY) {
+  console.log("Testing key with one Nearby Search (New York)…");
+  const res = await fetch("https://places.googleapis.com/v1/places:searchNearby", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-Goog-Api-Key": KEY, "X-Goog-FieldMask": "places.id,places.displayName" },
+    body: JSON.stringify({ includedTypes: ["restaurant"], maxResultCount: 1, locationRestriction: { circle: { center: { latitude: 40.728, longitude: -73.999 }, radius: 1500 } } }),
+  });
+  const body = await res.text();
+  if (res.ok) { console.log("✅ KEY OK — got:", JSON.parse(body).places?.[0]?.displayName?.text || "(a place)"); return true; }
+  console.error(`❌ HTTP ${res.status}\n${body}`);
+  if (/API_KEY_INVALID|API key not valid/.test(body)) console.error("\n→ The key string is wrong. Put your real key in ~/dopamine-app/.env (it starts with AIza).");
+  else if (/SERVICE_DISABLED|is not enabled|PERMISSION_DENIED/.test(body)) console.error("\n→ Enable 'Places API (New)' for this key's project: https://console.cloud.google.com/apis/library/places.googleapis.com  (NEW api, not legacy 'Places API')");
+  else if (/referer|referrer|API_KEY_HTTP_REFERRER_BLOCKED|API_KEY_IP/.test(body)) console.error("\n→ Remove the key's Application restrictions (HTTP referrer / IP), or set them to 'None'. This is a server-side call.");
+  else if (/billing/i.test(body)) console.error("\n→ Enable billing on the project (free $200/mo credit covers this bake).");
+  return false;
+}
+
 async function main() {
   const KEY = await loadKey();
   if (!KEY) {
     console.error("No key. Either:\n  export GOOGLE_PLACES_KEY=your-key\nor create ~/dopamine-app/.env containing:\n  GOOGLE_PLACES_KEY=your-key");
     process.exit(1);
   }
+  if (/^(paste|your|the)[-_]?|key-here|YOUR_REAL_KEY/i.test(KEY) || KEY.length < 30) {
+    console.error(`That's the placeholder, not a real key (got "${KEY.slice(0, 8)}…", length ${KEY.length}).\nPut your actual key (starts with AIza, ~39 chars) in ~/dopamine-app/.env:\n  printf 'GOOGLE_PLACES_KEY=%s\\n' 'AIza...' > ~/dopamine-app/.env`);
+    process.exit(1);
+  }
   const args = process.argv.slice(2);
+  if (args.includes("--check")) { process.exit(await checkKey(KEY) ? 0 : 1); }
   const force = args.includes("--force");
-  const ids = args.filter(x => x !== "--force");
+  const ids = args.filter(x => x !== "--force" && x !== "--check");
   const cities = ids.length ? CITIES.filter(c => ids.includes(c.id)) : CITIES;
   if (!cities.length) { console.error(`No matching cities. Available: ${CITIES.map(c => c.id).join(", ")}`); process.exit(1); }
 
