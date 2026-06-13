@@ -781,7 +781,7 @@ function etaStr(p){ if(p._cityId==="konbini") return "⚡ instant"; const fl = f
 const BASE = location.pathname.includes("/carted-demo") ? "/carted-demo/" : "/";
 /* backend (Supabase) — fill after deploying ~/carted-app/supabase (see supabase/BACKEND.md).
    Leave url:"" and the app runs fully, with push as a local-only demo + local buddy. */
-const CARTED_BE = { url: "", vapidPublic: "" };
+const CARTED_BE = { url: "https://twndjxqdhqcyxfdsteas.supabase.co/functions/v1", vapidPublic: "BIVyED-QXJHMAyRAA1Kk_WTh3APoVGXcUQ5xamY9ymVXYFtEuU16z0FjdPwxwPitZ0xgIt847SLiE25sRlMFQGk" };
 function beOn(){ return !!(CARTED_BE.url); }
 function deviceId(){ let d=localStorage.getItem("carted_device"); if(!d){ d="d"+Math.random().toString(36).slice(2)+Date.now().toString(36); try{ localStorage.setItem("carted_device", d); }catch(e){} } return d; }
 function bePost(fn, body){ return fetch(CARTED_BE.url+"/"+fn, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)}).then(r=>r.json()).catch(()=>null); }
