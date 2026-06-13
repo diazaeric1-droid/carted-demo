@@ -336,6 +336,17 @@
   .kb-p { font-family: var(--disp); font-weight: 600; color: var(--accent); font-size: 15px; }
   .kb-add { width: 36px; height: 36px; border-radius: 12px; border: 2px solid var(--ink); background: var(--go); color: #fff; font-size: 20px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); flex: 0 0 auto; }
   .kb-add:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
+  /* ----- restaurant menu ----- */
+  .mcourse { font-family: var(--disp); font-weight: 600; font-size: 14px; margin: 16px 2px 8px; }
+  .mrow { display: flex; align-items: center; gap: 11px; background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 8px 10px; margin-bottom: 8px; box-shadow: 2px 2px 0 var(--ink); }
+  .mthumb-wrap { width: 48px; height: 48px; flex: 0 0 48px; border-radius: 10px; border: 2px solid var(--ink); overflow: hidden; display: flex; align-items: center; justify-content: center; background: #ffe9b3; font-size: 26px; }
+  .mthumb { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .mthumb.emo { background: none; border: none; }
+  .mmid { flex: 1; min-width: 0; }
+  .mname { font-size: 13.5px; font-weight: 700; line-height: 1.25; }
+  .mprice { font-family: var(--disp); font-weight: 600; font-size: 13.5px; color: var(--accent); white-space: nowrap; }
+  .madd { width: 32px; height: 32px; flex: 0 0 32px; border-radius: 10px; border: 2px solid var(--ink); background: var(--go); color: #fff; font-size: 18px; line-height: 1; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; }
+  .madd:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
   /* ----- rate the plate ----- */
   .rtp { display: flex; align-items: center; gap: 8px; margin: 6px 0 4px; }
   .rtp-card { flex: 1; background: var(--screen); border: 2.5px solid var(--ink); border-radius: 16px; padding: 10px; cursor: pointer; box-shadow: 3px 3px 0 var(--ink); display: flex; flex-direction: column; align-items: center; gap: 8px; transition: transform .1s; min-width: 0; }
@@ -412,8 +423,10 @@
           <div class="d-desc" id="d-desc" style="display:none"></div>
           <div class="d-stats" id="d-stats"></div>
           <button class="savebtn" id="d-fav" onclick="toggleDetailFav()">♡ Save place</button>
+          <div class="section-label">🍴 menu · tap ＋ to (not) order</div>
+          <div id="d-menu"></div>
           <div class="reviews" id="d-reviews"></div>
-          <button class="cta" id="d-add">add to cart</button>
+          <button class="cta" id="d-add">🛒 view cart</button>
         </section>
 
         <!-- CART -->
@@ -766,6 +779,13 @@ function cityOf(p){ const i = CITY_INDEX[p._cityId]; return i!=null ? CITIES[i] 
 function etaStr(p){ if(p._cityId==="konbini") return "⚡ instant"; const fl = flightInfo(cityOf(p)); return fl ? `✈️ ${fl.label}` : `⏱ ${etaFor(p)} min`; }
 /* photo layer: baked Google photo when available, keyworded stock fallback, emoji last resort */
 const BASE = location.pathname.includes("/carted-demo") ? "/carted-demo/" : "/";
+/* backend (Supabase) — fill after deploying ~/carted-app/supabase (see supabase/BACKEND.md).
+   Leave url:"" and the app runs fully, with push as a local-only demo + local buddy. */
+const CARTED_BE = { url: "", vapidPublic: "" };
+function beOn(){ return !!(CARTED_BE.url); }
+function deviceId(){ let d=localStorage.getItem("carted_device"); if(!d){ d="d"+Math.random().toString(36).slice(2)+Date.now().toString(36); try{ localStorage.setItem("carted_device", d); }catch(e){} } return d; }
+function bePost(fn, body){ return fetch(CARTED_BE.url+"/"+fn, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)}).then(r=>r.json()).catch(()=>null); }
+function urlB64ToU8(s){ const pad="=".repeat((4-s.length%4)%4); const b=(s+pad).replace(/-/g,"+").replace(/_/g,"/"); const raw=atob(b); const out=new Uint8Array(raw.length); for(let i=0;i<raw.length;i++) out[i]=raw.charCodeAt(i); return out; }
 const PHOTO_KW = { "🍕":"pizza","🍔":"burger","🍟":"fries","🌮":"tacos","🌯":"burrito","🍜":"ramen","🍣":"sushi","🍱":"bento-box","🍛":"curry","🥡":"noodles","🍗":"fried-chicken","🥩":"steak","🍖":"barbecue","🥪":"sandwich","🥯":"bagel","🧆":"falafel","🥙":"kebab","🦐":"seafood","🥘":"paella","🍲":"hotpot","🥗":"salad","☕":"coffee","🥐":"croissant","🍩":"donut","🍰":"cake","🍦":"ice-cream","🍨":"gelato","🧋":"bubble-tea","🥟":"dumplings","🐙":"takoyaki","🐟":"grilled-fish","🥨":"pretzel","🍽️":"gourmet-food" };
 function photoUrl(p, big){ if(p.photo) return BASE + p.photo; const kw = PHOTO_KW[p.ic] || "food"; const s = big?400:200; return `https://loremflickr.com/${s}/${s}/${kw}?lock=${hash(p.name)%997}`; }
 function thumbImg(p, big){ return `<img class="ph-img" src="${photoUrl(p,big)}" alt="" loading="lazy" onerror="this.replaceWith('${p.ic}')">`; }
@@ -1185,8 +1205,10 @@ function renderProfile(){
   const owned=stats.drivers||[];
   const driversCard = `<div class="section-label" style="margin:8px 2px 8px">👻 your ghost couriers <span style="color:var(--muted)">${owned.length}/${GACHA.length}</span></div>`
     + `<div class="achv-grid">` + GACHA.map(d=>{ const on=owned.includes(d.id); return `<div class="achv${on?' on':''}" title="${esc(d.p)}"><div class="achv-ic">${on?d.e:'❔'}</div><div class="achv-name">${on?esc(d.n):'???'}</div><div class="achv-tip" style="color:${on?RARITY_COLOR[d.r]:'var(--muted)'}">${d.r}</div></div>`; }).join("") + `</div>`;
+  const bShared = stats.buddy && stats.buddy.sharedStreak!=null ? stats.buddy.sharedStreak : (stats.streak||0);
+  const bNote = beOn() ? (stats.buddy && stats.buddy.pending ? "waiting for them to tap your link…" : "synced live") : "prototype — goes live once the backend is configured";
   const buddyCard = stats.buddy
-    ? `<div class="tier-card"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">buddy: ${esc(stats.buddy.name)}</div><div class="tier-sub">sharing a 🔥 ${stats.streak||0}-night streak — if one caves, you both reset</div></div></div><button class="signin-btn" onclick="inviteBuddy()" style="margin-top:8px">↗ invite another</button><div style="text-align:center;color:var(--muted);font-size:10.5px;margin-top:6px">prototype — buddy sync goes live with the backend</div></div>`
+    ? `<div class="tier-card"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">${esc(stats.buddy.name||"your buddy")}</div><div class="tier-sub">sharing a 🔥 ${bShared}-night streak — if one caves, you both reset</div></div></div><button class="signin-btn" onclick="inviteBuddy()" style="margin-top:8px">↗ invite another</button><div style="text-align:center;color:var(--muted);font-size:10.5px;margin-top:6px">${bNote}</div></div>`
     : `<div class="tier-card"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">get a no-spend buddy</div><div class="tier-sub">share one streak with one person — accountability hits harder</div></div></div><button class="signin-btn" onclick="inviteBuddy()" style="margin-top:8px">↗ invite a buddy</button></div>`;
   const {t,next}=tierFor(stats.savedUsd);
   const prog = next ? Math.max(5, Math.min(100, Math.round((stats.savedUsd-t.min)/(next.min-t.min)*100))) : 100;
@@ -1207,16 +1229,18 @@ function openDetail(key){
   }
   currentDetailKey=key;
   $("#d-hero").innerHTML = thumbImg(p, true) + `<div class="city-tag">${p._flag} ${esc(p._cityName)}</div>`;
-  $("#d-name").innerHTML = `${esc(p.dish)} <span style="color:var(--muted);font-size:15px;font-weight:500;text-transform:capitalize">${esc(p.en)}</span>`;
-  $("#d-shop").textContent = `${p.name} · ${p.hood}`;
+  $("#d-name").textContent = p.name;
+  $("#d-shop").innerHTML = `<span style="text-transform:capitalize">${esc(p.en)}</span> · ${esc(p.hood)}`;
   const dd=$("#d-desc"); if(p.desc){ dd.textContent=p.desc; dd.style.display="block"; } else dd.style.display="none";
-  $("#d-stats").innerHTML = `<span>★ <b>${p.rate.toFixed(1)}</b> (${p.n.toLocaleString()})</span>${p.lvl?`<span><b>${"$".repeat(p.lvl)}</b></span>`:""}<span><b>${etaStr(p)}</b></span><span>💸 <b>${money(p.price,p._cur)}</b></span>`;
+  $("#d-stats").innerHTML = `<span>★ <b>${p.rate.toFixed(1)}</b> (${p.n.toLocaleString()})</span>${p.lvl?`<span><b>${"$".repeat(p.lvl)}</b></span>`:""}<span><b>${etaStr(p)}</b></span>`;
+  $("#d-menu").innerHTML = renderMenu(p);
   const real = (p.rv||[]).map(r=>`<div class="review"><div class="top"><span class="stars">${starStr(r.r)}</span><span>${esc(r.a||"a local")} · google</span></div><div class="text">${esc(r.t)}</div></div>`).join("");
   const mocks = mockFor(p).map(r=>`<div class="review"><div class="top"><span class="stars">${r[1]}</span><span>night owl 👻 · ${(hash(p.name)%23)+1}m ago</span></div><div class="text">${esc(r[0])}</div></div>`).join("");
   $("#d-reviews").innerHTML =
-    (real ? `<div class="section-label">★ real ones (google)</div>${real}` : "")
-    + `<div class="section-label">👻 night owls say (didn't eat)</div>${mocks}`;
-  $("#d-add").onclick = (e)=>addToCart(key, e);
+    `<div class="section-label" style="margin-top:18px">${real?"★ real ones (google)":"👻 night owls say (didn't eat)"}</div>`
+    + (real || mocks);
+  if(real) $("#d-reviews").innerHTML += `<div class="section-label">👻 night owls say (didn't eat)</div>${mocks}`;
+  $("#d-add").onclick = ()=>go("cart");
   updateDetailFav(); go("detail");
 }
 
@@ -1312,7 +1336,7 @@ function revealTruth(){
     streakGrew=true; stats.lastNight=tonight;
   }
   stats.orders++; stats.savedUsd += po.total/po.city.pf;
-  bumpTonight(po.total/po.city.pf);
+  bumpTonight(po.total/po.city.pf); buddyPing();
   combo++; if(combo>(stats.maxCombo||0)) stats.maxCombo=combo;
   stats.cuisines=stats.cuisines||[]; stats.cities=stats.cities||[];
   (po.items||[]).forEach(it=> uniqPush(stats.cuisines, it.en));
@@ -1496,15 +1520,45 @@ function toggleAsmr(){ asmrOn=!asmrOn; try{ localStorage.setItem("carted_asmr", 
 function ghostNudgeMsgs(){ return ["you up? your streak isn't gonna dodge itself 🔥","i'm outside. (i'm not.) 👻","craving incoming in 3… 2… open me instead","banana milk thinks about you too 🥛","2am. the kitchen's 'open'. don't 😌"]; }
 function fireGhostText(){ const d=pick(GACHA), body=`${d.n} ${d.e}: ${pick(ghostNudgeMsgs())}`; try{ if(navigator.serviceWorker && navigator.serviceWorker.ready){ navigator.serviceWorker.ready.then(reg=>reg.showNotification("Carted 🌙",{body, icon:BASE+"icon-192.png", badge:BASE+"icon-192.png", tag:"carted-ghost", renotify:true})).catch(()=>{ try{ new Notification("Carted 🌙",{body}); }catch(_){} }); } else new Notification("Carted 🌙",{body}); }catch(e){ try{ new Notification("Carted 🌙",{body}); }catch(_){} } }
 function scheduleGhostNudge(){ clearTimeout(window.__ghostNudge); window.__ghostNudge=setTimeout(fireGhostText, 60000); } // demo cadence while tab is alive
-function ghostPush(){ if(!("Notification" in window)){ toast("notifications aren't supported here"); return; }
-  if(Notification.permission==="granted"){ stats.pushOptIn=true; saveStats(); fireGhostText(); scheduleGhostNudge(); if($("#view-profile").classList.contains("active")) renderProfile(); return; }
+async function ghostPush(){
+  if(!("Notification" in window)){ toast("notifications aren't supported here"); return; }
   if(Notification.permission==="denied"){ toast("notifications are blocked in browser settings"); return; }
-  Notification.requestPermission().then(p=>{ if(p==="granted"){ stats.pushOptIn=true; saveStats(); toast("👻 the ghost has your number"); fireGhostText(); scheduleGhostNudge(); } else toast("no ghost texts then 🤷"); if($("#view-profile").classList.contains("active")) renderProfile(); }); }
+  let perm = Notification.permission;
+  if(perm!=="granted") perm = await Notification.requestPermission();
+  if(perm!=="granted"){ toast("no ghost texts then 🤷"); if($("#view-profile").classList.contains("active")) renderProfile(); return; }
+  stats.pushOptIn=true; saveStats();
+  try{
+    if(beOn() && CARTED_BE.vapidPublic && "serviceWorker" in navigator && "PushManager" in window){
+      const reg=await navigator.serviceWorker.ready;
+      let sub=await reg.pushManager.getSubscription();
+      if(!sub) sub=await reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey:urlB64ToU8(CARTED_BE.vapidPublic) });
+      await bePost("push-subscribe", { device_id:deviceId(), subscription:sub.toJSON(), streak:stats.streak||0, last_night:stats.lastNight, tz:Intl.DateTimeFormat().resolvedOptions().timeZone });
+      toast("🔔 ghost texts on — even when Carted's closed"); fireGhostText();
+    } else {
+      fireGhostText(); scheduleGhostNudge(); toast("👻 ghost texts on (local demo) — deploy the backend for closed-app push");
+    }
+  }catch(e){ fireGhostText(); scheduleGhostNudge(); toast("👻 ghost texts on (local)"); }
+  if($("#view-profile").classList.contains("active")) renderProfile();
+}
 
 /* --- 4 buddy streak (invite link; true two-device sync = backend) --- */
-function buddyCode(){ const base=(account&&account.handle)||"owl"; return base+"-"+hash(base+"carted").toString(36).slice(0,4); }
-function inviteBuddy(){ const link=location.origin+location.pathname+"?buddy="+encodeURIComponent(buddyCode()); const txt=`be my no-spend buddy on Carted 🌙 we share one streak — if either of us caves, we both reset. you in? ${link}`; if(navigator.share){ navigator.share({text:txt}).catch(()=>{}); } else if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>toast("invite copied 👯 send it to one person")); } else toast(link); }
-function acceptBuddyFromUrl(){ const m=location.search.match(/[?&]buddy=([^&]+)/); if(!m) return; const code=decodeURIComponent(m[1]); if((stats.buddy&&stats.buddy.code===code) || code===buddyCode()) return; stats.buddy={code, since:nightKey(), name:code.split("-")[0]}; saveStats(); setTimeout(()=>toast(`👯 you're now ${esc(stats.buddy.name)}'s no-spend buddy`), 1300); }
+function buddyCode(){ const base=(account&&account.handle)||"owl"; return (base+"-"+hash(base+deviceId()).toString(36).slice(0,4)).toLowerCase(); }
+function inviteBuddy(){
+  const code=buddyCode(), link=location.origin+location.pathname+"?buddy="+encodeURIComponent(code);
+  if(beOn()) bePost("buddy", { action:"join", code, device_id:deviceId() });
+  if(!stats.buddy){ stats.buddy={ code, since:nightKey(), name:"your buddy", role:"creator", pending:true }; saveStats(); }
+  const txt=`be my no-spend buddy on Carted 🌙 we share one streak — if either of us caves, we both reset. you in? ${link}`;
+  if(navigator.share){ navigator.share({text:txt}).catch(()=>{}); } else if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>toast("invite copied 👯 send it to one person")); } else toast(link);
+}
+function acceptBuddyFromUrl(){
+  const m=location.search.match(/[?&]buddy=([^&]+)/); if(!m) return;
+  const code=decodeURIComponent(m[1]).toLowerCase(); if(code===buddyCode()) return;
+  if(stats.buddy && stats.buddy.code===code) return;
+  stats.buddy={ code, since:nightKey(), name:"your buddy", role:"partner" }; saveStats();
+  if(beOn()) bePost("buddy", { action:"join", code, device_id:deviceId() }).then(r=>{ if(r && r.pair){ stats.buddy.sharedStreak=r.pair.streak||0; saveStats(); } });
+  setTimeout(()=>toast("👯 you're now sharing a no-spend streak"), 1300);
+}
+function buddyPing(){ if(!(stats.buddy && beOn())) return; bePost("buddy", { action:"ping", code:stats.buddy.code, device_id:deviceId(), night:nightKey() }).then(r=>{ if(r && r.pair){ stats.buddy.sharedStreak=r.pair.streak||0; stats.buddy.bothIn=!!r.bothIn; saveStats(); if($("#view-profile").classList.contains("active")) renderProfile(); } }); }
 
 /* --- 6 konbini: the city-less 24h corner store --- */
 const KONBINI = [
@@ -1531,9 +1585,44 @@ function rtpResult(){ let top="🍽️", max=0; for(const k in rtpScore){ if(rtp
 function msToSunrise(){ const now=new Date(), r=new Date(now); r.setHours(4,0,0,0); if(now.getHours()>=4) r.setDate(r.getDate()+1); return r-now; }
 function burnLabel(){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); return `🌅 posts burn in ${h}h ${String(m).padStart(2,"0")}m`; }
 
+/* ============================================================
+   Menus — tap a place -> a real, browsable menu. Mains are REAL
+   dishes (name + photo) from TheMealDB (menus.json, baked by
+   bake-menus.mjs); starters/sides/drinks/dessert are procedural
+   per cuisine. Prices are synthesized per city (you can't order,
+   so accuracy is moot — same wall as DoorDash menu data).
+   ============================================================ */
+let menusData = null;
+const EMOJI_CUISINE = { "🍕":"pizza","🍝":"italian","🍔":"american","🌮":"mexican","🌯":"mexican","🍣":"sushi","🍱":"japanese","🍜":"ramen","🥡":"chinese","🍛":"indian","🍲":"korean","🥘":"spanish","🍗":"american","🥩":"steak_house","🍖":"barbecue","🥪":"sandwich","🥯":"bagel","🧆":"middle_eastern","🥙":"greek","🦐":"seafood","🥐":"french","☕":"cafe","🍰":"dessert","🍦":"ice_cream","🥟":"dumpling","🐟":"seafood" };
+const STARTERS = { _:["House Salad","Garlic Bread","Soup of the Day"], italian:["Bruschetta","Caprese","Arancini"], pizza:["Bruschetta","Garlic Knots","Caprese"], japanese:["Edamame","Gyoza","Miso Soup"], sushi:["Edamame","Seaweed Salad","Miso Soup"], ramen:["Edamame","Gyoza","Takoyaki"], mexican:["Chips & Guac","Elote","Queso Fundido"], indian:["Samosa","Papadum","Onion Bhaji"], chinese:["Spring Rolls","Hot & Sour Soup","Wonton Soup"], thai:["Spring Rolls","Tom Yum","Satay Skewers"], korean:["Kimchi","Mandu","Tteokbokki"], french:["French Onion Soup","Escargot","Pâté"], greek:["Dolmades","Tzatziki & Pita","Saganaki"], american:["Mozzarella Sticks","Buffalo Wings","Loaded Fries"], spanish:["Patatas Bravas","Croquetas","Pan con Tomate"], turkish:["Hummus","Sigara Böreği","Lentil Soup"], vietnamese:["Summer Rolls","Bánh Cuốn","Goi Cuon"] };
+const SIDES = { _:["Fries","Side Salad","Steamed Rice"], japanese:["Steamed Rice","Pickles","Seaweed Salad"], sushi:["Steamed Rice","Edamame","Miso Soup"], mexican:["Rice & Beans","Tortilla Chips","Elote"], indian:["Naan","Basmati Rice","Raita"], italian:["Side of Pasta","Focaccia","Polenta"], pizza:["Garlic Bread","Side Salad","Wings"], korean:["Steamed Rice","Kimchi","Pickled Radish"], chinese:["Egg Fried Rice","Prawn Crackers","Bok Choy"], thai:["Jasmine Rice","Roti","Papaya Salad"], french:["Pommes Frites","Ratatouille","Baguette"], american:["Fries","Mac & Cheese","Coleslaw"] };
+const DRINKS = { _:["Sparkling Water","House Soda","Iced Tea"], japanese:["Ramune","Green Tea","Calpis"], sushi:["Green Tea","Ramune","Yuzu Soda"], ramen:["Ramune","Barley Tea","Calpis"], korean:["Barley Tea","Sikhye","Sujeonggwa"], mexican:["Horchata","Jarritos","Agua Fresca"], indian:["Mango Lassi","Masala Chai","Nimbu Pani"], italian:["Espresso","San Pellegrino","Aranciata"], pizza:["Italian Soda","San Pellegrino","Espresso"], chinese:["Jasmine Tea","Soy Milk","Lychee Soda"], thai:["Thai Iced Tea","Coconut Water","Lime Soda"], french:["Café au Lait","Citron Pressé","Perrier"], american:["Root Beer Float","Milkshake","Cold Brew"], cafe:["Latte","Cappuccino","Cold Brew"], coffee_shop:["Latte","Flat White","Mocha"], greek:["Frappé","Lemonade","Mountain Tea"], spanish:["Horchata","Clara (0%)","Café con Leche"] };
+const DESSERTS = { _:["Cheesecake","Vanilla Ice Cream","Chocolate Cake"], italian:["Tiramisu","Gelato","Cannoli"], pizza:["Tiramisu","Gelato","Nutella Pizza"], japanese:["Mochi","Matcha Ice Cream","Dorayaki"], sushi:["Mochi","Matcha Ice Cream","Yuzu Sorbet"], mexican:["Churros","Flan","Tres Leches"], indian:["Gulab Jamun","Kheer","Kulfi"], french:["Crème Brûlée","Macarons","Profiteroles"], thai:["Mango Sticky Rice","Coconut Ice Cream"], korean:["Bingsu","Hotteok","Yakgwa"], greek:["Baklava","Loukoumades","Galaktoboureko"], american:["NY Cheesecake","Apple Pie","Brownie Sundae"], turkish:["Baklava","Künefe","Turkish Delight"] };
+
+function cuisineKeyOf(p){ let k=(p.en||"").toLowerCase().trim().replace(/[\s-]+/g,"_"); if(menusData && menusData.byCuisine[k]) return k; if(STARTERS[k]||DRINKS[k]) return k; return EMOJI_CUISINE[p.ic] || k; }
+function pickList(map, key, n, salt){ const pool=(map[key]||map._||[]).slice(); const out=[]; let h=hash(salt+key); for(let i=0;i<n && pool.length;i++){ h=(h*1103515245+12345)>>>0; out.push(pool.splice(h%pool.length,1)[0]); } return out; }
+function menuPrice(base, mult, place, salt){ const city=cityOf(place), pf=city.pf||1, h=hash(salt); let v=base*mult*pf*(0.8+(h%40)/100); return place._cur.dec===0 ? Math.max(1,Math.round(v)) : Math.round(v*100)/100; }
+function mkItem(place, name, ic, kind, price, photo){ const k=place._key+"::"+kind+(hash(name)%9999); const it={ _key:k, _cityId:place._cityId, _cityName:place._cityName, _flag:place._flag, _cur:place._cur, ic:ic, name:place.name, hood:place.hood, dish:name, en:place.en, price:price, photo:photo||null, _menuItem:true }; placeByKey[k]=it; return it; }
+function buildMenu(place){
+  const key=cuisineKeyOf(place), base=(CUISINE[key]&&CUISINE[key].base)||14;
+  const realMains=(menusData && menusData.byCuisine[key]) ? menusData.byCuisine[key] : [];
+  const courses=[];
+  courses.push({label:"🍽️ signature", items:[ mkItem(place, place.dish, place.ic, "sig", place.price, place.photo) ]});
+  const st=pickList(STARTERS,key,3,place.name+"s"); if(st.length) courses.push({label:"🥢 starters", items: st.map(n=>mkItem(place,n,"🥢","starter",menuPrice(base,0.5,place,n+place.name))) });
+  if(realMains.length){ const mm=realMains.slice(0,6); courses.push({label:"🍲 mains", items: mm.map(d=>mkItem(place,d.name, place.ic, "main"+d.id, menuPrice(base,1,place,d.name), d.photo?BASE+d.photo:null)) }); }
+  const sd=pickList(SIDES,key,2,place.name+"sd"); if(sd.length) courses.push({label:"🍟 sides", items: sd.map(n=>mkItem(place,n,"🍟","side",menuPrice(base,0.38,place,n+place.name))) });
+  const dr=pickList(DRINKS,key,3,place.name+"dr"); if(dr.length) courses.push({label:"🥤 drinks", items: dr.map(n=>mkItem(place,n,"🥤","drink",menuPrice(base,0.3,place,n+place.name))) });
+  const de=pickList(DESSERTS,key,2,place.name+"de"); if(de.length) courses.push({label:"🍰 dessert", items: de.map(n=>mkItem(place,n,"🍰","dessert",menuPrice(base,0.5,place,n+place.name))) });
+  return courses;
+}
+function menuRow(it){ const thumb = it.photo ? `<img class="mthumb" src="${it.photo}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${it.ic}'))">` : `<span class="mthumb emo">${it.ic}</span>`;
+  return `<div class="mrow"><div class="mthumb-wrap">${thumb}</div><div class="mmid"><div class="mname">${esc(it.dish)}</div></div><div class="mprice">${money(it.price,it._cur)}</div><button class="madd" onclick="addToCart('${it._key}',event)">＋</button></div>`; }
+function renderMenu(place){ return buildMenu(place).map(c=>`<div class="mcourse">${c.label}</div>${c.items.map(menuRow).join("")}`).join(""); }
+
 /* ---- boot ---- */
 CITIES.forEach((c,i)=>{ CITY_INDEX[c.id]=i; statsByCity[c.id]={saved:0,orders:0}; });
 loadSaved(); loadAccount(); loadHome();
+fetch(BASE+"menus.json").then(r=>r.ok?r.json():null).then(j=>{ menusData=j; if($("#view-detail").classList.contains("active")&&currentDetailKey) openDetail(currentDetailKey); }).catch(()=>{});
 room = loadMinePosts();
 renderCityBar(); renderTally(); renderFeed();
 (function(){ const av=$("#avatar-btn"); if(av) av.textContent=avatarGlyph(); renderHud(); renderQuests(); })();
