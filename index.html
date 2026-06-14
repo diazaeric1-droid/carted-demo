@@ -393,6 +393,22 @@
   .souv-name { font-size: 7.5px; font-weight: 800; text-align: center; line-height: 1; color: var(--muted); }
   .reveal .ghostrise.ghost-hype { animation: rise 1.5s ease both, gwiggle .55s ease 1.5s 3; }
   @keyframes gwiggle { 0%,100%{ transform: rotate(0) scale(1.05); } 25%{ transform: rotate(-13deg) scale(1.1); } 75%{ transform: rotate(13deg) scale(1.1); } }
+  /* ----- coupons + new badge + spotlight ----- */
+  .thumb { position: relative; }
+  .coupon-rib { position: absolute; bottom: -2px; left: -2px; background: var(--hot); color: #fff; font-family: var(--disp); font-weight: 700; font-size: 9.5px; padding: 2px 6px; border: 2px solid var(--ink); border-radius: 9px 9px 9px 4px; box-shadow: 1px 1px 0 var(--ink); white-space: nowrap; }
+  .new-chip { display: inline-block; background: var(--go); color: #fff; font-weight: 800; font-size: 9.5px; padding: 1px 6px; border-radius: 8px; border: 1.5px solid var(--ink); margin-left: 4px; vertical-align: middle; }
+  .d-coupon { width: 100%; display: flex; align-items: center; gap: 10px; background: #ffe8ec; border: 2.5px dashed var(--hot); border-radius: 14px; padding: 11px 13px; margin: 14px 0 4px; cursor: pointer; text-align: left; box-shadow: 2px 2px 0 var(--hot); }
+  .d-coupon .dc-tag { font-family: var(--disp); font-weight: 700; font-size: 16px; color: var(--hot); white-space: nowrap; }
+  .d-coupon .dc-d { font-size: 12.5px; font-weight: 700; color: var(--text); }
+  .spotlight { width: 100%; text-align: left; background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 12px 14px; margin-bottom: 12px; box-shadow: 0 5px 0 var(--ink); cursor: pointer; }
+  .spotlight:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+  .spotlight.done { opacity: .72; box-shadow: 3px 3px 0 var(--ink); }
+  .spotlight .sp-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+  .spotlight .sp-badge { font-family: var(--disp); font-weight: 600; font-size: 12.5px; color: var(--accent); }
+  .spotlight .sp-bonus { background: var(--accent2); border: 2px solid var(--ink); border-radius: 9px; padding: 1px 7px; font-size: 11px; font-weight: 800; box-shadow: 1px 1px 0 var(--ink); }
+  .spotlight .sp-check { color: var(--go); font-weight: 800; font-size: 12px; }
+  .spotlight .sp-name { font-family: var(--disp); font-weight: 700; font-size: 18px; line-height: 1.1; }
+  .spotlight .sp-sub { font-size: 12px; color: var(--muted); font-weight: 700; margin-top: 2px; text-transform: capitalize; }
   /* ----- featured city banner ----- */
   .feat-banner { width: 100%; display: flex; align-items: center; gap: 11px; background: var(--neon); border: 2.5px solid var(--ink); border-radius: 16px; padding: 11px 13px; margin-bottom: 10px; box-shadow: 3px 3px 0 var(--ink); cursor: pointer; text-align: left; color: #fff; }
   .feat-banner:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
@@ -491,6 +507,7 @@
           </div>
           <div id="buddy-nudge"></div>
           <div id="featured-banner"></div>
+          <div id="spotlight"></div>
           <div id="event-banners"></div>
           <div class="section-label" style="margin-bottom:8px">📍 pick a city</div>
           <div class="city-bar" id="city-bar"></div>
@@ -530,6 +547,7 @@
           <div class="d-desc" id="d-desc" style="display:none"></div>
           <div class="d-stats" id="d-stats"></div>
           <button class="savebtn" id="d-fav" onclick="toggleDetailFav()">♡ Save place</button>
+          <div id="d-coupon"></div>
           <div class="section-label">🍴 menu · tap ＋ to (not) order</div>
           <div id="d-menu"></div>
           <div class="reviews" id="d-reviews"></div>
@@ -1181,7 +1199,7 @@ function go(view){
   if(view==="room") renderRoom();
   if(view==="profile") renderProfile();
   if(view==="explore") renderExplore();
-  if(view==="feed"){ renderFeatured(); const bn=$("#buddy-nudge"); if(bn) bn.innerHTML=buddyNudge(); setPresenceGhost(); }
+  if(view==="feed"){ renderFeatured(); renderSpotlight(); const bn=$("#buddy-nudge"); if(bn) bn.innerHTML=buddyNudge(); setPresenceGhost(); }
   if(view!=="track") stopCourier();
 }
 /* back to the feed but keep the user where they were scrolled to */
@@ -1283,12 +1301,12 @@ function upsertNearCity(lat,lng,m,place){
 /* guard against an address that got over-trimmed to an orphan ordinal ("th Ave") -> show the city instead */
 function niceHood(p){ const h=(p.hood||"").trim(); if(!h || /^(st|nd|rd|th)\b/i.test(h)) return p._cityName||""; return h; }
 function cardHTML(p, saved){
-  const fav=isFav(p._key);
+  const fav=isFav(p._key), cp=couponFor(p), isNew=isNewPlace(p)&&!saved;
   const where = saved ? `${p._flag} ${esc(p._cityName)}` : esc(p.en);
   return `<div class="card" onclick="openDetail('${p._key}')">
-    <div class="thumb">${thumbImg(p)}</div>
+    <div class="thumb">${thumbImg(p)}${cp?`<span class="coupon-rib">🎟️ ${cp.t}</span>`:""}</div>
     <div class="meta">
-      <div class="name">${esc(p.name)} <span class="en">· ${where}</span></div>
+      <div class="name">${esc(p.name)} <span class="en">· ${where}</span>${isNew?'<span class="new-chip">✨ new</span>':''}</div>
       <div class="shop">${esc(niceHood(p))}</div>
       <div class="row"><span class="rate">★ ${p.rate.toFixed(1)}</span><span>(${p.n.toLocaleString()})</span><span>· ${etaStr(p)}</span></div>
       <div class="price">${"$".repeat(p.lvl||2)}</div>
@@ -1299,7 +1317,7 @@ function cardHTML(p, saved){
 }
 const STORE_BLURB = { bodega:"grab a late-night snack from the bodega", konbini:"raid the 24h konbini", korean:"hit the 편의점 for ramyeon & banana milk", latin:"snacks from la tiendita", french:"a midnight run to l'épicerie", euro:"grab something from the späti", sea:"night-market bites", india:"chai & samosa from the kirana store", mideast:"a souk-kiosk snack run", aussie:"a milk bar run" };
 function renderFeed(){
-  renderBanners(); renderFeatured(); const bn=$("#buddy-nudge"); if(bn) bn.innerHTML=buddyNudge();
+  renderBanners(); renderFeatured(); renderSpotlight(); const bn=$("#buddy-nudge"); if(bn) bn.innerHTML=buddyNudge();
   const c=curCity(), saved=feedMode==="saved";
   const sb=$("#store-banner-sub"); if(sb) sb.textContent = STORE_BLURB[konbiniKey()] || "grab a late-night snack";
   $("#saved-count").textContent = Object.keys(savedPlaces).length;
@@ -1402,6 +1420,7 @@ function openDetail(key){
   $("#d-shop").innerHTML = `<span style="text-transform:capitalize">${esc(p.en)}</span> · ${esc(niceHood(p))}`;
   const dd=$("#d-desc"); if(p.desc){ dd.textContent=p.desc; dd.style.display="block"; } else dd.style.display="none";
   $("#d-stats").innerHTML = `<span>★ <b>${p.rate.toFixed(1)}</b> (${p.n.toLocaleString()})</span>${p.lvl?`<span><b>${"$".repeat(p.lvl)}</b></span>`:""}<span><b>${etaStr(p)}</b></span>`;
+  const cp=couponFor(p); const dc=$("#d-coupon"); if(dc) dc.innerHTML = cp?`<button class="d-coupon" onclick="claimCoupon('${p._key}')"><span class="dc-tag">🎟️ ${cp.t}</span><span class="dc-d">${esc(cp.d)} · tap to clip</span></button>`:"";
   $("#d-menu").innerHTML = renderMenu(p);
   const real = (p.rv||[]).map(r=>`<div class="review"><div class="top"><span class="stars">${starStr(r.r)}</span><span>${esc(r.a||"a local")} · google</span></div><div class="text">${esc(r.t)}</div></div>`).join("");
   const mocks = mockFor(p).map(r=>`<div class="review"><div class="top"><span class="stars">${r[1]}</span><span>night owl 👻 · ${(hash(p.name)%23)+1}m ago</span></div><div class="text">${esc(r[0])}</div></div>`).join("");
@@ -1511,6 +1530,13 @@ function revealTruth(){
   stats.cuisines=stats.cuisines||[]; stats.cities=stats.cities||[];
   (po.items||[]).forEach(it=> uniqPush(stats.cuisines, it.en));
   uniqPush(stats.cities, po.city.id);
+  // breadth + spotlight rewards: which restaurants did this order touch?
+  const parentKeys=[...new Set((po.items||[]).map(it=>String(it._key).split("::")[0]))];
+  const triedNew = parentKeys.some(k=>isNewPlace({_key:k}));
+  markVisited(parentKeys);
+  if(triedNew){ addXp(8); setTimeout(()=>toast("✨ first time at a new spot — +8 XP"), 2100); }
+  const sp=spotlightFor(po.city);
+  if(sp && parentKeys.includes(sp._key) && !(stats.spotDone||[]).includes(spotKey(po.city.id))){ stats.spotDone=stats.spotDone||[]; stats.spotDone.push(spotKey(po.city.id)); stats.freezes=Math.min(3,(stats.freezes||0)+1); addXp(30); setTimeout(()=>toast("🎯 spotlight complete! +30 XP & a 🧊 freeze"), 2300); }
   saveStats(); checkFitUnlocks();
   const newTier=tierFor(stats.savedUsd).t;
   let milestone="";
@@ -2040,6 +2066,32 @@ function shareItinerary(cityId){ const c=CITIES[CITY_INDEX[cityId]]||curCity(), 
   x.textAlign="left"; let yy=380; items.forEach(it=>{ x.font="60px serif"; x.fillText(it.ic, 130, yy); x.fillStyle="#221c33"; x.font="600 44px 'Fredoka',sans-serif"; x.fillText(String(it.name).slice(0,26), 210, yy-8); yy+=110; });
   x.textAlign="center"; x.fillStyle="#0ca678"; x.font="700 64px 'Fredoka',sans-serif"; x.fillText("spent: $0", 540, 920); x.fillStyle="#6b6580"; x.font="700 32px 'Nunito',sans-serif"; x.fillText("dreamed it all on Carted 👻", 540, 972);
   cv.toBlob(b=>{ if(!b){toast("couldn't build it");return;} const f=new File([b],"carted-night.png",{type:"image/png"}); if(navigator.canShare&&navigator.canShare({files:[f]})){ navigator.share({files:[f],text:`my imaginary night in ${c.name} 🌙 carted.`}).catch(()=>{}); } else { const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="carted-night.png"; a.click(); toast("night card saved 📸"); setTimeout(()=>URL.revokeObjectURL(a.href),4000); } },"image/png"); }
+
+/* ============================================================
+   Places discovery — nightly fake coupons, a spotlight mission to
+   try an EXACT restaurant, and "new to you" rewards for breadth.
+   ============================================================ */
+const COUPONS = [
+  {t:"BOGO", d:"buy one entrée, get one free", lvls:[1,2]},
+  {t:"2-FOR-1", d:"two mains for the price of one", lvls:[1,2]},
+  {t:"20% OFF", d:"20% off your whole order", lvls:[1,2,3]},
+  {t:"FREE APP", d:"free appetizer with any main", lvls:[2,3]},
+  {t:"FREE DESSERT", d:"a free dessert, on the house", lvls:[2,3,4]},
+  {t:"$10 OFF", d:"$10 off when you spend $40+", lvls:[3,4]},
+  {t:"HAPPY HR", d:"half-price drinks till close", lvls:[1,2,3]},
+];
+function couponFor(p){ if(!p || p._cityId==="konbini" || p._menuItem) return null; const h=hash(p.name+"|"+nightKey()); if(h%10>=4) return null; const pool=COUPONS.filter(c=>c.lvls.includes(p.lvl||2)); return pool.length?pool[h%pool.length]:null; }
+function claimCoupon(key){ const p=placeByKey[key]||savedPlaces[key]; const c=couponFor(p); if(!c) return; stats.coupons=stats.coupons||{}; const id=p._key+"@"+nightKey(); if(!stats.coupons[id]){ stats.coupons[id]={t:c.t, name:p.name, night:nightKey()}; saveStats(); addXp(3); snd("pop"); }
+  showModal(`<div class="m-emoji">🎟️</div><div class="m-title">${c.t} · ${esc(p.name)}</div><div class="m-body">${c.d} — clipped to your wallet for tonight 🌙<br><br><span style="font-size:11.5px">it's a fantasy coupon (you're not really ordering)… but if you cave, the affiliate handoff carries it over.</span></div><button class="cta" style="position:static" onclick="closeModal()">clipped 🎟️</button><button class="order-real" onclick="orderForReal('cart')">use it for real →</button>`); }
+
+function spotlightFor(city){ const ps=city&&city._places; if(!ps||!ps.length) return null; return ps[hash(nightKey()+"|"+city.id)%ps.length]; }
+function spotKey(cityId){ return cityId+"@"+nightKey(); }
+function renderSpotlight(){ const el=$("#spotlight"); if(!el) return; const c=curCity(), p=spotlightFor(c); if(!p){ el.innerHTML=""; return; }
+  const done=(stats.spotDone||[]).includes(spotKey(c.id));
+  el.innerHTML=`<button class="spotlight${done?' done':''}" onclick="openDetail('${p._key}')"><div class="sp-top"><span class="sp-badge">🎯 tonight's spotlight</span>${done?'<span class="sp-check">✓ done</span>':'<span class="sp-bonus">+30 XP · 🧊</span>'}</div><div class="sp-name">${esc(p.name)}</div><div class="sp-sub">${done?"nice — you tried tonight's spot 👻":`${esc(p.en)} · ${esc(niceHood(p))} — window-order here for the bonus`}</div></button>`; }
+
+function isNewPlace(p){ const k=p&&p._key; return !!k && !((stats.visited||[]).includes(k)); }
+function markVisited(keys){ stats.visited=stats.visited||[]; keys.forEach(k=>{ if(!stats.visited.includes(k)) stats.visited.push(k); }); if(stats.visited.length>600) stats.visited=stats.visited.slice(-600); saveStats(); }
 
 /* ---- boot ---- */
 CITIES.forEach((c,i)=>{ CITY_INDEX[c.id]=i; statsByCity[c.id]={saved:0,orders:0}; });
