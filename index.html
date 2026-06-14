@@ -36,7 +36,7 @@
   .statusbar .dim { color: var(--muted); font-weight: 600; }
   .body { flex: 1; overflow-y: auto; overflow-x: hidden; position: relative; }
   .body::-webkit-scrollbar { display: none; }
-  .view { display: none; padding: 4px 18px 120px; animation: fade .25s ease; position: relative; }
+  .view { display: none; padding: 4px 18px 92px; animation: fade .25s ease; position: relative; }
   .view > *:not(.foodfall) { position: relative; z-index: 1; }
   .view.active { display: block; }
   @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
@@ -170,7 +170,7 @@
   .chip.on { background: var(--accent2); color: var(--ink); font-weight: 800; }
   .chip .cnt { font-variant-numeric: tabular-nums; }
 
-  .nav { position: absolute; bottom: 0; left: 0; right: 0; height: 78px; background: var(--screen); border-top: 2.5px solid var(--ink); display: flex; align-items: center; justify-content: space-around; padding-bottom: 14px; z-index: 30; }
+  .nav { position: absolute; bottom: 0; left: 0; right: 0; height: 58px; background: var(--screen); border-top: 2.5px solid var(--ink); display: flex; align-items: center; justify-content: space-around; padding-bottom: 6px; z-index: 30; }
   .nav button { background: none; border: none; color: #a99e85; font-size: 11px; font-weight: 600; font-family: var(--disp); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; position: relative; transition: transform .15s; }
   .nav button.on { color: var(--accent); transform: translateY(-2px); }
   .nav button .gi { font-size: 21px; transition: transform .15s; }
@@ -183,6 +183,8 @@
   @keyframes fall { to { transform: translateY(900px) rotate(360deg); opacity: 0; } }
 
   .avatar { position: absolute; top: 4px; right: 0; width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); font-size: 19px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); }
+  .fav-link { position: absolute; top: 4px; right: 46px; width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); font-size: 18px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); transition: transform .12s; }
+  .fav-link:active { transform: scale(.88); }
   .order-real { display: block; width: 100%; text-align: center; background: none; border: none; color: var(--muted); font-size: 12.5px; text-decoration: underline; margin-top: 14px; cursor: pointer; }
   .modal-bg { position: absolute; inset: 0; background: rgba(34,28,51,.5); display: flex; align-items: center; justify-content: center; z-index: 70; padding: 24px; }
   .modal { background: var(--card); border: 3px solid var(--ink); border-radius: 20px; padding: 22px; width: 100%; max-width: 322px; text-align: center; animation: fade .2s ease; box-shadow: 6px 6px 0 var(--ink); }
@@ -265,7 +267,8 @@
   .chestbtn { width: 100%; border: 2.5px solid var(--ink); border-radius: 14px; padding: 12px; font-family: var(--disp); font-weight: 600; font-size: 14px; cursor: pointer; background: var(--neon); color: #fff; box-shadow: 0 4px 0 var(--ink); animation: pulse2 1.5s infinite; }
   /* ----- level-up overlay ----- */
   .lvlup { position: absolute; inset: 0; z-index: 90; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(251,243,228,.97); animation: fade .25s ease; text-align: center; padding: 30px; }
-  .lvlup .rays { position: absolute; width: 380px; height: 380px; border-radius: 50%; top: calc(42% - 190px); background: repeating-conic-gradient(rgba(255,194,61,.38) 0 12deg, transparent 12deg 24deg); animation: spinSlow 10s linear infinite; }
+  .lvlup .rays { position: absolute; width: 380px; height: 380px; border-radius: 50%; top: calc(42% - 190px); background: repeating-conic-gradient(rgba(255,194,61,.38) 0 12deg, transparent 12deg 24deg); animation: spinSlow 10s linear infinite; pointer-events: none; }
+  .lvlup-btns { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%; }
   @keyframes spinSlow { to { transform: rotate(360deg); } }
   .lvlup .big { font-family: var(--disp); font-size: 62px; font-weight: 700; color: var(--accent); text-shadow: 3.5px 3.5px 0 var(--ink); animation: pop .5s ease; position: relative; }
   .lvlup .sub2 { color: var(--text); margin: 6px 0 26px; font-weight: 800; position: relative; }
@@ -347,6 +350,13 @@
   .mprice { font-family: var(--disp); font-weight: 600; font-size: 13.5px; color: var(--accent); white-space: nowrap; }
   .madd { width: 32px; height: 32px; flex: 0 0 32px; border-radius: 10px; border: 2px solid var(--ink); background: var(--go); color: #fff; font-size: 18px; line-height: 1; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; }
   .madd:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
+  /* ----- stats modal ----- */
+  .stats-list { text-align: left; margin: 4px 0 10px; max-height: 42vh; overflow-y: auto; }
+  .stat-row { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 4px; border-bottom: 2px dashed #d9cbab; }
+  .stat-row .sc-cur { font-family: var(--disp); font-weight: 600; font-size: 15px; }
+  .stat-row .sc-usd { color: var(--muted); font-weight: 700; font-size: 13px; }
+  .stat-total { display: flex; justify-content: space-between; align-items: center; padding: 10px 4px 0; font-weight: 800; }
+  .stat-total b { color: var(--go); font-size: 20px; font-family: var(--disp); }
   /* ----- rate the plate ----- */
   .rtp { display: flex; align-items: center; gap: 8px; margin: 6px 0 4px; }
   .rtp-card { flex: 1; background: var(--screen); border: 2.5px solid var(--ink); border-radius: 16px; padding: 10px; cursor: pointer; box-shadow: 3px 3px 0 var(--ink); display: flex; flex-direction: column; align-items: center; gap: 8px; transition: transform .1s; min-width: 0; }
@@ -364,8 +374,8 @@
     .hud { padding-top: calc(env(safe-area-inset-top, 10px) + 4px); }
     .body { padding-top: 4px; }
     .confetti { top: env(safe-area-inset-top, 0px); }
-    .nav { height: calc(78px + env(safe-area-inset-bottom, 0px)); padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
-    .toast { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+    .nav { height: calc(58px + env(safe-area-inset-bottom, 0px)); padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px)); }
+    .toast { bottom: calc(74px + env(safe-area-inset-bottom, 0px)); }
   }
 </style>
 </head>
@@ -381,6 +391,7 @@
         <section class="view active" id="view-feed">
           <div class="foodfall" aria-hidden="true"><span>🍕</span><span>🍜</span><span>🌮</span><span>🍔</span><span>🍩</span><span>🍣</span></div>
           <div class="brand">
+            <button class="fav-link" id="fav-btn" onclick="goFav()" title="your favorites">🤍</button>
             <button class="avatar" id="avatar-btn" onclick="go('profile')">🙂</button>
             <h1>Carted</h1>
             <div class="sub">browse real places. cart it all. the driver never comes.</div>
@@ -416,7 +427,7 @@
 
         <!-- DETAIL -->
         <section class="view" id="view-detail">
-          <button class="back" onclick="go('feed')">‹ back</button>
+          <button class="back" onclick="backToFeed()">‹ back</button>
           <div class="hero" id="d-hero">🍕<div class="city-tag" id="d-citytag"></div></div>
           <div class="d-name" id="d-name"></div>
           <div class="d-shop" id="d-shop"></div>
@@ -475,7 +486,7 @@
         <!-- KONBINI (24h corner store) -->
         <section class="view" id="view-konbini">
           <button class="back" onclick="go('feed')">‹ back</button>
-          <div class="kb-head"><div class="kb-title">🏪 the 24h corner store</div><div class="kb-tag">no city. no closing time. no delivery — it's right there.</div></div>
+          <div class="kb-head"><div class="kb-title" id="kb-title">🏪 the 24h corner store</div><div class="kb-tag" id="kb-tag">open all night — no delivery, it's right there</div></div>
           <div id="konbini-list"></div>
           <button class="cta secondary" style="position:static" onclick="go('cart')">see cart</button>
         </section>
@@ -767,16 +778,18 @@ function havKm(a, b){
   const s=Math.sin(dLa/2)**2 + Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLo/2)**2;
   return 2*R*Math.asin(Math.sqrt(s));
 }
+function fmtFlight(mins){ const h=Math.floor(mins/60), m=Math.round(mins%60); return h ? `${h}h ${String(m).padStart(2,"0")}m` : `${m}m`; }
 function flightInfo(city){
   if(!city || city.lat==null) return null;
   const km = havKm(city, HOME);
   if(km < 150) return null;                       // same metro → normal courier
   const mins = Math.round(km/14.2) + 50;          // ~850 km/h cruise + taxi/takeoff/landing
-  const h = Math.floor(mins/60), m = mins%60;
-  return { km: Math.round(km), mins, label: h ? `${h}h ${String(m).padStart(2,"0")}m` : `${m}m` };
+  return { km: Math.round(km), mins, label: fmtFlight(mins) };
 }
 function cityOf(p){ const i = CITY_INDEX[p._cityId]; return i!=null ? CITIES[i] : curCity(); }
-function etaStr(p){ if(p._cityId==="konbini") return "⚡ instant"; const fl = flightInfo(cityOf(p)); return fl ? `✈️ ${fl.label}` : `⏱ ${etaFor(p)} min`; }
+/* per-restaurant flight time = city base ± a deterministic jitter, so each place reads a bit different */
+function placeFlight(p){ const fl=flightInfo(cityOf(p)); if(!fl) return null; const mins=Math.max(35, fl.mins + ((hash(p.name)%61)-20)); return { mins, label: fmtFlight(mins) }; }
+function etaStr(p){ if(p._cityId==="konbini") return "⚡ instant"; const fl = placeFlight(p); return fl ? `✈️ ${fl.label}` : `⏱ ${etaFor(p)} min`; }
 /* photo layer: baked Google photo when available, keyworded stock fallback, emoji last resort */
 const BASE = location.pathname.includes("/carted-demo") ? "/carted-demo/" : "/";
 /* backend (Supabase) — fill after deploying ~/carted-app/supabase (see supabase/BACKEND.md).
@@ -869,13 +882,38 @@ function renderHud(){
   el.innerHTML = `
     <button class="pill flame${done?' on':''}" onclick="go('profile')">🔥 <b>${stats.streak||0}</b>${done?'':'<span class="hint">tonight?</span>'}</button>
     <button class="pill lvl" onclick="go('profile')"><span>⭐ ${L.lvl}</span><span class="minibar"><i style="width:${L.pct}%"></i></span></button>
-    <button class="pill" onclick="go('profile')">💰 <b>$${Math.round(stats.savedUsd).toLocaleString()}</b></button>
+    <button class="pill" onclick="openStats()">💰 <b>$${Math.round(stats.savedUsd).toLocaleString()}</b></button>
     <button class="pill" onclick="toggleSnd()">${sndOn?"🔊":"🔇"}</button>`;
+}
+/* ---- stats: money dodged broken out by currency, total in USD ---- */
+function openStats(){
+  const byCur={}; // symbol -> {sym, dec, amount(local), usd}
+  CITIES.forEach(c=>{ const s=statsByCity[c.id]; if(!s||!s.saved) return; const k=c.cur.sym;
+    if(!byCur[k]) byCur[k]={sym:c.cur.sym, dec:c.cur.dec, amount:0, usd:0};
+    byCur[k].amount += s.saved; byCur[k].usd += s.saved/(c.pf||1); });
+  const rows=Object.values(byCur).sort((a,b)=>b.usd-a.usd);
+  const totalUsd=Math.round(stats.savedUsd);
+  const body = rows.length
+    ? rows.map(r=>`<div class="stat-row"><span class="sc-cur">${esc(money(r.amount,{sym:r.sym,dec:r.dec}))}</span><span class="sc-usd">≈ $${Math.round(r.usd).toLocaleString()}</span></div>`).join("")
+    : `<div class="m-body" style="margin:0">no dodges yet — go ghost a check 👻</div>`;
+  showModal(`<div class="m-emoji">💰</div><div class="m-title">money you didn't spend</div>
+    <div class="stats-list">${body}</div>
+    <div class="stat-total"><span>total dodged</span><b>$${totalUsd.toLocaleString()}</b></div>
+    <div class="m-body" style="font-size:11.5px;margin:10px 0 0">each line is what you dodged in that currency · total is the USD equivalent</div>
+    <button class="cta" style="position:static" onclick="closeModal()">nice 🙂</button>`);
 }
 
 /* ---- xp floaters + level-up takeover ---- */
 function floatXp(n){ const sc=$(".screen"); if(!sc) return; const d=document.createElement("div"); d.className="fxp"; d.textContent=`+${n} xp`; d.style.left=Math.max(14, Math.min(330, lastTap.x-14))+"px"; d.style.top=Math.max(60, lastTap.y-26)+"px"; sc.appendChild(d); setTimeout(()=>d.remove(), 950); }
-function showLevelUp(lvl){ snd("fanfare"); burst(); const sc=$(".screen"); const d=document.createElement("div"); d.className="lvlup"; d.innerHTML=`<div class="rays"></div><div class="big">LVL ${lvl}</div><div class="sub2">leveled up, night owl 🌙</div><button class="cta" style="position:static;max-width:240px">keep going</button>`; d.querySelector("button").onclick=()=>d.remove(); d.onclick=(e)=>{ if(e.target===d) d.remove(); }; sc.appendChild(d); }
+function showLevelUp(lvl){ snd("fanfare"); burst(); const sc=$(".screen"); const d=document.createElement("div"); d.className="lvlup";
+  d.innerHTML=`<div class="rays"></div><div class="big">LVL ${lvl}</div><div class="sub2">leveled up, night owl 🌙</div>
+    <div class="lvlup-btns"><button class="cta" id="lvlup-go" style="position:static;max-width:240px">keep going</button>
+    <button class="cta secondary" id="lvlup-share" style="position:static;max-width:240px">🌙 share to the room</button></div>`;
+  d.querySelector("#lvlup-go").onclick=()=>d.remove();
+  d.querySelector("#lvlup-share").onclick=()=>{ d.remove(); shareLevelToRoom(lvl); };
+  d.onclick=(e)=>{ if(e.target===d) d.remove(); };
+  sc.appendChild(d); }
+function shareLevelToRoom(lvl){ makeMine("⭐", `just hit level ${lvl} on Carted 🌙 still not ordering a thing`); go("room"); snd("chime"); toast("shared to the room 🌙"); addXp(4); }
 
 /* ---- nightly missions: 3 a night, seeded by date, chest when all claimed ---- */
 const QUEST_POOL = [
@@ -986,6 +1024,8 @@ function overpassFetch(q, i){
     .then(j=> j.elements||[])
     .catch(()=>{ clearTimeout(to); return overpassFetch(q, i+1); });
 }
+let feedScroll = 0;
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
 function loadCity(city, force){
   if(!force && city._places){ city._state="ready"; if(curCity().id===city.id) renderFeed(); return; }
   city._state="loading"; if(curCity().id===city.id) renderFeed();
@@ -994,6 +1034,7 @@ function loadCity(city, force){
     .then(r=>{ if(!r.ok) throw new Error("no bake"); return r.json(); })
     .then(places=>{
       places.forEach(p=>{ placeByKey[p._key]=p; });
+      shuffle(places);                       // random order, not by reviews
       city._places=places; city._state=places.length?"ready":"empty";
       if(curCity().id===city.id) renderFeed();
     })
@@ -1007,7 +1048,7 @@ function loadCity(city, force){
       placeByKey[p._key]=p; places.push(p);
       if(places.length>=42) break;
     }
-    places.sort((a,b)=> b.rate-a.rate || b.n-a.n);
+    shuffle(places);                       // random order, not by reviews
     city._places = places; city._state = places.length ? "ready" : "empty";
     if(curCity().id===city.id) renderFeed();
   }).catch(err=>{ city._state="error"; city._err=String(err.message||err); if(curCity().id===city.id) renderFeed(); });
@@ -1027,6 +1068,10 @@ function go(view){
   if(view==="profile") renderProfile();
   if(view!=="track") stopCourier();
 }
+/* back to the feed but keep the user where they were scrolled to */
+function backToFeed(){ go("feed"); $("#body").scrollTop = feedScroll; }
+/* heart in the header -> jump to your saved/favorite restaurants */
+function goFav(){ if(!$("#view-feed").classList.contains("active")) go("feed"); setMode("saved"); $("#body").scrollTop = 0; }
 
 /* ---- city + mode: featured chips + searchable 50-city modal ---- */
 function renderCityBar(){
@@ -1117,16 +1162,18 @@ function upsertNearCity(lat,lng,m,place){
 }
 
 /* ---- feed ---- */
+/* guard against an address that got over-trimmed to an orphan ordinal ("th Ave") -> show the city instead */
+function niceHood(p){ const h=(p.hood||"").trim(); if(!h || /^(st|nd|rd|th)\b/i.test(h)) return p._cityName||""; return h; }
 function cardHTML(p, saved){
   const fav=isFav(p._key);
   const where = saved ? `${p._flag} ${esc(p._cityName)}` : esc(p.en);
   return `<div class="card" onclick="openDetail('${p._key}')">
     <div class="thumb">${thumbImg(p)}</div>
     <div class="meta">
-      <div class="name">${esc(p.dish)} <span class="en">· ${where}</span></div>
-      <div class="shop">${esc(p.name)} · ${esc(p.hood)}</div>
-      <div class="row"><span class="rate">★ ${p.rate.toFixed(1)}</span><span>(${p.n.toLocaleString()})</span>${p.lvl?`<span>· ${"$".repeat(p.lvl)}</span>`:""}<span>· ${etaStr(p)}</span></div>
-      <div class="price">${money(p.price, p._cur)}</div>
+      <div class="name">${esc(p.name)} <span class="en">· ${where}</span></div>
+      <div class="shop">${esc(niceHood(p))}</div>
+      <div class="row"><span class="rate">★ ${p.rate.toFixed(1)}</span><span>(${p.n.toLocaleString()})</span><span>· ${etaStr(p)}</span></div>
+      <div class="price">${"$".repeat(p.lvl||2)}</div>
     </div>
     <button class="fav${fav?' on':''}" onclick="toggleFav('${p._key}',event)">${fav?'♥':'♡'}</button>
     <button class="qadd" onclick="quickAdd('${p._key}',event)">＋</button>
@@ -1209,7 +1256,7 @@ function renderProfile(){
   const bNote = beOn() ? (stats.buddy && stats.buddy.pending ? "waiting for them to tap your link…" : "synced live") : "prototype — goes live once the backend is configured";
   const buddyCard = stats.buddy
     ? `<div class="tier-card"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">${esc(stats.buddy.name||"your buddy")}</div><div class="tier-sub">sharing a 🔥 ${bShared}-night streak — if one caves, you both reset</div></div></div><button class="signin-btn" onclick="inviteBuddy()" style="margin-top:8px">↗ invite another</button><div style="text-align:center;color:var(--muted);font-size:10.5px;margin-top:6px">${bNote}</div></div>`
-    : `<div class="tier-card"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">get a no-spend buddy</div><div class="tier-sub">share one streak with one person — accountability hits harder</div></div></div><button class="signin-btn" onclick="inviteBuddy()" style="margin-top:8px">↗ invite a buddy</button></div>`;
+    : `<div class="tier-card" style="border-color:var(--accent);box-shadow:4px 4px 0 var(--accent)"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">get a no-spend buddy</div><div class="tier-sub">share one streak with one person — if either caves, you both reset. <b style="color:#d98324">+50 XP</b> when they join 🎁</div></div></div><button class="signin-btn dark" onclick="inviteBuddy()" style="margin-top:8px">↗ invite a buddy</button></div>`;
   const {t,next}=tierFor(stats.savedUsd);
   const prog = next ? Math.max(5, Math.min(100, Math.round((stats.savedUsd-t.min)/(next.min-t.min)*100))) : 100;
   const tierCard = `<div class="tier-card"><div class="tier-row"><span class="tier-ic">${t.ic}</span><div><div class="tier-name">${t.name}</div><div class="tier-sub">${next?`$${Math.max(0,Math.round(next.min-stats.savedUsd))} more saved → <b>${next.name}</b> ${next.ic}`:"max rank — legend 🏆"}</div></div></div><div class="tier-bar"><div class="tier-fill" style="width:${prog}%"></div></div></div>`;
@@ -1217,20 +1264,21 @@ function renderProfile(){
   const lvlCard = `<div class="lvl-card"><div class="lvl-top"><span>⭐ Level ${L.lvl}</span><span style="color:var(--muted)">${stats.xp||0} XP</span></div><div class="xp-track"><div class="xp-fill" style="width:${L.pct}%"></div></div></div>`;
   if(!stats.earned) stats.earned=[];
   const achv = `<div class="section-label" style="margin:6px 2px 8px">🏅 achievements</div><div class="achv-grid">` + ACHV.map(a=>{ const on=a.has(stats); return `<div class="achv${on?' on':''}"><div class="achv-ic">${on?a.ic:'🔒'}</div><div class="achv-name">${a.name}</div><div class="achv-tip">${on?'unlocked':a.tip}</div></div>`; }).join("") + `</div>`;
-  $("#profile-body").innerHTML = `<div class="brand"><h1 style="font-size:24px">profile</h1></div>` + head + lvlCard + tierCard + grid + achv + driversCard + buddyCard + auth
+  $("#profile-body").innerHTML = `<div class="brand"><h1 style="font-size:24px">profile</h1></div>` + head + buddyCard + lvlCard + tierCard + grid + achv + driversCard + auth
     + `<div style="text-align:center;color:var(--muted);font-size:11.5px;margin-top:14px">mock sign-in. real cross-device sync needs a backend (see roadmap).</div>`;
 }
 
 /* ---- detail ---- */
 function openDetail(key){
   const p = placeByKey[key] || savedPlaces[key]; if(!p) return;
+  if($("#view-feed").classList.contains("active")) feedScroll = $("#body").scrollTop;  // remember scroll for the back button
   if(p._cityId!==curCity().id && CITY_INDEX[p._cityId]!=null){
     curIdx=CITY_INDEX[p._cityId]; cart=[]; updateBadge(); renderCityBar(); renderTally(); loadCity(curCity());
   }
   currentDetailKey=key;
   $("#d-hero").innerHTML = thumbImg(p, true) + `<div class="city-tag">${p._flag} ${esc(p._cityName)}</div>`;
   $("#d-name").textContent = p.name;
-  $("#d-shop").innerHTML = `<span style="text-transform:capitalize">${esc(p.en)}</span> · ${esc(p.hood)}`;
+  $("#d-shop").innerHTML = `<span style="text-transform:capitalize">${esc(p.en)}</span> · ${esc(niceHood(p))}`;
   const dd=$("#d-desc"); if(p.desc){ dd.textContent=p.desc; dd.style.display="block"; } else dd.style.display="none";
   $("#d-stats").innerHTML = `<span>★ <b>${p.rate.toFixed(1)}</b> (${p.n.toLocaleString()})</span>${p.lvl?`<span><b>${"$".repeat(p.lvl)}</b></span>`:""}<span><b>${etaStr(p)}</b></span>`;
   $("#d-menu").innerHTML = renderMenu(p);
@@ -1553,34 +1601,48 @@ async function ghostPush(){
 
 /* --- 4 buddy streak (invite link; true two-device sync = backend) --- */
 function buddyCode(){ const base=(account&&account.handle)||"owl"; return (base+"-"+hash(base+deviceId()).toString(36).slice(0,4)).toLowerCase(); }
+function awardBuddyXp(){ if(stats.buddyXp) return; stats.buddyXp=true; saveStats(); addXp(50); setTimeout(()=>toast("🎁 +50 XP — buddy bonus"), 650); }
 function inviteBuddy(){
   const code=buddyCode(), link=location.origin+location.pathname+"?buddy="+encodeURIComponent(code);
   if(beOn()) bePost("buddy", { action:"join", code, device_id:deviceId() });
   if(!stats.buddy){ stats.buddy={ code, since:nightKey(), name:"your buddy", role:"creator", pending:true }; saveStats(); }
+  awardBuddyXp();
   const txt=`be my no-spend buddy on Carted 🌙 we share one streak — if either of us caves, we both reset. you in? ${link}`;
   if(navigator.share){ navigator.share({text:txt}).catch(()=>{}); } else if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>toast("invite copied 👯 send it to one person")); } else toast(link);
+  if($("#view-profile").classList.contains("active")) renderProfile();
 }
 function acceptBuddyFromUrl(){
   const m=location.search.match(/[?&]buddy=([^&]+)/); if(!m) return;
   const code=decodeURIComponent(m[1]).toLowerCase(); if(code===buddyCode()) return;
   if(stats.buddy && stats.buddy.code===code) return;
-  stats.buddy={ code, since:nightKey(), name:"your buddy", role:"partner" }; saveStats();
+  stats.buddy={ code, since:nightKey(), name:"your buddy", role:"partner" }; saveStats(); awardBuddyXp();
   if(beOn()) bePost("buddy", { action:"join", code, device_id:deviceId() }).then(r=>{ if(r && r.pair){ stats.buddy.sharedStreak=r.pair.streak||0; saveStats(); } });
   setTimeout(()=>toast("👯 you're now sharing a no-spend streak"), 1300);
 }
 function buddyPing(){ if(!(stats.buddy && beOn())) return; bePost("buddy", { action:"ping", code:stats.buddy.code, device_id:deviceId(), night:nightKey() }).then(r=>{ if(r && r.pair){ stats.buddy.sharedStreak=r.pair.streak||0; stats.buddy.bothIn=!!r.bothIn; saveStats(); if($("#view-profile").classList.contains("active")) renderProfile(); } }); }
 
 /* --- 6 konbini: the city-less 24h corner store --- */
-const KONBINI = [
-  {ic:"🍙", dish:"Triangle Kimbap", base:2.5}, {ic:"🥛", dish:"Banana Milk", base:2},
-  {ic:"🍜", dish:"Shin Ramyeon Cup", base:2.5}, {ic:"🍢", dish:"Odeng Skewer", base:3},
-  {ic:"🍗", dish:"Hot Bar", base:3}, {ic:"🥟", dish:"Steamed Bun", base:2.5},
-  {ic:"🍦", dish:"Melona Bar", base:1.5}, {ic:"🧋", dish:"Canned Coffee", base:2},
-  {ic:"🍫", dish:"Choco Pie box", base:4}, {ic:"🥤", dish:"Pocari Sweat", base:2},
-  {ic:"🍡", dish:"Dango", base:3}, {ic:"🍘", dish:"Senbei", base:2.5},
-];
-function konbiniPlaces(){ return KONBINI.map((k,i)=>({ _key:"kb"+i, _cityId:"konbini", _cityName:"corner store", _flag:"🏪", _cur:{sym:"$",dec:2}, ic:k.ic, name:"the 24h corner store", hood:"open all night", dish:k.dish, en:"konbini", rate:Math.round((44+i%6))/10, n:80+i*31, price:k.base, lvl:1, desc:null, maps:null, photo:null, rv:null })); }
-function openKonbini(){ const list=konbiniPlaces(); list.forEach(p=>placeByKey[p._key]=p); $("#konbini-list").innerHTML = list.map(p=>`<div class="kb-item"><div class="kb-ic">${p.ic}</div><div class="kb-mid"><div class="kb-n">${esc(p.dish)}</div><div class="kb-sub">⚡ already in your drawer</div></div><div class="kb-p">$${p.price.toFixed(2)}</div><button class="kb-add" onclick="addToCart('${p._key}',event)">＋</button></div>`).join(""); go("konbini"); }
+const KONBINI_BY = {
+  bodega:[ {ic:"🥯",dish:"Bacon Egg & Cheese",base:5}, {ic:"🥪",dish:"Chopped Cheese",base:6}, {ic:"☕",dish:"Deli Coffee",base:2}, {ic:"🥤",dish:"Arizona Iced Tea",base:1}, {ic:"🌭",dish:"Dirty Water Dog",base:3}, {ic:"🍫",dish:"Snickers",base:2}, {ic:"🍌",dish:"Loosie Banana",base:1}, {ic:"🧃",dish:"Capri Sun",base:1.5}, {ic:"🍦",dish:"Choco Taco",base:3}, {ic:"🥨",dish:"Soft Pretzel",base:3}, {ic:"🍪",dish:"Black & White Cookie",base:3}, {ic:"🥛",dish:"Yoo-hoo",base:2} ],
+  konbini:[ {ic:"🍙",dish:"Onigiri",base:2}, {ic:"🍱",dish:"Bento Box",base:6}, {ic:"🍜",dish:"Cup Ramen",base:2.5}, {ic:"🍡",dish:"Dango",base:2}, {ic:"🥟",dish:"Nikuman",base:2}, {ic:"🍮",dish:"Purin",base:2}, {ic:"🥤",dish:"Melon Soda",base:2}, {ic:"🍢",dish:"Oden",base:3}, {ic:"🍫",dish:"Pocky",base:2}, {ic:"🍦",dish:"Mochi Ice",base:3}, {ic:"🥪",dish:"Tamago Sando",base:3}, {ic:"🍵",dish:"Bottled Matcha",base:2} ],
+  korean:[ {ic:"🍙",dish:"Triangle Kimbap",base:2}, {ic:"🥛",dish:"Banana Milk",base:2}, {ic:"🍜",dish:"Shin Ramyeon",base:2.5}, {ic:"🍢",dish:"Odeng",base:3}, {ic:"🌭",dish:"Sotteok Sotteok",base:3}, {ic:"🍫",dish:"Choco Pie",base:3}, {ic:"🧋",dish:"Sikhye",base:2}, {ic:"🍦",dish:"Melona Bar",base:1.5}, {ic:"🥟",dish:"Hotteok",base:2.5}, {ic:"🥤",dish:"Milkis",base:2}, {ic:"🍪",dish:"Pepero",base:2}, {ic:"🍚",dish:"Cup Bap",base:4} ],
+  latin:[ {ic:"🌮",dish:"Taco al Pastor",base:2}, {ic:"🌽",dish:"Elote",base:2}, {ic:"🥤",dish:"Jarritos",base:1.5}, {ic:"🍬",dish:"Pulparindo",base:1}, {ic:"🌶️",dish:"Takis",base:2}, {ic:"🫔",dish:"Tamal",base:2.5}, {ic:"🥖",dish:"Bolillo",base:1}, {ic:"🍮",dish:"Flan Cup",base:2}, {ic:"☕",dish:"Café de Olla",base:1.5}, {ic:"🧀",dish:"Queso Fresco",base:3}, {ic:"🍫",dish:"Mazapán",base:1}, {ic:"🥛",dish:"Horchata",base:2} ],
+  french:[ {ic:"🥐",dish:"Croissant",base:2}, {ic:"🥖",dish:"Baguette",base:1.5}, {ic:"🧀",dish:"Camembert",base:4}, {ic:"☕",dish:"Espresso",base:2}, {ic:"🍫",dish:"Pain au Chocolat",base:2.5}, {ic:"🥪",dish:"Jambon-Beurre",base:5}, {ic:"🍷",dish:"Mini Bordeaux (0%)",base:6}, {ic:"🍮",dish:"Crème Caramel",base:3}, {ic:"🧃",dish:"Orangina",base:2}, {ic:"🍓",dish:"Tarte aux Fraises",base:4}, {ic:"🥛",dish:"Yaourt",base:1.5}, {ic:"🫛",dish:"Macaron Box",base:5} ],
+  euro:[ {ic:"🥨",dish:"Pretzel",base:2}, {ic:"🌭",dish:"Bratwurst",base:4}, {ic:"🧀",dish:"Cheese & Crackers",base:3}, {ic:"☕",dish:"Espresso",base:2}, {ic:"🍫",dish:"Kinder Bueno",base:2}, {ic:"🥪",dish:"Panini",base:5}, {ic:"🧃",dish:"Club-Mate",base:2.5}, {ic:"🍮",dish:"Pudding Cup",base:2}, {ic:"🥖",dish:"Bread Roll",base:1}, {ic:"🍏",dish:"Apfelschorle",base:2}, {ic:"🍪",dish:"Biscuits",base:2}, {ic:"🥛",dish:"Kefir",base:2} ],
+  sea:[ {ic:"🧋",dish:"Bubble Tea",base:3}, {ic:"🍜",dish:"Mama Noodles",base:1.5}, {ic:"🥟",dish:"Bao",base:2}, {ic:"🍡",dish:"Grilled Mochi",base:2}, {ic:"🥭",dish:"Mango Sticky Rice",base:3}, {ic:"🍢",dish:"Fish Ball Skewer",base:2}, {ic:"🥤",dish:"100 Plus",base:1.5}, {ic:"🍫",dish:"Hello Panda",base:2}, {ic:"🥥",dish:"Coconut Water",base:2}, {ic:"🍤",dish:"Prawn Crackers",base:2}, {ic:"🍮",dish:"Coffee Jelly",base:2.5}, {ic:"🫛",dish:"Edamame",base:2} ],
+  india:[ {ic:"🍛",dish:"Samosa",base:1}, {ic:"🥤",dish:"Thums Up",base:1}, {ic:"🧃",dish:"Frooti",base:1}, {ic:"🍪",dish:"Parle-G",base:0.5}, {ic:"🌶️",dish:"Masala Chips",base:1.5}, {ic:"🥛",dish:"Lassi",base:2}, {ic:"☕",dish:"Masala Chai",base:1}, {ic:"🍫",dish:"Dairy Milk",base:1.5}, {ic:"🫓",dish:"Aloo Paratha",base:2}, {ic:"🍢",dish:"Vada Pav",base:1.5}, {ic:"🥜",dish:"Bhel Puri",base:2}, {ic:"🍮",dish:"Gulab Jamun",base:2} ],
+  mideast:[ {ic:"🥙",dish:"Falafel Wrap",base:4}, {ic:"🫓",dish:"Manakish",base:3}, {ic:"☕",dish:"Arabic Coffee",base:2}, {ic:"🧆",dish:"Falafel Box",base:3}, {ic:"🥤",dish:"Jallab",base:2}, {ic:"🍯",dish:"Baklava",base:3}, {ic:"🫛",dish:"Roasted Chickpeas",base:1.5}, {ic:"🧀",dish:"Halloumi Roll",base:4}, {ic:"🍵",dish:"Mint Tea",base:1.5}, {ic:"🌴",dish:"Medjool Dates",base:2}, {ic:"🥛",dish:"Ayran",base:1.5}, {ic:"🍪",dish:"Maamoul",base:2} ],
+  aussie:[ {ic:"🥧",dish:"Meat Pie",base:5}, {ic:"🍫",dish:"Tim Tam",base:3}, {ic:"🥪",dish:"Vegemite Toastie",base:3}, {ic:"☕",dish:"Flat White",base:4}, {ic:"🍦",dish:"Golden Gaytime",base:3}, {ic:"🍧",dish:"Paddle Pop",base:2}, {ic:"🥤",dish:"Bundaberg Ginger Beer",base:3}, {ic:"🍌",dish:"Banana Bread",base:4}, {ic:"🍪",dish:"Anzac Biscuit",base:2}, {ic:"🌭",dish:"Sausage Roll",base:4}, {ic:"🍫",dish:"Cherry Ripe",base:2}, {ic:"🥛",dish:"Iced Coffee",base:3} ],
+};
+const CITY_STORE = { nyc:"bodega",la:"bodega",chi:"bodega",hou:"bodega",sfo:"bodega",nol:"bodega",tor:"bodega", tyo:"konbini",osa:"konbini",kyo:"konbini", sel:"korean",pus:"korean", mex:"latin",oax:"latin",lim:"latin",bue:"latin",sao:"latin", par:"french", ldn:"euro",ber:"euro",rom:"euro",nap:"euro",bol:"euro",bcn:"euro",mad:"euro",sse:"euro",lis:"euro",cph:"euro",ams:"euro",vie:"euro",ath:"euro",cpt:"euro", bkk:"sea",sin:"sea",sgn:"sea",han:"sea",pen:"sea",kul:"sea",tpe:"sea",hkg:"sea", bom:"india",del:"india", ist:"mideast",dxb:"mideast",cai:"mideast",rak:"mideast",tlv:"mideast",bey:"mideast", syd:"aussie",mel:"aussie" };
+const STORE_LABEL = { bodega:"the corner bodega", konbini:"the 24h konbini", korean:"the 편의점", latin:"la tiendita", french:"l'épicerie", euro:"the späti", sea:"the night market", india:"the kirana store", mideast:"the souk kiosk", aussie:"the milk bar" };
+function konbiniKey(){ return CITY_STORE[curCity().id] || "euro"; }
+function konbiniPlaces(){ const c=curCity(), cur=c.cur, pf=c.pf||1; const items=KONBINI_BY[konbiniKey()]||KONBINI_BY.bodega;
+  return items.map((k,i)=>({ _key:"kb"+i, _cityId:"konbini", _cityName:"corner store", _flag:"🏪", _cur:cur, ic:k.ic, name:STORE_LABEL[konbiniKey()]||"the 24h corner store", hood:"open all night", dish:k.dish, en:"konbini", rate:Math.round((44+i%6))/10, n:80+i*31, price: cur.dec===0?Math.max(1,Math.round(k.base*pf)):Math.round(k.base*pf*100)/100, lvl:1, desc:null, maps:null, photo:null, rv:null })); }
+function openKonbini(){ const list=konbiniPlaces(); list.forEach(p=>placeByKey[p._key]=p);
+  const t=$("#kb-title"); if(t) t.textContent = `🏪 ${STORE_LABEL[konbiniKey()]||"the 24h corner store"}`;
+  const g=$("#kb-tag"); if(g) g.textContent = `${curCity().flag} ${curCity().name} · open all night — no delivery, it's right there`;
+  $("#konbini-list").innerHTML = list.map(p=>`<div class="kb-item"><div class="kb-ic">${p.ic}</div><div class="kb-mid"><div class="kb-n">${esc(p.dish)}</div><div class="kb-sub">⚡ already in your drawer</div></div><div class="kb-p">${money(p.price,p._cur)}</div><button class="kb-add" onclick="addToCart('${p._key}',event)">＋</button></div>`).join(""); go("konbini"); }
 
 /* --- 7 rate the plate: hot-or-not, 8 rounds --- */
 let rtpRound=0, rtpScore={};
@@ -1604,12 +1666,13 @@ function burnLabel(){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.f
    ============================================================ */
 let menusData = null;
 const EMOJI_CUISINE = { "🍕":"pizza","🍝":"italian","🍔":"american","🌮":"mexican","🌯":"mexican","🍣":"sushi","🍱":"japanese","🍜":"ramen","🥡":"chinese","🍛":"indian","🍲":"korean","🥘":"spanish","🍗":"american","🥩":"steak_house","🍖":"barbecue","🥪":"sandwich","🥯":"bagel","🧆":"middle_eastern","🥙":"greek","🦐":"seafood","🥐":"french","☕":"cafe","🍰":"dessert","🍦":"ice_cream","🥟":"dumpling","🐟":"seafood" };
-const STARTERS = { _:["House Salad","Garlic Bread","Soup of the Day"], italian:["Bruschetta","Caprese","Arancini"], pizza:["Bruschetta","Garlic Knots","Caprese"], japanese:["Edamame","Gyoza","Miso Soup"], sushi:["Edamame","Seaweed Salad","Miso Soup"], ramen:["Edamame","Gyoza","Takoyaki"], mexican:["Chips & Guac","Elote","Queso Fundido"], indian:["Samosa","Papadum","Onion Bhaji"], chinese:["Spring Rolls","Hot & Sour Soup","Wonton Soup"], thai:["Spring Rolls","Tom Yum","Satay Skewers"], korean:["Kimchi","Mandu","Tteokbokki"], french:["French Onion Soup","Escargot","Pâté"], greek:["Dolmades","Tzatziki & Pita","Saganaki"], american:["Mozzarella Sticks","Buffalo Wings","Loaded Fries"], spanish:["Patatas Bravas","Croquetas","Pan con Tomate"], turkish:["Hummus","Sigara Böreği","Lentil Soup"], vietnamese:["Summer Rolls","Bánh Cuốn","Goi Cuon"] };
-const SIDES = { _:["Fries","Side Salad","Steamed Rice"], japanese:["Steamed Rice","Pickles","Seaweed Salad"], sushi:["Steamed Rice","Edamame","Miso Soup"], mexican:["Rice & Beans","Tortilla Chips","Elote"], indian:["Naan","Basmati Rice","Raita"], italian:["Side of Pasta","Focaccia","Polenta"], pizza:["Garlic Bread","Side Salad","Wings"], korean:["Steamed Rice","Kimchi","Pickled Radish"], chinese:["Egg Fried Rice","Prawn Crackers","Bok Choy"], thai:["Jasmine Rice","Roti","Papaya Salad"], french:["Pommes Frites","Ratatouille","Baguette"], american:["Fries","Mac & Cheese","Coleslaw"] };
-const DRINKS = { _:["Sparkling Water","House Soda","Iced Tea"], japanese:["Ramune","Green Tea","Calpis"], sushi:["Green Tea","Ramune","Yuzu Soda"], ramen:["Ramune","Barley Tea","Calpis"], korean:["Barley Tea","Sikhye","Sujeonggwa"], mexican:["Horchata","Jarritos","Agua Fresca"], indian:["Mango Lassi","Masala Chai","Nimbu Pani"], italian:["Espresso","San Pellegrino","Aranciata"], pizza:["Italian Soda","San Pellegrino","Espresso"], chinese:["Jasmine Tea","Soy Milk","Lychee Soda"], thai:["Thai Iced Tea","Coconut Water","Lime Soda"], french:["Café au Lait","Citron Pressé","Perrier"], american:["Root Beer Float","Milkshake","Cold Brew"], cafe:["Latte","Cappuccino","Cold Brew"], coffee_shop:["Latte","Flat White","Mocha"], greek:["Frappé","Lemonade","Mountain Tea"], spanish:["Horchata","Clara (0%)","Café con Leche"] };
-const DESSERTS = { _:["Cheesecake","Vanilla Ice Cream","Chocolate Cake"], italian:["Tiramisu","Gelato","Cannoli"], pizza:["Tiramisu","Gelato","Nutella Pizza"], japanese:["Mochi","Matcha Ice Cream","Dorayaki"], sushi:["Mochi","Matcha Ice Cream","Yuzu Sorbet"], mexican:["Churros","Flan","Tres Leches"], indian:["Gulab Jamun","Kheer","Kulfi"], french:["Crème Brûlée","Macarons","Profiteroles"], thai:["Mango Sticky Rice","Coconut Ice Cream"], korean:["Bingsu","Hotteok","Yakgwa"], greek:["Baklava","Loukoumades","Galaktoboureko"], american:["NY Cheesecake","Apple Pie","Brownie Sundae"], turkish:["Baklava","Künefe","Turkish Delight"] };
+const STARTERS = { _:["Mixed Greens","Bread Basket","Soup of the Day"], italian:["Bruschetta","Caprese","Arancini"], pizza:["Bruschetta","Garlic Knots","Caprese"], japanese:["Edamame","Gyoza","Miso Soup"], sushi:["Edamame","Seaweed Salad","Miso Soup"], ramen:["Edamame","Gyoza","Takoyaki"], mexican:["Chips & Guac","Elote","Queso Fundido"], indian:["Samosa","Papadum","Onion Bhaji"], chinese:["Spring Rolls","Hot & Sour Soup","Wonton Soup"], thai:["Spring Rolls","Tom Yum","Satay Skewers"], korean:["Kimchi","Mandu","Tteokbokki"], french:["French Onion Soup","Escargot","Pâté"], greek:["Dolmades","Tzatziki & Pita","Saganaki"], american:["Mozzarella Sticks","Buffalo Wings","Deviled Eggs"], spanish:["Patatas Bravas","Croquetas","Pan con Tomate"], turkish:["Hummus","Sigara Böreği","Lentil Soup"], vietnamese:["Summer Rolls","Bánh Cuốn","Gỏi Cuốn"], middle_eastern:["Hummus","Falafel","Baba Ganoush"], lebanese:["Hummus","Tabbouleh","Kibbeh"], mediterranean:["Hummus","Stuffed Vine Leaves","Halloumi"], peruvian:["Ceviche","Causa","Anticuchos"], ethiopian:["Sambusa","Azifa","Timatim Salad"], german:["Pretzel","Kartoffelsuppe","Obatzda"], portuguese:["Bifana","Pastéis de Bacalhau","Caldo Verde"], seafood:["Oysters","Clam Chowder","Calamari"], steak_house:["Shrimp Cocktail","Caesar Salad","Wedge Salad"], barbecue:["Burnt Ends","Cornbread","Hush Puppies"], british:["Scotch Egg","Prawn Cocktail","Pea & Ham Soup"], european:["Cured Meats","Goulash Soup","Pierogi"], deli:["Matzo Ball Soup","Pickles","Knish"], bakery:["Quiche","Mini Croissant","Scone"], vegetarian:["Garden Salad","Hummus Plate","Soup of the Day"], vegan:["Edamame","Garden Salad","Spring Rolls"], dumpling:["Pot Stickers","Hot & Sour Soup","Spring Rolls"] };
+const SIDES = { _:["House Rice","Seasonal Vegetables","Side Salad"], japanese:["Steamed Rice","Pickles","Seaweed Salad"], sushi:["Steamed Rice","Edamame","Miso Soup"], ramen:["Gyoza","Steamed Rice","Menma"], mexican:["Rice & Beans","Tortilla Chips","Elote"], indian:["Naan","Basmati Rice","Raita"], italian:["Side of Pasta","Focaccia","Polenta"], pizza:["Garlic Bread","Side Salad","Meatballs"], korean:["Steamed Rice","Kimchi","Pickled Radish"], chinese:["Egg Fried Rice","Prawn Crackers","Bok Choy"], thai:["Jasmine Rice","Roti","Papaya Salad"], french:["Pommes Frites","Ratatouille","Baguette"], american:["Fries","Mac & Cheese","Coleslaw"], greek:["Lemon Potatoes","Pita","Greek Salad"], spanish:["Patatas","Padrón Peppers","Bread & Aioli"], turkish:["Bulgur Pilaf","Flatbread","Shepherd Salad"], vietnamese:["Steamed Rice","Pickled Veg","Rice Noodles"], middle_eastern:["Pita","Rice Pilaf","Fattoush"], lebanese:["Pita","Rice & Vermicelli","Fattoush"], mediterranean:["Pita","Couscous","Greek Salad"], peruvian:["Yuca Fries","White Rice","Salsa Criolla"], ethiopian:["Injera","Gomen","Yellow Lentils"], german:["Spätzle","Sauerkraut","Potato Salad"], portuguese:["Batatas","Arroz","Broa Bread"], seafood:["Fries","Slaw","Grilled Corn"], steak_house:["Creamed Spinach","Mashed Potatoes","Onion Rings"], barbecue:["Baked Beans","Mac & Cheese","Slaw"], british:["Chips","Mushy Peas","Yorkshire Pudding"], european:["Spätzle","Red Cabbage","Dumplings"], deli:["Potato Salad","Coleslaw","Pickle Spear"], bakery:["Side Salad","Soup","Fruit Cup"], vegetarian:["Roasted Veg","Quinoa","Side Salad"], vegan:["Roasted Veg","Brown Rice","Side Salad"], dumpling:["Fried Rice","Greens","Pickles"] };
+const DRINKS = { _:["Still Water","Sparkling Water","House Soda","Iced Tea"], japanese:["Ramune","Green Tea","Calpis"], sushi:["Green Tea","Ramune","Yuzu Soda"], ramen:["Ramune","Barley Tea","Calpis"], korean:["Barley Tea","Sikhye","Sujeonggwa"], mexican:["Horchata","Jarritos","Agua Fresca"], indian:["Mango Lassi","Masala Chai","Nimbu Pani"], italian:["Espresso","San Pellegrino","Aranciata"], pizza:["Italian Soda","San Pellegrino","Chinotto"], chinese:["Jasmine Tea","Soy Milk","Lychee Soda"], thai:["Thai Iced Tea","Coconut Water","Lime Soda"], french:["Café au Lait","Citron Pressé","Perrier"], american:["Root Beer Float","Milkshake","Lemonade"], cafe:["Latte","Cappuccino","Cold Brew"], coffee_shop:["Latte","Flat White","Mocha"], greek:["Frappé","Lemonade","Mountain Tea"], spanish:["Horchata","Tinto de Verano (0%)","Café con Leche"], turkish:["Ayran","Turkish Tea","Şalgam"], vietnamese:["Cà Phê Sữa Đá","Sugarcane Juice","Soy Milk"], middle_eastern:["Mint Lemonade","Jallab","Arabic Coffee"], lebanese:["Jallab","Ayran","Arabic Coffee"], mediterranean:["Mint Lemonade","Sparkling Water","Espresso"], peruvian:["Chicha Morada","Inca Kola","Maracuyá Juice"], ethiopian:["Ethiopian Coffee","Spris","Mango Juice"], german:["Apfelschorle","Spezi","Radler (0%)"], portuguese:["Galão","Sumol","Água das Pedras"], seafood:["Lemonade","Iced Tea","Sparkling Water"], steak_house:["Iced Tea","Cola","Sparkling Water"], barbecue:["Sweet Tea","Lemonade","Root Beer"], british:["Builder's Tea","Lemonade","Ginger Beer"], european:["Kompot","Sparkling Water","Coffee"], deli:["Egg Cream","Dr. Brown's Soda","Iced Coffee"], bakery:["Latte","Cappuccino","Hot Chocolate"], vegetarian:["Kombucha","Fresh Juice","Iced Tea"], vegan:["Kombucha","Oat Latte","Fresh Juice"], dumpling:["Jasmine Tea","Soy Milk","Lychee Soda"] };
+const DESSERTS = { _:["Chef's Dessert","Ice Cream","Seasonal Fruit"], italian:["Tiramisu","Gelato","Cannoli"], pizza:["Tiramisu","Gelato","Nutella Calzone"], japanese:["Mochi","Matcha Ice Cream","Dorayaki"], sushi:["Mochi","Matcha Ice Cream","Yuzu Sorbet"], ramen:["Mochi","Matcha Ice Cream","Dango"], mexican:["Churros","Flan","Tres Leches"], indian:["Gulab Jamun","Kheer","Kulfi"], chinese:["Egg Tart","Mango Pudding","Sesame Balls"], french:["Crème Brûlée","Macarons","Profiteroles"], thai:["Mango Sticky Rice","Coconut Ice Cream","Tub Tim Krob"], korean:["Bingsu","Hotteok","Yakgwa"], greek:["Baklava","Loukoumades","Galaktoboureko"], american:["NY Cheesecake","Apple Pie","Brownie Sundae"], turkish:["Baklava","Künefe","Turkish Delight"], spanish:["Crema Catalana","Churros","Flan"], vietnamese:["Chè","Coconut Sorbet","Bánh Flan"], middle_eastern:["Baklava","Kunafa","Halva"], lebanese:["Baklava","Knafeh","Mouhalabia"], mediterranean:["Baklava","Yogurt & Honey","Loukoumades"], peruvian:["Suspiro a la Limeña","Picarones","Mazamorra"], ethiopian:["Honey Baklava","Fresh Fruit","Spiced Cake"], german:["Black Forest Cake","Apfelstrudel","Bienenstich"], portuguese:["Pastel de Nata","Arroz Doce","Toucinho do Céu"], seafood:["Key Lime Pie","Ice Cream","Berry Cobbler"], steak_house:["Cheesecake","Crème Brûlée","Chocolate Cake"], barbecue:["Banana Pudding","Pecan Pie","Peach Cobbler"], british:["Sticky Toffee Pudding","Eton Mess","Crumble"], european:["Sachertorte","Apple Strudel","Poppyseed Cake"], deli:["Black & White Cookie","Cheesecake","Rugelach"], bakery:["Éclair","Fruit Tart","Cinnamon Roll"], vegetarian:["Fruit Crumble","Sorbet","Chocolate Mousse"], vegan:["Coconut Sorbet","Vegan Brownie","Fruit Bowl"], dumpling:["Sesame Balls","Mango Pudding","Egg Tart"] };
 
-function cuisineKeyOf(p){ let k=(p.en||"").toLowerCase().trim().replace(/[\s-]+/g,"_"); if(menusData && menusData.byCuisine[k]) return k; if(STARTERS[k]||DRINKS[k]) return k; return EMOJI_CUISINE[p.ic] || k; }
+const CUISINE_ALIAS = { bbq:"barbecue", diner:"american", bistro:"french", gastropub:"british", eastern_european:"european", modern_european:"european", continental:"european", steakhouse:"steak_house", pub:"british", brazilian:"barbecue", argentinian:"steak_house", argentine:"steak_house", caribbean:"mexican", soul_food:"american", southern:"american", new_american:"american", contemporary:"american", fusion:"asian", asian:"chinese", noodle:"chinese", patisserie:"bakery", brunch:"breakfast", cafe:"breakfast", coffee_shop:"breakfast", afghan:"middle_eastern", persian:"middle_eastern", iranian:"middle_eastern", moroccan:"middle_eastern", israeli:"mediterranean", egyptian:"middle_eastern", indonesian:"thai", malaysian:"thai", filipino:"asian", singaporean:"asian" };
+function cuisineKeyOf(p){ let k=(p.en||"").toLowerCase().trim().replace(/[\s-]+/g,"_"); k=CUISINE_ALIAS[k]||k; if((menusData && menusData.byCuisine[k]) || STARTERS[k] || DRINKS[k]) return k; return EMOJI_CUISINE[p.ic] || k; }
 function pickList(map, key, n, salt){ const pool=(map[key]||map._||[]).slice(); const out=[]; let h=hash(salt+key); for(let i=0;i<n && pool.length;i++){ h=(h*1103515245+12345)>>>0; out.push(pool.splice(h%pool.length,1)[0]); } return out; }
 function menuPrice(base, mult, place, salt){ const city=cityOf(place), pf=city.pf||1, h=hash(salt); let v=base*mult*pf*(0.8+(h%40)/100); return place._cur.dec===0 ? Math.max(1,Math.round(v)) : Math.round(v*100)/100; }
 function mkItem(place, name, ic, kind, price, photo){ const k=place._key+"::"+kind+(hash(name)%9999); const it={ _key:k, _cityId:place._cityId, _cityName:place._cityName, _flag:place._flag, _cur:place._cur, ic:ic, name:place.name, hood:place.hood, dish:name, en:place.en, price:price, photo:photo||null, _menuItem:true }; placeByKey[k]=it; return it; }

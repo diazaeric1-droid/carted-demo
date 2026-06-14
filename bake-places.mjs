@@ -1,22 +1,24 @@
 #!/usr/bin/env node
-// bake-places.mjs v2 — pre-bake the world's 50 best food cities from Google Places API (New)
+// bake-places.mjs v3 — pre-bake 50 cultural restaurants per city from Google Places API (New)
 //
 // Usage:
-//   GOOGLE_PLACES_KEY=xxx node bake-places.mjs            # bake all 50 cities
-//   GOOGLE_PLACES_KEY=xxx node bake-places.mjs nyc hou    # bake a subset
-//   node bake-places.mjs --force nyc                      # re-bake even if JSON exists
-//   (key can also live in ./.env as GOOGLE_PLACES_KEY=xxx — .env is gitignored)
+//   node bake-places.mjs                 # bake all 50 cities (skips existing)
+//   node bake-places.mjs nyc hou         # subset
+//   node bake-places.mjs --force         # re-bake everything
+//   node bake-places.mjs --check         # validate the key with one call
+//   (key in env GOOGLE_PLACES_KEY or ./.env — .env is gitignored)
 //
-// Per city: 2 Nearby Search calls (restaurants + cafés/bars/bakeries), merged,
-// top 20 by popularity. Per place: rating, rating count, price level, price range,
-// editorial summary, 3 review snippets, 1 photo (downloaded, 400px) + attribution.
+// Per city: up to 3 pages of Text Search ("popular local restaurants in <city>",
+// includedType restaurant) → ~60 candidates, then FILTERED to 50 unique, cultural,
+// photographed restaurants: excludes bars/pubs/nightlife, ~90 chain brands
+// (McDonald's/Starbucks/Barnes & Noble/…), and non-food places; requires a photo
+// (landscape preferred, so storefront/food over portrait selfies). Per place: rating,
+// rating count, price level (always set), 3 review snippets, location, and the
+// restaurant's own primary photo (400px, downloaded).
 //
-// Cost at full run (50 cities): ~100 searches ≈ $4 + ~1000 photos ≈ $7 → ~$11,
-// well inside Google's $200/mo free credit.
-//
+// Cost at full run: ~150 text searches + ~2500 photos ≈ ~$25, inside the $200/mo free credit.
 // Output: places/<cityId>.json + places/photos/<placeId>.jpg + places/index.json
-// NOTE: Google ToS caps caching of Places content at 30 days — re-run monthly
-// while this is a public demo, or swap photos for an owned pack before scale.
+// NOTE: Google ToS caps caching of Places content at 30 days — re-run monthly while public.
 
 import { mkdir, writeFile, readFile } from "fs/promises";
 import { existsSync } from "fs";
@@ -146,37 +148,55 @@ const PRICE_LVL = { PRICE_LEVEL_INEXPENSIVE:1, PRICE_LEVEL_MODERATE:2, PRICE_LEV
 function hash(str){ let h=0; for(let i=0;i<str.length;i++) h=(Math.imul(31,h)+str.charCodeAt(i))|0; return Math.abs(h); }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-/* ---- field masks, richest first; fall back if the API rejects a field ---- */
-const MASKS = [
-  "places.id,places.displayName,places.shortFormattedAddress,places.primaryType,places.types,places.rating,places.userRatingCount,places.photos,places.priceLevel,places.priceRange,places.editorialSummary,places.reviews,places.googleMapsUri",
-  "places.id,places.displayName,places.shortFormattedAddress,places.primaryType,places.types,places.rating,places.userRatingCount,places.photos,places.priceLevel,places.editorialSummary,places.reviews,places.googleMapsUri",
-  "places.id,places.displayName,places.shortFormattedAddress,places.primaryType,places.types,places.rating,places.userRatingCount,places.photos,places.priceLevel",
-];
-let maskIdx = 0;
+/* ---- Text Search (New) with pagination ---- */
+const PLACE_FIELDS = "places.id,places.displayName,places.shortFormattedAddress,places.primaryType,places.types,places.rating,places.userRatingCount,places.photos,places.priceLevel,places.editorialSummary,places.reviews,places.googleMapsUri,places.location";
+const TEXT_MASK = "nextPageToken," + PLACE_FIELDS;
 
-async function nearby(KEY, city, includedTypes) {
+async function textSearchPage(KEY, city, query, pageToken) {
   const body = {
-    includedTypes,
-    maxResultCount: 20,
-    rankPreference: "POPULARITY",
-    locationRestriction: { circle: { center: { latitude: city.lat, longitude: city.lng }, radius: city.radius } },
+    textQuery: query,
+    includedType: "restaurant",
+    pageSize: 20,
+    rankPreference: "RELEVANCE",
+    locationBias: { circle: { center: { latitude: city.lat, longitude: city.lng }, radius: Math.min(city.radius * 2.2, 35000) } },
   };
-  while (maskIdx < MASKS.length) {
-    const res = await fetch("https://places.googleapis.com/v1/places:searchNearby", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Goog-Api-Key": KEY, "X-Goog-FieldMask": MASKS[maskIdx] },
-      body: JSON.stringify(body),
-    });
-    if (res.ok) return (await res.json()).places || [];
-    const txt = await res.text();
-    if (res.status === 400 && /field|mask/i.test(txt) && maskIdx < MASKS.length - 1) {
-      console.warn(`  field mask rejected, falling back (tier ${maskIdx + 1} → ${maskIdx + 2})`);
-      maskIdx++;
-      continue;
-    }
-    throw new Error(`Nearby ${res.status}: ${txt.slice(0, 300)}`);
-  }
-  throw new Error("all field masks rejected");
+  if (pageToken) body.pageToken = pageToken;
+  const res = await fetch("https://places.googleapis.com/v1/places:searchText", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-Goog-Api-Key": KEY, "X-Goog-FieldMask": TEXT_MASK },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`TextSearch ${res.status}: ${(await res.text()).slice(0, 220)}`);
+  const j = await res.json();
+  return { places: j.places || [], next: j.nextPageToken || null };
+}
+
+/* ---- filters: keep only unique, cultural, photographed restaurants ---- */
+const CHAINS = ["mcdonald","starbucks","subway","kfc","burger king","domino","pizza hut","taco bell","wendy","dunkin","chipotle","five guys","popeye","chick-fil","panera","baskin","dairy queen","little caesar","papa john","jamba","sonic drive","arby","ihop","denny","olive garden","applebee","chili's","tgi","outback steak","red lobster","cheesecake factory","panda express","shake shack","in-n-out","whataburger","carl's jr","hardee","jack in the box","del taco","el pollo loco","raising cane","wingstop","buffalo wild","jollibee","costa coffee","pret a manger","greggs","wagamama","nando","tim hortons"," a&w ","yoshinoya","sukiya","matsuya","mos burger","lotteria","pizza express","caffe nero","leon ","itsu","wetherspoon","hooters","hard rock cafe","cinnabon","auntie anne","krispy kreme","coffee bean","peet's","red robin","texas roadhouse","ruby tuesday","cracker barrel","waffle house","barnes & noble","costco","walmart","target","7-eleven","circle k","pizza hut"];
+const NONFOOD_OR_BAR = new Set(["bar","pub","night_club","wine_bar","bar_and_grill","liquor_store","cafe","coffee_shop","book_store","store","department_store","supermarket","grocery_store","convenience_store","shopping_mall","gas_station","lodging","hotel","tourist_attraction","movie_theater","gym","casino"]);
+const BAR_TYPES = new Set(["bar","pub","night_club","wine_bar","bar_and_grill","liquor_store"]);
+const FOOD_HINT = /restaurant|food|bakery|dessert|ice_cream|meal_takeaway|deli|diner|bistro|steak|sushi|ramen|pizza|bbq|barbecue|noodle|dumpling|breakfast|brunch|patisserie|trattoria/;
+function isChain(name){ const n = " " + name.toLowerCase() + " "; return CHAINS.some(c => n.includes(c)); }
+function isFoodPlace(g){
+  const pt = g.primaryType || "";
+  if (NONFOOD_OR_BAR.has(pt)) return false;
+  if ((g.types || []).some(t => BAR_TYPES.has(t))) return false;
+  return FOOD_HINT.test(pt) || (g.types || []).some(t => FOOD_HINT.test(t));
+}
+function keepPlace(g){
+  const name = g.displayName?.text; if (!name) return false;
+  if (!isFoodPlace(g)) return false;
+  if (isChain(name)) return false;
+  if (!(g.photos || []).length) return false;        // must have a photo
+  if ((g.userRatingCount || 0) < 30) return false;    // established / real
+  if (g.rating != null && g.rating < 3.9) return false;
+  return true;
+}
+// prefer a landscape photo (storefront / plated food) over portrait (selfies / people)
+function pickPhoto(g){
+  const ph = (g.photos || []).filter(p => p.name);
+  if (!ph.length) return null;
+  return ph.find(p => (p.widthPx || 0) >= (p.heightPx || 1)) || ph[0];
 }
 
 async function downloadPhoto(KEY, photoName, dest) {
@@ -194,21 +214,13 @@ function buildPlace(g, city, photoPath, photoBy) {
   const en = czKey ? czKey.replace(/_/g, " ")
     : (g.primaryType || "restaurant").replace(/_restaurant$/, "").replace(/_/g, " ");
 
-  const lvl = PRICE_LVL[g.priceLevel] || 0;
-  let price = null;
-  const pr = g.priceRange;
-  if (pr?.startPrice?.units != null) {
-    const a = Number(pr.startPrice.units), b = Number(pr.endPrice?.units ?? a);
-    if (b > 0) price = (a + b) / 2 * 0.9;             // mid of meal range, solo-ish portion
-  }
-  if (price == null || !isFinite(price)) {
-    const mult = lvl ? { 1: 0.75, 2: 1, 3: 1.6, 4: 2.4 }[lvl] : 1;
-    price = c.base * city.pf * mult * (0.85 + ((h >> 3) % 30) / 100);
-  }
+  // price level: Google's when present, else a believable mid-range guess (deterministic per place)
+  const lvl = PRICE_LVL[g.priceLevel] || (2 + (h % 2));   // 2 or 3 when unknown
+  let price = c.base * city.pf * ({ 1: 0.7, 2: 1, 3: 1.6, 4: 2.4 }[lvl] || 1) * (0.85 + ((h >> 3) % 30) / 100);
   price = Math.max(3 * city.pf, Math.min(90 * city.pf, price));
   price = city.cur.dec === 0 ? Math.round(price) : Math.round(price * 100) / 100;
 
-  const street = (g.shortFormattedAddress || "").split(",")[0].replace(/^[\d–\-/ ]+\s*/, "").trim();
+  const street = (g.shortFormattedAddress || "").split(",")[0].replace(/^\d+\s+/, "").trim();
   const rv = (g.reviews || [])
     .filter(r => r.text?.text)
     .slice(0, 3)
@@ -223,7 +235,8 @@ function buildPlace(g, city, photoPath, photoBy) {
     ic: c.ic, name, hood: street || city.name, dish: c.dish, en,
     rate: g.rating != null ? Math.round(g.rating * 10) / 10 : (40 + h % 10) / 10,
     n: g.userRatingCount || 200 + (h % 9000),
-    price, lvl: lvl || null,
+    price, lvl,
+    lat: g.location?.latitude ?? null, lng: g.location?.longitude ?? null,
     desc: g.editorialSummary?.text || null,
     maps: g.googleMapsUri || null,
     photo: photoPath, photoBy: photoBy || null,
@@ -233,42 +246,52 @@ function buildPlace(g, city, photoPath, photoBy) {
 
 async function bakeCity(KEY, city, photosDir) {
   console.log(`\n[${city.id}] ${city.name}`);
-  const a = await nearby(KEY, city, ["restaurant"]);
-  await sleep(200);
-  let b = [];
-  try { b = await nearby(KEY, city, ["cafe", "bakery", "fast_food_restaurant", "bar"]); }
-  catch (e) { console.warn(`  second sweep failed (${e.message}) — continuing with ${a.length}`); }
+  // collect from 2 queries (~120 candidates) so we still clear 50 after filtering
+  const QUERIES = [`popular local restaurants in ${city.name}`, `best traditional restaurants in ${city.name}`];
+  const raw = [];
+  for (const q of QUERIES) {
+    let token = null;
+    for (let page = 0; page < 3; page++) {
+      let r;
+      try { r = await textSearchPage(KEY, city, q, token); }
+      catch (e) { console.warn(`  "${q}" p${page + 1} failed: ${e.message}`); break; }
+      raw.push(...r.places);
+      token = r.next;
+      if (!token) break;
+      await sleep(2000);   // Google needs a moment before a fresh page token is valid
+    }
+  }
 
-  const seen = new Set(), merged = [];
-  for (const g of [...a, ...b]) {
+  // filter -> unique, cultural, photographed restaurants; dedupe by name
+  const seen = new Set(), kept = [];
+  for (const g of raw) {
     const nm = g.displayName?.text?.toLowerCase();
     if (!nm || seen.has(nm) || seen.has(g.id)) continue;
+    if (!keepPlace(g)) continue;
     seen.add(nm); seen.add(g.id);
-    merged.push(g);
+    kept.push(g);
   }
-  // most-reviewed first, photo-havers first — recognizable places make the demo land
-  merged.sort((x, y) => ((y.photos?.length ? 1 : 0) - (x.photos?.length ? 1 : 0)) || (y.userRatingCount || 0) - (x.userRatingCount || 0));
+  // rank by quality for the cut to 50 (the APP shuffles for display order)
+  kept.sort((x, y) => ((y.rating || 0) - (x.rating || 0)) || ((y.userRatingCount || 0) - (x.userRatingCount || 0)));
 
   const places = [];
-  for (const g of merged) {
-    if (places.length >= 20) break;
-    let photoPath = null, photoBy = null;
-    const ph = (g.photos || [])[0];
-    if (ph) {
-      const safeId = g.id.replace(/[^a-zA-Z0-9_-]/g, "");
-      const dest = path.join(photosDir, `${safeId}.jpg`);
-      photoBy = ph.authorAttributions?.[0]?.displayName || null;
-      if (existsSync(dest)) photoPath = `places/photos/${safeId}.jpg`;
-      else {
-        try { await downloadPhoto(KEY, ph.name, dest); photoPath = `places/photos/${safeId}.jpg`; await sleep(120); }
-        catch (e) { console.warn(`  [photo skip] ${g.displayName?.text}: ${e.message}`); }
-      }
+  for (const g of kept) {
+    if (places.length >= 50) break;
+    const ph = pickPhoto(g);
+    if (!ph) continue;
+    const safeId = g.id.replace(/[^a-zA-Z0-9_-]/g, "");
+    const dest = path.join(photosDir, `${safeId}.jpg`);
+    let photoPath = null;
+    if (existsSync(dest)) photoPath = `places/photos/${safeId}.jpg`;
+    else {
+      try { await downloadPhoto(KEY, ph.name, dest); photoPath = `places/photos/${safeId}.jpg`; await sleep(110); }
+      catch (e) { console.warn(`  [photo skip] ${g.displayName?.text}: ${e.message}`); }
     }
-    const p = buildPlace(g, city, photoPath, photoBy);
+    if (!photoPath) continue;   // hard requirement: every place keeps a real photo
+    const p = buildPlace(g, city, photoPath, ph.authorAttributions?.[0]?.displayName || null);
     if (p) places.push(p);
   }
-  places.sort((x, y) => y.rate - x.rate || y.n - x.n);
-  console.log(`  → ${places.length} places · ${places.filter(p => p.photo).length} photos · ${places.filter(p => p.rv.length).length} with real reviews`);
+  console.log(`  → ${places.length} places kept (${raw.length} raw) · ${places.filter(p => p.rv.length).length} w/ reviews`);
   return places;
 }
 
