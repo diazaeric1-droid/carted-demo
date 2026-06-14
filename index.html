@@ -366,6 +366,48 @@
   .rtp-n { font-size: 12px; font-weight: 800; text-align: center; line-height: 1.2; }
   .rtp-vs { font-family: var(--disp); font-weight: 700; color: var(--muted); font-size: 14px; flex: 0 0 auto; }
 
+  /* ----- itinerary / plan my night ----- */
+  .plan-btn { width: 100%; background: var(--accent2); border: 2.5px solid var(--ink); border-radius: 14px; padding: 11px; font-family: var(--disp); font-weight: 600; font-size: 14.5px; color: var(--ink); cursor: pointer; box-shadow: 0 4px 0 var(--ink); margin-bottom: 12px; }
+  .plan-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
+  .itin { text-align: left; margin: 6px 0 4px; }
+  .itin-row { display: flex; align-items: center; gap: 9px; padding: 9px 4px; border-bottom: 2px dashed #d9cbab; font-weight: 700; font-size: 14px; }
+  .itin-row span:first-child { font-size: 20px; }
+  .itin-tag { margin-left: auto; font-size: 10.5px; font-weight: 800; color: var(--muted); text-transform: uppercase; border: 2px solid var(--soft); border-radius: 8px; padding: 2px 6px; }
+  /* ----- ghost mascot + wardrobe ----- */
+  .ghost-av { position: relative; display: inline-flex; align-items: center; justify-content: center; line-height: 1; vertical-align: middle; }
+  .ghost-av .gh-hat { position: absolute; top: -0.52em; left: 50%; transform: translateX(-50%) rotate(-8deg); pointer-events: none; }
+  .reveal .ghost-quip { font-size: 14.5px; font-weight: 800; color: var(--ink); background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 8px 14px; display: inline-block; margin: 4px auto 2px; box-shadow: 3px 3px 0 var(--ink); max-width: 270px; animation: pop .5s ease both; }
+  .wardrobe { display: flex; gap: 12px; background: var(--card); border: 2.5px solid var(--ink); border-radius: 18px; padding: 14px; box-shadow: 4px 4px 0 var(--ink); margin-bottom: 14px; }
+  .wd-ghost { flex: 0 0 84px; display: flex; align-items: center; justify-content: center; background: var(--screen); border: 2.5px solid var(--ink); border-radius: 14px; }
+  .wd-grid { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; min-width: 0; }
+  .wd-fit { background: var(--screen); border: 2px solid var(--ink); border-radius: 12px; padding: 8px 4px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; box-shadow: 2px 2px 0 var(--ink); }
+  .wd-fit.eq { background: var(--accent2); }
+  .wd-fit.lock { opacity: .5; filter: grayscale(1); cursor: default; box-shadow: none; }
+  .wd-hat { font-size: 21px; }
+  .wd-name { font-size: 8.5px; font-weight: 800; text-align: center; line-height: 1.1; }
+  /* ----- featured city banner ----- */
+  .feat-banner { width: 100%; display: flex; align-items: center; gap: 11px; background: var(--neon); border: 2.5px solid var(--ink); border-radius: 16px; padding: 11px 13px; margin-bottom: 10px; box-shadow: 3px 3px 0 var(--ink); cursor: pointer; text-align: left; color: #fff; }
+  .feat-banner:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
+  .feat-banner .fb-ic { font-size: 24px; }
+  .feat-banner .fb-text { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .feat-banner .fb-text b { font-family: var(--disp); font-weight: 600; font-size: 14.5px; }
+  .feat-banner .fb-sub { font-size: 11.5px; opacity: .9; font-weight: 700; }
+  .feat-banner .fb-go { font-size: 22px; font-weight: 800; }
+  /* ----- buddy nudge ----- */
+  .buddy-nudge { width: 100%; text-align: left; background: #fff4ec; border: 2.5px dashed var(--accent); border-radius: 14px; padding: 10px 13px; margin-bottom: 10px; font-size: 12.5px; font-weight: 700; color: var(--text); cursor: pointer; box-shadow: 2px 2px 0 var(--accent); }
+  /* ----- city leaderboard (room) ----- */
+  #city-board { background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 12px 14px; margin-bottom: 14px; box-shadow: 4px 4px 0 var(--ink); }
+  #city-board:empty { display: none; }
+  .cb-title { font-family: var(--disp); font-weight: 600; font-size: 14px; margin-bottom: 8px; }
+  .cb-row { display: flex; align-items: center; gap: 9px; padding: 5px 0; font-size: 13.5px; font-weight: 700; }
+  .cb-row .cb-name { flex: 1; color: var(--muted); }
+  .cb-row b { color: var(--go); font-variant-numeric: tabular-nums; }
+  .cb-row.mine { background: #fff4ec; border: 2px dashed var(--accent); border-radius: 10px; padding: 5px 8px; }
+  .cb-row.mine .cb-name { color: var(--accent); }
+  /* ----- wrapped ----- */
+  .wrap-stats { text-align: left; margin: 4px 0 12px; }
+  .ws-row { display: flex; justify-content: space-between; align-items: baseline; padding: 9px 4px; border-bottom: 2px dashed #d9cbab; font-weight: 700; }
+  .ws-row b { font-family: var(--disp); font-size: 19px; }
   /* ----- corner store banner (prominent on the feed) ----- */
   .store-banner { width: 100%; display: flex; align-items: center; gap: 12px; background: var(--accent2); border: 2.5px solid var(--ink); border-radius: 18px; padding: 13px 14px; margin-bottom: 14px; box-shadow: 0 5px 0 var(--ink); cursor: pointer; text-align: left; transition: transform .08s, box-shadow .08s; }
   .store-banner:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
@@ -439,6 +481,8 @@
             <div class="live"><span class="dot"></span> <span id="live-count">1,247</span> night owls browsing with you</div>
             <div class="ghostline"><span class="ghost-emo">👻</span><div class="msg" id="ticker-msg"></div></div>
           </div>
+          <div id="buddy-nudge"></div>
+          <div id="featured-banner"></div>
           <div id="event-banners"></div>
           <div class="section-label" style="margin-bottom:8px">📍 pick a city</div>
           <div class="city-bar" id="city-bar"></div>
@@ -497,6 +541,7 @@
             <div class="live2"><span class="dot"></span> <b id="room-live" style="color:var(--go);font-weight:800">1,247</b>&nbsp;up worldwide · <b id="room-dodged" style="color:var(--go)">$—</b>&nbsp;dodged tonight</div>
           </div>
           <div id="room-podium"></div>
+          <div id="city-board"></div>
           <div class="prompts"><span class="plabel">what almost got you?</span><button class="pchip" onclick="quickConfess('🍕')">🍕</button><button class="pchip" onclick="quickConfess('🍜')">🍜</button><button class="pchip" onclick="quickConfess('🍣')">🍣</button><button class="pchip" onclick="quickConfess('🌮')">🌮</button><button class="pchip" onclick="quickConfess('🍔')">🍔</button><button class="pchip" onclick="quickConfess('🍰')">🍰</button></div>
           <div class="composer"><input id="composer-input" placeholder="or tell the room about it…" maxlength="90" /><button onclick="postFromComposer()">post</button></div>
           <div id="room-feed"></div>
@@ -544,6 +589,7 @@
             <div class="ghostline"><span class="ghost-emo">🗺️</span><div class="msg" id="explore-ticker"></div></div>
           </div>
           <div class="passport" id="explore-passport"></div>
+          <button class="plan-btn" onclick="planMyNight()">📋 plan my night here →</button>
           <div class="efilters" id="explore-filters"></div>
           <div id="explore-list"></div>
           <div class="osm-credit">things to do © Google · deals via Groupon (affiliate)</div>
@@ -1127,6 +1173,7 @@ function go(view){
   if(view==="room") renderRoom();
   if(view==="profile") renderProfile();
   if(view==="explore") renderExplore();
+  if(view==="feed"){ renderFeatured(); const bn=$("#buddy-nudge"); if(bn) bn.innerHTML=buddyNudge(); setPresenceGhost(); }
   if(view!=="track") stopCourier();
 }
 /* back to the feed but keep the user where they were scrolled to */
@@ -1244,7 +1291,7 @@ function cardHTML(p, saved){
 }
 const STORE_BLURB = { bodega:"grab a late-night snack from the bodega", konbini:"raid the 24h konbini", korean:"hit the 편의점 for ramyeon & banana milk", latin:"snacks from la tiendita", french:"a midnight run to l'épicerie", euro:"grab something from the späti", sea:"night-market bites", india:"chai & samosa from the kirana store", mideast:"a souk-kiosk snack run", aussie:"a milk bar run" };
 function renderFeed(){
-  renderBanners();
+  renderBanners(); renderFeatured(); const bn=$("#buddy-nudge"); if(bn) bn.innerHTML=buddyNudge();
   const c=curCity(), saved=feedMode==="saved";
   const sb=$("#store-banner-sub"); if(sb) sb.textContent = STORE_BLURB[konbiniKey()] || "grab a late-night snack";
   $("#saved-count").textContent = Object.keys(savedPlaces).length;
@@ -1311,6 +1358,7 @@ function renderProfile(){
     ? `<button class="signin-btn" onclick="signOut()">sign out</button>`
     : `<button class="signin-btn dark" onclick="signIn('Apple')"> Sign in with Apple</button><button class="signin-btn" onclick="signIn('Google')">Sign in with Google</button>`)
     + `<button class="signin-btn" onclick="shareWin('streak')">📸 flex your streak card</button>`
+    + `<button class="signin-btn" onclick="showWrapped()">📊 your week, wrapped</button>`
     + `<button class="signin-btn" onclick="ghostPush()">${stats.pushOptIn?"🔔 ghost texts: on":"🔔 let the ghost text me"}</button>`
     + `<button class="signin-btn" onclick="toggleAsmr()">${asmrOn?"🍳 kitchen ASMR: on":"🍳 kitchen ASMR: off"}</button>`
     + `<button class="signin-btn" onclick="toggleSnd()">${sndOn?"🔊 sounds: on":"🔇 sounds: off"}</button>`;
@@ -1329,7 +1377,7 @@ function renderProfile(){
   const lvlCard = `<div class="lvl-card"><div class="lvl-top"><span>⭐ Level ${L.lvl}</span><span style="color:var(--muted)">${stats.xp||0} XP</span></div><div class="xp-track"><div class="xp-fill" style="width:${L.pct}%"></div></div></div>`;
   if(!stats.earned) stats.earned=[];
   const achv = `<div class="section-label" style="margin:6px 2px 8px">🏅 achievements</div><div class="achv-grid">` + ACHV.map(a=>{ const on=a.has(stats); return `<div class="achv${on?' on':''}"><div class="achv-ic">${on?a.ic:'🔒'}</div><div class="achv-name">${a.name}</div><div class="achv-tip">${on?'unlocked':a.tip}</div></div>`; }).join("") + `</div>`;
-  $("#profile-body").innerHTML = `<div class="brand"><h1 style="font-size:24px">profile</h1></div>` + head + buddyCard + lvlCard + tierCard + grid + achv + driversCard + auth
+  $("#profile-body").innerHTML = `<div class="brand"><h1 style="font-size:24px">profile</h1></div>` + head + buddyCard + lvlCard + tierCard + grid + achv + renderWardrobe() + driversCard + auth
     + `<div style="text-align:center;color:var(--muted);font-size:11.5px;margin-top:14px">mock sign-in. real cross-device sync needs a backend (see roadmap).</div>`;
 }
 
@@ -1449,17 +1497,19 @@ function revealTruth(){
     streakGrew=true; stats.lastNight=tonight;
   }
   stats.orders++; stats.savedUsd += po.total/po.city.pf;
-  bumpTonight(po.total/po.city.pf); buddyPing();
+  bumpTonight(po.total/po.city.pf); buddyPing(); bumpWeek(po.total/po.city.pf, po.city.id, (po.items[0]||{}).ic);
   combo++; if(combo>(stats.maxCombo||0)) stats.maxCombo=combo;
+  stats.maxStreak=maxStreakEver();
   stats.cuisines=stats.cuisines||[]; stats.cities=stats.cities||[];
   (po.items||[]).forEach(it=> uniqPush(stats.cuisines, it.en));
   uniqPush(stats.cities, po.city.id);
-  saveStats();
+  saveStats(); checkFitUnlocks();
   const newTier=tierFor(stats.savedUsd).t;
   let milestone="";
   if(newTier.name!==beforeTier){ milestone=`${newTier.ic} new rank unlocked: ${newTier.name}!`; stats.freezes=Math.min(3,(stats.freezes||0)+1); saveStats(); }
   else if(streakGrew && [3,7,14,30,50,100,200].includes(stats.streak)){ milestone=`🔥 ${stats.streak}-night streak milestone!`; if(stats.streak>=7){ stats.freezes=Math.min(3,(stats.freezes||0)+1); saveStats(); } }
   if(po.city.id===curCity().id) renderTally();
+  if(po.city.id===featuredCity().id){ addXp(15); setTimeout(()=>toast("🌟 tonight's featured city — +15 XP bonus"), 1900); }
   lastShare = { usd: po.total/po.city.pf, label: money(po.total, po.city.cur), streak: stats.streak, tier: newTier, city: po.city.name };
   const rd=$("#rider"); rd.textContent= po.flight?"✈️💨":"🚗💨"; rd.style.left="125%"; rd.style.opacity="0"; $("#road-done").style.width="60%"; $("#track-live").style.display="none";
   snd("whoosh");
@@ -1468,9 +1518,10 @@ function revealTruth(){
   const driver=po.driver||"Marcus", pl=pick(po.flight?FLIGHT_PUNCH:PUNCH);
   const r=$("#track-reveal"); r.style.display="block"; r.className="reveal";
   r.innerHTML = `
-    <div class="ghostrise">👻</div>
+    <div class="ghostrise">${ghostAvatar(66)}</div>
+    <div class="ghost-quip">“${ghostQuip()}”</div>
     <div class="punch">${pl.p.replace("{n}",driver)}</div>
-    <div class="sub">${pl.s}</div>
+    <div class="sub">${pl.s.replace("{n}",driver)}</div>
     <div class="saved" id="reveal-saved">${money(0,po.city.cur)} saved</div>
     <div class="sub">${po.flight?`that's dinner in ${esc(po.city.name)} + a ${po.flight.label} flight that never took off.`:`that's what tonight in ${esc(po.city.name)} would've cost. nice.`}</div>
     <div class="sub" style="color:#d98324;font-weight:800;margin-top:6px">🔥 ${stats.streak}-night no-spend streak${usedFreeze?' · 🧊 freeze used':''}</div>
@@ -1534,6 +1585,8 @@ function podiumHTML(){
 }
 function renderRoom(){
   $("#room-podium").innerHTML = podiumHTML();
+  renderCityBoard();
+  const back=roomReturnNudge(); if(back) setTimeout(()=>toast(`💬 ${back} people reacted to your posts while you were gone`), 500);
   $("#room-feed").innerHTML = room.map((p,i)=>`
     <div class="post${p.mine?' mine':''}">
       <div class="phead"><span class="pic">${p.ic}</span><div class="pmeta">${p.mine?'<span class="mine-tag">you</span>':'<b>anon</b> · '+esc(p.city)} · ${p.ago}${p.streak?` · <span class="sbadge">🔥${p.streak}</span>`:""}</div></div>
@@ -1833,19 +1886,134 @@ function confirmDeal(key){ const a=actByKey[key]; if(!a){ closeModal(); return; 
 let exTick=0;
 function rotateExploreTicker(){ const el=$("#explore-ticker"); if(!el) return; el.style.opacity="0"; setTimeout(()=>{ el.textContent=EXPLORE_TICKER[exTick%EXPLORE_TICKER.length]; exTick++; el.style.opacity="1"; },350); }
 
+/* ============================================================
+   Ghost mascot — a character with cosmetics you unlock by playing.
+   He shows up (in his fit) after every checkout to roast you, and
+   lives in a wardrobe on the profile. (lever 8 + mascot prominence)
+   ============================================================ */
+function maxStreakEver(){ return Math.max(stats.maxStreak||0, stats.streak||0); }
+const GHOST_FITS = [
+  {id:"none",   hat:"",   name:"just vibes",       req:"default",          has:()=>true},
+  {id:"cap",    hat:"🧢", name:"backwards cap",    req:"3 window-orders",  has:()=>(stats.orders||0)>=3},
+  {id:"shades", hat:"🕶️", name:"2am shades",       req:"6 window-orders",  has:()=>(stats.orders||0)>=6},
+  {id:"party",  hat:"🥳", name:"party ghost",      req:"3-night streak",   has:()=>maxStreakEver()>=3},
+  {id:"chef",   hat:"🍳", name:"chef ghost",       req:"8 cuisines tried", has:()=>(stats.cuisines||[]).length>=8},
+  {id:"tophat", hat:"🎩", name:"fancy top hat",    req:"$200 dodged",      has:()=>(stats.savedUsd||0)>=200},
+  {id:"cowboy", hat:"🤠", name:"howdy ghost",      req:"map Houston",      has:()=>citiesExplored().has("hou")},
+  {id:"jet",    hat:"🧳", name:"jet-setter",       req:"map 5 cities",     has:()=>citiesExplored().size>=5},
+  {id:"halo",   hat:"😇", name:"saint of savings", req:"14-night streak",  has:()=>maxStreakEver()>=14},
+  {id:"crown",  hat:"👑", name:"dopamine crown",   req:"top rank ($1.2k)", has:()=>(stats.savedUsd||0)>=1200},
+];
+function ghostFit(){ return GHOST_FITS.find(f=>f.id===(stats.fit||"none"))||GHOST_FITS[0]; }
+function ghostAvatar(size){ size=size||40; const f=ghostFit(); return `<span class="ghost-av" style="font-size:${size}px;width:${size}px;height:${size}px">👻${f.hat?`<span class="gh-hat" style="font-size:${Math.round(size*0.6)}px">${f.hat}</span>`:""}</span>`; }
+function setPresenceGhost(){ const ge=$(".ghost-emo"); if(ge) ge.innerHTML=ghostAvatar(19); }
+function equipFit(id){ const f=GHOST_FITS.find(x=>x.id===id); if(!f||!f.has()) return; stats.fit=id; saveStats(); snd("pop"); toast(`👻 fit on: ${f.hat||"naked"} ${f.name}`); if($("#view-profile").classList.contains("active")) renderProfile(); setPresenceGhost(); }
+function checkFitUnlocks(){ if(!stats.fitsSeen) stats.fitsSeen=["none"]; let newly=null; GHOST_FITS.forEach(f=>{ if(f.has() && !stats.fitsSeen.includes(f.id)){ stats.fitsSeen.push(f.id); newly=f; } }); if(newly){ saveStats(); setTimeout(()=>toast(`👻 new fit unlocked: ${newly.hat} ${newly.name} — equip it on your profile`), 1700); } }
+const GHOST_QUIPS = [
+  "I ate your order. you're welcome 👻",
+  "tipped myself 20% on a meal that never existed",
+  "the driver called in dead. again 💀",
+  "your wallet just slid into my DMs to say thanks",
+  "cooked. plated. imagined. chef's kiss 🤌",
+  "that's another stack you'll never see again. iconic.",
+  "I'd bring it over but… *gestures at being incorporeal*",
+  "you window-shopped dinner like an absolute champion",
+  "boo. also you saved money. mostly the boo though.",
+  "delivery ETA: never. savings: immediate.",
+  "not saying I'm proud, but I am hovering proudly",
+  "girl dinner? ghost dinner. nobody ate. gorgeous.",
+  "no notes. except the $0 on your card. love that for us.",
+  "the kitchen says hi. the kitchen is also me. it's just me.",
+  "another night, another ghosted check. we ball 👻",
+];
+function ghostQuip(){ return pick(GHOST_QUIPS); }
+function renderWardrobe(){
+  const owned=GHOST_FITS.filter(f=>f.has());
+  return `<div class="section-label" style="margin:8px 2px 8px">👻 ghost wardrobe <span style="color:var(--muted)">${owned.length}/${GHOST_FITS.length}</span></div>`
+    + `<div class="wardrobe"><div class="wd-ghost">${ghostAvatar(70)}</div>`
+    + `<div class="wd-grid">` + GHOST_FITS.map(f=>{ const on=f.has(), eq=(stats.fit||"none")===f.id; return `<button class="wd-fit${eq?' eq':''}${on?'':' lock'}" ${on?`onclick="equipFit('${f.id}')"`:""}><span class="wd-hat">${on?(f.hat||"👻"):"🔒"}</span><span class="wd-name">${on?esc(f.name):esc(f.req)}</span></button>`; }).join("") + `</div></div>`;
+}
+
+/* ============================================================
+   Retention levers: weekly Wrapped (4), nightly featured city +
+   craving forecast (6), simulated city leaderboard (5), in-app
+   buddy nudge (2), async-room "reacted while away" (7).
+   ============================================================ */
+
+/* --- 4 weekly Wrapped --- */
+function weekKey(){ const d=new Date(Date.now()-4*3600*1000); const jan=new Date(d.getFullYear(),0,1); const wk=Math.ceil((((d-jan)/86400000)+jan.getDay()+1)/7); return `${d.getFullYear()}-W${wk}`; }
+function bumpWeek(usd, cityId, ic){ const wk=weekKey(); if(!stats.week || stats.week.k!==wk) stats.week={k:wk, usd:0, cities:[], crav:{}}; stats.week.usd+=usd; uniqPush(stats.week.cities, cityId); if(ic) stats.week.crav[ic]=(stats.week.crav[ic]||0)+1; saveStats(); }
+function topCrav(crav){ let top=null,m=0; for(const k in (crav||{})){ if(crav[k]>m){m=crav[k]; top=k;} } return top; }
+function showWrapped(){ const w=stats.week||{usd:0,cities:[],crav:{}}; const crav=topCrav(w.crav)||"🍜";
+  showModal(`<div class="m-emoji">📊</div><div class="m-title">your week, wrapped</div>
+   <div class="wrap-stats"><div class="ws-row"><span>dodged this week</span><b style="color:var(--go)">$${Math.round(w.usd).toLocaleString()}</b></div><div class="ws-row"><span>cities visited</span><b>${(w.cities||[]).length}</b></div><div class="ws-row"><span>top craving</span><b>${crav}</b></div><div class="ws-row"><span>🔥 current streak</span><b>${stats.streak||0} nights</b></div></div>
+   <button class="cta gold" style="position:static" onclick="shareWrapped()">📸 share my week</button><button class="cta secondary" style="position:static" onclick="closeModal()">close</button>`);
+  stats.wrappedSeen=weekKey(); saveStats(); }
+function shareWrapped(){ const w=stats.week||{usd:0,cities:[],crav:{}}, crav=topCrav(w.crav)||"🍜";
+  const cv=document.createElement("canvas"); cv.width=1080; cv.height=1080; const x=cv.getContext("2d");
+  x.fillStyle="#fbf3e4"; x.fillRect(0,0,1080,1080); x.strokeStyle="#221c33"; x.lineWidth=16; x.strokeRect(40,40,1000,1000); x.textAlign="center";
+  x.fillStyle="#221c33"; x.font="700 62px 'Fredoka',sans-serif"; x.fillText("my week on Carted", 540, 158);
+  x.font="130px serif"; x.fillText("👻", 540, 320);
+  x.fillStyle="#0ca678"; x.font="700 150px 'Fredoka',sans-serif"; x.fillText("$"+Math.round(w.usd).toLocaleString(), 540, 500);
+  x.fillStyle="#221c33"; x.font="700 40px 'Nunito',sans-serif"; x.fillText("dodged this week", 540, 558);
+  x.fillStyle="#ff5a3c"; x.font="600 50px 'Fredoka',sans-serif"; x.fillText(`${(w.cities||[]).length} cities · craving ${crav}`, 540, 672);
+  x.fillStyle="#221c33"; x.font="600 46px 'Fredoka',sans-serif"; x.fillText(`🔥 ${stats.streak||0}-night streak`, 540, 748);
+  x.fillStyle="#ff5a3c"; x.font="600 60px 'Fredoka',sans-serif"; x.fillText("CARTED", 540, 936); x.fillStyle="#6b6580"; x.font="700 30px 'Nunito',sans-serif"; x.fillText("fill the cart. ghost the check.", 540, 986);
+  cv.toBlob(b=>{ if(!b){toast("couldn't build it");return;} const f=new File([b],"carted-week.png",{type:"image/png"}); if(navigator.canShare&&navigator.canShare({files:[f]})){ navigator.share({files:[f],text:"my week on Carted 👻 — dodged $"+Math.round(w.usd).toLocaleString()}).catch(()=>{}); } else { const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="carted-week.png"; a.click(); toast("week card saved 📸"); setTimeout(()=>URL.revokeObjectURL(a.href),4000); } },"image/png"); }
+
+/* --- 6 nightly featured city + craving forecast --- */
+function featuredCity(){ return CITIES[hash(nightKey())%CITIES.length]; }
+const CRAV_NAMES = {"🍕":"pizza","🍜":"ramen","🌮":"tacos","🍔":"a smashburger","🍣":"sushi","🍛":"curry","🥟":"dumplings","🍗":"fried chicken","🥘":"something stewy","🍝":"pasta"};
+function cravingForecast(){ const EMO=Object.keys(CRAV_NAMES); const e=EMO[hash(nightKey()+deviceId())%EMO.length]; return {e, name:CRAV_NAMES[e]}; }
+function renderFeatured(){ const el=$("#featured-banner"); if(!el) return; const f=featuredCity(), cr=cravingForecast(), here=curCity().id===f.id;
+  el.innerHTML=`<button class="feat-banner" onclick="setCity(CITY_INDEX['${f.id}'])"><span class="fb-ic">${f.flag}</span><span class="fb-text"><b>tonight's city: ${esc(f.name)}${here?" ✓":""}</b><span class="fb-sub">dodge a cart here for +15 XP · you'll crave ${cr.e} ${cr.name} tonight</span></span><span class="fb-go">${here?"":"›"}</span></button>`; }
+
+/* --- 5 city leaderboard (simulated; real version needs the backend aggregate) --- */
+function cityBoard(){ const board=CITIES.map(c=>({c, amt: 18000 + (hash(nightKey()+c.id)%190000)})).sort((a,b)=>b.amt-a.amt); const yc=curCity(); const yourRank=board.findIndex(b=>b.c.id===yc.id)+1; return {top:board.slice(0,5), yourRank, yc, yourAmt:board.find(b=>b.c.id===yc.id)?.amt||0}; }
+function renderCityBoard(){ const el=$("#city-board"); if(!el) return; const {top,yourRank,yc}=cityBoard(); const medal=["🥇","🥈","🥉","4","5"];
+  el.innerHTML=`<div class="cb-title">🏙️ cities dodging tonight</div>`+top.map((b,i)=>`<div class="cb-row${b.c.id===yc.id?' mine':''}"><span>${medal[i]}</span><span class="cb-name">${b.c.flag} ${esc(b.c.name)}</span><b>$${Math.round(b.amt).toLocaleString()}</b></div>`).join("")+(yourRank>5?`<div class="cb-row mine"><span>#${yourRank}</span><span class="cb-name">${yc.flag} ${esc(yc.name)} (you're here)</span><b>$${Math.round(cityBoard().yourAmt).toLocaleString()}</b></div>`:""); }
+
+/* --- 2 in-app buddy nudge --- */
+function buddyNudge(){ if(!stats.buddy) return ""; if(stats.lastNight===nightKey()) return "";   // you already dodged
+  const buddyIn = (stats.buddy.bothIn) || (hash(nightKey()+(stats.buddy.code||""))%3!==0);       // backend signal, else simulated ~2/3 nights
+  if(!buddyIn) return "";
+  return `<button class="buddy-nudge" onclick="go('feed')">👯 <b>${esc(stats.buddy.name||"your buddy")}</b> already dodged tonight — your shared 🔥 streak needs you. don't be the one who breaks it.</button>`; }
+
+/* --- 7 async room: reactions piled up while you were away --- */
+function roomReturnNudge(){ let mine=0; try{ mine=(JSON.parse(localStorage.getItem("carted_room_mine")||"[]")).filter(p=>p.night===nightKey()).length; }catch(e){}
+  const last=stats.roomLastVisit||0, now=Date.now(); stats.roomLastVisit=now; saveStats();
+  if(mine>0 && now-last>120000){ return mine*(3+Math.floor(Math.random()*10)); } return 0; }
+
+/* --- 3 itinerary: a shareable "my night in <city>" from saved spots --- */
+function cityItinerary(cityId){ return { rests:Object.values(savedPlaces).filter(p=>p._cityId===cityId), acts:Object.values(savedActs).filter(a=>a._cityId===cityId) }; }
+function planMyNight(){ const c=curCity(), {rests,acts}=cityItinerary(c.id);
+  if(!rests.length && !acts.length){ showModal(`<div class="m-emoji">🗺️</div><div class="m-title">build your ${esc(c.name)} night</div><div class="m-body">save a few restaurants (♡ on the browse tab) and things to do (☆ here) in ${esc(c.name)}, then come back to plan the perfect night — real or imaginary.</div><button class="cta" style="position:static" onclick="closeModal()">got it 🌙</button>`); return; }
+  const rows=[...acts.slice(0,3).map(a=>`<div class="itin-row"><span>${a.ic}</span> ${esc(a.name)} <span class="itin-tag">${a.free?"free":"to do"}</span></div>`), ...rests.slice(0,2).map(r=>`<div class="itin-row"><span>${r.ic}</span> ${esc(r.name)} <span class="itin-tag">eat</span></div>`)].join("");
+  showModal(`<div class="m-emoji">${c.flag}</div><div class="m-title">my night in ${esc(c.name)}</div><div class="itin">${rows}</div><div class="m-body" style="margin:10px 0 0">spent: <b style="color:var(--go)">$0</b> · dreamed: all of it 🌙</div><button class="cta gold" style="position:static" onclick="shareItinerary('${c.id}')">📸 share my night</button><button class="cta secondary" style="position:static" onclick="closeModal()">close</button>`); }
+function shareItinerary(cityId){ const c=CITIES[CITY_INDEX[cityId]]||curCity(), {rests,acts}=cityItinerary(cityId);
+  const items=[...acts.slice(0,3), ...rests.slice(0,2)];
+  const cv=document.createElement("canvas"); cv.width=1080; cv.height=1080; const x=cv.getContext("2d");
+  x.fillStyle="#fbf3e4"; x.fillRect(0,0,1080,1080); x.strokeStyle="#221c33"; x.lineWidth=16; x.strokeRect(40,40,1000,1000); x.textAlign="center";
+  x.fillStyle="#ff5a3c"; x.font="700 70px 'Fredoka',sans-serif"; x.fillText("my night in", 540, 150); x.fillStyle="#221c33"; x.font="700 86px 'Fredoka',sans-serif"; x.fillText(c.flag+" "+c.name, 540, 250);
+  x.textAlign="left"; let yy=380; items.forEach(it=>{ x.font="60px serif"; x.fillText(it.ic, 130, yy); x.fillStyle="#221c33"; x.font="600 44px 'Fredoka',sans-serif"; x.fillText(String(it.name).slice(0,26), 210, yy-8); yy+=110; });
+  x.textAlign="center"; x.fillStyle="#0ca678"; x.font="700 64px 'Fredoka',sans-serif"; x.fillText("spent: $0", 540, 920); x.fillStyle="#6b6580"; x.font="700 32px 'Nunito',sans-serif"; x.fillText("dreamed it all on Carted 👻", 540, 972);
+  cv.toBlob(b=>{ if(!b){toast("couldn't build it");return;} const f=new File([b],"carted-night.png",{type:"image/png"}); if(navigator.canShare&&navigator.canShare({files:[f]})){ navigator.share({files:[f],text:`my imaginary night in ${c.name} 🌙 carted.`}).catch(()=>{}); } else { const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="carted-night.png"; a.click(); toast("night card saved 📸"); setTimeout(()=>URL.revokeObjectURL(a.href),4000); } },"image/png"); }
+
 /* ---- boot ---- */
 CITIES.forEach((c,i)=>{ CITY_INDEX[c.id]=i; statsByCity[c.id]={saved:0,orders:0}; });
 loadSaved(); loadAccount(); loadHome(); loadActsSaved();
 fetch(BASE+"menus.json").then(r=>r.ok?r.json():null).then(j=>{ menusData=j; if($("#view-detail").classList.contains("active")&&currentDetailKey) openDetail(currentDetailKey); }).catch(()=>{});
 room = loadMinePosts();
 renderCityBar(); renderTally(); renderFeed();
-(function(){ const av=$("#avatar-btn"); if(av) av.textContent=avatarGlyph(); renderHud(); renderQuests(); })();
+(function(){ const av=$("#avatar-btn"); if(av) av.textContent=avatarGlyph(); renderHud(); renderQuests(); setPresenceGhost(); })();
 loadCity(CITIES[0]);
 room = room.concat(ROOM_SEED.map(p=>({...p, reacted:{}})));
 rotateTicker(); setInterval(rotateTicker, 3600); setInterval(driftLive, 2600); setInterval(streamIncoming, 7000);
 rotateExploreTicker(); setInterval(rotateExploreTicker, 4200);
 renderBanners(); setInterval(renderBanners, 60000);
 acceptBuddyFromUrl();
+renderFeatured();
+if(new Date().getDay()===0 && stats.wrappedSeen!==weekKey() && (stats.orders||0)>0){ setTimeout(showWrapped, 1400); }  // Sunday-night Wrapped prompt
 if(stats.pushOptIn && "Notification" in window && Notification.permission==="granted") scheduleGhostNudge();
 document.addEventListener("pointerdown", e=>{ const sc=document.querySelector(".screen"); if(!sc) return; const r=sc.getBoundingClientRect(); lastTap={x:e.clientX-r.left, y:e.clientY-r.top}; if(asmrOn && !asmrNode) startAsmr(); }, true);
 if(!localStorage.getItem("carted_onboard")){
