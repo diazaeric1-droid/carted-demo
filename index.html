@@ -1534,18 +1534,20 @@ async function ghostPush(){
   if(perm!=="granted") perm = await Notification.requestPermission();
   if(perm!=="granted"){ toast("no ghost texts then 🤷"); if($("#view-profile").classList.contains("active")) renderProfile(); return; }
   stats.pushOptIn=true; saveStats();
+  const diag=(emoji,title,body)=>showModal(`<div class="m-emoji">${emoji}</div><div class="m-title">${title}</div><div class="m-body" style="text-align:left">${body}</div><button class="cta" style="position:static" onclick="closeModal()">ok</button>`);
+  if(!(beOn() && CARTED_BE.vapidPublic && "PushManager" in window)){
+    fireGhostText(); scheduleGhostNudge(); diag("👻","ghost texts on (local)","this build isn't wired to the backend — running a local demo nudge only.");
+    if($("#view-profile").classList.contains("active")) renderProfile(); return;
+  }
   try{
-    if(beOn() && CARTED_BE.vapidPublic && "serviceWorker" in navigator && "PushManager" in window){
-      const reg=await navigator.serviceWorker.ready;
-      let sub=await reg.pushManager.getSubscription();
-      if(sub){ try{ await sub.unsubscribe(); }catch(e){} sub=null; } // re-subscribe so it matches the current VAPID key (handles key rotation)
-      sub=await reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey:urlB64ToU8(CARTED_BE.vapidPublic) });
-      await bePost("push-subscribe", { device_id:deviceId(), subscription:sub.toJSON(), streak:stats.streak||0, last_night:stats.lastNight, tz:Intl.DateTimeFormat().resolvedOptions().timeZone });
-      toast("🔔 ghost texts on — even when Carted's closed"); fireGhostText();
-    } else {
-      fireGhostText(); scheduleGhostNudge(); toast("👻 ghost texts on (local demo) — deploy the backend for closed-app push");
-    }
-  }catch(e){ fireGhostText(); scheduleGhostNudge(); toast("👻 ghost texts on (local)"); }
+    const reg=await navigator.serviceWorker.ready;
+    let sub=await reg.pushManager.getSubscription();
+    if(sub){ try{ await sub.unsubscribe(); }catch(e){} sub=null; } // re-subscribe so it matches the current VAPID key (handles key rotation)
+    sub=await reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey:urlB64ToU8(CARTED_BE.vapidPublic) });
+    const res=await bePost("push-subscribe", { device_id:deviceId(), subscription:sub.toJSON(), streak:stats.streak||0, last_night:stats.lastNight, tz:Intl.DateTimeFormat().resolvedOptions().timeZone });
+    if(res && res.ok){ fireGhostText(); diag("🔔","ghost texts: ON","subscription saved to the server ✓<br>you'll get a nudge even when Carted's closed."); }
+    else diag("⚠️","subscribed, but server didn't confirm","the browser made a subscription, but the save call returned:<br><br><b>"+esc(JSON.stringify(res))+"</b>");
+  }catch(e){ diag("⚠️","couldn't subscribe","the browser blocked the push subscription:<br><br><b>"+esc(String(e&&e.message||e))+"</b>"); }
   if($("#view-profile").classList.contains("active")) renderProfile();
 }
 
