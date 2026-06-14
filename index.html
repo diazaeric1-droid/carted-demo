@@ -440,6 +440,44 @@
   .store-banner .sb-text b { font-family: var(--disp); font-weight: 700; font-size: 16px; color: var(--ink); }
   .store-banner .sb-sub { font-size: 12px; color: #7a6520; font-weight: 700; }
   .store-banner .sb-go { font-size: 26px; font-weight: 800; color: var(--ink); }
+
+  /* ----- discovery #1-8: deals, Mort's pick, variety, must-try, crawls, filters ----- */
+  .seg button span { opacity: .65; font-size: 11px; }
+  .fh-btns { display: flex; gap: 6px; flex: 0 0 auto; }
+  .morts-pick { width: 100%; display: flex; align-items: center; gap: 11px; text-align: left; background: var(--neon); border: 2.5px solid var(--ink); border-radius: 16px; padding: 11px 13px; margin-bottom: 12px; box-shadow: 0 5px 0 var(--ink); cursor: pointer; color: #fff; transition: transform .08s, box-shadow .08s; }
+  .morts-pick:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+  .morts-pick .mp-ghost { flex: 0 0 auto; }
+  .morts-pick .mp-text { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .morts-pick .mp-text b { font-family: var(--disp); font-weight: 700; font-size: 15px; line-height: 1.15; }
+  .morts-pick .mp-quip { font-size: 12px; font-weight: 600; opacity: .92; font-style: italic; margin-top: 1px; }
+  .morts-pick .mp-go { font-size: 22px; font-weight: 800; flex: 0 0 auto; }
+  .variety { background: var(--card-hi); border: 2px solid var(--ink); border-radius: 12px; padding: 8px 12px; margin-bottom: 12px; font-size: 12.5px; font-weight: 700; color: var(--text); box-shadow: 2px 2px 0 var(--ink); }
+  .variety.done { background: var(--go); color: #fff; }
+  .variety b { font-family: var(--disp); }
+  .must-card { background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 10px 12px; margin-bottom: 14px; box-shadow: 3px 3px 0 var(--ink); }
+  .must-card .mt-head { font-family: var(--disp); font-weight: 700; font-size: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .must-card .mt-head span { background: var(--accent2); border: 2px solid var(--ink); border-radius: 8px; padding: 0 7px; font-size: 12px; box-shadow: 1px 1px 0 var(--ink); }
+  .mt-row { width: 100%; display: flex; align-items: center; gap: 8px; background: none; border: none; border-top: 1.5px dashed var(--soft); padding: 7px 2px; cursor: pointer; text-align: left; font-size: 13px; color: var(--text); }
+  .mt-row:first-of-type { border-top: none; }
+  .mt-row .mt-check { font-weight: 800; font-size: 15px; color: var(--muted); flex: 0 0 auto; }
+  .mt-row.got .mt-check { color: var(--go); }
+  .mt-row .mt-name { flex: 1; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mt-row.got .mt-name { color: var(--muted); }
+  .mt-row .mt-stars { flex: 0 0 auto; font-size: 12px; font-weight: 800; color: var(--accent); }
+  .crawl-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 12px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .crawl-row::-webkit-scrollbar { display: none; }
+  .crawl-chip { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; background: var(--card); border: 2.5px solid var(--ink); border-radius: 14px; padding: 8px 12px; font-family: var(--disp); font-weight: 600; font-size: 12.5px; color: var(--text); cursor: pointer; box-shadow: 2px 2px 0 var(--ink); white-space: nowrap; transition: transform .08s, box-shadow .08s; }
+  .crawl-chip:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
+  .crawl-chip .cr-e { font-size: 16px; }
+  .crawl-list { display: flex; flex-direction: column; gap: 8px; margin: 6px 0 12px; max-height: 46vh; overflow-y: auto; }
+  .crawl-item { width: 100%; display: flex; align-items: center; gap: 9px; background: var(--card-hi); border: 2px solid var(--ink); border-radius: 12px; padding: 10px 12px; font-size: 13.5px; color: var(--text); cursor: pointer; text-align: left; box-shadow: 2px 2px 0 var(--ink); }
+  .crawl-item b { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .crawl-item .ci-lvl { color: var(--go); font-weight: 800; flex: 0 0 auto; }
+  .feed-filters { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin: -4px 0 6px; scrollbar-width: none; }
+  .feed-filters::-webkit-scrollbar { display: none; }
+  .feed-filters:empty { display: none; }
+  .ffilt { flex: 0 0 auto; background: var(--card); border: 2px solid var(--ink); border-radius: 11px; padding: 5px 11px; font-weight: 800; font-size: 12px; color: var(--muted); cursor: pointer; box-shadow: 1.5px 1.5px 0 var(--ink); text-transform: capitalize; white-space: nowrap; }
+  .ffilt.on { background: var(--accent); color: #fff; }
   /* ----- explore (things to do) ----- */
   .ex-city { background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 10px 14px; font-family: var(--disp); font-weight: 600; font-size: 16px; color: var(--text); box-shadow: 3px 3px 0 var(--ink); cursor: pointer; margin: 2px 0 4px; }
   .ex-city:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
@@ -508,6 +546,7 @@
           <div id="buddy-nudge"></div>
           <div id="featured-banner"></div>
           <div id="spotlight"></div>
+          <div id="morts-pick"></div>
           <div id="event-banners"></div>
           <div class="section-label" style="margin-bottom:8px">📍 pick a city</div>
           <div class="city-bar" id="city-bar"></div>
@@ -515,6 +554,7 @@
             <div class="box"><div class="k">saved here tonight</div><div class="v green" id="saved-tally">$0.00</div></div>
             <div class="box"><div class="k">window-orders</div><div class="v" id="order-count">0</div></div>
           </div>
+          <div id="variety"></div>
           <div id="quests"></div>
           <button class="store-banner" onclick="openKonbini()">
             <span class="sb-ic">🏪</span>
@@ -526,13 +566,17 @@
             <button class="hub-tile" onclick="go('explore')"><span class="ht-ic">🗺️</span>things to do</button>
             <button class="hub-tile" onclick="go('profile')"><span class="ht-ic">👻</span>your drivers</button>
           </div>
+          <div id="must-try"></div>
+          <div id="crawls"></div>
           <div class="seg">
             <button id="seg-all" class="on" onclick="setMode('all')">All</button>
             <button id="seg-saved" onclick="setMode('saved')">♥ Saved <span id="saved-count">0</span></button>
+            <button id="seg-deals" onclick="setMode('deals')">🎟️ Deals <span id="deals-count">0</span></button>
           </div>
+          <div id="feed-filters" class="feed-filters"></div>
           <div class="feed-head">
             <div class="section-label" id="feed-section-label" style="margin:0">🔥 craving right now</div>
-            <button class="surprise" onclick="surpriseMe()">🎲 surprise me</button>
+            <div class="fh-btns"><button class="surprise" onclick="teleport()">🎲 teleport</button><button class="surprise" onclick="surpriseMe()">🔀 surprise</button></div>
           </div>
           <div id="feed-list"></div>
           <div class="osm-credit">📍 places © OpenStreetMap contributors &amp; Google · ratings + photos © Google</div>
@@ -1158,7 +1202,7 @@ function overpassFetch(q, i){
 let feedScroll = 0;
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
 function loadCity(city, force){
-  if(!force && city._places){ city._state="ready"; if(curCity().id===city.id) renderFeed(); return; }
+  if(!force && city._places){ city._state="ready"; if(curCity().id===city.id){ renderFeed(); teleportLand(city); } return; }
   city._state="loading"; if(curCity().id===city.id) renderFeed();
   // try pre-baked static data first; fall through to Overpass on miss
   fetch(`${BASE}places/${city.id}.json`)
@@ -1167,7 +1211,7 @@ function loadCity(city, force){
       places.forEach(p=>{ placeByKey[p._key]=p; });
       shuffle(places);                       // random order, not by reviews
       city._places=places; city._state=places.length?"ready":"empty";
-      if(curCity().id===city.id) renderFeed();
+      if(curCity().id===city.id){ renderFeed(); teleportLand(city); }
     })
     .catch(()=>{
   const q = `[out:json][timeout:25];nwr["amenity"~"^(restaurant|fast_food|cafe)$"]["name"](around:${city.radius},${city.lat},${city.lng});out center 200;`;
@@ -1181,7 +1225,7 @@ function loadCity(city, force){
     }
     shuffle(places);                       // random order, not by reviews
     city._places = places; city._state = places.length ? "ready" : "empty";
-    if(curCity().id===city.id) renderFeed();
+    if(curCity().id===city.id){ renderFeed(); teleportLand(city); }
   }).catch(err=>{ city._state="error"; city._err=String(err.message||err); if(curCity().id===city.id) renderFeed(); });
     }); // end Overpass fallback
 }
@@ -1199,7 +1243,7 @@ function go(view){
   if(view==="room") renderRoom();
   if(view==="profile") renderProfile();
   if(view==="explore") renderExplore();
-  if(view==="feed"){ renderFeatured(); renderSpotlight(); const bn=$("#buddy-nudge"); if(bn) bn.innerHTML=buddyNudge(); setPresenceGhost(); }
+  if(view==="feed"){ renderFeatured(); renderSpotlight(); const bn=$("#buddy-nudge"); if(bn) bn.innerHTML=buddyNudge(); refreshDiscovery(); setPresenceGhost(); }
   if(view!=="track") stopCourier();
 }
 /* back to the feed but keep the user where they were scrolled to */
@@ -1245,7 +1289,7 @@ function setCity(i){
   if(onExplore){ renderExplore(); loadActs(curCity()); }
 }
 function setMode(m){ feedMode=m; setSegUI(); renderFeed(); $("#body").scrollTop=0; }
-function setSegUI(){ $("#seg-all").classList.toggle("on", feedMode==="all"); $("#seg-saved").classList.toggle("on", feedMode==="saved"); }
+function setSegUI(){ $("#seg-all").classList.toggle("on", feedMode==="all"); $("#seg-saved").classList.toggle("on", feedMode==="saved"); const sd=$("#seg-deals"); if(sd) sd.classList.toggle("on", feedMode==="deals"); }
 function renderTally(){ const c=curCity(), s=statsByCity[c.id]||{saved:0,orders:0}; $("#saved-tally").textContent=money(s.saved,c.cur); $("#order-count").textContent=s.orders; }
 
 /* ---- any city via OSM Nominatim geocoder ---- */
@@ -1304,7 +1348,7 @@ function cardHTML(p, saved){
   const fav=isFav(p._key), cp=couponFor(p), isNew=isNewPlace(p)&&!saved;
   const where = saved ? `${p._flag} ${esc(p._cityName)}` : esc(p.en);
   return `<div class="card" onclick="openDetail('${p._key}')">
-    <div class="thumb">${thumbImg(p)}${cp?`<span class="coupon-rib">🎟️ ${cp.t}</span>`:""}</div>
+    <div class="thumb">${thumbImg(p)}${cp?`<span class="coupon-rib">🎟️ ${cp.t} · ${couponQty(p)} left</span>`:""}</div>
     <div class="meta">
       <div class="name">${esc(p.name)} <span class="en">· ${where}</span>${isNew?'<span class="new-chip">✨ new</span>':''}</div>
       <div class="shop">${esc(niceHood(p))}</div>
@@ -1321,6 +1365,7 @@ function renderFeed(){
   const c=curCity(), saved=feedMode==="saved";
   const sb=$("#store-banner-sub"); if(sb) sb.textContent = STORE_BLURB[konbiniKey()] || "grab a late-night snack";
   $("#saved-count").textContent = Object.keys(savedPlaces).length;
+  refreshDiscovery();
   if(saved){
     $("#feed-section-label").textContent = "♥ your saved places";
     const list = Object.values(savedPlaces);
@@ -1332,7 +1377,15 @@ function renderFeed(){
   if(!c._state || c._state==="loading"){ $("#feed-list").innerHTML = `<div class="loading"><div class="ghost-emo" style="font-size:42px">👻</div><div style="margin-top:10px">summoning real places in ${esc(c.name)}…</div><span style="color:var(--muted);font-size:12px;font-weight:600">live from OpenStreetMap</span></div>`; return; }
   if(c._state==="error"){ $("#feed-list").innerHTML = `<div class="empty"><div class="big">📡</div>couldn't reach OpenStreetMap.<br><span style="font-size:12px">${esc(c._err)}</span><br><br><button class="cta secondary" style="position:static" onclick="loadCity(curCity(),true)">retry</button></div>`; return; }
   if(c._state==="empty"){ $("#feed-list").innerHTML = `<div class="empty"><div class="big">🗺️</div>no places found here.<br>try another city.</div>`; return; }
-  $("#feed-list").innerHTML = c._places.map(p=>cardHTML(p,false)).join("");
+  const list = applyFilters(c._places);
+  if(feedMode==="deals"){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); $("#feed-section-label").innerHTML = `🎟️ tonight's deals · ${list.length} <span style="color:var(--muted);font-weight:600">— end at sunrise · ${h}h ${String(m).padStart(2,"0")}m</span>`; }
+  if(!list.length){
+    $("#feed-list").innerHTML = (feedMode==="deals")
+      ? `<div class="empty"><div class="big">🎟️</div>no live deals in ${esc(c.name)} right now.<br>a fresh batch drops after sunrise 🌅</div>`
+      : `<div class="empty"><div class="big">🔍</div>nothing matches those filters.<br><button class="cta secondary" style="position:static;margin-top:12px" onclick="clearFilters()">clear filters</button></div>`;
+    return;
+  }
+  $("#feed-list").innerHTML = list.map(p=>cardHTML(p,false)).join("");
 }
 
 /* ---- favorites (snapshot map -> survives reloads & unloaded cities) ---- */
@@ -1420,7 +1473,7 @@ function openDetail(key){
   $("#d-shop").innerHTML = `<span style="text-transform:capitalize">${esc(p.en)}</span> · ${esc(niceHood(p))}`;
   const dd=$("#d-desc"); if(p.desc){ dd.textContent=p.desc; dd.style.display="block"; } else dd.style.display="none";
   $("#d-stats").innerHTML = `<span>★ <b>${p.rate.toFixed(1)}</b> (${p.n.toLocaleString()})</span>${p.lvl?`<span><b>${"$".repeat(p.lvl)}</b></span>`:""}<span><b>${etaStr(p)}</b></span>`;
-  const cp=couponFor(p); const dc=$("#d-coupon"); if(dc) dc.innerHTML = cp?`<button class="d-coupon" onclick="claimCoupon('${p._key}')"><span class="dc-tag">🎟️ ${cp.t}</span><span class="dc-d">${esc(cp.d)} · tap to clip</span></button>`:"";
+  const cp=couponFor(p); const dc=$("#d-coupon"); if(dc) dc.innerHTML = cp?`<button class="d-coupon" onclick="claimCoupon('${p._key}')"><span class="dc-tag">🎟️ ${cp.t}</span><span class="dc-d">${esc(cp.d)}<br><span style="color:var(--hot)">🔥 only ${couponQty(p)} left · ends at sunrise</span> · tap to clip</span></button>`:"";
   $("#d-menu").innerHTML = renderMenu(p);
   const real = (p.rv||[]).map(r=>`<div class="review"><div class="top"><span class="stars">${starStr(r.r)}</span><span>${esc(r.a||"a local")} · google</span></div><div class="text">${esc(r.t)}</div></div>`).join("");
   const mocks = mockFor(p).map(r=>`<div class="review"><div class="top"><span class="stars">${r[1]}</span><span>night owl 👻 · ${(hash(p.name)%23)+1}m ago</span></div><div class="text">${esc(r[0])}</div></div>`).join("");
@@ -1525,6 +1578,7 @@ function revealTruth(){
   }
   stats.orders++; stats.savedUsd += po.total/po.city.pf;
   bumpTonight(po.total/po.city.pf); buddyPing(); bumpWeek(po.total/po.city.pf, po.city.id, (po.items[0]||{}).ic);
+  bumpVariety([...new Set((po.items||[]).map(it=>it.en).filter(Boolean))]);
   combo++; if(combo>(stats.maxCombo||0)) stats.maxCombo=combo;
   stats.maxStreak=maxStreakEver();
   stats.cuisines=stats.cuisines||[]; stats.cities=stats.cities||[];
@@ -2010,7 +2064,7 @@ function renderSouvenirs(){
 
 /* --- 4 weekly Wrapped --- */
 function weekKey(){ const d=new Date(Date.now()-4*3600*1000); const jan=new Date(d.getFullYear(),0,1); const wk=Math.ceil((((d-jan)/86400000)+jan.getDay()+1)/7); return `${d.getFullYear()}-W${wk}`; }
-function bumpWeek(usd, cityId, ic){ const wk=weekKey(); if(!stats.week || stats.week.k!==wk) stats.week={k:wk, usd:0, cities:[], crav:{}}; stats.week.usd+=usd; uniqPush(stats.week.cities, cityId); if(ic) stats.week.crav[ic]=(stats.week.crav[ic]||0)+1; saveStats(); }
+function bumpWeek(usd, cityId, ic){ const wk=weekKey(); if(!stats.week || stats.week.k!==wk) stats.week={k:wk, usd:0, cities:[], crav:{}, cuisines:[], varietyDone:false}; stats.week.usd+=usd; uniqPush(stats.week.cities, cityId); if(ic) stats.week.crav[ic]=(stats.week.crav[ic]||0)+1; saveStats(); }
 function topCrav(crav){ let top=null,m=0; for(const k in (crav||{})){ if(crav[k]>m){m=crav[k]; top=k;} } return top; }
 function showWrapped(){ const w=stats.week||{usd:0,cities:[],crav:{}}; const crav=topCrav(w.crav)||"🍜";
   showModal(`<div class="m-emoji">📊</div><div class="m-title">your week, wrapped</div>
@@ -2092,6 +2146,66 @@ function renderSpotlight(){ const el=$("#spotlight"); if(!el) return; const c=cu
 
 function isNewPlace(p){ const k=p&&p._key; return !!k && !((stats.visited||[]).includes(k)); }
 function markVisited(keys){ stats.visited=stats.visited||[]; keys.forEach(k=>{ if(!stats.visited.includes(k)) stats.visited.push(k); }); if(stats.visited.length>600) stats.visited=stats.visited.slice(-600); saveStats(); }
+
+/* ============================================================
+   Discovery #1-8 — deals filter + sunrise scarcity, Mort's pick,
+   teleport, variety streak, cuisine/price filters, themed crawls,
+   must-try checklist. (all push people toward trying new places)
+   ============================================================ */
+let feedFilters = { price:null, cuisine:null };
+function refreshDiscovery(){ renderMortsPick(); renderVariety(); renderMustTry(); renderCrawls(); renderFeedFilters(); const dc=$("#deals-count"); if(dc) dc.textContent=dealsCount(); }
+
+/* 1+2 — coupon scarcity ("N left"); coupons already refresh nightly via couponFor + burn at the 4am sunrise */
+function couponQty(p){ return 2 + (hash(p.name+"q"+nightKey())%8); }
+function dealsCount(){ return (curCity()._places||[]).filter(p=>couponFor(p)).length; }
+
+/* 3 — Mort's pick: one spot a night with a one-liner */
+const MORT_LINES = ["trust me, the {d} here is unreal","i'd haunt this place nightly if i could eat","this one's a vibe. don't @ me 👻","peak 2am energy — you'll thank me","quietly the best {d} in town","i've 'delivered' here 1,000 times. zero regrets","if i had a stomach it'd live here"];
+function mortsPick(city){ const ps=city&&city._places; if(!ps||!ps.length) return null; let i=hash(nightKey()+"mort|"+city.id)%ps.length; const sp=spotlightFor(city); if(sp && ps.length>1 && ps[i]._key===sp._key) i=(i+1)%ps.length; return ps[i]; }
+function renderMortsPick(){ const el=$("#morts-pick"); if(!el) return; const p=mortsPick(curCity()); if(!p){ el.innerHTML=""; return; } const line=pick(MORT_LINES).replace("{d}",(p.dish||"food").toLowerCase());
+  el.innerHTML=`<button class="morts-pick" onclick="openDetail('${p._key}')"><span class="mp-ghost">${ghostAvatar(36)}</span><span class="mp-text"><b>Mort's pick: ${esc(p.name)}</b><span class="mp-quip">“${esc(line)}”</span></span><span class="mp-go">›</span></button>`; }
+
+/* 4 — teleport: random place in a random city */
+let teleportPending=false;
+function teleport(){ snd("whoosh"); teleportPending=true; const i=Math.floor(Math.random()*CITIES.length); toast(`✈️ teleporting to ${CITIES[i].name}…`); setCity(i); }
+function teleportLand(city){ if(!teleportPending) return; const ps=city&&city._places; if(ps&&ps.length){ teleportPending=false; openDetail(ps[Math.floor(Math.random()*ps.length)]._key); } }
+
+/* 5 — variety streak: distinct cuisines this week */
+function weekCuisines(){ return (stats.week&&stats.week.cuisines)||[]; }
+function bumpVariety(ens){ if(!stats.week) return; stats.week.cuisines=stats.week.cuisines||[]; (ens||[]).forEach(en=>{ if(en) uniqPush(stats.week.cuisines, en); }); if(!stats.week.varietyDone && stats.week.cuisines.length>=5){ stats.week.varietyDone=true; addXp(50); setTimeout(()=>toast("🌈 5 cuisines this week — +50 XP variety bonus!"), 2500); } saveStats(); }
+function renderVariety(){ const el=$("#variety"); if(!el) return; const n=weekCuisines().length, goal=5; if(n<=0){ el.innerHTML=""; return; } const done=n>=goal;
+  el.innerHTML=`<div class="variety${done?' done':''}">🌈 <b>cuisine variety</b> · ${Math.min(n,goal)}/${goal} this week${done?" — bonus claimed 🎉":` · ${goal-n} more for +50 XP`}</div>`; }
+
+/* 6 — cuisine / price filters */
+function cityCuisines(){ const s=new Set(); (curCity()._places||[]).forEach(p=>s.add(cuisineKeyOf(p))); return [...s].sort(); }
+function setPrice(l){ feedFilters.price=feedFilters.price===l?null:l; renderFeed(); }
+function setCuisine(k){ feedFilters.cuisine=feedFilters.cuisine===k?null:k; renderFeed(); }
+function clearFilters(){ feedFilters={price:null,cuisine:null}; renderFeed(); }
+function renderFeedFilters(){ const el=$("#feed-filters"); if(!el) return; if(feedMode==="saved"){ el.innerHTML=""; return; }
+  const price=[1,2,3,4].map(l=>`<button class="ffilt${feedFilters.price===l?' on':''}" onclick="setPrice(${l})">${"$".repeat(l)}</button>`).join("");
+  const cui=cityCuisines().map(k=>`<button class="ffilt${feedFilters.cuisine===k?' on':''}" onclick="setCuisine('${k}')">${esc(k.replace(/_/g," "))}</button>`).join("");
+  const any=feedFilters.price||feedFilters.cuisine;
+  el.innerHTML=`<button class="ffilt${any?'':' on'}" onclick="clearFilters()">all</button>${price}${cui}`; }
+function applyFilters(list){ let out=list; if(feedMode==="deals") out=out.filter(p=>couponFor(p)); if(feedFilters.price) out=out.filter(p=>(p.lvl||2)===feedFilters.price); if(feedFilters.cuisine) out=out.filter(p=>cuisineKeyOf(p)===feedFilters.cuisine); return out; }
+
+/* 7 — themed crawls */
+const CRAWLS = [
+  {id:"ramen", e:"🍜", name:"late-night noodle crawl", m:p=>/ramen|noodle|japanese|chinese|vietnamese|thai|korean/.test(p.en||"")},
+  {id:"taco", e:"🌮", name:"taco tour", m:p=>/mexican|burrito/.test(p.en||"")},
+  {id:"cheap", e:"💸", name:"cheap eats run", m:p=>(p.lvl||2)<=2},
+  {id:"fancy", e:"🥂", name:"big spender night", m:p=>(p.lvl||2)>=3},
+  {id:"pizza", e:"🍕", name:"pizza pilgrimage", m:p=>/pizza|italian/.test(p.en||"")},
+  {id:"sweet", e:"🍰", name:"dessert crawl", m:p=>/dessert|bakery|ice_cream|french/.test(p.en||"")},
+];
+function renderCrawls(){ const el=$("#crawls"); if(!el) return; const c=curCity(); const avail=CRAWLS.filter(cr=>(c._places||[]).some(cr.m)); if(!avail.length){ el.innerHTML=""; return; }
+  el.innerHTML=`<div class="section-label" style="margin:6px 2px 8px">🗺️ tonight's crawls</div><div class="crawl-row">`+avail.map(cr=>`<button class="crawl-chip" onclick="openCrawl('${cr.id}')"><span class="cr-e">${cr.e}</span>${esc(cr.name)}</button>`).join("")+`</div>`; }
+function openCrawl(id){ const cr=CRAWLS.find(x=>x.id===id); if(!cr) return; const c=curCity(); const ps=(c._places||[]).filter(cr.m).slice(0,8);
+  showModal(`<div class="m-emoji">${cr.e}</div><div class="m-title">${esc(cr.name)}</div><div class="m-body" style="font-size:12px;margin:0 0 8px">${ps.length} spots in ${esc(c.name)} 🌙</div><div class="crawl-list">`+ps.map(p=>`<button class="crawl-item" onclick="closeModal();openDetail('${p._key}')"><span>${p.ic}</span> <b>${esc(p.name)}</b> <span class="ci-lvl">${"$".repeat(p.lvl||2)}</span></button>`).join("")+`</div><button class="cta secondary" style="position:static" onclick="closeModal()">close</button>`); }
+
+/* 8 — must-try checklist (top spots per city by reviews) */
+function mustTryFor(city){ return [...((city&&city._places)||[])].sort((a,b)=>b.n-a.n).slice(0,3); }
+function renderMustTry(){ const el=$("#must-try"); if(!el) return; const c=curCity(), list=mustTryFor(c); if(!list.length){ el.innerHTML=""; return; } const tried=list.filter(p=>!isNewPlace(p)).length;
+  el.innerHTML=`<div class="must-card"><div class="mt-head">🏅 must-try in ${esc(c.name)} <span>${tried}/${list.length}</span></div>`+list.map(p=>`<button class="mt-row${isNewPlace(p)?'':' got'}" onclick="openDetail('${p._key}')"><span class="mt-check">${isNewPlace(p)?"○":"✓"}</span><span class="mt-name">${esc(p.name)}</span><span class="mt-stars">★ ${p.rate.toFixed(1)}</span></button>`).join("")+`</div>`; }
 
 /* ---- boot ---- */
 CITIES.forEach((c,i)=>{ CITY_INDEX[c.id]=i; statsByCity[c.id]={saved:0,orders:0}; });
