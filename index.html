@@ -385,6 +385,14 @@
   .wd-fit.lock { opacity: .5; filter: grayscale(1); cursor: default; box-shadow: none; }
   .wd-hat { font-size: 21px; }
   .wd-name { font-size: 8.5px; font-weight: 800; text-align: center; line-height: 1.1; }
+  .souv-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .souv { background: var(--card); border: 2px solid var(--ink); border-radius: 11px; padding: 7px 2px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: 2px 2px 0 var(--ink); }
+  .souv.eq { background: var(--accent2); }
+  .souv.lock { opacity: .45; filter: grayscale(1); cursor: default; box-shadow: none; }
+  .souv-hat { font-size: 19px; }
+  .souv-name { font-size: 7.5px; font-weight: 800; text-align: center; line-height: 1; color: var(--muted); }
+  .reveal .ghostrise.ghost-hype { animation: rise 1.5s ease both, gwiggle .55s ease 1.5s 3; }
+  @keyframes gwiggle { 0%,100%{ transform: rotate(0) scale(1.05); } 25%{ transform: rotate(-13deg) scale(1.1); } 75%{ transform: rotate(13deg) scale(1.1); } }
   /* ----- featured city banner ----- */
   .feat-banner { width: 100%; display: flex; align-items: center; gap: 11px; background: var(--neon); border: 2.5px solid var(--ink); border-radius: 16px; padding: 11px 13px; margin-bottom: 10px; box-shadow: 3px 3px 0 var(--ink); cursor: pointer; text-align: left; color: #fff; }
   .feat-banner:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
@@ -1516,10 +1524,12 @@ function revealTruth(){
   const newDriver = po.gachaDriver ? collectDriver(po.gachaDriver) : false;
   if(Math.random()<0.22){ const gift=pick(HONORIFICS); addXp(5); setTimeout(()=>toast(gift), 1500); }
   const driver=po.driver||"Marcus", pl=pick(po.flight?FLIGHT_PUNCH:PUNCH);
+  const quipCtx={ usd: po.total/po.city.pf, flight: !!po.flight, flightH: po.flight?Math.floor(po.flight.mins/60):0, streak: stats.streak, milestone: !!milestone && streakGrew, combo: combo, featured: po.city.id===featuredCity().id };
+  const ghostHype = combo>=3 || quipCtx.usd>=60 || quipCtx.milestone;
   const r=$("#track-reveal"); r.style.display="block"; r.className="reveal";
   r.innerHTML = `
-    <div class="ghostrise">${ghostAvatar(66)}</div>
-    <div class="ghost-quip">“${ghostQuip()}”</div>
+    <div class="ghostrise${ghostHype?' ghost-hype':''}">${ghostAvatar(66)}</div>
+    <div class="ghost-quip">“${ghostQuip(quipCtx)}”</div>
     <div class="punch">${pl.p.replace("{n}",driver)}</div>
     <div class="sub">${pl.s.replace("{n}",driver)}</div>
     <div class="saved" id="reveal-saved">${money(0,po.city.cur)} saved</div>
@@ -1684,7 +1694,10 @@ function toggleAsmr(){ asmrOn=!asmrOn; try{ localStorage.setItem("carted_asmr", 
 
 /* --- 1 ghost-driver push (local notifications now; remote/timed = backend, stubbed in sw.js) --- */
 function ghostNudgeMsgs(){ return ["you up? your streak isn't gonna dodge itself 🔥","i'm outside. (i'm not.) 👻","craving incoming in 3… 2… open me instead","banana milk thinks about you too 🥛","2am. the kitchen's 'open'. don't 😌"]; }
-function fireGhostText(){ const d=pick(GACHA), body=`${d.n} ${d.e}: ${pick(ghostNudgeMsgs())}`; try{ if(navigator.serviceWorker && navigator.serviceWorker.ready){ navigator.serviceWorker.ready.then(reg=>reg.showNotification("Carted 🌙",{body, icon:BASE+"icon-192.png", badge:BASE+"icon-192.png", tag:"carted-ghost", renotify:true})).catch(()=>{ try{ new Notification("Carted 🌙",{body}); }catch(_){} }); } else new Notification("Carted 🌙",{body}); }catch(e){ try{ new Notification("Carted 🌙",{body}); }catch(_){} } }
+function fireGhostText(){ const hat=ghostFit().hat||"👻"; const atRisk = stats.lastNight!==nightKey() && (stats.streak||0)>0;
+  const lines = atRisk ? [`your ${stats.streak}-night streak ends soon 🔥 don't let me down`, `the streak's in danger and I can feel it (spectrally)`, `${stats.streak} nights. don't blow it now, I've got plans`] : ghostNudgeMsgs();
+  const body=`Mort ${hat}: ${pick(lines)}`;
+  try{ if(navigator.serviceWorker && navigator.serviceWorker.ready){ navigator.serviceWorker.ready.then(reg=>reg.showNotification("Carted 🌙",{body, icon:BASE+"icon-192.png", badge:BASE+"icon-192.png", tag:"carted-ghost", renotify:true})).catch(()=>{ try{ new Notification("Carted 🌙",{body}); }catch(_){} }); } else new Notification("Carted 🌙",{body}); }catch(e){ try{ new Notification("Carted 🌙",{body}); }catch(_){} } }
 function scheduleGhostNudge(){ clearTimeout(window.__ghostNudge); window.__ghostNudge=setTimeout(fireGhostText, 60000); } // demo cadence while tab is alive
 async function ghostPush(){
   if(!("Notification" in window) || !("serviceWorker" in navigator)){
@@ -1876,7 +1889,7 @@ function renderExplore(){
 }
 function toggleAct(key, ev){ if(ev) ev.stopPropagation(); const a=actByKey[key]; if(!a) return;
   if(savedActs[key]){ delete savedActs[key]; } else { savedActs[key]=a; const firstInCity=![...citiesExplored()].includes(a._cityId); toast(firstInCity?`🛂 ${esc(a._cityName)} added to your map!`:"added to your list ⭐"); snd("pop"); addXp(4); }
-  saveActs(); renderExplore(); }
+  saveActs(); checkFitUnlocks(); renderExplore(); }
 /* deals — Groupon affiliate handoff (real revenue path; slot your affiliate id into the URL) */
 function openDeal(key){ const a=actByKey[key]; if(!a) return;
   showModal(`<div class="m-emoji">🎟️</div><div class="m-title">deals for ${esc(a.name)}</div><div class="m-body">open Groupon to look for discounts on <b>${esc(a.cat)}</b> & things to do in ${esc(a._cityName)}.<br><br><span style="font-size:11.5px">affiliate handoff — a cut comes back to Carted 💚</span></div><button class="cta" style="position:static" onclick="confirmDeal('${a._key}')">see Groupon deals →</button><button class="cta secondary" style="position:static" onclick="closeModal()">maybe later</button>`); }
@@ -1904,11 +1917,23 @@ const GHOST_FITS = [
   {id:"halo",   hat:"😇", name:"saint of savings", req:"14-night streak",  has:()=>maxStreakEver()>=14},
   {id:"crown",  hat:"👑", name:"dopamine crown",   req:"top rank ($1.2k)", has:()=>(stats.savedUsd||0)>=1200},
 ];
-function ghostFit(){ return GHOST_FITS.find(f=>f.id===(stats.fit||"none"))||GHOST_FITS[0]; }
+/* souvenir hats — one per city, earned by mapping (saving an activity) or window-ordering there. ties cosmetics to Explore. */
+const CITY_HAT = { nyc:"🗽", la:"🌴", ldn:"🎩", tyo:"🍣", sel:"🧧", mex:"🌵", par:"🥐", ber:"🥨", bkk:"🛺", syd:"🦘", tor:"🍁", chi:"🌭", sin:"🦁", hou:"🚀", sfo:"🌉", nol:"🎷", oax:"🌶️", lim:"🦙", bue:"⚽", sao:"🥥", rom:"🏛️", nap:"🍕", bol:"🍝", bcn:"🦎", mad:"🐂", sse:"🍢", lis:"🚋", cph:"🧜", ams:"🌷", vie:"🎻", ath:"🏺", ist:"🧿", tlv:"🕎", bey:"🌳", dxb:"🐪", cai:"🔺", rak:"🐫", cpt:"🏔️", osa:"🐙", kyo:"⛩️", pus:"🦀", hkg:"🥟", tpe:"🧋", sgn:"🛵", han:"🍜", pen:"🦐", kul:"🏙️", bom:"🛕", del:"🛺", mel:"☕" };
+function cityVisited(id){ return citiesExplored().has(id) || ((statsByCity[id]||{}).orders>0) || (stats.cities||[]).includes(id); }
+/* seasonal fits — only available in their date window */
+const SEASON_FITS = [ {id:"pumpkin",hat:"🎃",name:"spooky szn"}, {id:"santa",hat:"🎅",name:"santa ghost"}, {id:"nye",hat:"🎉",name:"new year ghost"}, {id:"love",hat:"💘",name:"valenghost"} ];
+const SEASON_WIN = { pumpkin:[[10,24],[10,31]], santa:[[12,1],[12,26]], nye:[[12,30],[1,2]], love:[[2,12],[2,15]] };
+function inWindow(id){ const w=SEASON_WIN[id]; if(!w) return false; const d=new Date(),mo=d.getMonth()+1,dy=d.getDate(); const aft=mo>w[0][0]||(mo===w[0][0]&&dy>=w[0][1]); const bef=mo<w[1][0]||(mo===w[1][0]&&dy<=w[1][1]); return w[0][0]<=w[1][0]?(aft&&bef):(aft||bef); }
+function activeSeasonFits(){ return SEASON_FITS.filter(f=>inWindow(f.id)).map(f=>({id:f.id,hat:f.hat,name:f.name,req:"seasonal",has:()=>true})); }
+function baseFits(){ return GHOST_FITS.concat(activeSeasonFits()); }
+function ghostFit(){ const id=stats.fit||"none"; if(id.startsWith("city:")){ const cid=id.slice(5); return {id, hat:CITY_HAT[cid]||"", name:((CITIES[CITY_INDEX[cid]]||{}).name||"city")+" souvenir"}; } return baseFits().find(f=>f.id===id) || GHOST_FITS[0]; }
 function ghostAvatar(size){ size=size||40; const f=ghostFit(); return `<span class="ghost-av" style="font-size:${size}px;width:${size}px;height:${size}px">👻${f.hat?`<span class="gh-hat" style="font-size:${Math.round(size*0.6)}px">${f.hat}</span>`:""}</span>`; }
 function setPresenceGhost(){ const ge=$(".ghost-emo"); if(ge) ge.innerHTML=ghostAvatar(19); }
-function equipFit(id){ const f=GHOST_FITS.find(x=>x.id===id); if(!f||!f.has()) return; stats.fit=id; saveStats(); snd("pop"); toast(`👻 fit on: ${f.hat||"naked"} ${f.name}`); if($("#view-profile").classList.contains("active")) renderProfile(); setPresenceGhost(); }
-function checkFitUnlocks(){ if(!stats.fitsSeen) stats.fitsSeen=["none"]; let newly=null; GHOST_FITS.forEach(f=>{ if(f.has() && !stats.fitsSeen.includes(f.id)){ stats.fitsSeen.push(f.id); newly=f; } }); if(newly){ saveStats(); setTimeout(()=>toast(`👻 new fit unlocked: ${newly.hat} ${newly.name} — equip it on your profile`), 1700); } }
+function equipFit(id){ let ok=false; if(id.startsWith("city:")) ok=cityVisited(id.slice(5)); else { const f=baseFits().find(x=>x.id===id); ok=f && f.has(); } if(!ok) return; stats.fit=id; saveStats(); snd("pop"); const f=ghostFit(); toast(`👻 Mort's fit: ${f.hat||"naked"} ${f.name}`); if($("#view-profile").classList.contains("active")) renderProfile(); setPresenceGhost(); }
+function checkFitUnlocks(){ if(!stats.fitsSeen) stats.fitsSeen=["none"]; let newly=null;
+  baseFits().forEach(f=>{ if(f.has && f.has() && !stats.fitsSeen.includes(f.id)){ stats.fitsSeen.push(f.id); newly={hat:f.hat,name:f.name}; } });
+  CITIES.forEach(c=>{ const id="city:"+c.id; if(cityVisited(c.id) && !stats.fitsSeen.includes(id)){ stats.fitsSeen.push(id); newly={hat:CITY_HAT[c.id],name:c.name+" souvenir"}; } });
+  if(newly){ saveStats(); setTimeout(()=>toast(`🧳 Mort unlocked: ${newly.hat} ${newly.name} — equip it on your profile`), 1700); } }
 const GHOST_QUIPS = [
   "I ate your order. you're welcome 👻",
   "tipped myself 20% on a meal that never existed",
@@ -1926,12 +1951,29 @@ const GHOST_QUIPS = [
   "the kitchen says hi. the kitchen is also me. it's just me.",
   "another night, another ghosted check. we ball 👻",
 ];
-function ghostQuip(){ return pick(GHOST_QUIPS); }
+const QUIP_CTX = {
+  jackpot:["that's basically rent you just ghosted. unreal 👻","big dodge. I'd applaud but my hands phase through each other","you out-earned the delivery app tonight. poetic.","huge save. the FEE BOSS is crying. I can hear it."],
+  tiny:["small dodge, but a dodge nonetheless. proud of you","every cent counts — especially the ones I eat","tiny snack, tiny win, big ghost energy"],
+  flight:["I flew {h}h for this. for nothing. love that for us ✈️","cleared customs with zero food and zero shame","jet-lagged and STILL didn't deliver. iconic"],
+  milestone:["{s} nights straight. I'm legally your roommate now 🔥","{s}-night streak — the kitchen weeps. the kitchen is me.","streak milestone! I baked a cake. it's also imaginary."],
+  featured:["tonight's featured city and you showed up. teacher's pet 🌟","you dodged in the city of the night. bonus secured.","featured-city dodge — chef's kiss, chef's ghost 🤌"],
+  combo:["{c}× combo!! I'm dizzy and I don't even have an inner ear","combo behavior. nobody's eating tonight 👑","{c} in a row. slot machine could never."],
+  late:["it's {hr}am. sleep after this, I'm begging spectrally","2am brain said order. 2am ghost said absolutely not.","the witching hour — but for your wallet 🌙"],
+};
+function ghostQuip(ctx){ ctx=ctx||{}; const hr=new Date().getHours(); let pool;
+  if(ctx.milestone) pool=QUIP_CTX.milestone; else if(ctx.usd>=60) pool=QUIP_CTX.jackpot; else if(ctx.flight) pool=QUIP_CTX.flight; else if(ctx.combo>=3) pool=QUIP_CTX.combo; else if(ctx.featured) pool=QUIP_CTX.featured; else if(hr>=1&&hr<5) pool=QUIP_CTX.late; else if(ctx.usd>0&&ctx.usd<6) pool=QUIP_CTX.tiny; else pool=GHOST_QUIPS;
+  return pick(pool).replace("{s}",ctx.streak||0).replace("{c}",ctx.combo||0).replace("{h}",ctx.flightH||"a few").replace("{hr}",hr); }
 function renderWardrobe(){
-  const owned=GHOST_FITS.filter(f=>f.has());
-  return `<div class="section-label" style="margin:8px 2px 8px">👻 ghost wardrobe <span style="color:var(--muted)">${owned.length}/${GHOST_FITS.length}</span></div>`
+  const list=baseFits(), owned=list.filter(f=>f.has());
+  return `<div class="section-label" style="margin:8px 2px 8px">👻 Mort's wardrobe <span style="color:var(--muted)">${owned.length}/${list.length}</span></div>`
     + `<div class="wardrobe"><div class="wd-ghost">${ghostAvatar(70)}</div>`
-    + `<div class="wd-grid">` + GHOST_FITS.map(f=>{ const on=f.has(), eq=(stats.fit||"none")===f.id; return `<button class="wd-fit${eq?' eq':''}${on?'':' lock'}" ${on?`onclick="equipFit('${f.id}')"`:""}><span class="wd-hat">${on?(f.hat||"👻"):"🔒"}</span><span class="wd-name">${on?esc(f.name):esc(f.req)}</span></button>`; }).join("") + `</div></div>`;
+    + `<div class="wd-grid">` + list.map(f=>{ const on=f.has(), eq=(stats.fit||"none")===f.id; return `<button class="wd-fit${eq?' eq':''}${on?'':' lock'}" ${on?`onclick="equipFit('${f.id}')"`:""}><span class="wd-hat">${on?(f.hat||"👻"):"🔒"}</span><span class="wd-name">${on?esc(f.name):esc(f.req)}</span></button>`; }).join("") + `</div></div>`
+    + renderSouvenirs();
+}
+function renderSouvenirs(){
+  const owned=CITIES.filter(c=>cityVisited(c.id));
+  return `<div class="section-label" style="margin:10px 2px 8px">🧳 souvenir hats <span style="color:var(--muted)">${owned.length}/${CITIES.length}</span> · map a city to earn its hat</div>`
+    + `<div class="souv-grid">` + CITIES.map(c=>{ const on=cityVisited(c.id), eq=(stats.fit||"")==="city:"+c.id; return `<button class="souv${eq?' eq':''}${on?'':' lock'}" ${on?`onclick="equipFit('city:${c.id}')"`:""}><span class="souv-hat">${on?CITY_HAT[c.id]:"🔒"}</span><span class="souv-name">${esc(c.name)}</span></button>`; }).join("") + `</div>`;
 }
 
 /* ============================================================
