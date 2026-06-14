@@ -366,6 +366,45 @@
   .rtp-n { font-size: 12px; font-weight: 800; text-align: center; line-height: 1.2; }
   .rtp-vs { font-family: var(--disp); font-weight: 700; color: var(--muted); font-size: 14px; flex: 0 0 auto; }
 
+  /* ----- corner store banner (prominent on the feed) ----- */
+  .store-banner { width: 100%; display: flex; align-items: center; gap: 12px; background: var(--accent2); border: 2.5px solid var(--ink); border-radius: 18px; padding: 13px 14px; margin-bottom: 14px; box-shadow: 0 5px 0 var(--ink); cursor: pointer; text-align: left; transition: transform .08s, box-shadow .08s; }
+  .store-banner:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+  .store-banner .sb-ic { font-size: 30px; }
+  .store-banner .sb-text { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .store-banner .sb-text b { font-family: var(--disp); font-weight: 700; font-size: 16px; color: var(--ink); }
+  .store-banner .sb-sub { font-size: 12px; color: #7a6520; font-weight: 700; }
+  .store-banner .sb-go { font-size: 26px; font-weight: 800; color: var(--ink); }
+  /* ----- explore (things to do) ----- */
+  .ex-city { background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 10px 14px; font-family: var(--disp); font-weight: 600; font-size: 16px; color: var(--text); box-shadow: 3px 3px 0 var(--ink); cursor: pointer; margin: 2px 0 4px; }
+  .ex-city:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
+  .passport { display: flex; align-items: center; gap: 8px; background: #fff3d6; border: 2px solid var(--ink); border-radius: 14px; padding: 9px 12px; margin: 12px 0; font-size: 13px; font-weight: 700; box-shadow: 2px 2px 0 var(--ink); }
+  .passport .psp-ic { font-size: 17px; }
+  .passport b { font-family: var(--disp); }
+  .passport .psp-saved { margin-left: auto; color: var(--muted); }
+  .efilters { display: flex; gap: 7px; overflow-x: auto; padding: 2px 0 12px; }
+  .efilters::-webkit-scrollbar { display: none; }
+  .efilter { white-space: nowrap; background: var(--card); border: 2px solid var(--ink); color: var(--text); border-radius: 16px; padding: 7px 13px; font-size: 13px; font-weight: 700; font-family: var(--disp); cursor: pointer; flex: 0 0 auto; box-shadow: 2px 2px 0 var(--ink); }
+  .efilter.on { background: var(--ink); color: var(--screen); }
+  .acard { background: var(--card); border: 2.5px solid var(--ink); border-radius: 18px; overflow: hidden; margin-bottom: 14px; box-shadow: 4px 4px 0 var(--ink); }
+  .ac-photo { position: relative; height: 150px; background: #ffe9b3; display: flex; align-items: center; justify-content: center; border-bottom: 2.5px solid var(--ink); }
+  .ac-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ac-photo .ac-emo { font-size: 56px; }
+  .ac-cat { position: absolute; top: 10px; left: 10px; background: var(--card); border: 2px solid var(--ink); border-radius: 12px; padding: 4px 10px; font-size: 12px; font-weight: 800; text-transform: capitalize; box-shadow: 2px 2px 0 var(--ink); }
+  .ac-pet { position: absolute; top: 10px; right: 10px; background: var(--go); border: 2px solid var(--ink); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 15px; box-shadow: 2px 2px 0 var(--ink); }
+  .ac-body { padding: 12px 14px; }
+  .ac-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .ac-name { font-size: 16.5px; font-weight: 800; line-height: 1.2; }
+  .ac-save { background: none; border: none; font-size: 24px; color: var(--accent); cursor: pointer; line-height: 1; padding: 0; flex: 0 0 auto; }
+  .ac-meta { font-size: 12.5px; color: var(--muted); margin-top: 5px; }
+  .ac-meta .ac-rate { color: #d98324; font-weight: 800; }
+  .ac-who { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
+  .who-chip { background: var(--screen); border: 2px solid var(--ink); border-radius: 10px; padding: 3px 8px; font-size: 11px; font-weight: 800; text-transform: capitalize; }
+  .ac-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 11px; }
+  .ac-cost { font-family: var(--disp); font-weight: 600; font-size: 18px; color: var(--accent); }
+  .ac-cost .ac-free { color: var(--go); }
+  .ac-deal { background: var(--accent2); border: 2px solid var(--ink); border-radius: 12px; padding: 8px 12px; font-weight: 800; font-size: 12.5px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); color: var(--ink); }
+  .ac-deal:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
+
   @media (max-width: 440px) {
     body { background: var(--screen); display: block; overflow: hidden; }
     .phone { width: 100vw; height: 100vh; height: 100dvh; padding: 0; border-radius: 0; box-shadow: none; }
@@ -408,9 +447,14 @@
             <div class="box"><div class="k">window-orders</div><div class="v" id="order-count">0</div></div>
           </div>
           <div id="quests"></div>
+          <button class="store-banner" onclick="openKonbini()">
+            <span class="sb-ic">🏪</span>
+            <span class="sb-text"><b>the 24h corner store</b><span class="sb-sub" id="store-banner-sub">grab a late-night snack from the bodega</span></span>
+            <span class="sb-go">›</span>
+          </button>
           <div class="hub" id="hub">
-            <button class="hub-tile" onclick="openKonbini()"><span class="ht-ic">🏪</span>corner store</button>
             <button class="hub-tile" onclick="ratePlate()"><span class="ht-ic">🔥</span>rate the plate</button>
+            <button class="hub-tile" onclick="go('explore')"><span class="ht-ic">🗺️</span>things to do</button>
             <button class="hub-tile" onclick="go('profile')"><span class="ht-ic">👻</span>your drivers</button>
           </div>
           <div class="seg">
@@ -491,11 +535,26 @@
           <button class="cta secondary" style="position:static" onclick="go('cart')">see cart</button>
         </section>
 
+        <!-- EXPLORE (things to do) -->
+        <section class="view" id="view-explore">
+          <div class="brand"><h1 style="font-size:26px">things to do</h1><div class="sub">plan a trip — real or imaginary — across 50 cities</div></div>
+          <button class="ex-city" onclick="cityModal(false)"><span id="explore-city">🗽 New York</span> &nbsp;›</button>
+          <div class="presence" style="margin-top:6px">
+            <div class="live"><span class="dot"></span> <span id="explore-live">843</span> exploring <span id="explore-cityname">tonight</span></div>
+            <div class="ghostline"><span class="ghost-emo">🗺️</span><div class="msg" id="explore-ticker"></div></div>
+          </div>
+          <div class="passport" id="explore-passport"></div>
+          <div class="efilters" id="explore-filters"></div>
+          <div id="explore-list"></div>
+          <div class="osm-credit">things to do © Google · deals via Groupon (affiliate)</div>
+        </section>
+
       </div>
 
       <div class="nav">
         <button class="on" id="nav-feed" onclick="go('feed')"><span class="gi">🍜</span>browse</button>
-        <button id="nav-room" onclick="go('room')"><span class="gi">🌙</span>the room</button>
+        <button id="nav-explore" onclick="go('explore')"><span class="gi">🗺️</span>explore</button>
+        <button id="nav-room" onclick="go('room')"><span class="gi">🌙</span>room</button>
         <button id="nav-cart" onclick="go('cart')"><span class="gi">🛒</span>cart<span class="badge" id="cart-badge" style="display:none">0</span></button>
       </div>
       <div class="modal-bg" id="modal" style="display:none" onclick="if(event.target===this) closeModal()"><div class="modal" id="modal-content"></div></div>
@@ -1061,11 +1120,13 @@ function go(view){
   $("#view-"+view).classList.add("active");
   $("#body").scrollTop = 0;
   $("#nav-feed").classList.toggle("on", view==="feed");
+  $("#nav-explore").classList.toggle("on", view==="explore");
   $("#nav-room").classList.toggle("on", view==="room");
   $("#nav-cart").classList.toggle("on", view==="cart");
   if(view==="cart") renderCart();
   if(view==="room") renderRoom();
   if(view==="profile") renderProfile();
+  if(view==="explore") renderExplore();
   if(view!=="track") stopCourier();
 }
 /* back to the feed but keep the user where they were scrolled to */
@@ -1103,10 +1164,12 @@ function modalPick(id, homeMode){
   else setCity(i);
 }
 function setCity(i){
-  if(i===curIdx && curCity()._places){ return; }
+  const onExplore=$("#view-explore").classList.contains("active");
+  if(i===curIdx && curCity()._places){ if(onExplore) renderExplore(); return; }
   curIdx=i; cart=[]; updateBadge(); feedMode="all"; setSegUI();
   renderCityBar(); renderTally(); renderFeed();
   loadCity(curCity()); questEvent("city");
+  if(onExplore){ renderExplore(); loadActs(curCity()); }
 }
 function setMode(m){ feedMode=m; setSegUI(); renderFeed(); $("#body").scrollTop=0; }
 function setSegUI(){ $("#seg-all").classList.toggle("on", feedMode==="all"); $("#seg-saved").classList.toggle("on", feedMode==="saved"); }
@@ -1179,9 +1242,11 @@ function cardHTML(p, saved){
     <button class="qadd" onclick="quickAdd('${p._key}',event)">＋</button>
   </div>`;
 }
+const STORE_BLURB = { bodega:"grab a late-night snack from the bodega", konbini:"raid the 24h konbini", korean:"hit the 편의점 for ramyeon & banana milk", latin:"snacks from la tiendita", french:"a midnight run to l'épicerie", euro:"grab something from the späti", sea:"night-market bites", india:"chai & samosa from the kirana store", mideast:"a souk-kiosk snack run", aussie:"a milk bar run" };
 function renderFeed(){
   renderBanners();
   const c=curCity(), saved=feedMode==="saved";
+  const sb=$("#store-banner-sub"); if(sb) sb.textContent = STORE_BLURB[konbiniKey()] || "grab a late-night snack";
   $("#saved-count").textContent = Object.keys(savedPlaces).length;
   if(saved){
     $("#feed-section-label").textContent = "♥ your saved places";
@@ -1505,7 +1570,7 @@ function streamIncoming(){ if(!$("#view-room").classList.contains("active")) ret
 let tIdx=0;
 function rotateTicker(){ const el=$("#ticker-msg"); el.style.opacity="0"; el.style.transform="translateY(-8px)"; setTimeout(()=>{ el.textContent=TICKER[tIdx%TICKER.length]; tIdx++; el.style.opacity="1"; el.style.transform="translateY(0)"; },420); }
 let dodgedTonight = 61000 + (hash(nightKey())%52000);
-function driftLive(){ liveBase += Math.floor(Math.random()*17)-7; if(liveBase<1180) liveBase=1180; if(liveBase>1390) liveBase=1390; $("#live-count").textContent=liveBase.toLocaleString(); const rl=$("#room-live"); if(rl) rl.textContent=liveBase.toLocaleString(); dodgedTonight += Math.floor(Math.random()*120); const rd=$("#room-dodged"); if(rd) rd.textContent="$"+dodgedTonight.toLocaleString(); const to=$("#track-others"); if($("#view-track").classList.contains("active") && $("#track-live").style.display!=="none"){ to.textContent=Math.max(210, parseInt(to.textContent)+(Math.floor(Math.random()*9)-4)); } }
+function driftLive(){ liveBase += Math.floor(Math.random()*17)-7; if(liveBase<1180) liveBase=1180; if(liveBase>1390) liveBase=1390; $("#live-count").textContent=liveBase.toLocaleString(); const rl=$("#room-live"); if(rl) rl.textContent=liveBase.toLocaleString(); dodgedTonight += Math.floor(Math.random()*120); const rd=$("#room-dodged"); if(rd) rd.textContent="$"+dodgedTonight.toLocaleString(); const el=$("#explore-live"); if(el){ const base=620+(hash(curCity().id)%900); el.textContent=(base+Math.floor(Math.random()*40)).toLocaleString(); } const to=$("#track-others"); if($("#view-track").classList.contains("active") && $("#track-live").style.display!=="none"){ to.textContent=Math.max(210, parseInt(to.textContent)+(Math.floor(Math.random()*9)-4)); } }
 
 /* ============================================================
    Korea-trend features (도파민 사이트 playbook)
@@ -1692,9 +1757,85 @@ function menuRow(it){ const thumb = it.photo ? `<img class="mthumb" src="${it.ph
   return `<div class="mrow"><div class="mthumb-wrap">${thumb}</div><div class="mmid"><div class="mname">${esc(it.dish)}</div></div><div class="mprice">${money(it.price,it._cur)}</div><button class="madd" onclick="addToCart('${it._key}',event)">＋</button></div>`; }
 function renderMenu(place){ return buildMenu(place).map(c=>`<div class="mcourse">${c.label}</div>${c.items.map(menuRow).join("")}`).join(""); }
 
+/* ============================================================
+   Explore — "things to do" in all 50 cities (Google attractions/
+   museums/parks/bars; baked by bake-activities.mjs). Plan a real
+   or imaginary trip: filter by free / family / date / friends /
+   pet-ok, save to a bucket list (passport stamps per city), and
+   hand off to Groupon for real deals (affiliate revenue).
+   ============================================================ */
+const actByKey = {};
+let activitiesData = {};      // cityId -> [activities]
+let exploreFilter = "all";
+let savedActs = {};           // key -> activity (bucket list)
+const WHO_ICON = { family:"👨‍👩‍👧", date:"💕", friends:"🥂", solo:"🚶", everyone:"✨" };
+const EXPLORE_FILTERS = [ {k:"all",label:"all"}, {k:"free",label:"🆓 free"}, {k:"family",label:"👨‍👩‍👧 family"}, {k:"date",label:"💕 date"}, {k:"friends",label:"🥂 friends"}, {k:"pet",label:"🐶 pet-ok"}, {k:"list",label:"⭐ my list"} ];
+const EXPLORE_TICKER = [
+  "someone in Paris just added the Louvre to their list 🖼️",
+  "a night owl is planning teamLab Planets in Tokyo 🫧",
+  "3 people are eyeing the rooftop bars in Bangkok 🍸",
+  "someone in Mexico City saved Frida Kahlo's house 🎨",
+  "a couple is mapping a date at Park Güell, Barcelona 🦎",
+  "Cape Town's Table Mountain is trending tonight 🏔️",
+  "someone in Rome is planning a 2am Colosseum walk 🏛️",
+  "a family bucket-listed the aquarium in Lisbon 🐠",
+];
+
+function loadActsSaved(){ try{ savedActs=JSON.parse(localStorage.getItem("carted_acts")||"{}")||{}; Object.values(savedActs).forEach(a=>{ if(a&&a._key) actByKey[a._key]=actByKey[a._key]||a; }); }catch(e){ savedActs={}; } }
+function saveActs(){ try{ localStorage.setItem("carted_acts", JSON.stringify(savedActs)); }catch(e){} }
+function loadActs(city){
+  if(activitiesData[city.id]){ if(curCity().id===city.id && $("#view-explore").classList.contains("active")) renderExplore(); return; }
+  fetch(`${BASE}activities/${city.id}.json`).then(r=>r.ok?r.json():[]).then(acts=>{
+    acts.forEach(a=>{ actByKey[a._key]=a; }); activitiesData[city.id]=acts;
+    if(curCity().id===city.id && $("#view-explore").classList.contains("active")) renderExplore();
+  }).catch(()=>{ activitiesData[city.id]=[]; if($("#view-explore").classList.contains("active")) renderExplore(); });
+}
+function matchFilter(a){ if(exploreFilter==="all") return true; if(exploreFilter==="free") return a.free; if(exploreFilter==="pet") return a.pet; if(exploreFilter==="list") return !!savedActs[a._key]; return (a.who||[]).includes(exploreFilter); }
+function setExploreFilter(k){ exploreFilter=k; renderExplore(); $("#body").scrollTop=0; }
+function citiesExplored(){ const s=new Set(); Object.values(savedActs).forEach(a=>s.add(a._cityId)); return s; }
+function actCost(a){ return a.free ? `<span class="ac-free">Free</span>` : money(a.costUsd*(curCity().pf||1), curCity().cur); }
+function actCard(a){
+  const saved=!!savedActs[a._key];
+  const photo=a.photo?`<img src="${BASE+a.photo}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${a.ic}'))">`:`<span class="ac-emo">${a.ic}</span>`;
+  const who=(a.who||[]).map(w=>`<span class="who-chip">${WHO_ICON[w]||"✨"} ${w}</span>`).join("");
+  return `<div class="acard">
+    <div class="ac-photo">${photo}<span class="ac-cat">${a.ic} ${esc(a.cat)}</span>${a.pet?'<span class="ac-pet" title="pet-friendly">🐶</span>':''}</div>
+    <div class="ac-body">
+      <div class="ac-top"><div class="ac-name">${esc(a.name)}</div><button class="ac-save${saved?' on':''}" onclick="toggleAct('${a._key}',event)">${saved?'★':'☆'}</button></div>
+      <div class="ac-meta"><span class="ac-rate">★ ${a.rate.toFixed(1)}</span><span>(${a.n.toLocaleString()})</span> · ${esc(a.hood)}</div>
+      <div class="ac-who">${who}</div>
+      <div class="ac-foot"><span class="ac-cost">${actCost(a)}</span><button class="ac-deal" onclick="openDeal('${a._key}')">🎟️ find deals</button></div>
+    </div>
+  </div>`;
+}
+function renderExplore(){
+  const c=curCity();
+  const cn=$("#explore-city"); if(cn) cn.textContent=`${c.flag} ${c.name}`;
+  const en=$("#explore-cityname"); if(en) en.textContent=`${c.name} tonight`;
+  const ex=citiesExplored(), psp=$("#explore-passport");
+  if(psp) psp.innerHTML=`<span class="psp-ic">🛂</span><b>${ex.size}/50</b> cities on your map<span class="psp-saved">⭐ ${Object.keys(savedActs).length} saved</span>`;
+  const ff=$("#explore-filters"); if(ff) ff.innerHTML=EXPLORE_FILTERS.map(f=>{ const n=f.k==="list"?Object.keys(savedActs).length:0; return `<button class="efilter${exploreFilter===f.k?' on':''}" onclick="setExploreFilter('${f.k}')">${f.label}${f.k==="list"&&n?` ${n}`:""}</button>`; }).join("");
+  const acts=activitiesData[c.id], list=$("#explore-list"); if(!list) return;
+  if(!acts){ list.innerHTML=`<div class="loading"><div class="spinner"></div><div style="margin-top:8px">finding things to do in ${esc(c.name)}…</div></div>`; loadActs(c); return; }
+  const filtered=acts.filter(matchFilter);
+  if(!filtered.length){ list.innerHTML=`<div class="empty"><div class="big">🗺️</div>${exploreFilter==="list"?"your list is empty — tap ☆ on anything you'd want to do":"nothing matches that filter here"}</div>`; return; }
+  list.innerHTML=filtered.map(actCard).join("");
+}
+function toggleAct(key, ev){ if(ev) ev.stopPropagation(); const a=actByKey[key]; if(!a) return;
+  if(savedActs[key]){ delete savedActs[key]; } else { savedActs[key]=a; const firstInCity=![...citiesExplored()].includes(a._cityId); toast(firstInCity?`🛂 ${esc(a._cityName)} added to your map!`:"added to your list ⭐"); snd("pop"); addXp(4); }
+  saveActs(); renderExplore(); }
+/* deals — Groupon affiliate handoff (real revenue path; slot your affiliate id into the URL) */
+function openDeal(key){ const a=actByKey[key]; if(!a) return;
+  showModal(`<div class="m-emoji">🎟️</div><div class="m-title">deals for ${esc(a.name)}</div><div class="m-body">open Groupon to look for discounts on <b>${esc(a.cat)}</b> & things to do in ${esc(a._cityName)}.<br><br><span style="font-size:11.5px">affiliate handoff — a cut comes back to Carted 💚</span></div><button class="cta" style="position:static" onclick="confirmDeal('${a._key}')">see Groupon deals →</button><button class="cta secondary" style="position:static" onclick="closeModal()">maybe later</button>`); }
+function confirmDeal(key){ const a=actByKey[key]; if(!a){ closeModal(); return; } stats.dealClicks=(stats.dealClicks||0)+1; saveStats();
+  const url=`https://www.groupon.com/browse/${encodeURIComponent((a._cityName||"").toLowerCase().replace(/\s+/g,"-"))}?query=${encodeURIComponent(a.name)}`;  // prod: wrap with your CJ/Rakuten affiliate link
+  window.open(url, "_blank"); closeModal(); toast("opened Groupon 🎟️"); }
+let exTick=0;
+function rotateExploreTicker(){ const el=$("#explore-ticker"); if(!el) return; el.style.opacity="0"; setTimeout(()=>{ el.textContent=EXPLORE_TICKER[exTick%EXPLORE_TICKER.length]; exTick++; el.style.opacity="1"; },350); }
+
 /* ---- boot ---- */
 CITIES.forEach((c,i)=>{ CITY_INDEX[c.id]=i; statsByCity[c.id]={saved:0,orders:0}; });
-loadSaved(); loadAccount(); loadHome();
+loadSaved(); loadAccount(); loadHome(); loadActsSaved();
 fetch(BASE+"menus.json").then(r=>r.ok?r.json():null).then(j=>{ menusData=j; if($("#view-detail").classList.contains("active")&&currentDetailKey) openDetail(currentDetailKey); }).catch(()=>{});
 room = loadMinePosts();
 renderCityBar(); renderTally(); renderFeed();
@@ -1702,6 +1843,7 @@ renderCityBar(); renderTally(); renderFeed();
 loadCity(CITIES[0]);
 room = room.concat(ROOM_SEED.map(p=>({...p, reacted:{}})));
 rotateTicker(); setInterval(rotateTicker, 3600); setInterval(driftLive, 2600); setInterval(streamIncoming, 7000);
+rotateExploreTicker(); setInterval(rotateExploreTicker, 4200);
 renderBanners(); setInterval(renderBanners, 60000);
 acceptBuddyFromUrl();
 if(stats.pushOptIn && "Notification" in window && Notification.permission==="granted") scheduleGhostNudge();

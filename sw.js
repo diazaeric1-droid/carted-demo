@@ -1,4 +1,4 @@
-const CACHE = "carted-v13";
+const CACHE = "carted-v14";
 const SHELL = [
   "/carted-demo/",
   "/carted-demo/index.html",
@@ -25,7 +25,7 @@ self.addEventListener("fetch", e => {
   // Pass through all third-party API calls (Overpass, Nominatim, Google Fonts)
   if (!url.hostname.includes("github.io")) return;
   // Let the HTTP cache handle baked place + dish photos — keeps SW cache small
-  if (url.pathname.includes("/places/photos/") || url.pathname.includes("/menus/")) return;
+  if (url.pathname.includes("/places/photos/") || url.pathname.includes("/menus/") || url.pathname.includes("/activities/")) return;
   e.respondWith(
     caches.match(e.request).then(cached => {
       if (cached) return cached;
