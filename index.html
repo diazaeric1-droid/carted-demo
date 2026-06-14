@@ -478,6 +478,30 @@
   .feed-filters:empty { display: none; }
   .ffilt { flex: 0 0 auto; background: var(--card); border: 2px solid var(--ink); border-radius: 11px; padding: 5px 11px; font-weight: 800; font-size: 12px; color: var(--muted); cursor: pointer; box-shadow: 1.5px 1.5px 0 var(--ink); text-transform: capitalize; white-space: nowrap; }
   .ffilt.on { background: var(--accent); color: #fff; }
+
+  /* ----- feed declutter: brand live pill, collapsible drawers, consolidated controls ----- */
+  .brand .live-pill { display: flex; align-items: center; gap: 6px; margin-top: 7px; font-size: 12px; font-weight: 800; color: var(--muted); min-height: 18px; white-space: nowrap; }
+  .brand .live-pill .lp-count { flex: 0 0 auto; }
+  .brand .live-pill .lp-sep { flex: 0 0 auto; opacity: .55; }
+  .brand .live-pill .lp-ticker { flex: 1 1 auto; min-width: 0; color: var(--muted); font-weight: 700; overflow: hidden; text-overflow: ellipsis; transition: opacity .5s, transform .5s; }
+  .drawer { border: 2.5px solid var(--ink); border-radius: 16px; background: var(--card); box-shadow: 3px 3px 0 var(--ink); margin-bottom: 12px; overflow: hidden; }
+  .drawer .dr-head { width: 100%; display: flex; align-items: center; gap: 9px; background: none; border: none; padding: 11px 13px; cursor: pointer; text-align: left; }
+  .drawer .dr-lead { font-size: 19px; flex: 0 0 auto; line-height: 1; }
+  .drawer .dr-teaser { flex: 1; min-width: 0; font-family: var(--disp); font-weight: 700; font-size: 13.5px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .35s, transform .35s; }
+  .drawer .dr-mult { flex: 0 0 auto; background: var(--hot); color: #fff; border: 2px solid var(--ink); border-radius: 8px; padding: 1px 7px; font-size: 10px; font-weight: 800; box-shadow: 1px 1px 0 var(--ink); white-space: nowrap; }
+  #more .dr-mult { background: var(--accent2); color: var(--ink); }
+  .drawer .dr-caret { flex: 0 0 auto; font-size: 13px; color: var(--muted); transition: transform .2s; }
+  .drawer.open .dr-caret { transform: rotate(180deg); }
+  .drawer .dr-body { max-height: 0; opacity: 0; overflow: hidden; transition: max-height .24s ease, opacity .2s ease; padding: 0 12px; }
+  .drawer.open .dr-body { max-height: 2200px; opacity: 1; padding: 2px 12px 10px; }
+  .drawer .dr-body > div:empty { display: none; }
+  .drawer .dr-body .feat-banner, .drawer .dr-body .spotlight, .drawer .dr-body .morts-pick, .drawer .dr-body .buddy-nudge, .drawer .dr-body .store-banner, .drawer .dr-body .must-card, .drawer .dr-body .quests, .drawer .dr-body .hub, .drawer .dr-body .tally { margin-bottom: 10px; }
+  .drawer .dr-body > *:last-child { margin-bottom: 0; }
+  .feed-controls { margin-bottom: 8px; }
+  .feed-controls .seg { margin-bottom: 8px; }
+  .feed-controls .fc-row { display: flex; align-items: center; gap: 8px; }
+  .feed-controls .fc-row #feed-filters { flex: 1; margin: 0; padding-bottom: 0; }
+  .feed-controls .feed-craving { margin: 9px 2px 2px; }
   /* ----- explore (things to do) ----- */
   .ex-city { background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 10px 14px; font-family: var(--disp); font-weight: 600; font-size: 16px; color: var(--text); box-shadow: 3px 3px 0 var(--ink); cursor: pointer; margin: 2px 0 4px; }
   .ex-city:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
@@ -538,47 +562,73 @@
             <button class="avatar" id="avatar-btn" onclick="go('profile')">🙂</button>
             <h1>Carted</h1>
             <div class="sub">browse real places. cart it all. the driver never comes.</div>
+            <div class="live-pill"><span class="dot"></span><span class="lp-count"><span id="live-count">1,247</span> night owls up</span><span class="lp-sep">·</span><span id="ticker-msg" class="lp-ticker"></span></div>
           </div>
-          <div class="presence">
-            <div class="live"><span class="dot"></span> <span id="live-count">1,247</span> night owls browsing with you</div>
-            <div class="ghostline"><span class="ghost-emo">👻</span><div class="msg" id="ticker-msg"></div></div>
+
+          <!-- #1+2 consolidated: the 5 "tonight" nudges collapse behind one rotating teaser -->
+          <div class="drawer" id="tonight">
+            <button class="dr-head" onclick="toggleDrawer('tonight')">
+              <span class="dr-lead ghost-emo">👻</span>
+              <span class="dr-teaser" id="tonight-teaser">tonight's picks</span>
+              <span class="dr-mult" id="tonight-mult" style="display:none"></span>
+              <span class="dr-caret">▾</span>
+            </button>
+            <div class="dr-body">
+              <div id="buddy-nudge"></div>
+              <div id="featured-banner"></div>
+              <div id="spotlight"></div>
+              <div id="morts-pick"></div>
+              <div id="event-banners"></div>
+            </div>
           </div>
-          <div id="buddy-nudge"></div>
-          <div id="featured-banner"></div>
-          <div id="spotlight"></div>
-          <div id="morts-pick"></div>
-          <div id="event-banners"></div>
-          <div class="section-label" style="margin-bottom:8px">📍 pick a city</div>
+
           <div class="city-bar" id="city-bar"></div>
-          <div class="tally">
-            <div class="box"><div class="k">saved here tonight</div><div class="v green" id="saved-tally">$0.00</div></div>
-            <div class="box"><div class="k">window-orders</div><div class="v" id="order-count">0</div></div>
+
+          <!-- consolidated feed controls (was: seg + filters + feed-head) -->
+          <div class="feed-controls" id="feed-controls">
+            <div class="seg">
+              <button id="seg-all" class="on" onclick="setMode('all')">All</button>
+              <button id="seg-saved" onclick="setMode('saved')">♥ Saved <span id="saved-count">0</span></button>
+              <button id="seg-deals" onclick="setMode('deals')">🎟️ Deals <span id="deals-count">0</span></button>
+            </div>
+            <div class="fc-row">
+              <div id="feed-filters" class="feed-filters"></div>
+              <div class="fh-btns"><button class="surprise" onclick="teleport()">🎲</button><button class="surprise" onclick="surpriseMe()">🔀</button></div>
+            </div>
+            <div class="section-label feed-craving" id="feed-section-label">🔥 craving right now</div>
           </div>
-          <div id="variety"></div>
-          <div id="quests"></div>
-          <button class="store-banner" onclick="openKonbini()">
-            <span class="sb-ic">🏪</span>
-            <span class="sb-text"><b>the 24h corner store</b><span class="sb-sub" id="store-banner-sub">grab a late-night snack from the bodega</span></span>
-            <span class="sb-go">›</span>
-          </button>
-          <div class="hub" id="hub">
-            <button class="hub-tile" onclick="ratePlate()"><span class="ht-ic">🔥</span>rate the plate</button>
-            <button class="hub-tile" onclick="go('explore')"><span class="ht-ic">🗺️</span>things to do</button>
-            <button class="hub-tile" onclick="go('profile')"><span class="ht-ic">👻</span>your drivers</button>
-          </div>
-          <div id="must-try"></div>
-          <div id="crawls"></div>
-          <div class="seg">
-            <button id="seg-all" class="on" onclick="setMode('all')">All</button>
-            <button id="seg-saved" onclick="setMode('saved')">♥ Saved <span id="saved-count">0</span></button>
-            <button id="seg-deals" onclick="setMode('deals')">🎟️ Deals <span id="deals-count">0</span></button>
-          </div>
-          <div id="feed-filters" class="feed-filters"></div>
-          <div class="feed-head">
-            <div class="section-label" id="feed-section-label" style="margin:0">🔥 craving right now</div>
-            <div class="fh-btns"><button class="surprise" onclick="teleport()">🎲 teleport</button><button class="surprise" onclick="surpriseMe()">🔀 surprise</button></div>
-          </div>
+
           <div id="feed-list"></div>
+
+          <!-- #more: discovery extras tucked below the first screen of restaurants -->
+          <div class="drawer" id="more">
+            <button class="dr-head" onclick="toggleDrawer('more')">
+              <span class="dr-lead">✨</span>
+              <span class="dr-teaser">more — missions, crawls &amp; corner store</span>
+              <span class="dr-mult" id="more-badge"></span>
+              <span class="dr-caret">▾</span>
+            </button>
+            <div class="dr-body">
+              <div id="must-try"></div>
+              <div id="crawls"></div>
+              <div class="tally">
+                <div class="box"><div class="k">saved here tonight</div><div class="v green" id="saved-tally">$0.00</div></div>
+                <div class="box"><div class="k">window-orders</div><div class="v" id="order-count">0</div></div>
+              </div>
+              <div id="variety"></div>
+              <div id="quests"></div>
+              <button class="store-banner" onclick="openKonbini()">
+                <span class="sb-ic">🏪</span>
+                <span class="sb-text"><b>the 24h corner store</b><span class="sb-sub" id="store-banner-sub">grab a late-night snack from the bodega</span></span>
+                <span class="sb-go">›</span>
+              </button>
+              <div class="hub" id="hub">
+                <button class="hub-tile" onclick="ratePlate()"><span class="ht-ic">🔥</span>rate the plate</button>
+                <button class="hub-tile" onclick="go('explore')"><span class="ht-ic">🗺️</span>things to do</button>
+                <button class="hub-tile" onclick="go('profile')"><span class="ht-ic">👻</span>your drivers</button>
+              </div>
+            </div>
+          </div>
           <div class="osm-credit">📍 places © OpenStreetMap contributors &amp; Google · ratings + photos © Google</div>
         </section>
 
@@ -2153,7 +2203,32 @@ function markVisited(keys){ stats.visited=stats.visited||[]; keys.forEach(k=>{ i
    must-try checklist. (all push people toward trying new places)
    ============================================================ */
 let feedFilters = { price:null, cuisine:null };
-function refreshDiscovery(){ renderMortsPick(); renderVariety(); renderMustTry(); renderCrawls(); renderFeedFilters(); const dc=$("#deals-count"); if(dc) dc.textContent=dealsCount(); }
+function refreshDiscovery(){ renderMortsPick(); renderVariety(); renderMustTry(); renderCrawls(); renderFeedFilters(); renderQuests(); renderTally(); refreshTonightHead(); refreshMoreHead(); const dc=$("#deals-count"); if(dc) dc.textContent=dealsCount(); }
+
+/* ---- collapsible feed drawers (#tonight above the list, #more below) ---- */
+function toggleDrawer(id){ const d=$("#"+id); if(!d) return; const open=d.classList.toggle("open"); try{ localStorage.setItem("carted_dr_"+id, open?"1":"0"); }catch(e){} snd("pop"); }
+function initDrawers(){ ["tonight","more"].forEach(id=>{ const d=$("#"+id); if(!d) return; let v=null; try{ v=localStorage.getItem("carted_dr_"+id); }catch(e){} d.classList.toggle("open", v==="1"); }); }
+
+/* rotating "tonight" teaser — one line that replaces the 5 stacked nudge banners */
+let tonightTeasers=[], tnIdx=0;
+function buildTonightTeasers(){
+  const c=curCity(), out=[], doneSpot=(stats.spotDone||[]).includes(spotKey(c.id));
+  const sp=spotlightFor(c); if(sp && !doneSpot) out.push(`🎯 spotlight: ${sp.name} · +30 XP`);
+  if(buddyNudge()) out.push(`👯 ${(stats.buddy&&stats.buddy.name)||"your buddy"} dodged — keep the 🔥 streak`);
+  const f=featuredCity(); if(c.id!==f.id){ const cr=cravingForecast(); out.push(`${f.flag} tonight's city: ${f.name} · crave ${cr.e}`); }
+  const s=currentSeason(); if(s) out.push(`${s.emoji} ${s.name} · ${s.xp}× XP all season`);
+  if(isGoldenHour()) out.push(`🌙 golden hours · 2× XP til 4am`);
+  const mp=mortsPick(c); if(mp) out.push(`👻 Mort's pick: ${mp.name}`);
+  if(doneSpot) out.push(`✓ tonight's spotlight done — nice one 👻`);
+  if(!out.length) out.push("tap for tonight's picks 🌙");
+  return out;
+}
+function refreshTonightHead(){ tonightTeasers=buildTonightTeasers(); const el=$("#tonight-teaser"); if(el && tonightTeasers.length) el.textContent=tonightTeasers[tnIdx%tonightTeasers.length];
+  const pill=$("#tonight-mult"); if(pill){ const m=xpMult(); if(m>1){ pill.textContent=m+"× XP"; pill.style.display="inline-block"; } else pill.style.display="none"; } }
+function rotateTonight(){ const d=$("#tonight"); if(!d || d.classList.contains("open")) return; const el=$("#tonight-teaser"); if(!el) return;
+  tonightTeasers=buildTonightTeasers(); if(tonightTeasers.length<=1){ refreshTonightHead(); return; }
+  el.style.opacity="0"; el.style.transform="translateY(-6px)"; setTimeout(()=>{ tnIdx++; el.textContent=tonightTeasers[tnIdx%tonightTeasers.length]; el.style.opacity="1"; el.style.transform="translateY(0)"; },360); }
+function refreshMoreHead(){ const b=$("#more-badge"); if(!b) return; const q=questsToday(); const n=(q.claimed||[]).length, tot=(q.ids||[]).length||3; b.textContent=`missions ${n}/${tot}`; }
 
 /* 1+2 — coupon scarcity ("N left"); coupons already refresh nightly via couponFor + burn at the 4am sunrise */
 function couponQty(p){ return 2 + (hash(p.name+"q"+nightKey())%8); }
@@ -2217,6 +2292,7 @@ renderCityBar(); renderTally(); renderFeed();
 loadCity(CITIES[0]);
 room = room.concat(ROOM_SEED.map(p=>({...p, reacted:{}})));
 rotateTicker(); setInterval(rotateTicker, 3600); setInterval(driftLive, 2600); setInterval(streamIncoming, 7000);
+initDrawers(); refreshTonightHead(); refreshMoreHead(); setInterval(rotateTonight, 4200);
 rotateExploreTicker(); setInterval(rotateExploreTicker, 4200);
 renderBanners(); setInterval(renderBanners, 60000);
 acceptBuddyFromUrl();
