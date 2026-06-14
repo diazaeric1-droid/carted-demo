@@ -149,7 +149,7 @@
   .reveal .sub { color: var(--muted); font-size: 13.5px; }
 
   .room-head { padding: 6px 2px 12px; }
-  .room-head h1 { margin: 0; font-size: 24px; font-weight: 800; }
+  .room-head h1 { margin: 0; font-size: 24px; font-weight: 700; font-family: var(--disp); color: var(--accent); text-shadow: 2.5px 2.5px 0 var(--ink); }
   .room-head .live2 { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); margin-top: 5px; }
   .composer { display: flex; gap: 8px; margin-bottom: 16px; }
   .composer input { flex: 1; background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 13px 14px; color: var(--text); font-size: 14px; outline: none; font-family: var(--bodyf); font-weight: 600; }
@@ -1804,7 +1804,7 @@ function actCard(a){
       <div class="ac-top"><div class="ac-name">${esc(a.name)}</div><button class="ac-save${saved?' on':''}" onclick="toggleAct('${a._key}',event)">${saved?'★':'☆'}</button></div>
       <div class="ac-meta"><span class="ac-rate">★ ${a.rate.toFixed(1)}</span><span>(${a.n.toLocaleString()})</span> · ${esc(a.hood)}</div>
       <div class="ac-who">${who}</div>
-      <div class="ac-foot"><span class="ac-cost">${actCost(a)}</span><button class="ac-deal" onclick="openDeal('${a._key}')">🎟️ find deals</button></div>
+      <div class="ac-foot"><span class="ac-cost">${actCost(a)}</span>${a.free?'':`<button class="ac-deal" onclick="openDeal('${a._key}')">🎟️ find deals</button>`}</div>
     </div>
   </div>`;
 }
