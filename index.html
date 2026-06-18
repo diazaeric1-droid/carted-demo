@@ -185,7 +185,7 @@
   .globe-box .gpin-o { fill: #ffc23d; } .globe-box .gpin-d { fill: #ff5a3c; }
   .globe-box .gplane { transition: transform 2.4s linear; }
   .globe-box .gplane path { fill: #ffc23d; stroke: var(--ink); stroke-width: 1.4; stroke-linejoin: round; }
-  .globe-box .glabel { position: absolute; left: 0; right: 0; bottom: 0; text-align: center; font-family: var(--disp); font-weight: 600; font-size: 12.5px; color: var(--muted); }
+  .globe-box .glabel { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); display: inline-block; max-width: 92%; white-space: nowrap; padding: 3px 11px; border-radius: 999px; background: var(--screen); border: 2px solid var(--ink); box-shadow: 0 2.5px 0 var(--ink); text-align: center; font-family: var(--disp); font-weight: 700; font-size: 12.5px; line-height: 1.25; letter-spacing: .2px; color: var(--ink); }
   @media (prefers-reduced-motion: reduce) {
     .map.arrive, .route .ants, .pin .halo, .rider .mort, .rider .puff { animation: none !important; }
     .route .done, .rider, .eta-chip { transition: none !important; }
@@ -383,14 +383,15 @@
   .kb-add:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
   /* ----- restaurant menu ----- */
   .mcourse { font-family: var(--disp); font-weight: 600; font-size: 14px; margin: 16px 2px 8px; }
-  .mrow { display: flex; align-items: center; gap: 11px; background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 8px 10px; margin-bottom: 8px; box-shadow: 2px 2px 0 var(--ink); }
-  .mthumb-wrap { width: 48px; height: 48px; flex: 0 0 48px; border-radius: 10px; border: 2px solid var(--ink); overflow: hidden; display: flex; align-items: center; justify-content: center; background: #ffe9b3; font-size: 26px; }
+  .mrow { display: flex; align-items: flex-start; gap: 12px; background: var(--card); border: 2px solid var(--ink); border-radius: 16px; padding: 10px; margin-bottom: 10px; box-shadow: 2px 2px 0 var(--ink); }
+  .mthumb-wrap { width: 100px; height: 100px; flex: 0 0 100px; border-radius: 13px; border: 2.5px solid var(--ink); overflow: hidden; display: flex; align-items: center; justify-content: center; background: #ffe9b3; font-size: 52px; box-shadow: 1.5px 1.5px 0 var(--ink); }
   .mthumb { width: 100%; height: 100%; object-fit: cover; display: block; }
   .mthumb.emo { background: none; border: none; display: flex; align-items: center; justify-content: center; line-height: 1; }
-  .mmid { flex: 1; min-width: 0; }
-  .mname { font-size: 13.5px; font-weight: 700; line-height: 1.25; }
-  .mprice { font-family: var(--disp); font-weight: 600; font-size: 13.5px; color: var(--accent); white-space: nowrap; }
-  .madd { width: 32px; height: 32px; flex: 0 0 32px; border-radius: 10px; border: 2px solid var(--ink); background: var(--go); color: #fff; font-size: 18px; line-height: 1; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; }
+  .mmid { flex: 1; min-width: 0; align-self: stretch; display: flex; flex-direction: column; }
+  .mname { font-size: 14.5px; font-weight: 800; line-height: 1.2; }
+  .mblurb { font-size: 11px; font-style: italic; font-weight: 600; color: var(--muted); line-height: 1.3; margin-top: 3px; }
+  .mprice { font-family: var(--disp); font-weight: 600; font-size: 14px; color: var(--accent); white-space: nowrap; margin-top: auto; padding-top: 6px; }
+  .madd { width: 36px; height: 36px; flex: 0 0 36px; align-self: center; border-radius: 11px; border: 2px solid var(--ink); background: var(--go); color: #fff; font-size: 20px; line-height: 1; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; }
   .madd:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
   /* ----- stats modal ----- */
   .stats-list { text-align: left; margin: 4px 0 10px; max-height: 42vh; overflow-y: auto; }
@@ -435,13 +436,29 @@
   .souv-name { font-size: 7.5px; font-weight: 800; text-align: center; line-height: 1; color: var(--muted); }
   .reveal .ghostrise.ghost-hype { animation: rise 1.5s ease both, gwiggle .55s ease 1.5s 3; }
   @keyframes gwiggle { 0%,100%{ transform: rotate(0) scale(1.05); } 25%{ transform: rotate(-13deg) scale(1.1); } 75%{ transform: rotate(13deg) scale(1.1); } }
+  /* post-delivery Mort scene */
+  .mort-scene { position: relative; display: inline-block; padding-top: 16px; }
+  .mort-scene .ghostrise { position: relative; z-index: 2; }
+  .mort-scene .ms-bag { position: absolute; left: 50%; top: 6px; transform: translateX(-50%); font-size: 26px; z-index: 3; animation: msBag 2.2s ease both; pointer-events: none; }
+  @keyframes msBag { 0%{ opacity:0; transform: translate(-50%,18px) scale(.5) rotate(-12deg);} 35%{ opacity:1; transform: translate(-50%,-4px) scale(1) rotate(6deg);} 60%{ transform: translate(-50%,-4px) scale(1) rotate(-4deg);} 100%{ opacity:.9; transform: translate(-50%,10px) scale(.96) rotate(0);} }
+  .mort-scene .ms-puffs { position: absolute; left: 50%; top: 14px; width: 0; height: 0; z-index: 1; pointer-events: none; }
+  .mort-scene .ms-puff { position: absolute; left: 0; top: 0; font-size: 18px; opacity: 0; animation: msPuff ease-out both; will-change: transform, opacity; }
+  @keyframes msPuff { 0%{ opacity:0; transform: translate(var(--x), 6px) scale(.4);} 18%{ opacity:1;} 100%{ opacity:0; transform: translate(calc(var(--x) * 1.5), -64px) scale(1.15) rotate(8deg);} }
+  .mort-scene.ms-hype .ms-puff { font-size: 22px; }
+  .mort-scene.ms-still .ms-bag { animation: none; opacity: .95; transform: translate(-50%, 8px); }
+  .mort-scene.ms-still .ms-puffs { display: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .mort-scene .ms-bag, .mort-scene .ms-puff { animation: none !important; }
+    .mort-scene .ms-puffs { display: none !important; }
+    .mort-scene .ms-bag { opacity: .95; transform: translate(-50%, 8px); }
+  }
   /* ----- coupons + new badge + spotlight ----- */
   .thumb { position: relative; }
   .coupon-rib { position: absolute; bottom: -2px; left: -2px; background: var(--hot); color: #fff; font-family: var(--disp); font-weight: 700; font-size: 9.5px; padding: 2px 6px; border: 2px solid var(--ink); border-radius: 9px 9px 9px 4px; box-shadow: 1px 1px 0 var(--ink); white-space: nowrap; }
   .new-chip { display: inline-block; background: var(--go); color: #fff; font-weight: 800; font-size: 9.5px; padding: 1px 6px; border-radius: 8px; border: 1.5px solid var(--ink); margin-left: 4px; vertical-align: middle; }
-  .d-coupon { width: 100%; display: flex; align-items: center; gap: 10px; background: #ffe8ec; border: 2.5px dashed var(--hot); border-radius: 14px; padding: 11px 13px; margin: 14px 0 4px; cursor: pointer; text-align: left; box-shadow: 2px 2px 0 var(--hot); }
-  .d-coupon .dc-tag { font-family: var(--disp); font-weight: 700; font-size: 16px; color: var(--hot); white-space: nowrap; }
-  .d-coupon .dc-d { font-size: 12.5px; font-weight: 700; color: var(--text); }
+  .d-coupon { width: 100%; display: flex; align-items: center; gap: 8px; background: #ffe8ec; border: 2px dashed var(--hot); border-radius: 11px; padding: 7px 11px; margin: 10px 0 2px; cursor: pointer; text-align: left; box-shadow: 1.5px 1.5px 0 var(--hot); }
+  .d-coupon .dc-tag { font-family: var(--disp); font-weight: 700; font-size: 13px; color: var(--hot); white-space: nowrap; }
+  .d-coupon .dc-d { font-size: 11px; font-weight: 700; color: var(--text); line-height: 1.25; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .spotlight { display: block; width: 100%; text-align: left; background: var(--card); border: 2.5px solid var(--ink); border-radius: 20px; padding: 0; margin-bottom: 14px; box-shadow: 5px 6px 0 var(--ink); cursor: pointer; overflow: hidden; transition: transform .12s ease, box-shadow .12s ease; }
   .spotlight:active { transform: translate(2px,3px); box-shadow: 1px 2px 0 var(--ink); }
   .spotlight.done { opacity: .78; box-shadow: 3px 3px 0 var(--ink); }
@@ -1601,7 +1618,7 @@ function openDetail(key){
     + `<div class="hero-name"><div class="hn-title">${esc(p.name)}</div><div class="hn-sub">${esc(p.en)} · ${esc(niceHood(p))}</div></div>`;
   const dd=$("#d-desc"); if(p.desc){ dd.textContent=p.desc; dd.style.display="block"; } else dd.style.display="none";
   $("#d-stats").innerHTML = `<span>★ <b>${p.rate.toFixed(1)}</b> (${p.n.toLocaleString()})</span>${p.lvl?`<span><b>${"$".repeat(p.lvl)}</b></span>`:""}<span><b>${etaStr(p)}</b></span>`;
-  const cp=couponFor(p); const dc=$("#d-coupon"); if(dc) dc.innerHTML = cp?`<button class="d-coupon" onclick="claimCoupon('${p._key}')"><span class="dc-tag">🎟️ ${cp.t}</span><span class="dc-d">${esc(cp.d)}<br><span style="color:var(--hot)">🔥 only ${couponQty(p)} left · ends at sunrise</span> · tap to clip</span></button>`:"";
+  const cp=couponFor(p); const dc=$("#d-coupon"); if(dc) dc.innerHTML = cp?`<button class="d-coupon" onclick="claimCoupon('${p._key}')"><span class="dc-tag">🎟️ ${cp.t}</span><span class="dc-d">${esc(cp.d)} · <span style="color:var(--hot)">🔥 ${couponQty(p)} left</span> · tap to clip</span></button>`:"";
   $("#d-menu").innerHTML = renderMenu(p);
   const real = (p.rv||[]).map(r=>`<div class="review"><div class="top"><span class="stars">${starStr(r.r)}</span><span>${esc(r.a||"a local")} · google</span></div><div class="text">${esc(r.t)}</div></div>`).join("");
   const mocks = mockFor(p).map(r=>`<div class="review"><div class="top"><span class="stars">${r[1]}</span><span>night owl 👻 · ${(hash(p.name)%23)+1}m ago</span></div><div class="text">${esc(r[0])}</div></div>`).join("");
@@ -1745,7 +1762,7 @@ function revealTruth(){
   const ghostHype = combo>=3 || quipCtx.usd>=60 || quipCtx.milestone;
   const r=$("#track-reveal"); r.style.display="block"; r.className="reveal";
   r.innerHTML = `
-    <div class="ghostrise${ghostHype?' ghost-hype':''}">${ghostAvatar(66)}</div>
+    ${mortReveal(quipCtx.usd, ghostHype)}
     <div class="ghost-quip">“${ghostQuip(quipCtx)}”</div>
     <div class="punch">${pl.p.replace("{n}",driver)}</div>
     <div class="sub">${pl.s.replace("{n}",driver)}</div>
@@ -2108,8 +2125,21 @@ function buildMenu(place){
   const de=pickList(DESSERTS,key,2,place.name+"de"); if(de.length) courses.push({label:"🍰 dessert", items: de.map(n=>mkItem(place,n,"🍰","dessert",menuPrice(base,0.5,place,n+place.name))) });
   return courses;
 }
-function menuRow(it){ const thumb = it.photo ? `<img class="mthumb" src="${it.photo}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${it.ic}'))">` : `<span class="mthumb emo">${it.ic}</span>`;
-  return `<div class="mrow"><div class="mthumb-wrap">${thumb}</div><div class="mmid"><div class="mname">${esc(it.dish)}</div></div><div class="mprice">${money(it.price,it._cur)}</div><button class="madd" onclick="addToCart('${it._key}',event)">＋</button></div>`; }
+/* dishBlurb(it) — deterministic, hash-seeded appetizing line under each dish */
+const BLURB_OPEN = ["slow-cooked","blistered","pan-seared","fire-kissed","caramelized","silky","crispy-edged","golden","velvety","char-grilled","melt-in-your-mouth","fragrant","glossy","crackling","buttery"];
+const BLURB_TEXTURE = ["with a crackle you can hear","layered with deep savory notes","dripping in its own juices","kissed with smoke and spice","under a blanket of melted richness","glistening with sauce","stacked tall and steaming","finished with a bright citrus lift","tangled in herbs and heat","balanced between sweet and salt","seared to a deep, toasty edge","piled high and unapologetic"];
+const BLURB_CLOSE = ["the kind you dream about","worth crossing the city for","gone in three bites","made to ruin all others","comfort in its purest form","a little dangerous, honestly","the table's first casualty","pure midnight-craving fuel","absurdly good","the reason you're here"];
+const BLURB_CUISINE = { italian:["hand-rolled","slow-simmered","blistered","garlicky"], pizza:["wood-fired","blistered","bubbling","char-spotted"], japanese:["delicate","umami-rich","feather-light","precisely sliced"], sushi:["glistening","ocean-fresh","jewel-bright","feather-light"], ramen:["broth-soaked","steaming","slurp-worthy","deeply savory"], mexican:["smoky","lime-bright","fire-roasted","heaped with"], indian:["spice-bloomed","ghee-rich","fragrant","slow-braised"], chinese:["wok-charred","glossy","blistered","saucy"], thai:["coconut-laced","chili-bright","zingy","aromatic"], korean:["gochujang-glazed","sizzling","fermented-funky","caramelized"], french:["butter-basted","silky","golden-crusted","decadent"], bbq:["bark-crusted","smoke-ringed","fall-apart","sticky-glazed"], barbecue:["bark-crusted","smoke-ringed","fall-apart","sticky-glazed"], steak_house:["dry-aged","seared crusty","butter-basted","blushing pink"], american:["griddle-smashed","stacked","juicy","golden-fried"], seafood:["ocean-sweet","butter-poached","just off the boil","brine-bright"], dessert:["decadent","silky","sugar-dusted","cloud-light"] };
+function dishBlurb(it){
+  const en=(it && it.en ? it.en : "").toLowerCase().trim().replace(/[\s-]+/g,"_");
+  const ckey=(typeof CUISINE_ALIAS!=="undefined" && CUISINE_ALIAS[en])||en;
+  const opens=BLURB_CUISINE[ckey]||BLURB_OPEN;
+  let h=hash((it&&it.dish?it.dish:"")+"|blurb");
+  const p=(arr)=>{ h=(h*1103515245+12345)>>>0; return arr[h%arr.length]; };
+  return `${p(opens)} ${p(BLURB_TEXTURE)} — ${p(BLURB_CLOSE)}`;
+}
+function menuRow(it){ const thumb = it.photo ? `<img class="mthumb" src="${it.photo}" alt="" loading="lazy" decoding="async" onerror="this.replaceWith(document.createTextNode('${it.ic}'))">` : `<span class="mthumb emo">${it.ic}</span>`;
+  return `<div class="mrow"><div class="mthumb-wrap">${thumb}</div><div class="mmid"><div class="mname">${esc(it.dish)}</div><div class="mblurb">${esc(dishBlurb(it))}</div><div class="mprice">${money(it.price,it._cur)}</div></div><button class="madd" onclick="addToCart('${it._key}',event)">＋</button></div>`; }
 function renderMenu(place){ return buildMenu(place).map(c=>`<div class="mcourse">${c.label}</div>${c.items.map(menuRow).join("")}`).join(""); }
 
 /* ============================================================
@@ -2221,6 +2251,8 @@ function activeSeasonFits(){ return SEASON_FITS.filter(f=>inWindow(f.id)).map(f=
 function baseFits(){ return GHOST_FITS.concat(activeSeasonFits()); }
 function ghostFit(){ const id=stats.fit||"none"; if(id.startsWith("city:")){ const cid=id.slice(5); return {id, hat:CITY_HAT[cid]||"", name:((CITIES[CITY_INDEX[cid]]||{}).name||"city")+" souvenir"}; } return baseFits().find(f=>f.id===id) || GHOST_FITS[0]; }
 function ghostAvatar(size){ size=size||40; const f=ghostFit(); return `<span class="ghost-av" style="font-size:${size}px;width:${size}px;height:${size}px">👻${f.hat?`<span class="gh-hat" style="font-size:${Math.round(size*0.6)}px">${f.hat}</span>`:""}</span>`; }
+/* Post-delivery Mort scene: floats up with the (empty) bag, wiggles, emits a $-scaled puff. */
+function mortReveal(usd, hype){ usd=+usd||0; var puff=["✨","✨","🌙"]; if(usd>=6) puff=["✨","💚","✨","🌙"]; if(usd>=25) puff=["✨","💚","💸","✨","🌟"]; if(usd>=60) puff=["🎉","👑","💸","✨","💚","🌟"]; var reduce=false; try{ reduce=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){} var floaters=reduce?"":puff.map(function(e,i){ var x=(i/(puff.length-1)*2-1)*46; var d=(i*0.12).toFixed(2), dur=(1.5+Math.random()*0.6).toFixed(2); return '<span class="ms-puff" style="--x:'+x.toFixed(0)+'px;animation-delay:'+d+'s;animation-duration:'+dur+'s">'+e+'</span>'; }).join(""); return '<div class="mort-scene'+(hype?' ms-hype':'')+(reduce?' ms-still':'')+'"><div class="ms-puffs">'+floaters+'</div><div class="ms-bag">🛍️</div><div class="ghostrise'+(hype?' ghost-hype':'')+'">'+ghostAvatar(66)+'</div></div>'; }
 function setPresenceGhost(){ const ge=$(".ghost-emo"); if(ge) ge.innerHTML=ghostAvatar(19); }
 function equipFit(id){ let ok=false; if(id.startsWith("city:")) ok=cityVisited(id.slice(5)); else { const f=baseFits().find(x=>x.id===id); ok=f && f.has(); } if(!ok) return; stats.fit=id; saveStats(); snd("pop"); const f=ghostFit(); toast(`👻 Mort's fit: ${f.hat||"naked"} ${f.name}`); if($("#view-profile").classList.contains("active")) renderProfile(); setPresenceGhost(); }
 function checkFitUnlocks(){ if(!stats.fitsSeen) stats.fitsSeen=["none"]; let newly=null;
