@@ -652,6 +652,17 @@
     .nav { height: calc(58px + env(safe-area-inset-bottom, 0px)); padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px)); }
     .toast { bottom: calc(74px + env(safe-area-inset-bottom, 0px)); }
   }
+  /* first-run onboarding overlay */
+  .onboard { position: absolute; inset: 0; z-index: 300; background: var(--screen); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 28px 24px; }
+  .onboard .ob-card { max-width: 300px; animation: fade .35s ease; }
+  .onboard .ob-emoji { font-size: 86px; line-height: 1; margin-bottom: 18px; animation: rise 1.4s ease both; }
+  .onboard .ob-h { font-family: var(--disp); font-weight: 700; font-size: 28px; color: var(--accent); text-shadow: 2.5px 2.5px 0 var(--ink); line-height: 1.05; }
+  .onboard .ob-s { font-size: 15px; font-weight: 700; color: var(--text); margin-top: 13px; line-height: 1.42; }
+  .onboard .ob-foot { position: absolute; left: 24px; right: 24px; bottom: calc(30px + env(safe-area-inset-bottom, 0px)); }
+  .onboard .ob-dots { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
+  .onboard .ob-dot { width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); transition: background .2s; }
+  .onboard .ob-dot.on { background: var(--accent); }
+  .onboard .ob-skip { display: block; margin: 11px auto 0; background: none; border: none; color: var(--muted); font-weight: 700; font-size: 13px; cursor: pointer; }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
     .foodfall, .lvlup .rays { display: none !important; }
@@ -1161,6 +1172,36 @@ const CARTED_BE = { url: "https://twndjxqdhqcyxfdsteas.supabase.co/functions/v1"
 function beOn(){ return !!(CARTED_BE.url); }
 function deviceId(){ let d=localStorage.getItem("carted_device"); if(!d){ d="d"+Math.random().toString(36).slice(2)+Date.now().toString(36); try{ localStorage.setItem("carted_device", d); }catch(e){} } return d; }
 function bePost(fn, body){ return fetch(CARTED_BE.url+"/"+fn, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)}).then(r=>r.json()).catch(()=>null); }
+
+/* ===== lightweight analytics: funnel counts + return-night tracking (the retention signal) + best-effort beacon ===== */
+const ANALYTICS_URL = (CARTED_BE && CARTED_BE.url) ? CARTED_BE.url + "/track" : "";
+function _aGet(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } }
+function _aSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+let _aQueue=[], _aTimer=null;
+function track(ev, props){ try{
+  const t=Date.now();
+  const f=_aGet("carted_funnel",{}); f[ev]=(f[ev]||0)+1; _aSet("carted_funnel",f);
+  const log=_aGet("carted_events",[]); log.push(Object.assign({ev,t},props||{})); while(log.length>150) log.shift(); _aSet("carted_events",log);
+  _aQueue.push(Object.assign({ev,t},props||{}));
+  if(!_aTimer) _aTimer=setTimeout(_aFlush,4000);
+}catch(e){} }
+function _aFlush(){ _aTimer=null; if(!_aQueue.length || !ANALYTICS_URL) return; const batch=_aQueue.splice(0,_aQueue.length); const body=JSON.stringify({ device:deviceId(), nights:_aGet("carted_nights",[]).length, events:batch }); try{ if(navigator.sendBeacon) navigator.sendBeacon(ANALYTICS_URL, new Blob([body],{type:"application/json"})); else fetch(ANALYTICS_URL,{method:"POST",headers:{"Content-Type":"application/json"},body,keepalive:true}).catch(()=>{}); }catch(e){} }
+window.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="hidden") _aFlush(); });
+function trackOpen(){ const n=nightKey(); const nights=_aGet("carted_nights",[]); if(!nights.includes(n)){ nights.push(n); while(nights.length>90) nights.shift(); _aSet("carted_nights",nights); } if(_aGet("carted_first_open",null)==null) _aSet("carted_first_open",n); track("open",{night:nights.length}); }
+/* devtools inspector — call cartedReport() in the console */
+window.cartedReport = function(){ const nights=_aGet("carted_nights",[]); const r={ firstOpen:_aGet("carted_first_open",null), distinctNights:nights.length, returnedAnotherNight:nights.length>=2, funnel:_aGet("carted_funnel",{}), nights }; console.log("📊 Carted report:", r); return r; };
+
+/* ===== first-run onboarding: 3 punchy sticker-pop beats (for cold TikTok traffic) ===== */
+const OB = [
+  { e:"🌍", h:"real food, everywhere", s:"browse actual restaurants from 50 cities — live, worldwide. real photos, real menus." },
+  { e:"🛒", h:"cart it, call the ghost", s:"fill your cart with whatever you're craving and a ghost courier flies it across the globe to you." },
+  { e:"💸", h:"…it never comes", s:"the driver was never real. you keep every dollar you didn't spend. that's the whole point. 👻" },
+];
+let obIdx=0;
+function showOnboard(){ obIdx=0; let el=$("#onboard"); if(!el){ el=document.createElement("div"); el.className="onboard"; el.id="onboard"; const sc=$(".screen")||document.body; sc.appendChild(el); } el.style.display="flex"; renderOnboard(); track("onboard_start"); }
+function renderOnboard(){ const el=$("#onboard"); if(!el) return; const c=OB[obIdx], last=obIdx===OB.length-1; el.innerHTML=`<div class="ob-card"><div class="ob-emoji">${c.e}</div><div class="ob-h">${c.h}</div><div class="ob-s">${c.s}</div></div><div class="ob-foot"><div class="ob-dots">${OB.map((_,i)=>`<span class="ob-dot${i===obIdx?' on':''}"></span>`).join("")}</div><button class="cta" style="position:static" onclick="${last?"endOnboard()":"nextOnboard()"}">${last?"let's go 🌙":"next →"}</button>${last?"":`<button class="ob-skip" onclick="endOnboard()">skip intro</button>`}</div>`; }
+function nextOnboard(){ obIdx=Math.min(OB.length-1,obIdx+1); try{snd("pop");}catch(e){} renderOnboard(); }
+function endOnboard(){ const el=$("#onboard"); if(el) el.style.display="none"; try{ localStorage.setItem("carted_onboard","2"); }catch(e){} try{snd("chime");}catch(e){} track("onboarded"); }
 function urlB64ToU8(s){ const pad="=".repeat((4-s.length%4)%4); const b=(s+pad).replace(/-/g,"+").replace(/_/g,"/"); const raw=atob(b); const out=new Uint8Array(raw.length); for(let i=0;i<raw.length;i++) out[i]=raw.charCodeAt(i); return out; }
 const PHOTO_KW = { "🍕":"pizza","🍔":"burger","🍟":"fries","🌮":"tacos","🌯":"burrito","🍜":"ramen","🍣":"sushi","🍱":"bento-box","🍛":"curry","🥡":"noodles","🍗":"fried-chicken","🥩":"steak","🍖":"barbecue","🥪":"sandwich","🥯":"bagel","🧆":"falafel","🥙":"kebab","🦐":"seafood","🥘":"paella","🍲":"hotpot","🥗":"salad","☕":"coffee","🥐":"croissant","🍩":"donut","🍰":"cake","🍦":"ice-cream","🍨":"gelato","🧋":"bubble-tea","🥟":"dumplings","🐙":"takoyaki","🐟":"grilled-fish","🥨":"pretzel","🍽️":"gourmet-food" };
 function photoUrl(p, big){ if(p.photo) return BASE + p.photo; const kw = PHOTO_KW[p.ic] || "food"; const s = big?400:200; return `https://loremflickr.com/${s}/${s}/${kw}?lock=${hash(p.name)%997}`; }
@@ -1330,7 +1371,7 @@ function flyToCart(ev, emo){
 function quickAdd(key, ev){ ev.stopPropagation(); addToCart(key, ev); }
 
 /* ---- shareable win card (canvas → native share / download) ---- */
-function shareWin(mode){
+function shareWin(mode){ track("share",{k:"win"});
   let s = lastShare;
   if(mode==="streak"){ const {t}=tierFor(stats.savedUsd); s={ label:"$"+Math.round(stats.savedUsd).toLocaleString(), streak:stats.streak||0, tier:t, city:"", streakMode:true }; }
   if(!s){ toast("nothing to share yet"); return; }
@@ -1419,7 +1460,7 @@ function loadCity(city, force){
 }
 
 /* ---- navigation ---- */
-function go(view){
+function go(view){ track("view",{v:view});
   document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
   $("#view-"+view).classList.add("active");
   $("#body").scrollTop = 0;
@@ -1681,7 +1722,7 @@ function openDetail(key){
 }
 
 /* ---- cart ---- */
-function addToCart(key, ev){ const p=placeByKey[key]||savedPlaces[key]; if(!p) return; const c=cityOf(p); const item={...p, _pf:(c&&c.pf)||1, _tax:(c&&c.tax!=null)?c.tax:curCity().tax}; cart.push(item); updateBadge(); if(ev) flyToCart(ev, p.ic); snd("pop"); toast(`added — that's ${money(p.price,p._cur)} you didn't spend 😌`); addXp(6); questEvent("add"); }
+function addToCart(key, ev){ const p=placeByKey[key]||savedPlaces[key]; if(!p) return; const c=cityOf(p); const item={...p, _pf:(c&&c.pf)||1, _tax:(c&&c.tax!=null)?c.tax:curCity().tax}; cart.push(item); track("add_cart"); updateBadge(); if(ev) flyToCart(ev, p.ic); snd("pop"); toast(`added — that's ${money(p.price,p._cur)} you didn't spend 😌`); addXp(6); questEvent("add"); }
 function removeFromCart(i){ cart.splice(i,1); updateBadge(); renderCart(); }
 function updateBadge(){ const b=$("#cart-badge"); if(cart.length){ b.style.display="flex"; b.textContent=cart.length; } else b.style.display="none"; }
 /* ---- all cart math is now in USD; each item converts via its own city's pf ---- */
@@ -1771,6 +1812,7 @@ function placeOrder(){
   const multi = route.length>2;
   const flight = isFlight ? { mins: routeMinutes(route), label: fmtFlight(routeMinutes(route)), multi: multi } : null;
   pendingOrder = { items: cart.slice(), total: cartAllIn(), city: c, cities: cities, flight: flight, route: route, driver: gd.n, gachaDriver: gd };
+  track("place_order",{cities:cities.length,flight:isFlight,usd:Math.round(cartAllIn())});
   snd("pop"); burst();
   $("#track-reveal").style.display="none"; $("#track-live").style.display="block";
   const rd=$("#rider"); rd.style.opacity="1";
@@ -1801,6 +1843,7 @@ function placeOrder(){
 }
 function revealTruth(){
   const po=pendingOrder; if(!po) return;
+  track("reveal",{usd:Math.round(po.total||0)});
   lastOrderItems=po.items; const st=statsByCity[po.city.id]; st.orders++; st.saved+=po.total*po.city.pf;  // st.saved is per-city LOCAL; po.total is USD
   const beforeTier=tierFor(stats.savedUsd).t.name;
   /* streak = real calendar nights (4am cutoff), with a freeze to forgive one missed night */
@@ -2016,7 +2059,7 @@ function sharePost(i){
 }
 function saveMinePost(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); all.unshift({ic:post.ic,text:post.text,streak:post.streak||0,night:nightKey()}); localStorage.setItem("carted_room_mine", JSON.stringify(all.slice(0,12))); }catch(e){} }
 function loadMinePosts(){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); const live=all.filter(p=>p.night===nightKey()); if(live.length!==all.length){ try{ localStorage.setItem("carted_room_mine", JSON.stringify(live)); }catch(e){} } return live.map(p=>({ic:p.ic,text:p.text,streak:p.streak,city:"you",ago:"tonight",mine:true,r:{hug:1+Math.floor(Math.random()*5),me:Math.floor(Math.random()*4),go:Math.floor(Math.random()*2)},reacted:{}})); }catch(e){ return []; } }
-function makeMine(ic, text){ const post={ic, text, city:"you", ago:"now", mine:true, streak:stats.streak||0, r:{hug:0,me:0,go:0}, reacted:{}}; room.unshift(post); saveMinePost(post); renderRoom(); beSeen(post); return post; }
+function makeMine(ic, text){ const post={ic, text, city:"you", ago:"now", mine:true, streak:stats.streak||0, r:{hug:0,me:0,go:0}, reacted:{}}; room.unshift(post); saveMinePost(post); renderRoom(); beSeen(post); track("room_post"); return post; }
 function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; makeMine("🌙", v); inp.value=""; snd("chime"); toast("posted — burns at sunrise 🌅"); addXp(4); questEvent("post"); }
 const CONFESS = ["almost got me. it didn't. 💪","called my name at 2am. i let it ring.","was THIS close. wallet's still shut.","tempted me for 20 whole minutes. survived."];
 function quickConfess(e){ makeMine(e, `${e} ${pick(CONFESS)}`); snd("chime"); toast("confessed to the room 🌙"); addXp(4); questEvent("post"); }
@@ -2254,7 +2297,7 @@ let exploreFilter = "all";
 let savedActs = {};           // key -> activity (bucket list)
 /* ===== FLIGHT-LOG PASSPORT: durable per-city travel ledger (stamps earned by flying, not saving) ===== */
 function ensureTravel(){ if(!stats.travel || typeof stats.travel!=="object"){ stats.travel={}; } if(!stats._travelMigrated){ (stats.cities||[]).forEach(id=>{ if(!stats.travel[id]) stats.travel[id]={flights:1,dodgedUsd:0,miles:0,last:null}; }); stats._travelMigrated=1; saveStats(); } return stats.travel; }
-function logFlight(cityId, usd, km){ const t=ensureTravel(); const e=t[cityId]||(t[cityId]={flights:0,dodgedUsd:0,miles:0,last:null}); e.flights++; e.dodgedUsd+=(usd||0); e.miles+=Math.round((km||0)*0.621371); e.last=nightKey(); saveStats(); }
+function logFlight(cityId, usd, km){ track("stamp",{city:cityId}); const t=ensureTravel(); const e=t[cityId]||(t[cityId]={flights:0,dodgedUsd:0,miles:0,last:null}); e.flights++; e.dodgedUsd+=(usd||0); e.miles+=Math.round((km||0)*0.621371); e.last=nightKey(); saveStats(); }
 function citiesFlown(){ ensureTravel(); const s=new Set(Object.keys(stats.travel)); (stats.cities||[]).forEach(id=>s.add(id)); return s; }
 function travelTotals(){ ensureTravel(); let miles=0,usd=0,flights=0; Object.values(stats.travel).forEach(e=>{ miles+=e.miles||0; usd+=e.dodgedUsd||0; flights+=e.flights||0; }); return {miles,usd,flights}; }
 function renderExploreCityBar(){ const el=$("#explore-city-bar"); if(!el) return; const cur=curCity(); const flown=citiesFlown(); const extra=(!FEATURED.includes(cur.id))?`<button class="city-chip on">${cur.flag} ${esc(cur.name)}</button>`:""; el.innerHTML = `<button class="city-chip add" onclick="nearMe()">📍 Near me</button>` + extra + FEATURED.map(id=>{ const i=CITY_INDEX[id], c=CITIES[i]; const stamped=flown.has(id); return `<button class="city-chip${i===curIdx?' on':''}" onclick="setCity(${i})">${c.flag} ${esc(c.name)}${stamped?' <span class="cc-stamp">🛂</span>':''}</button>`; }).join("") + `<button class="city-chip add" onclick="cityModal(false)">🌍 all 50</button>`; }
@@ -2606,14 +2649,8 @@ renderFeatured();
 if(new Date().getDay()===0 && stats.wrappedSeen!==weekKey() && (stats.orders||0)>0){ setTimeout(showWrapped, 1400); }  // Sunday-night Wrapped prompt
 if(stats.pushOptIn && "Notification" in window && Notification.permission==="granted") scheduleGhostNudge();
 document.addEventListener("pointerdown", e=>{ const sc=document.querySelector(".screen"); if(!sc) return; const r=sc.getBoundingClientRect(); lastTap={x:e.clientX-r.left, y:e.clientY-r.top}; if(asmrOn && !asmrNode) startAsmr(); }, true);
-if(!localStorage.getItem("carted_onboard")){
-  try{ localStorage.setItem("carted_onboard","1"); }catch(e){}
-  setTimeout(()=>{ showModal(`
-    <div class="m-emoji">👻</div>
-    <div class="m-title">welcome to Carted</div>
-    <div class="m-body" style="text-align:left">🍜 browse <b>real restaurants</b>, live from OpenStreetMap<br><br>🛒 fill your cart like you mean it<br><br>🚗 watch a driver who <b>never arrives</b> — nothing is ever charged<br><br>💰 every "order" banks the money you didn't spend. clear missions, build the streak, climb the ranks.</div>
-    <button class="cta" style="position:static" onclick="closeModal();snd('pop')">let's get hungry 🌙</button>`); }, 800);
-}
+trackOpen();
+if(!localStorage.getItem("carted_onboard")){ setTimeout(showOnboard, 500); }
 document.addEventListener("keydown", e=>{ if(e.key==="Enter" && document.activeElement && document.activeElement.id==="composer-input") postFromComposer(); });
 if("serviceWorker" in navigator){ navigator.serviceWorker.register(BASE+"sw.js").catch(()=>{}); }
 </script>
