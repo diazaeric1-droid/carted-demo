@@ -605,6 +605,17 @@
   .passport .pp-saved { margin-left: auto; color: var(--muted); font-size: 12px; }
   .passport .pp-bar { height: 12px; background: var(--screen); border: 2px solid var(--ink); border-radius: 8px; overflow: hidden; }
   .passport .pp-fill { height: 100%; background: var(--accent2); border-right: 2px solid var(--ink); transition: width .4s ease; }
+  /* flight-log passport stamp strip + explore city scroller */
+  .passport .pp-strip { display: flex; gap: 7px; overflow-x: auto; padding: 9px 0 2px; margin-top: 9px; }
+  .passport .pp-strip::-webkit-scrollbar { display: none; }
+  .passport .pp-strip.empty { font-size: 11.5px; color: var(--muted); align-items: center; gap: 6px; }
+  .pp-stamp { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 46px; height: 46px; border: 2px solid var(--ink); border-radius: 50%; background: var(--screen); box-shadow: 2px 2px 0 var(--ink); cursor: pointer; line-height: 1; transition: transform .1s; }
+  .pp-stamp:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
+  .pp-stamp .pps-hat { font-size: 20px; }
+  .pp-stamp .pps-n { font-size: 9px; font-weight: 800; font-family: var(--disp); color: var(--accent); margin-top: 1px; }
+  .pp-stamp.add { border-style: dashed; color: var(--accent); box-shadow: none; font-size: 20px; font-weight: 800; }
+  #explore-city-bar.city-bar { margin: 2px 0 8px; }
+  .city-chip .cc-stamp { font-size: 11px; opacity: .9; }
   .efilters { display: flex; gap: 7px; overflow-x: auto; padding: 2px 0 12px; }
   .efilters::-webkit-scrollbar { display: none; }
   .efilter { white-space: nowrap; background: var(--card); border: 2px solid var(--ink); color: var(--text); border-radius: 16px; padding: 7px 13px; font-size: 13px; font-weight: 700; font-family: var(--disp); cursor: pointer; flex: 0 0 auto; box-shadow: 2px 2px 0 var(--ink); }
@@ -812,7 +823,7 @@
             <div class="sub">your someday list — dream the trip, skip the flight 🌙</div>
             <div class="live-pill"><span class="dot"></span><span class="lp-count"><span id="explore-live">843</span> exploring <span id="explore-cityname">tonight</span></span><span class="lp-sep">·</span><span id="explore-ticker" class="lp-ticker"></span></div>
           </div>
-          <button class="ex-city" onclick="cityModal(false)"><span id="explore-city">🗽 New York</span> &nbsp;›</button>
+          <div class="city-bar" id="explore-city-bar"></div>
           <div class="passport" id="explore-passport"></div>
           <button class="plan-btn" onclick="planMyNight()">📋 plan my someday night here →</button>
           <div class="efilters" id="explore-filters"></div>
@@ -1809,6 +1820,8 @@ function revealTruth(){
   stats.cuisines=stats.cuisines||[]; stats.cities=stats.cities||[];
   (po.items||[]).forEach(it=> uniqPush(stats.cuisines, it.en));
   uniqPush(stats.cities, po.city.id);
+  // FLIGHT-LOG PASSPORT: stamp every city the ghost actually flew to (route stops); po.total is USD
+  if(po.flight){ const stops=(po.route||[]).filter(s=>s && !s.home && s.id); const per=po.total/(stops.length||1); let firstNew=null; stops.forEach(s=>{ if(!citiesFlown().has(s.id)){ if(!firstNew) firstNew=s; addXp(12); } logFlight(s.id, per, havKm(s, HOME)); }); if(firstNew){ const fn=firstNew; setTimeout(()=>toast(`🛂 new stamp! you flew to ${esc(fn.name)} — a trip that never took off`), 1700); } }
   // breadth + spotlight rewards: which restaurants did this order touch?
   const parentKeys=[...new Set((po.items||[]).map(it=>String(it._key).split("::")[0]))];
   const triedNew = parentKeys.some(k=>isNewPlace({_key:k}));
@@ -2239,6 +2252,13 @@ const actByKey = {};
 let activitiesData = {};      // cityId -> [activities]
 let exploreFilter = "all";
 let savedActs = {};           // key -> activity (bucket list)
+/* ===== FLIGHT-LOG PASSPORT: durable per-city travel ledger (stamps earned by flying, not saving) ===== */
+function ensureTravel(){ if(!stats.travel || typeof stats.travel!=="object"){ stats.travel={}; } if(!stats._travelMigrated){ (stats.cities||[]).forEach(id=>{ if(!stats.travel[id]) stats.travel[id]={flights:1,dodgedUsd:0,miles:0,last:null}; }); stats._travelMigrated=1; saveStats(); } return stats.travel; }
+function logFlight(cityId, usd, km){ const t=ensureTravel(); const e=t[cityId]||(t[cityId]={flights:0,dodgedUsd:0,miles:0,last:null}); e.flights++; e.dodgedUsd+=(usd||0); e.miles+=Math.round((km||0)*0.621371); e.last=nightKey(); saveStats(); }
+function citiesFlown(){ ensureTravel(); const s=new Set(Object.keys(stats.travel)); (stats.cities||[]).forEach(id=>s.add(id)); return s; }
+function travelTotals(){ ensureTravel(); let miles=0,usd=0,flights=0; Object.values(stats.travel).forEach(e=>{ miles+=e.miles||0; usd+=e.dodgedUsd||0; flights+=e.flights||0; }); return {miles,usd,flights}; }
+function renderExploreCityBar(){ const el=$("#explore-city-bar"); if(!el) return; const cur=curCity(); const flown=citiesFlown(); const extra=(!FEATURED.includes(cur.id))?`<button class="city-chip on">${cur.flag} ${esc(cur.name)}</button>`:""; el.innerHTML = `<button class="city-chip add" onclick="nearMe()">📍 Near me</button>` + extra + FEATURED.map(id=>{ const i=CITY_INDEX[id], c=CITIES[i]; const stamped=flown.has(id); return `<button class="city-chip${i===curIdx?' on':''}" onclick="setCity(${i})">${c.flag} ${esc(c.name)}${stamped?' <span class="cc-stamp">🛂</span>':''}</button>`; }).join("") + `<button class="city-chip add" onclick="cityModal(false)">🌍 all 50</button>`; }
+function passportStrip(){ const flown=citiesFlown(); ensureTravel(); if(!flown.size){ return `<div class="pp-strip empty">✈️ <span>no stamps yet — the ghost only stamps your passport when he flies. window-order from a city far from home 🌍</span></div>`; } const chips=CITIES.filter(c=>flown.has(c.id)).map(c=>{ const e=stats.travel[c.id]||{flights:1,dodgedUsd:0,miles:0}; const hat=CITY_HAT[c.id]||c.flag; const title=`${c.name} · ${e.flights} flight${e.flights>1?'s':''} · $${Math.round(e.dodgedUsd).toLocaleString()} dodged · ${(e.miles||0).toLocaleString()} mi`; return `<button class="pp-stamp" title="${esc(title)}" onclick="setCity(${CITY_INDEX[c.id]})"><span class="pps-hat">${hat}</span><span class="pps-n">×${e.flights}</span></button>`; }).join(""); return `<div class="pp-strip">${chips}<button class="pp-stamp add" onclick="cityModal(false)" title="fly somewhere new">＋</button></div>`; }
 const WHO_ICON = { family:"👨‍👩‍👧", date:"💕", friends:"🥂", solo:"🚶", everyone:"✨" };
 const EXPLORE_FILTERS = [ {k:"all",label:"all"}, {k:"free",label:"🆓 free"}, {k:"family",label:"👨‍👩‍👧 family"}, {k:"date",label:"💕 date"}, {k:"friends",label:"🥂 friends"}, {k:"pet",label:"🐶 pet-ok"}, {k:"list",label:"⭐ my list"} ];
 const EXPLORE_TICKER = [
@@ -2263,7 +2283,8 @@ function loadActs(city){
 }
 function matchFilter(a){ if(exploreFilter==="all") return true; if(exploreFilter==="free") return a.free; if(exploreFilter==="pet") return a.pet; if(exploreFilter==="list") return !!savedActs[a._key]; return (a.who||[]).includes(exploreFilter); }
 function setExploreFilter(k){ exploreFilter=k; renderExplore(); $("#body").scrollTop=0; }
-function citiesExplored(){ const s=new Set(); Object.values(savedActs).forEach(a=>s.add(a._cityId)); return s; }
+/* legacy name kept for GHOST_FITS/cityVisited; passport now counts FLOWN cities, union w/ saved for back-compat */
+function citiesExplored(){ const s=citiesFlown(); Object.values(savedActs).forEach(a=>s.add(a._cityId)); return s; }
 function actCost(a){ return a.free ? `<span class="ac-free">Free</span>` : money(a.costUsd*(curCity().pf||1), curCity().cur); }
 function actCard(a){
   const saved=!!savedActs[a._key];
@@ -2282,10 +2303,10 @@ function actCard(a){
 }
 function renderExplore(){
   const c=curCity();
-  const cn=$("#explore-city"); if(cn) cn.textContent=`${c.flag} ${c.name}`;
+  renderExploreCityBar();
   const en=$("#explore-cityname"); if(en) en.textContent=`${c.name} tonight`;
-  const ex=citiesExplored(), psp=$("#explore-passport");
-  if(psp) psp.innerHTML=`<div class="pp-top"><span>🛂</span> <b>${ex.size}/50</b> cities stamped<span class="pp-saved">⭐ ${Object.keys(savedActs).length} on your list</span></div><div class="pp-bar"><div class="pp-fill" style="width:${Math.round(ex.size/50*100)}%"></div></div>`;
+  const flown=citiesFlown(), tt=travelTotals(), psp=$("#explore-passport");
+  if(psp) psp.innerHTML=`<div class="pp-top"><span>🛂</span> <b>${flown.size}/50</b> cities flown<span class="pp-saved">✈️ ${tt.miles.toLocaleString()} mi never flown</span></div><div class="pp-bar"><div class="pp-fill" style="width:${Math.round(flown.size/50*100)}%"></div></div>${passportStrip()}`;
   const ff=$("#explore-filters"); if(ff) ff.innerHTML=EXPLORE_FILTERS.map(f=>{ const n=f.k==="list"?Object.keys(savedActs).length:0; return `<button class="efilter${exploreFilter===f.k?' on':''}" onclick="setExploreFilter('${f.k}')">${f.label}${f.k==="list"&&n?` ${n}`:""}</button>`; }).join("");
   const acts=activitiesData[c.id], list=$("#explore-list"); if(!list) return;
   if(!acts){ list.innerHTML=`<div class="loading"><div class="spinner"></div><div style="margin-top:8px">finding things to do in ${esc(c.name)}…</div></div>`; loadActs(c); return; }
@@ -2294,7 +2315,7 @@ function renderExplore(){
   list.innerHTML=filtered.map(actCard).join("");
 }
 function toggleAct(key, ev){ if(ev) ev.stopPropagation(); const a=actByKey[key]; if(!a) return;
-  if(savedActs[key]){ delete savedActs[key]; } else { savedActs[key]=a; const firstInCity=![...citiesExplored()].includes(a._cityId); toast(firstInCity?`🛂 ${esc(a._cityName)} added to your map!`:"added to your list ⭐"); snd("pop"); addXp(4); }
+  if(savedActs[key]){ delete savedActs[key]; } else { savedActs[key]=a; toast("added to your someday list ⭐"); snd("pop"); addXp(4); }
   saveActs(); checkFitUnlocks(); renderExplore(); }
 /* deals — Groupon affiliate handoff (real revenue path; slot your affiliate id into the URL) */
 function openDeal(key){ const a=actByKey[key]; if(!a) return;
