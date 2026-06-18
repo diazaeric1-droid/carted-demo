@@ -99,14 +99,17 @@
   .osm-credit { text-align: center; color: var(--muted); font-size: 11px; padding: 14px 0 4px; opacity: .8; }
 
   .back { background: none; border: none; color: var(--accent); font-size: 15px; font-weight: 800; padding: 6px 0; cursor: pointer; }
-  .hero { height: 200px; border-radius: 18px; margin: 6px 0 16px; position: relative; display: flex; align-items: center; justify-content: center; font-size: 110px; background: #ffe9b3; border: 2.5px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); overflow: hidden; }
-  .hero .city-tag { position: absolute; top: 12px; left: 12px; background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 5px 11px; font-size: 12.5px; font-weight: 800; }
-  .d-name { font-size: 24px; font-weight: 800; }
-  .d-shop { color: var(--muted); margin-top: 3px; font-size: 14px; }
-  .d-stats { display: flex; gap: 16px; margin: 14px 0; font-size: 13px; color: var(--muted); }
+  .hero { height: 244px; border-radius: 20px; margin: 6px 0 12px; position: relative; display: flex; align-items: center; justify-content: center; font-size: 120px; background: #ffe9b3; border: 2.5px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); overflow: hidden; }
+  .hero::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to top, rgba(34,28,51,.8) 0%, rgba(34,28,51,.12) 34%, rgba(34,28,51,0) 56%); pointer-events: none; }
+  .hero .city-tag { position: absolute; top: 12px; left: 12px; z-index: 2; background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 5px 11px; font-size: 12.5px; font-weight: 800; }
+  .hero .d-fav { position: absolute; top: 11px; right: 11px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); color: #c9bfa6; font-size: 20px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0 var(--ink); }
+  .hero .d-fav.on { color: var(--hot); background: #ffeef1; }
+  .hero .hero-name { position: absolute; left: 15px; right: 15px; bottom: 13px; z-index: 2; color: #fff; }
+  .hero .hero-name .hn-title { font-family: var(--disp); font-weight: 700; font-size: 27px; line-height: 1.04; text-shadow: 0 2px 9px rgba(0,0,0,.5); }
+  .hero .hero-name .hn-sub { font-size: 13px; font-weight: 700; margin-top: 3px; opacity: .96; text-transform: capitalize; text-shadow: 0 1px 7px rgba(0,0,0,.55); }
+  .d-stats { display: flex; gap: 16px; margin: 4px 2px 10px; font-size: 13px; color: var(--muted); }
   .d-stats b { color: var(--text); }
-  .savebtn { background: var(--card); border: 2px solid var(--ink); color: var(--text); font-weight: 800; font-size: 13.5px; padding: 10px 16px; border-radius: 12px; cursor: pointer; margin-bottom: 14px; box-shadow: 2px 2px 0 var(--ink); }
-  .savebtn.on { color: var(--hot); background: #ffeef1; }
+  .d-desc { font-size: 13px; color: var(--muted); font-style: italic; line-height: 1.4; margin: 0 2px 10px; }
   .reviews { margin-top: 6px; }
   .review { background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; }
   .review .top { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--muted); margin-bottom: 6px; }
@@ -121,7 +124,8 @@
   .cta.gold:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
 
   .cart-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 2px dashed #d9cbab; }
-  .cart-item .ic { font-size: 30px; width: 44px; text-align: center; }
+  .cart-item .ci-thumb { width: 54px; height: 54px; flex: 0 0 54px; border-radius: 11px; border: 2px solid var(--ink); overflow: hidden; display: flex; align-items: center; justify-content: center; background: #ffe9b3; font-size: 30px; box-shadow: 2px 2px 0 var(--ink); }
+  .cart-item .ci-thumb .ph-img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .cart-item .nm { flex: 1; font-size: 14.5px; font-weight: 600; }
   .cart-item .pr { font-weight: 700; font-size: 14px; }
   .cart-item .rm { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; padding: 4px 8px; }
@@ -380,7 +384,7 @@
   .mrow { display: flex; align-items: center; gap: 11px; background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 8px 10px; margin-bottom: 8px; box-shadow: 2px 2px 0 var(--ink); }
   .mthumb-wrap { width: 48px; height: 48px; flex: 0 0 48px; border-radius: 10px; border: 2px solid var(--ink); overflow: hidden; display: flex; align-items: center; justify-content: center; background: #ffe9b3; font-size: 26px; }
   .mthumb { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .mthumb.emo { background: none; border: none; }
+  .mthumb.emo { background: none; border: none; display: flex; align-items: center; justify-content: center; line-height: 1; }
   .mmid { flex: 1; min-width: 0; }
   .mname { font-size: 13.5px; font-weight: 700; line-height: 1.25; }
   .mprice { font-family: var(--disp); font-weight: 600; font-size: 13.5px; color: var(--accent); white-space: nowrap; }
@@ -483,6 +487,17 @@
   .store-banner .sb-text b { font-family: var(--disp); font-weight: 700; font-size: 16px; color: var(--ink); }
   .store-banner .sb-sub { font-size: 12px; color: #7a6520; font-weight: 700; }
   .store-banner .sb-go { font-size: 26px; font-weight: 800; color: var(--ink); }
+  /* corner-store + random row */
+  .store-row { display: flex; gap: 9px; align-items: stretch; margin-bottom: 12px; }
+  .store-row .store-banner { flex: 1; margin-bottom: 0; }
+  .surprise-big { flex: 0 0 auto; width: 56px; border: 2.5px solid var(--ink); border-radius: 18px; background: var(--accent2); color: var(--ink); font-size: 25px; cursor: pointer; box-shadow: 0 5px 0 var(--ink); display: flex; align-items: center; justify-content: center; transition: transform .08s, box-shadow .08s; }
+  .surprise-big:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+  .store-banner.neon { background: #181228; }
+  .store-banner.neon .sb-ic { filter: drop-shadow(0 0 7px rgba(94,240,208,.9)); }
+  .store-banner.neon .sb-text b { color: #5ef0d0; text-shadow: 0 0 8px rgba(94,240,208,.85); letter-spacing: .3px; animation: neonflick 2.4s ease-in-out infinite; }
+  .store-banner.neon .sb-sub { color: #ff79c6; text-shadow: 0 0 6px rgba(255,121,198,.55); }
+  .store-banner.neon .sb-go { color: #5ef0d0; text-shadow: 0 0 6px rgba(94,240,208,.7); }
+  @keyframes neonflick { 0%,100%{ opacity: 1; } 48%{ opacity: 1; } 50%{ opacity: .82; } 52%{ opacity: 1; } }
 
   /* ----- discovery #1-8: deals, Mort's pick, variety, must-try, crawls, filters ----- */
   .seg button span { opacity: .65; font-size: 11px; }
@@ -638,9 +653,13 @@
               <button id="seg-saved" onclick="setMode('saved')">♥ Saved <span id="saved-count">0</span></button>
               <button id="seg-deals" onclick="setMode('deals')">🎟️ Deals <span id="deals-count">0</span></button>
             </div>
-            <div class="fc-row">
-              <div id="feed-filters" class="feed-filters"></div>
-              <div class="fh-btns"><button class="surprise" onclick="teleport()">🎲</button><button class="surprise" onclick="surpriseMe()">🔀</button></div>
+            <div class="store-row">
+              <button class="store-banner neon" onclick="openKonbini()">
+                <span class="sb-ic">🏪</span>
+                <span class="sb-text"><b>24h corner store</b><span class="sb-sub" id="store-banner-sub">open all night — it's right there</span></span>
+                <span class="sb-go">›</span>
+              </button>
+              <button class="surprise-big" onclick="surpriseMe()" aria-label="Surprise me — random dish">🔀</button>
             </div>
             <div class="section-label feed-craving" id="feed-section-label">🔥 craving right now</div>
           </div>
@@ -651,7 +670,7 @@
           <div class="drawer" id="more">
             <button class="dr-head" onclick="toggleDrawer('more')">
               <span class="dr-lead">✨</span>
-              <span class="dr-teaser">more — missions, crawls &amp; corner store</span>
+              <span class="dr-teaser">more — missions, crawls &amp; extras</span>
               <span class="dr-mult" id="more-badge"></span>
               <span class="dr-caret">▾</span>
             </button>
@@ -664,11 +683,6 @@
               </div>
               <div id="variety"></div>
               <div id="quests"></div>
-              <button class="store-banner" onclick="openKonbini()">
-                <span class="sb-ic">🏪</span>
-                <span class="sb-text"><b>the 24h corner store</b><span class="sb-sub" id="store-banner-sub">grab a late-night snack from the bodega</span></span>
-                <span class="sb-go">›</span>
-              </button>
               <div class="hub" id="hub">
                 <button class="hub-tile" onclick="ratePlate()"><span class="ht-ic">🔥</span>rate the plate</button>
                 <button class="hub-tile" onclick="go('explore')"><span class="ht-ic">🗺️</span>things to do</button>
@@ -682,12 +696,9 @@
         <!-- DETAIL -->
         <section class="view" id="view-detail">
           <button class="back" onclick="backToFeed()">‹ back</button>
-          <div class="hero" id="d-hero">🍕<div class="city-tag" id="d-citytag"></div></div>
-          <div class="d-name" id="d-name"></div>
-          <div class="d-shop" id="d-shop"></div>
-          <div class="d-desc" id="d-desc" style="display:none"></div>
+          <div class="hero" id="d-hero"></div>
           <div class="d-stats" id="d-stats"></div>
-          <button class="savebtn" id="d-fav" onclick="toggleDetailFav()">♡ Save place</button>
+          <div class="d-desc" id="d-desc" style="display:none"></div>
           <div id="d-coupon"></div>
           <div class="section-label">🍴 menu · tap ＋ to (not) order</div>
           <div id="d-menu"></div>
@@ -1512,7 +1523,7 @@ function toggleFav(key, ev){
   if(feedMode==="saved" && $("#view-feed").classList.contains("active")) renderFeed();
 }
 function toggleDetailFav(){ if(!currentDetailKey) return; toggleFav(currentDetailKey, null); updateDetailFav(); }
-function updateDetailFav(){ const on=isFav(currentDetailKey); const b=$("#d-fav"); b.classList.toggle("on",on); b.textContent= on?"♥ Saved":"♡ Save place"; }
+function updateDetailFav(){ const on=isFav(currentDetailKey); const b=$("#d-fav"); if(!b) return; b.classList.toggle("on",on); b.textContent= on?"♥":"♡"; }
 
 /* ---- account + profile (mock auth; real cross-device sync = backend) ---- */
 function loadAccount(){ try{ account=JSON.parse(localStorage.getItem("carted_account")||"null"); }catch(e){} try{ Object.assign(stats, JSON.parse(localStorage.getItem("carted_stats")||"{}")); }catch(e){} }
@@ -1580,9 +1591,10 @@ function openDetail(key){
     curIdx=CITY_INDEX[p._cityId]; cart=[]; updateBadge(); renderCityBar(); renderTally(); loadCity(curCity());
   }
   currentDetailKey=key;
-  $("#d-hero").innerHTML = thumbImg(p, true) + `<div class="city-tag">${p._flag} ${esc(p._cityName)}</div>`;
-  $("#d-name").textContent = p.name;
-  $("#d-shop").innerHTML = `<span style="text-transform:capitalize">${esc(p.en)}</span> · ${esc(niceHood(p))}`;
+  $("#d-hero").innerHTML = thumbImg(p, true)
+    + `<div class="city-tag">${p._flag} ${esc(p._cityName)}</div>`
+    + `<button class="d-fav${isFav(p._key)?' on':''}" id="d-fav" onclick="toggleDetailFav()" aria-label="Save place">${isFav(p._key)?'♥':'♡'}</button>`
+    + `<div class="hero-name"><div class="hn-title">${esc(p.name)}</div><div class="hn-sub">${esc(p.en)} · ${esc(niceHood(p))}</div></div>`;
   const dd=$("#d-desc"); if(p.desc){ dd.textContent=p.desc; dd.style.display="block"; } else dd.style.display="none";
   $("#d-stats").innerHTML = `<span>★ <b>${p.rate.toFixed(1)}</b> (${p.n.toLocaleString()})</span>${p.lvl?`<span><b>${"$".repeat(p.lvl)}</b></span>`:""}<span><b>${etaStr(p)}</b></span>`;
   const cp=couponFor(p); const dc=$("#d-coupon"); if(dc) dc.innerHTML = cp?`<button class="d-coupon" onclick="claimCoupon('${p._key}')"><span class="dc-tag">🎟️ ${cp.t}</span><span class="dc-d">${esc(cp.d)}<br><span style="color:var(--hot)">🔥 only ${couponQty(p)} left · ends at sunrise</span> · tap to clip</span></button>`:"";
@@ -1612,7 +1624,7 @@ function renderCart(){
   if(!cart.length){ body.innerHTML = `<div class="empty"><div class="big">👻</div>your cart is a ghost town.<br>go fill it up.<br><br><button class="cta secondary" style="position:static" onclick="go('feed')">browse places</button></div>`; return; }
   const sub=cartSubtotal(), fl=flightInfo(c);
   body.innerHTML = `
-    ${cart.map((p,i)=>`<div class="cart-item"><div class="ic">${p.ic}</div><div class="nm">${esc(p.dish)}<div style="font-size:11.5px;color:var(--muted);font-weight:400">${esc(p.name)}</div></div><div class="pr">${money(p.price,c.cur)}</div><button class="rm" onclick="removeFromCart(${i})">✕</button></div>`).join("")}
+    ${cart.map((p,i)=>`<div class="cart-item"><div class="ci-thumb">${(p._menuItem&&p.photo)?`<img class="ph-img" src="${p.photo}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${p.ic}'))">`:p.ic}</div><div class="nm">${esc(p.dish)}<div style="font-size:11.5px;color:var(--muted);font-weight:400">${esc(p.name)}</div></div><div class="pr">${money(p.price,c.cur)}</div><button class="rm" onclick="removeFromCart(${i})">✕</button></div>`).join("")}
     <div class="summary">
       <div class="line"><span>Subtotal</span><span>${money(sub,c.cur)}</span></div>
       <div class="line"><span>Delivery fee</span><span>${money(c.delivery,c.cur)}</span></div>
@@ -2076,9 +2088,12 @@ function buildMenu(place){
   const key=cuisineKeyOf(place), base=(CUISINE[key]&&CUISINE[key].base)||14;
   const realMains=(menusData && menusData.byCuisine[key]) ? menusData.byCuisine[key] : [];
   const courses=[];
-  courses.push({label:"🍽️ signature", items:[ mkItem(place, place.dish, place.ic, "sig", place.price, place.photo) ]});
+  let mainsPool=realMains.slice(), sigItem;
+  if(mainsPool.length){ const m=mainsPool.splice(hash(place.name+"sig")%mainsPool.length,1)[0]; sigItem=mkItem(place, m.name, place.ic, "sig", place.price, m.photo?BASE+m.photo:null); }
+  else { sigItem=mkItem(place, place.dish, place.ic, "sig", place.price, null); }
+  courses.push({label:"🍽️ signature", items:[ sigItem ]});
   const st=pickList(STARTERS,key,3,place.name+"s"); if(st.length) courses.push({label:"🥢 starters", items: st.map(n=>mkItem(place,n,"🥢","starter",menuPrice(base,0.5,place,n+place.name))) });
-  if(realMains.length){ const mm=realMains.slice(0,6); courses.push({label:"🍲 mains", items: mm.map(d=>mkItem(place,d.name, place.ic, "main"+d.id, menuPrice(base,1,place,d.name), d.photo?BASE+d.photo:null)) }); }
+  if(mainsPool.length){ const mm=mainsPool.slice(0,6); courses.push({label:"🍲 mains", items: mm.map(d=>mkItem(place,d.name, place.ic, "main"+d.id, menuPrice(base,1,place,d.name), d.photo?BASE+d.photo:null)) }); }
   const sd=pickList(SIDES,key,2,place.name+"sd"); if(sd.length) courses.push({label:"🍟 sides", items: sd.map(n=>mkItem(place,n,"🍟","side",menuPrice(base,0.38,place,n+place.name))) });
   const dr=pickList(DRINKS,key,3,place.name+"dr"); if(dr.length) courses.push({label:"🥤 drinks", items: dr.map(n=>mkItem(place,n,"🥤","drink",menuPrice(base,0.3,place,n+place.name))) });
   const de=pickList(DESSERTS,key,2,place.name+"de"); if(de.length) courses.push({label:"🍰 dessert", items: de.map(n=>mkItem(place,n,"🍰","dessert",menuPrice(base,0.5,place,n+place.name))) });
