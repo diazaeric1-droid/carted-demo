@@ -73,20 +73,22 @@
 
   .section-label { font-size: 13px; color: var(--muted); font-weight: 700; margin: 4px 2px 10px; text-transform: uppercase; letter-spacing: .6px; }
 
-  .card { position: relative; display: flex; gap: 14px; padding: 12px; margin-bottom: 13px; background: var(--card); border: 2.5px solid var(--ink); border-radius: 18px; cursor: pointer; transition: transform .12s ease, background .15s, box-shadow .12s; box-shadow: 4px 4px 0 var(--ink); }
-  .card:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); background: var(--card-hi); }
-  .thumb { width: 86px; height: 86px; flex: 0 0 86px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 44px; background: #ffe9b3; border: 2px solid var(--ink); overflow: hidden; }
+  .card { position: relative; display: flex; gap: 13px; padding: 11px; margin-bottom: 14px; background: var(--card); border: 2.5px solid var(--ink); border-radius: 20px; cursor: pointer; transition: transform .12s ease, background .15s, box-shadow .12s; box-shadow: 5px 5px 0 var(--ink); }
+  .card:active { transform: translate(2px,3px); box-shadow: 1px 2px 0 var(--ink); background: var(--card-hi); }
+  .thumb { width: 118px; height: 118px; flex: 0 0 118px; align-self: center; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 56px; background: #ffe9b3; border: 2.5px solid var(--ink); overflow: hidden; box-shadow: 2px 2px 0 var(--ink); }
   .thumb .ph-img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .hero .ph-img { width: 100%; height: 100%; object-fit: cover; border-radius: 22px; display: block; }
-  .meta { flex: 1; min-width: 0; padding-right: 34px; }
-  .meta .name { font-size: 16px; font-weight: 700; }
-  .meta .name .en { color: var(--muted); font-weight: 500; font-size: 12px; text-transform: capitalize; }
-  .meta .shop { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
-  .meta .row { display: flex; align-items: center; gap: 10px; margin-top: 8px; font-size: 12.5px; color: var(--muted); }
+  .meta { flex: 1; min-width: 0; padding-right: 48px; display: flex; flex-direction: column; }
+  .meta .name { font-size: 19.5px; font-weight: 700; font-family: var(--disp); line-height: 1.08; color: var(--ink); }
+  .meta .name .en { color: var(--muted); font-weight: 500; font-size: 12px; text-transform: capitalize; font-family: 'Nunito', sans-serif; }
+  .meta .shop { font-size: 12.5px; color: var(--muted); margin-top: 3px; font-weight: 600; }
+  .meta .cprow { margin-top: 7px; overflow: hidden; }
+  .meta .cpchip { display: inline-flex; align-items: center; gap: 4px; background: var(--hot); color: #fff; font-family: var(--disp); font-weight: 700; font-size: 11.5px; padding: 3px 9px; border: 2px solid var(--ink); border-radius: 10px; box-shadow: 1.5px 1.5px 0 var(--ink); white-space: nowrap; }
+  .meta .row { display: flex; align-items: center; gap: 7px; margin-top: 7px; font-size: 12px; color: var(--muted); font-weight: 600; white-space: nowrap; }
   .meta .row .rate { color: #d98324; font-weight: 800; }
-  .meta .price { margin-top: 8px; font-size: 15px; font-weight: 600; font-family: var(--disp); color: var(--accent); }
-  .qadd { position: absolute; bottom: 10px; right: 10px; width: 38px; height: 38px; border-radius: 13px; border: 2px solid var(--ink); background: var(--go); color: #fff; font-size: 22px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; line-height: 1; transition: transform .1s, box-shadow .1s; }
-  .qadd:active { transform: translate(2px,2px) scale(.96); box-shadow: 0 0 0 var(--ink); }
+  .meta .price { margin-top: auto; padding-top: 7px; font-size: 16px; font-weight: 700; font-family: var(--disp); color: var(--accent); }
+  .qadd { position: absolute; top: 50%; right: 11px; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 13px; border: 2px solid var(--ink); background: var(--go); color: #fff; font-size: 23px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; line-height: 1; transition: transform .1s, box-shadow .1s; }
+  .qadd:active { transform: translateY(-50%) translate(1px,2px) scale(.96); box-shadow: 0 0 0 var(--ink); }
   .fav { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); color: #c9bfa6; font-size: 17px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform .12s, color .15s; }
   .fav:active { transform: scale(.85); }
   .fav.on { color: var(--hot); }
@@ -167,6 +169,17 @@
   .reveal .punch { font-size: 19px; font-weight: 800; margin: 12px 0 6px; line-height: 1.4; }
   .reveal .saved { font-size: 32px; font-weight: 800; color: var(--go); margin: 6px 0 4px; }
   .reveal .sub { color: var(--muted); font-size: 13.5px; }
+  /* ----- globe: international flight route ----- */
+  .globe-box { height: 234px; margin: 6px 0 14px; position: relative; }
+  .globe-box svg { display: block; width: 100%; height: 100%; overflow: visible; }
+  .globe-box .grat polyline { fill: none; stroke: rgba(255,255,255,.42); stroke-width: 1; }
+  .globe-box .arc-bed { fill: none; stroke: rgba(34,28,51,.32); stroke-width: 2; stroke-dasharray: 1.5 5; stroke-linecap: round; }
+  .globe-box .arc { fill: none; stroke: var(--accent); stroke-width: 3.2; stroke-linecap: round; filter: drop-shadow(0 0 5px rgba(255,90,60,.7)); }
+  .globe-box .gpin-dot { stroke: var(--ink); stroke-width: 2.5; }
+  .globe-box .gpin-o { fill: #ffc23d; } .globe-box .gpin-d { fill: #ff5a3c; }
+  .globe-box .gplane { transition: transform 2.4s linear; }
+  .globe-box .gplane path { fill: #ffc23d; stroke: var(--ink); stroke-width: 1.4; stroke-linejoin: round; }
+  .globe-box .glabel { position: absolute; left: 0; right: 0; bottom: 0; text-align: center; font-family: var(--disp); font-weight: 600; font-size: 12.5px; color: var(--muted); }
   @media (prefers-reduced-motion: reduce) {
     .map.arrive, .route .ants, .pin .halo, .rider .mort, .rider .puff { animation: none !important; }
     .route .done, .rider, .eta-chip { transition: none !important; }
@@ -724,6 +737,7 @@
               <div class="rider" id="rider"><span class="mort">👻</span><span class="puff">💨</span></div>
               <div class="eta-chip" id="eta-chip">14 min</div>
             </div>
+            <div class="globe-box" id="track-globe" style="display:none"></div>
             <div id="track-live">
               <div class="eta"><span id="eta-num">14</span><span class="u"> min</span></div>
               <div class="stage" id="track-stage">confirming your (non-)order…</div>
@@ -1440,10 +1454,11 @@ function cardHTML(p, saved){
   const fav=isFav(p._key), cp=couponFor(p), isNew=isNewPlace(p)&&!saved;
   const where = saved ? `${p._flag} ${esc(p._cityName)}` : esc(p.en);
   return `<div class="card" onclick="openDetail('${p._key}')">
-    <div class="thumb">${thumbImg(p)}${cp?`<span class="coupon-rib">🎟️ ${cp.t} · ${couponQty(p)} left</span>`:""}</div>
+    <div class="thumb">${thumbImg(p)}</div>
     <div class="meta">
-      <div class="name">${esc(p.name)} <span class="en">· ${where}</span>${isNew?'<span class="new-chip">✨ new</span>':''}</div>
-      <div class="shop">${esc(niceHood(p))}</div>
+      <div class="name">${esc(p.name)}${isNew?'<span class="new-chip">✨ new</span>':''}</div>
+      <div class="shop"><span class="en">${where}</span> · ${esc(niceHood(p))}</div>
+      ${cp?`<div class="cprow"><span class="cpchip">🎟️ ${cp.t}</span></div>`:""}
       <div class="row"><span class="rate">★ ${p.rate.toFixed(1)}</span><span>(${p.n.toLocaleString()})</span><span>· ${etaStr(p)}</span></div>
       <div class="price">${"$".repeat(p.lvl||2)}</div>
     </div>
@@ -1649,12 +1664,15 @@ function placeOrder(){
   $("#track-others").textContent = 220+Math.floor(Math.random()*80);
   $("#dchat").innerHTML="";
   const stages = fl ? FLIGHT_STAGES : STAGES;
-  go("track"); stopCourier(); routeProgress(0);
+  const useGlobe=!!fl, globeBox=$("#track-globe");
+  if(useGlobe){ if(mp) mp.style.display="none"; if(globeBox) globeBox.style.display="block"; renderGlobe(c, HOME, stages.length*2.4+2.4); }
+  else { if(globeBox) globeBox.style.display="none"; if(mp) mp.style.display="block"; }
+  go("track"); stopCourier();
+  if(useGlobe) globeProgress(0); else routeProgress(0);
   driverSay(pendingOrder.driver, fl ? `tonight's ghost courier. your order is ${fl.label} away by air. i fly free.` : "tonight's ghost courier. i don't exist, but i'm fast.");
   let i=0;
   const step=()=>{ const s=stages[i];
-    routeProgress(s.p);
-    if(mort) mort.textContent = fl ? s.r : "👻";
+    if(useGlobe){ globeProgress(s.p); } else { routeProgress(s.p); if(mort) mort.textContent="👻"; }
     $("#track-stage").textContent=s.txt.replace("{n}", pendingOrder.driver);
     $("#eta-num").textContent = fl ? fmtMins(fl.mins*(1-s.p/100)) : ([14,11,6,2,1][i]||1);
     $(".eta .u").textContent = fl ? " ✈️" : " min";
@@ -1701,7 +1719,8 @@ function revealTruth(){
   if(po.city.id===curCity().id) renderTally();
   if(po.city.id===featuredCity().id){ addXp(15); setTimeout(()=>toast("🌟 tonight's featured city — +15 XP bonus"), 1900); }
   lastShare = { usd: po.total/po.city.pf, label: money(po.total, po.city.cur), streak: stats.streak, tier: newTier, city: po.city.name };
-  const rd=$("#rider"); const mort=rd.querySelector(".mort"); if(mort) mort.textContent= po.flight?"✈️💨":"👻💨"; rd.style.left="120%"; rd.style.top="-12%"; rd.style.opacity="0"; routeProgress(100); const mp=$("#track-map"); if(mp) mp.classList.add("arrive"); $("#track-live").style.display="none";
+  if(po.flight){ globeProgress(100); $("#track-live").style.display="none"; }
+  else { const rd=$("#rider"); const mort=rd.querySelector(".mort"); if(mort) mort.textContent="👻💨"; rd.style.left="120%"; rd.style.top="-12%"; rd.style.opacity="0"; routeProgress(100); const mp=$("#track-map"); if(mp) mp.classList.add("arrive"); $("#track-live").style.display="none"; }
   snd("whoosh");
   const newDriver = po.gachaDriver ? collectDriver(po.gachaDriver) : false;
   if(Math.random()<0.22){ const gift=pick(HONORIFICS); addXp(5); setTimeout(()=>toast(gift), 1500); }
@@ -1737,7 +1756,7 @@ function revealTruth(){
   cart=[]; updateBadge();
 }
 function resetCartAndBrowse(){ go("feed"); toast("ok. let's get hungry again 🌙"); }
-function stopCourier(){ courierTimers.forEach(clearTimeout); courierTimers=[]; }
+function stopCourier(){ courierTimers.forEach(clearTimeout); courierTimers=[]; if(typeof cancelGlobePlane==='function') cancelGlobePlane(); }
 /* drive the SVG route: fill the curve to p% and ride Mort + ETA chip along it */
 function routeProgress(p){
   const path=$("#route-path"), done=$("#road-done"); if(!path||!done) return;
@@ -1751,6 +1770,49 @@ function routeProgress(p){
   const rd=$("#rider"), ec=$("#eta-chip");
   if(rd){ rd.style.left=xp; rd.style.top=yp; }
   if(ec){ ec.style.left=xp; ec.style.top=yp; }
+}
+/* ---- globe: orthographic Earth for international (flight) orders ---- */
+const D2R=Math.PI/180;
+function gcMid(a,b){ const f1=a.lat*D2R,l1=a.lng*D2R,f2=b.lat*D2R,l2=b.lng*D2R; const Bx=Math.cos(f2)*Math.cos(l2-l1), By=Math.cos(f2)*Math.sin(l2-l1); const f3=Math.atan2(Math.sin(f1)+Math.sin(f2), Math.sqrt((Math.cos(f1)+Bx)**2+By**2)); const l3=l1+Math.atan2(By, Math.cos(f1)+Bx); return {lat:f3/D2R, lng:l3/D2R}; }
+function gcInterp(a,b,t){ const f1=a.lat*D2R,l1=a.lng*D2R,f2=b.lat*D2R,l2=b.lng*D2R; const d=2*Math.asin(Math.min(1,Math.sqrt(Math.sin((f2-f1)/2)**2+Math.cos(f1)*Math.cos(f2)*Math.sin((l2-l1)/2)**2))); if(d<1e-6) return {lat:a.lat,lng:a.lng}; const A=Math.sin((1-t)*d)/Math.sin(d), B=Math.sin(t*d)/Math.sin(d); const x=A*Math.cos(f1)*Math.cos(l1)+B*Math.cos(f2)*Math.cos(l2); const y=A*Math.cos(f1)*Math.sin(l1)+B*Math.cos(f2)*Math.sin(l2); const z=A*Math.sin(f1)+B*Math.sin(f2); return {lat:Math.atan2(z,Math.sqrt(x*x+y*y))/D2R, lng:Math.atan2(y,x)/D2R}; }
+function renderGlobe(city, home, durSec){
+  const el=$("#track-globe"); if(!el || city.lat==null || home.lat==null) return;
+  const W=300,H=234, cx=150, cy=116, R=92;
+  const o={lat:city.lat,lng:city.lng}, d={lat:home.lat,lng:home.lng};
+  const mid=gcMid(o,d), lat0=mid.lat*D2R, lng0=mid.lng*D2R;
+  const proj=(la,ln)=>{ const f=la*D2R, l=ln*D2R, dl=l-lng0; const cosc=Math.sin(lat0)*Math.sin(f)+Math.cos(lat0)*Math.cos(f)*Math.cos(dl); return { x:cx+R*Math.cos(f)*Math.sin(dl), y:cy-R*(Math.cos(lat0)*Math.sin(f)-Math.sin(lat0)*Math.cos(f)*Math.cos(dl)), front:cosc>=0 }; };
+  let grat=""; const seg=(pts)=>{ if(pts.length>1) grat+=`<polyline points="${pts.join(' ')}"/>`; };
+  for(let ln=-180; ln<180; ln+=30){ let pts=[]; for(let la=-90;la<=90;la+=5){ const p=proj(la,ln); if(p.front) pts.push(p.x.toFixed(1)+','+p.y.toFixed(1)); else { seg(pts); pts=[]; } } seg(pts); }
+  for(let la=-60; la<=60; la+=30){ let pts=[]; for(let ln=-180;ln<=180;ln+=5){ const p=proj(la,ln); if(p.front) pts.push(p.x.toFixed(1)+','+p.y.toFixed(1)); else { seg(pts); pts=[]; } } seg(pts); }
+  const N=72; let ap=[]; for(let i=0;i<=N;i++){ const t=i/N, g=gcInterp(o,d,t), p=proj(g.lat,g.lng), lift=1+0.18*Math.sin(Math.PI*t); ap.push([cx+(p.x-cx)*lift, cy+(p.y-cy)*lift]); }
+  const arcD="M"+ap.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' L');
+  const op=proj(o.lat,o.lng), dp=proj(d.lat,d.lng), oFlag=city.flag||'📍';
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+    <defs>
+      <radialGradient id="g-ocean" cx="36%" cy="30%" r="80%"><stop offset="0%" stop-color="#cdebff"/><stop offset="45%" stop-color="#8ecdf2"/><stop offset="100%" stop-color="#3d86cf"/></radialGradient>
+      <radialGradient id="g-shine" cx="33%" cy="27%" r="42%"><stop offset="0%" stop-color="rgba(255,255,255,.65)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient>
+      <clipPath id="g-clip"><circle cx="${cx}" cy="${cy}" r="${R}"/></clipPath>
+    </defs>
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#g-ocean)" stroke="var(--ink)" stroke-width="3.5"/>
+    <g clip-path="url(#g-clip)" class="grat">${grat}</g>
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#g-shine)" pointer-events="none"/>
+    <path class="arc-bed" d="${arcD}"/>
+    <path class="arc" id="globe-arc-path" d="${arcD}"/>
+    <g><circle class="gpin-dot gpin-o" cx="${op.x.toFixed(1)}" cy="${op.y.toFixed(1)}" r="4.5"/><text x="${op.x.toFixed(1)}" y="${(op.y-9).toFixed(1)}" text-anchor="middle" font-size="15">${oFlag}</text></g>
+    <g><circle class="gpin-dot gpin-d" cx="${dp.x.toFixed(1)}" cy="${dp.y.toFixed(1)}" r="4.5"/><text x="${dp.x.toFixed(1)}" y="${(dp.y-9).toFixed(1)}" text-anchor="middle" font-size="15">📍</text></g>
+    <g class="gplane" id="globe-plane" style="transform:translate(${op.x.toFixed(1)}px,${op.y.toFixed(1)}px)"><g id="globe-plane-rot"><path d="M12,0 L-8,-6.5 L-3.5,0 L-8,6.5 Z"/></g></g>
+  </svg>
+  <div class="glabel">${oFlag} ${esc(city.name)} &nbsp;✈&nbsp; 📍 ${esc(home.label||'you')}</div>`;
+}
+function globeProgress(p){
+  const path=document.getElementById('globe-arc-path'), pos=document.getElementById('globe-plane'), rot=document.getElementById('globe-plane-rot');
+  if(!path||!pos) return;
+  let L=0; try{ L=path.getTotalLength(); }catch(e){ return; }
+  if(!L) return;
+  const f=Math.max(0,Math.min(1,p/100));
+  let pt,pt2; try{ pt=path.getPointAtLength(L*f); pt2=path.getPointAtLength(Math.min(L,L*f+1)); }catch(e){ return; }
+  pos.style.transform=`translate(${pt.x.toFixed(1)}px,${pt.y.toFixed(1)}px)`;
+  if(rot){ const ang=Math.atan2(pt2.y-pt.y,pt2.x-pt.x)*180/Math.PI; rot.setAttribute('transform',`rotate(${ang.toFixed(1)})`); }
 }
 
 /* ---- affiliate handoff: the ONLY money path, opt-in, never the default ---- */
