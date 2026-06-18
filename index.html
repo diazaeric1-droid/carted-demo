@@ -1048,6 +1048,28 @@ const round2 = (n) => Math.round(n*100)/100;
 function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 function hash(s){ let h=0; for(let i=0;i<s.length;i++){ h=(h*31 + s.charCodeAt(i))>>>0; } return h; }
 function money(n, cur){ cur=cur||curCity().cur; return cur.dec===0 ? cur.sym+Math.round(n).toLocaleString("en-US") : cur.sym+(round2(n)).toFixed(2); }
+/* ---- USD cart helpers: each item converts via its own city's price-factor (frozen at add-time) ---- */
+const USD = { sym:"$", dec:2 };
+function cityPfOf(item){ if(item && item._pf!=null) return item._pf || 1; const i=item?CITY_INDEX[item._cityId]:null; return (i!=null && CITIES[i] && CITIES[i].pf) || 1; }
+function cityTaxOf(item){ const i=item?CITY_INDEX[item._cityId]:null; if(i!=null && CITIES[i] && CITIES[i].tax!=null) return CITIES[i].tax; return (item && item._tax!=null) ? item._tax : curCity().tax; }
+function usdOf(item){ return (item && item.price!=null ? item.price : 0) / cityPfOf(item); }
+/* ---- quirky judgy fees: deterministic 1-2 per cart/night, each a small USD amount ---- */
+const QUIRK_FEES = [
+  { id:"odd",   label:"🤨 odd choices but okay",     usd:1.50 },
+  { id:"saw",   label:"👀 we saw that, fee",          usd:1.25 },
+  { id:"2am",   label:"🌙 2am decision tax",          usd:1.99 },
+  { id:"ghost", label:"👻 ghost surge",               usd:1.50 },
+  { id:"main",  label:"✨ main-character tax",         usd:0.99 },
+  { id:"doing", label:"💀 you're really doing this",   usd:2.25 },
+  { id:"notes", label:"🤷 no notes (a few notes)",     usd:0.75 },
+  { id:"moon",  label:"🚀 moon delivery",              usd:3.00 },
+  { id:"rat",   label:"🐀 rat-courier toll",           usd:0.75 },
+  { id:"vibes", label:"🧾 vibes-based pricing",         usd:1.10 },
+  { id:"snack", label:"🫥 phantom snacking fee",        usd:1.40 },
+];
+function cartQuirkSig(){ const first=cart[0]||{}, last=cart[cart.length-1]||{}; return nightKey()+"|"+cart.length+"|"+(first.dish||"")+"|"+(last.dish||""); }
+function cartQuirkFees(){ if(!cart.length) return []; let h=hash(cartQuirkSig()); const n=1+(h%2); const pool=QUIRK_FEES.slice(), out=[]; for(let k=0;k<n && pool.length;k++){ h=(h*1103515245+12345)>>>0; out.push(pool.splice(h%pool.length,1)[0]); } return out; }
+function cartQuirkTotal(){ return cartQuirkFees().reduce((s,f)=>s+f.usd,0); }
 function etaFor(p){ const m = 15 + (p.name.length % 4)*5; return `${m}–${m+10}`; }
 
 /* ---- home base + flight-time delivery: ordering from another city shows the real
@@ -1421,7 +1443,7 @@ function modalPick(id, homeMode){
 function setCity(i){
   const onExplore=$("#view-explore").classList.contains("active");
   if(i===curIdx && curCity()._places){ if(onExplore) renderExplore(); return; }
-  curIdx=i; cart=[]; updateBadge(); feedMode="all"; setSegUI();
+  curIdx=i; updateBadge(); feedMode="all"; setSegUI();
   renderCityBar(); renderTally(); renderFeed();
   loadCity(curCity()); questEvent("city");
   if(onExplore){ renderExplore(); loadActs(curCity()); }
@@ -1445,7 +1467,7 @@ function addCity(){
         delivery: m.dec===0?Math.round(5*m.pf):round2(5*m.pf), late: m.dec===0?Math.round(2.5*m.pf):round2(2.5*m.pf),
         lat:parseFloat(g.lat), lng:parseFloat(g.lon), radius:2600 };
       CITIES.push(city); CITY_INDEX[city.id]=CITIES.length-1; statsByCity[city.id]={saved:0,orders:0};
-      curIdx=CITIES.length-1; cart=[]; updateBadge(); feedMode="all"; setSegUI();
+      curIdx=CITIES.length-1; updateBadge(); feedMode="all"; setSegUI();
       renderCityBar(); renderTally(); renderFeed(); loadCity(city); questEvent("city");
     }).catch(()=> toast("geocoder unavailable, try again"));
 }
@@ -1475,7 +1497,7 @@ function upsertNearCity(lat,lng,m,place){
   if(CITY_INDEX["near"]!=null){ CITIES[CITY_INDEX["near"]]=city; }
   else { CITIES.push(city); CITY_INDEX["near"]=CITIES.length-1; }
   statsByCity["near"]=statsByCity["near"]||{saved:0,orders:0};
-  curIdx=CITY_INDEX["near"]; cart=[]; updateBadge(); feedMode="all"; setSegUI();
+  curIdx=CITY_INDEX["near"]; updateBadge(); feedMode="all"; setSegUI();
   renderCityBar(); renderTally(); renderFeed(); loadCity(city, true); questEvent("city");
 }
 
@@ -1609,7 +1631,7 @@ function openDetail(key){
   const p = placeByKey[key] || savedPlaces[key]; if(!p) return;
   if($("#view-feed").classList.contains("active")) feedScroll = $("#body").scrollTop;  // remember scroll for the back button
   if(p._cityId!==curCity().id && CITY_INDEX[p._cityId]!=null){
-    curIdx=CITY_INDEX[p._cityId]; cart=[]; updateBadge(); renderCityBar(); renderTally(); loadCity(curCity());
+    curIdx=CITY_INDEX[p._cityId]; updateBadge(); renderCityBar(); renderTally(); loadCity(curCity());
   }
   currentDetailKey=key;
   $("#d-hero").innerHTML = thumbImg(p, true)
@@ -1631,32 +1653,38 @@ function openDetail(key){
 }
 
 /* ---- cart ---- */
-function addToCart(key, ev){ const p=placeByKey[key]||savedPlaces[key]; if(!p) return; cart.push(p); updateBadge(); if(ev) flyToCart(ev, p.ic); snd("pop"); toast(`added — that's ${money(p.price,p._cur)} you didn't spend 😌`); addXp(6); questEvent("add"); }
+function addToCart(key, ev){ const p=placeByKey[key]||savedPlaces[key]; if(!p) return; const c=cityOf(p); const item={...p, _pf:(c&&c.pf)||1, _tax:(c&&c.tax!=null)?c.tax:curCity().tax}; cart.push(item); updateBadge(); if(ev) flyToCart(ev, p.ic); snd("pop"); toast(`added — that's ${money(p.price,p._cur)} you didn't spend 😌`); addXp(6); questEvent("add"); }
 function removeFromCart(i){ cart.splice(i,1); updateBadge(); renderCart(); }
 function updateBadge(){ const b=$("#cart-badge"); if(cart.length){ b.style.display="flex"; b.textContent=cart.length; } else b.style.display="none"; }
-function cartSubtotal(){ return cart.reduce((s,p)=>s+p.price,0); }
+/* ---- all cart math is now in USD; each item converts via its own city's pf ---- */
+function cartSubtotal(){ return cart.reduce((s,p)=>s+usdOf(p),0); }
 function cartService(){ return cartSubtotal()*0.15; }
-function cartTax(){ return cartSubtotal()*curCity().tax; }
-function cartFees(){ const c=curCity(); return c.delivery + cartService() + c.late + cartTax(); }
+function cartTax(){ return cart.reduce((s,p)=>s+usdOf(p)*cityTaxOf(p),0); }
+const CART_DELIVERY_USD = 5.99, CART_LATE_USD = 2.99;
+function cartDelivery(){ return CART_DELIVERY_USD; }
+function cartLate(){ return CART_LATE_USD; }
+function cartFees(){ return cartDelivery() + cartService() + cartLate() + cartTax() + cartQuirkTotal(); }
 function cartAllIn(){ return cartSubtotal() + cartFees(); }
 function renderCart(){
   const body=$("#cart-body"), c=curCity();
-  $("#cart-sub").textContent = cart.length ? `from ${c.name} ${c.flag} · don't check out.` : "fill it up. don't check out.";
+  const cityIds=[...new Set(cart.map(p=>p._cityId))], multi=cityIds.length>1;
+  $("#cart-sub").textContent = cart.length ? (multi ? `🌍 ${cityIds.length} cities in your cart · don't check out.` : `from ${cart[0]._cityName||c.name} · don't check out.`) : "fill it up. don't check out.";
   if(!cart.length){ body.innerHTML = `<div class="empty"><div class="big">👻</div>your cart is a ghost town.<br>go fill it up.<br><br><button class="cta secondary" style="position:static" onclick="go('feed')">browse places</button></div>`; return; }
-  const sub=cartSubtotal(), fl=flightInfo(c);
+  const sub=cartSubtotal(), fl=flightInfo(c), quirks=cartQuirkFees();
   body.innerHTML = `
-    ${cart.map((p,i)=>`<div class="cart-item"><div class="ci-thumb">${(p._menuItem&&p.photo)?`<img class="ph-img" src="${p.photo}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${p.ic}'))">`:p.ic}</div><div class="nm">${esc(p.dish)}<div style="font-size:11.5px;color:var(--muted);font-weight:400">${esc(p.name)}</div></div><div class="pr">${money(p.price,c.cur)}</div><button class="rm" onclick="removeFromCart(${i})">✕</button></div>`).join("")}
+    ${cart.map((p,i)=>`<div class="cart-item"><div class="ci-thumb">${(p._menuItem&&p.photo)?`<img class="ph-img" src="${p.photo}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${p.ic}'))">`:p.ic}</div><div class="nm">${esc(p.dish)}<div style="font-size:11.5px;color:var(--muted);font-weight:400">${p._flag||""} ${esc(p._cityName||p.name)}</div></div><div class="pr">${money(p.price,p._cur)}${cityPfOf(p)!==1?`<div style="font-size:10.5px;color:var(--muted);font-weight:600">≈ ${money(usdOf(p),USD)}</div>`:""}</div><button class="rm" onclick="removeFromCart(${i})">✕</button></div>`).join("")}
     <div class="summary">
-      <div class="line"><span>Subtotal</span><span>${money(sub,c.cur)}</span></div>
-      <div class="line"><span>Delivery fee</span><span>${money(c.delivery,c.cur)}</span></div>
-      <div class="line"><span>Service fee</span><span>${money(cartService(),c.cur)}</span></div>
-      <div class="line"><span>Late-night fee</span><span>${money(c.late,c.cur)}</span></div>
+      <div class="line"><span>Subtotal${multi?" (USD)":""}</span><span>${money(sub,USD)}</span></div>
+      <div class="line"><span>Delivery fee</span><span>${money(cartDelivery(),USD)}</span></div>
+      <div class="line"><span>Service fee</span><span>${money(cartService(),USD)}</span></div>
+      <div class="line"><span>Late-night fee</span><span>${money(cartLate(),USD)}</span></div>
+      ${quirks.map(q=>`<div class="line"><span>${q.label}</span><span>${money(q.usd,USD)}</span></div>`).join("")}
       ${fl?`<div class="line"><span>✈️ ghost air freight (${esc(c.name)} → ${esc(HOME.label)})</span><span style="color:var(--go);font-weight:800">free</span></div>`:""}
-      <div class="line"><span>Estimated tax</span><span>${money(cartTax(),c.cur)}</span></div>
-      <div class="line total"><span>Total</span><span>${money(cartAllIn(),c.cur)}</span></div>
+      <div class="line"><span>Estimated tax</span><span>${money(cartTax(),USD)}</span></div>
+      <div class="line total"><span>Total</span><span>${money(cartAllIn(),USD)}</span></div>
     </div>
-    <div class="boss"><span class="bossic">👹</span><span>the FEE BOSS wants <b style="color:var(--hot)">${money(cartFees(),c.cur)}</b> in junk fees.<br>place the order. dodge him.</span></div>
-    <div class="deliver-to">${fl?`✈️ flying <b>${esc(c.name)} → ${esc(HOME.label)}</b> · real flight time ${fl.label}`:`🛵 delivering nearby in ${esc(HOME.label)}`} · <span class="dt-change" onclick="cityModal(true)">change</span></div>
+    <div class="boss"><span class="bossic">👹</span><span>the FEE BOSS wants <b style="color:var(--hot)">${money(cartFees(),USD)}</b> in junk fees${quirks.length?` (incl. ${quirks.map(q=>q.label).join(" + ")})`:""}.<br>place the order. dodge him.</span></div>
+    <div class="deliver-to">${multi?`✈️ a ghost plane will hit all ${cityIds.length} cities, then you`:(fl?`✈️ flying <b>${esc(c.name)} → ${esc(HOME.label)}</b> · real flight time ${fl.label}`:`🛵 delivering nearby in ${esc(HOME.label)}`)} · <span class="dt-change" onclick="cityModal(true)">change</span></div>
     <button class="cta" onclick="placeOrder()">place order ${fl?"✈️":"🚗"}</button>
     <button class="cta secondary" onclick="go('feed')">keep browsing</button>
     <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:12px">the button looks real. nothing gets charged.</div>`;
@@ -1686,9 +1714,35 @@ const FLIGHT_STAGES = [
 ];
 function fmtMins(mins){ const h=Math.floor(mins/60), m=Math.round(mins%60); return h?`${h}h ${String(m).padStart(2,"0")}m`:`${m}m`; }
 function driverSay(name, msg){ const dc=$("#dchat"); if(!dc) return; const d=document.createElement("div"); d.className="dmsg"; d.innerHTML=`<b>${esc(name)} 👻</b> ${esc(msg)}`; dc.appendChild(d); while(dc.children.length>3) dc.removeChild(dc.firstChild); }
+/* ---- multi-leg ghost-route: distinct cart cities -> stops -> HOME, with summed leg ETA ---- */
+const STOP_OVERHEAD_MIN = 25, CRUISE_DIV = 14.2;
+let GLOBE_LEGBREAKS = [];
+function buildRoute(items, home){
+  const seen=[], stops=[];
+  (items||[]).forEach(it=>{ const id=it._cityId; if(!id || id==="konbini") return; if(seen.includes(id)) return; const ci=CITIES[CITY_INDEX[id]]; if(!ci || ci.lat==null) return; seen.push(id); stops.push({ id:ci.id, name:ci.name, flag:ci.flag||'📍', lat:ci.lat, lng:ci.lng }); });
+  if(!stops.length){ const c=curCity(); stops.push({ id:c.id, name:c.name, flag:c.flag||'📍', lat:c.lat, lng:c.lng }); }
+  stops.push({ id:"__home", name:home.label||"you", flag:"📍", lat:home.lat, lng:home.lng, home:true });
+  return stops;
+}
+function legMinutes(a,b){ return havKm(a,b)/CRUISE_DIV; }
+function routeMinutes(route){ let m=50; for(let i=0;i<route.length-1;i++){ m += legMinutes(route[i], route[i+1]); if(i>0) m += STOP_OVERHEAD_MIN; } return Math.round(m); }
+function buildFlightStages(route){
+  const legs=route.length-1;
+  if(legs<=1) return FLIGHT_STAGES;
+  const stages=[ { p:5, txt:"confirming your (non-)order…", r:"🛵", say:"got the manifest. heading to the first gate." } ];
+  for(let k=0;k<legs;k++){ const dest=route[k+1]; const pAtStop=Math.max(6, Math.min(96, GLOBE_LEGBREAKS[k]!=null ? GLOBE_LEGBREAKS[k] : Math.round((k+1)/legs*100)));
+    if(dest.home){ stages.push({ p:Math.min(96,pAtStop-3), txt:"🚗 final mile to your door…", r:"🚗", say:"i can see your street. i cannot be seen." }); }
+    else { stages.push({ p:pAtStop, txt:`🛬 picked up in ${dest.name} ${dest.flag}`, r:"✈️", say:`order ${k+1} secured in ${dest.name}. wheels up to the next ghost kitchen.` }); } }
+  return stages;
+}
 function placeOrder(){
-  const c=curCity(), fl=flightInfo(c), gd=rollDriver();
-  pendingOrder = { items: cart.slice(), total: cartAllIn(), city: c, flight: fl, driver: gd.n, gachaDriver: gd };
+  const c=curCity(), gd=rollDriver();
+  const cities=[...new Set(cart.map(p=>p._cityId))];
+  const route=buildRoute(cart, HOME);
+  const isFlight = route.slice(0,-1).some(s=>havKm(s, HOME) >= 150);   // flight if any stop is >150km from home (cart-derived)
+  const multi = route.length>2;
+  const flight = isFlight ? { mins: routeMinutes(route), label: fmtFlight(routeMinutes(route)), multi: multi } : null;
+  pendingOrder = { items: cart.slice(), total: cartAllIn(), city: c, cities: cities, flight: flight, route: route, driver: gd.n, gachaDriver: gd };
   snd("pop"); burst();
   $("#track-reveal").style.display="none"; $("#track-live").style.display="block";
   const rd=$("#rider"); rd.style.opacity="1";
@@ -1696,20 +1750,20 @@ function placeOrder(){
   const mp=$("#track-map"); if(mp) mp.classList.remove("arrive");
   $("#track-others").textContent = 220+Math.floor(Math.random()*80);
   $("#dchat").innerHTML="";
-  const stages = fl ? FLIGHT_STAGES : STAGES;
-  const useGlobe=!!fl, globeBox=$("#track-globe");
-  if(useGlobe){ if(mp) mp.style.display="none"; if(globeBox) globeBox.style.display="block"; renderGlobe(c, HOME, stages.length*2.4+2.4); }
+  const useGlobe=isFlight, globeBox=$("#track-globe");
+  if(useGlobe){ if(mp) mp.style.display="none"; if(globeBox) globeBox.style.display="block"; renderGlobe(route, HOME, 0); }
   else { if(globeBox) globeBox.style.display="none"; if(mp) mp.style.display="block"; }
   go("track"); stopCourier();
   if(useGlobe) globeProgress(0); else routeProgress(0);
-  driverSay(pendingOrder.driver, fl ? `tonight's ghost courier. your order is ${fl.label} away by air. i fly free.` : "tonight's ghost courier. i don't exist, but i'm fast.");
+  const stages = isFlight ? buildFlightStages(route) : STAGES;
+  driverSay(pendingOrder.driver, isFlight ? `tonight's ghost courier. your order is ${flight.label} away by air. i fly free.` : "tonight's ghost courier. i don't exist, but i'm fast.");
   let i=0;
   const step=()=>{ const s=stages[i];
     if(useGlobe){ globeProgress(s.p); } else { routeProgress(s.p); if(mort) mort.textContent="👻"; }
     $("#track-stage").textContent=s.txt.replace("{n}", pendingOrder.driver);
-    $("#eta-num").textContent = fl ? fmtMins(fl.mins*(1-s.p/100)) : ([14,11,6,2,1][i]||1);
-    $(".eta .u").textContent = fl ? " ✈️" : " min";
-    const etaTxt = fl ? (fmtMins(fl.mins*(1-s.p/100))+" ✈️") : ((([14,11,6,2,1][i]||1))+" min");
+    $("#eta-num").textContent = flight ? fmtMins(flight.mins*(1-s.p/100)) : ([14,11,6,2,1][i]||1);
+    $(".eta .u").textContent = flight ? " ✈️" : " min";
+    const etaTxt = flight ? (fmtMins(flight.mins*(1-s.p/100))+" ✈️") : ((([14,11,6,2,1][i]||1))+" min");
     { const ec=$("#eta-chip"); if(ec) ec.textContent = (s.p>=92 ? "almost!" : etaTxt); }
     if(s.say) driverSay(pendingOrder.driver, s.say);
     i++;
@@ -1718,7 +1772,7 @@ function placeOrder(){
 }
 function revealTruth(){
   const po=pendingOrder; if(!po) return;
-  lastOrderItems=po.items; const st=statsByCity[po.city.id]; st.orders++; st.saved+=po.total;
+  lastOrderItems=po.items; const st=statsByCity[po.city.id]; st.orders++; st.saved+=po.total*po.city.pf;  // st.saved is per-city LOCAL; po.total is USD
   const beforeTier=tierFor(stats.savedUsd).t.name;
   /* streak = real calendar nights (4am cutoff), with a freeze to forgive one missed night */
   const tonight=nightKey(); let streakGrew=false, usedFreeze=false;
@@ -1729,8 +1783,8 @@ function revealTruth(){
     else { stats.streak=1; }
     streakGrew=true; stats.lastNight=tonight;
   }
-  stats.orders++; stats.savedUsd += po.total/po.city.pf;
-  bumpTonight(po.total/po.city.pf); buddyPing(); bumpWeek(po.total/po.city.pf, po.city.id, (po.items[0]||{}).ic);
+  stats.orders++; stats.savedUsd += po.total;          // po.total is already USD
+  bumpTonight(po.total); buddyPing(); bumpWeek(po.total, po.city.id, (po.items[0]||{}).ic);
   bumpVariety([...new Set((po.items||[]).map(it=>it.en).filter(Boolean))]);
   combo++; if(combo>(stats.maxCombo||0)) stats.maxCombo=combo;
   stats.maxStreak=maxStreakEver();
@@ -1751,14 +1805,14 @@ function revealTruth(){
   else if(streakGrew && [3,7,14,30,50,100,200].includes(stats.streak)){ milestone=`🔥 ${stats.streak}-night streak milestone!`; if(stats.streak>=7){ stats.freezes=Math.min(3,(stats.freezes||0)+1); saveStats(); } }
   if(po.city.id===curCity().id) renderTally();
   if(po.city.id===featuredCity().id){ addXp(15); setTimeout(()=>toast("🌟 tonight's featured city — +15 XP bonus"), 1900); }
-  lastShare = { usd: po.total/po.city.pf, label: money(po.total, po.city.cur), streak: stats.streak, tier: newTier, city: po.city.name };
+  lastShare = { usd: po.total, label: money(po.total, USD), streak: stats.streak, tier: newTier, city: (po.cities&&po.cities.length>1)?`${po.cities.length} cities`:po.city.name };
   if(po.flight){ globeProgress(100); $("#track-live").style.display="none"; }
   else { const rd=$("#rider"); const mort=rd.querySelector(".mort"); if(mort) mort.textContent="👻💨"; rd.style.left="120%"; rd.style.top="-12%"; rd.style.opacity="0"; routeProgress(100); const mp=$("#track-map"); if(mp) mp.classList.add("arrive"); $("#track-live").style.display="none"; }
   snd("whoosh");
   const newDriver = po.gachaDriver ? collectDriver(po.gachaDriver) : false;
   if(Math.random()<0.22){ const gift=pick(HONORIFICS); addXp(5); setTimeout(()=>toast(gift), 1500); }
   const driver=po.driver||"Marcus", pl=pick(po.flight?FLIGHT_PUNCH:PUNCH);
-  const quipCtx={ usd: po.total/po.city.pf, flight: !!po.flight, flightH: po.flight?Math.floor(po.flight.mins/60):0, streak: stats.streak, milestone: !!milestone && streakGrew, combo: combo, featured: po.city.id===featuredCity().id };
+  const quipCtx={ usd: po.total, flight: !!po.flight, flightH: po.flight?Math.floor(po.flight.mins/60):0, streak: stats.streak, milestone: !!milestone && streakGrew, combo: combo, featured: po.city.id===featuredCity().id };
   const ghostHype = combo>=3 || quipCtx.usd>=60 || quipCtx.milestone;
   const r=$("#track-reveal"); r.style.display="block"; r.className="reveal";
   r.innerHTML = `
@@ -1766,8 +1820,8 @@ function revealTruth(){
     <div class="ghost-quip">“${ghostQuip(quipCtx)}”</div>
     <div class="punch">${pl.p.replace("{n}",driver)}</div>
     <div class="sub">${pl.s.replace("{n}",driver)}</div>
-    <div class="saved" id="reveal-saved">${money(0,po.city.cur)} saved</div>
-    <div class="sub">${po.flight?`that's dinner in ${esc(po.city.name)} + a ${po.flight.label} flight that never took off.`:`that's what tonight in ${esc(po.city.name)} would've cost. nice.`}</div>
+    <div class="saved" id="reveal-saved">${money(0,USD)} saved</div>
+    <div class="sub">${(po.cities&&po.cities.length>1)?`that's dinner across ${po.cities.length} cities, all dodged. nice.`:(po.flight?`that's dinner in ${esc(po.city.name)} + a ${po.flight.label} flight that never took off.`:`that's what tonight in ${esc(po.city.name)} would've cost. nice.`)}</div>
     <div class="sub" style="color:#d98324;font-weight:800;margin-top:6px">🔥 ${stats.streak}-night no-spend streak${usedFreeze?' · 🧊 freeze used':''}</div>
     ${combo>=2?`<div class="combo">⚡ ${combo}× dodge combo!</div>`:""}
     ${milestone?`<div class="milestone">${milestone}</div>`:""}
@@ -1779,11 +1833,11 @@ function revealTruth(){
     </div>
     <!-- DEMO/PRE-AFFILIATE: real-money handoff removed until partners live. Re-enable: <button class="order-real" onclick="orderForReal('reveal')">actually… order it for real →</button> -->
     <div class="track-presence" style="margin-top:14px"><b>${220+Math.floor(Math.random()*80)}</b> people didn't order, with you · <span onclick="go('feed')" style="color:var(--accent);cursor:pointer">I'm good</span></div>`;
-  animateMoney($("#reveal-saved"), po.total, po.city.cur);
+  animateMoney($("#reveal-saved"), po.total, USD);
   setTimeout(()=>snd("chime"), 850);
   addXp(30 + (combo>=2?combo*5:0));
   questEvent("order");
-  if(po.total/po.city.pf >= 25) questEvent("bigdodge");
+  if(po.total >= 25) questEvent("bigdodge");
   renderHud();
   checkAchv();
   cart=[]; updateBadge();
@@ -1809,20 +1863,34 @@ const D2R=Math.PI/180;
 const LAND=[[[107.0,77.0],[114.1,75.8],[109.4,74.2],[127.0,73.6],[131.3,70.8],[140.5,72.8],[160.9,69.4],[178.6,69.4],[180.0,69.0],[180.0,65.0],[177.4,64.6],[179.5,62.6],[163.5,59.9],[162.1,54.9],[156.8,51.0],[155.9,56.8],[164.5,62.6],[160.1,60.5],[156.7,61.4],[155.0,59.1],[142.2,59.0],[135.1,54.7],[139.9,54.2],[141.4,52.2],[138.2,46.3],[127.5,39.8],[129.1,35.1],[126.5,34.4],[125.3,39.6],[121.1,38.9],[121.6,40.9],[118.0,39.2],[118.9,37.4],[122.4,37.5],[119.2,34.9],[121.9,31.7],[121.7,28.2],[115.9,22.8],[105.9,19.8],[109.3,13.4],[105.2,8.6],[100.1,13.4],[99.2,9.2],[104.2,1.3],[98.3,7.8],[97.2,16.9],[94.2,16.0],[91.4,22.8],[87.0,21.5],[80.3,15.9],[79.9,10.4],[77.5,8.0],[72.6,21.4],[70.5,20.9],[66.4,25.4],[57.4,25.7],[48.0,30.0],[51.8,24.0],[56.4,26.4],[59.8,22.3],[55.3,17.2],[43.5,12.6],[34.9,29.5],[33.9,27.6],[32.4,29.9],[42.7,11.7],[44.6,10.4],[51.1,12.0],[51.0,10.6],[47.7,4.2],[39.2,-4.7],[40.8,-14.7],[34.8,-19.8],[35.6,-23.7],[32.6,-25.7],[32.2,-28.8],[25.8,-33.9],[18.4,-34.1],[11.8,-18.1],[13.7,-10.7],[8.8,-1.1],[9.4,3.7],[4.3,6.3],[-9.0,4.8],[-16.6,12.2],[-17.0,21.9],[-5.9,35.8],[9.5,37.4],[11.1,36.9],[10.3,33.8],[19.1,30.3],[21.5,32.8],[33.8,31.0],[36.2,36.7],[27.6,36.7],[26.2,39.5],[33.5,42.0],[41.7,42.0],[36.7,45.2],[39.1,47.3],[33.9,44.4],[30.7,46.6],[27.7,42.6],[28.8,41.1],[22.6,40.3],[24.0,37.7],[22.5,36.4],[19.5,41.7],[13.1,45.7],[12.6,44.1],[18.5,40.2],[16.9,40.4],[16.1,38.0],[8.9,44.4],[3.1,43.1],[-2.1,36.7],[-8.9,36.9],[-9.4,43.0],[-1.4,44.0],[-1.2,46.0],[-4.6,48.7],[8.1,53.5],[8.5,57.1],[10.6,57.7],[10.9,54.0],[19.7,54.4],[21.6,57.4],[24.1,57.0],[23.3,59.2],[29.1,60.0],[21.3,60.7],[21.5,63.2],[25.4,65.1],[22.2,65.7],[17.8,62.7],[18.8,60.1],[15.9,56.1],[12.9,55.4],[10.4,59.5],[5.7,58.6],[5.0,62.0],[24.5,71.0],[40.3,67.9],[40.0,66.3],[33.2,66.6],[37.0,63.8],[43.9,66.1],[43.5,68.6],[46.3,68.3],[46.3,66.7],[53.7,68.9],[59.9,68.3],[60.6,69.9],[68.5,68.1],[66.7,71.0],[72.6,72.8],[72.4,66.2],[75.1,67.8],[73.1,71.4],[74.7,72.8],[76.4,71.2],[81.5,71.8],[80.5,73.6],[87.2,75.1],[107.0,77.0]],[[-58.6,-64.2],[-65.7,-68.0],[-60.8,-73.7],[-77.2,-76.7],[-73.7,-77.9],[-78.0,-79.2],[-58.2,-83.2],[-28.5,-80.3],[-35.6,-79.5],[-35.3,-78.1],[-17.5,-75.1],[-6.9,-70.9],[27.1,-70.5],[33.9,-68.5],[38.6,-69.8],[54.5,-65.8],[68.9,-67.9],[67.9,-71.9],[69.9,-72.3],[88.0,-66.2],[119.8,-67.3],[135.1,-65.3],[137.5,-67.0],[171.2,-71.7],[163.6,-76.2],[167.0,-78.8],[159.8,-80.9],[180.0,-84.7],[180.0,-90.0],[-180.0,-90.0],[-179.1,-84.1],[-143.1,-85.0],[-153.6,-83.7],[-152.9,-82.0],[-156.8,-81.1],[-146.4,-80.3],[-155.3,-79.1],[-158.4,-76.9],[-113.9,-73.7],[-100.6,-75.3],[-103.7,-72.6],[-74.9,-73.9],[-67.4,-72.5],[-67.7,-67.3],[-58.6,-64.2]],[[-90.5,69.5],[-87.4,67.2],[-85.5,69.9],[-82.6,69.7],[-81.3,67.6],[-93.2,62.0],[-94.7,58.9],[-92.3,57.1],[-82.3,55.1],[-79.9,51.2],[-78.6,52.6],[-79.8,54.7],[-76.5,56.5],[-78.5,58.8],[-78.1,62.3],[-73.8,62.4],[-69.6,61.1],[-67.6,58.2],[-64.6,60.3],[-55.7,52.1],[-66.4,50.2],[-71.1,46.8],[-65.1,49.2],[-64.5,46.2],[-59.8,45.9],[-65.4,43.5],[-64.4,45.3],[-67.1,45.1],[-70.7,43.0],[-70.0,41.6],[-75.5,39.5],[-75.9,37.2],[-76.3,39.2],[-75.7,35.6],[-81.3,31.4],[-80.4,25.2],[-84.1,30.1],[-96.6,28.3],[-97.9,22.4],[-96.3,19.3],[-92.0,18.7],[-87.1,21.5],[-88.9,15.9],[-83.4,15.3],[-83.8,11.1],[-81.4,8.8],[-76.8,8.6],[-71.8,12.4],[-71.7,9.1],[-69.9,12.2],[-68.2,10.6],[-61.9,10.7],[-57.1,6.0],[-51.3,4.2],[-50.4,-0.1],[-40.0,-2.9],[-34.7,-7.3],[-38.7,-13.1],[-40.9,-21.9],[-47.6,-24.9],[-53.8,-34.4],[-58.4,-33.9],[-56.8,-36.9],[-65.1,-41.1],[-63.5,-42.6],[-67.3,-45.6],[-66.0,-48.1],[-71.0,-53.8],[-74.9,-52.3],[-74.1,-46.9],[-75.6,-46.6],[-72.7,-42.4],[-74.3,-43.2],[-70.2,-19.8],[-76.0,-14.6],[-81.2,-6.1],[-79.8,-2.7],[-80.9,-1.1],[-77.1,3.8],[-78.2,8.3],[-80.9,7.2],[-85.7,9.9],[-87.5,13.3],[-103.5,18.3],[-113.9,31.6],[-114.7,30.2],[-109.4,23.4],[-112.2,24.7],[-124.4,40.3],[-124.7,48.2],[-122.6,47.1],[-122.8,49.0],[-127.4,50.8],[-134.1,58.1],[-147.1,60.9],[-151.7,59.2],[-150.6,61.3],[-158.4,56.0],[-164.8,54.4],[-157.0,58.9],[-162.0,58.7],[-166.1,61.5],[-160.8,64.8],[-168.1,65.7],[-161.7,66.1],[-166.8,68.4],[-156.6,71.4],[-136.5,68.9],[-128.1,70.5],[-108.9,67.4],[-106.2,68.8],[-96.1,67.3],[-94.2,69.1],[-96.5,70.1],[-95.2,71.9],[-90.5,69.5]],[[143.6,-13.8],[153.1,-26.1],[152.9,-31.6],[150.0,-37.4],[146.3,-39.0],[140.6,-38.0],[138.2,-34.4],[136.8,-35.3],[137.8,-32.9],[136.0,-34.9],[131.3,-31.5],[118.0,-35.1],[115.0,-34.2],[114.1,-21.8],[120.9,-19.7],[125.7,-14.2],[129.6,-15.0],[132.4,-11.1],[136.5,-11.9],[135.5,-15.0],[140.2,-17.7],[142.1,-11.0],[143.6,-13.8]],[[-27.1,83.5],[-20.8,82.7],[-31.4,82.0],[-12.2,81.3],[-20.0,80.2],[-17.7,80.1],[-19.7,78.8],[-18.5,77.0],[-21.7,76.6],[-19.4,74.3],[-24.8,72.3],[-21.8,70.7],[-26.4,70.2],[-22.3,70.1],[-39.8,65.5],[-43.4,60.1],[-48.3,60.9],[-51.6,63.6],[-54.0,67.2],[-50.9,69.9],[-54.7,69.6],[-51.4,70.6],[-55.8,71.7],[-54.7,72.6],[-58.6,75.5],[-73.3,78.0],[-65.7,79.4],[-68.0,80.1],[-62.7,81.8],[-27.1,83.5]],[[-86.6,73.2],[-72.2,71.6],[-61.9,66.9],[-63.9,65.0],[-68.0,66.3],[-64.7,63.4],[-68.8,63.7],[-66.2,61.9],[-77.7,64.2],[-74.0,65.5],[-72.9,67.7],[-79.0,70.2],[-88.7,70.4],[-90.2,72.2],[-86.6,73.2]],[[-68.5,83.1],[-61.9,82.4],[-76.9,79.3],[-75.4,78.5],[-80.6,76.2],[-89.5,76.5],[-85.0,77.5],[-88.0,78.4],[-85.1,79.3],[-86.9,80.3],[-81.8,80.5],[-91.6,81.9],[-68.5,83.1]],[[117.9,1.8],[119.0,0.9],[116.1,-4.0],[110.2,-2.9],[109.1,-0.5],[109.7,2.0],[116.7,6.9],[119.2,5.4],[117.9,1.8]],[[134.1,-1.2],[135.5,-3.4],[138.3,-1.7],[144.6,-3.9],[150.7,-10.6],[144.7,-7.6],[142.6,-9.3],[137.6,-8.4],[137.9,-5.4],[133.0,-4.1],[132.0,-2.8],[133.7,-2.2],[130.5,-0.9],[134.1,-1.2]],[[50.1,-13.6],[47.1,-24.9],[44.0,-25.0],[44.4,-16.2],[49.2,-12.0],[50.1,-13.6]],[[-114.2,73.1],[-108.2,71.7],[-108.4,73.1],[-106.5,73.1],[-101.1,69.6],[-116.1,69.2],[-112.4,70.4],[-119.4,71.6],[-114.2,73.1]],[[141.0,37.1],[140.3,35.1],[135.8,33.5],[131.0,33.9],[130.2,31.4],[129.4,33.3],[139.4,38.2],[140.3,41.2],[141.9,40.0],[141.0,37.1]],[[105.8,-5.9],[102.6,-4.2],[95.3,5.5],[103.8,0.1],[105.8,-5.9]],[[-3.0,58.6],[-3.1,56.0],[1.4,51.3],[-5.2,50.0],[-2.9,54.0],[-6.1,56.8],[-3.0,58.6]],[[-120.5,71.4],[-125.9,71.9],[-124.9,74.3],[-117.6,74.2],[-115.5,73.5],[-120.5,71.4]],[[57.5,70.7],[51.6,71.5],[55.6,75.1],[68.9,76.5],[58.5,74.3],[55.4,72.4],[57.5,70.7]],[[-175.0,66.6],[-169.9,66.0],[-173.0,64.3],[-178.7,66.1],[-180.0,65.0],[-180.0,69.0],[-175.0,66.6]],[[-94.7,77.1],[-79.8,74.9],[-92.4,74.8],[-97.1,76.8],[-94.7,77.1]],[[-14.5,66.5],[-13.6,65.1],[-18.7,63.5],[-24.3,65.6],[-14.5,66.5]],[[18.3,79.7],[21.5,79.0],[15.9,76.8],[10.4,79.7],[18.3,79.7]],[[173.0,-40.9],[174.2,-41.3],[173.1,-43.9],[169.3,-46.6],[166.7,-46.2],[173.0,-40.9]],[[174.6,-36.2],[178.5,-37.7],[175.2,-41.7],[172.6,-34.5],[174.6,-36.2]],[[-87.0,79.7],[-90.8,78.2],[-96.7,80.2],[-92.4,81.3],[-87.0,79.7]],[[-56.1,50.7],[-53.5,49.2],[-53.1,46.7],[-59.3,47.6],[-56.1,50.7]],[[143.6,50.7],[144.7,49.0],[143.2,49.3],[143.5,46.1],[142.1,46.0],[141.7,53.3],[142.7,54.4],[143.6,50.7]],[[-45.2,-78.0],[-43.3,-80.0],[-54.2,-80.6],[-45.2,-78.0]],[[-68.5,-71.0],[-71.1,-72.5],[-75.0,-71.7],[-70.3,-68.9],[-68.5,-71.0]],[[-67.8,-53.9],[-65.0,-54.7],[-69.2,-55.5],[-74.7,-52.8],[-67.8,-53.9]],[[143.9,44.2],[145.5,43.3],[140.0,41.6],[142.0,45.6],[143.9,44.2]],[[-79.7,22.8],[-74.2,20.3],[-77.8,19.9],[-81.8,22.6],[-85.0,21.9],[-79.7,22.8]],[[125.2,1.4],[120.2,0.2],[120.9,-1.4],[123.3,-0.6],[121.5,-1.9],[123.2,-5.3],[121.0,-2.6],[119.4,-5.4],[120.0,0.6],[125.2,1.4]],[[-100.4,73.8],[-97.4,73.8],[-96.7,71.7],[-102.5,72.5],[-100.4,73.8]],[[99.9,78.9],[91.2,80.3],[95.9,81.3],[99.9,78.9]],[[-85.2,65.7],[-80.1,63.7],[-87.2,63.5],[-85.2,65.7]],[[-6.8,52.3],[-10.0,51.8],[-9.7,53.9],[-6.7,55.2],[-6.8,52.3]],[[126.4,8.4],[125.4,5.6],[123.6,7.8],[121.9,7.2],[125.4,9.8],[126.4,8.4]],[[-108.2,76.2],[-106.3,75.0],[-117.7,75.2],[-108.2,76.2]],[[145.4,-40.8],[148.3,-40.9],[147.9,-43.2],[146.0,-43.5],[145.4,-40.8]],[[-72.6,19.9],[-68.3,18.6],[-73.9,18.0],[-72.6,19.9]],[[121.3,18.5],[121.7,14.3],[124.1,12.5],[120.1,15.0],[121.3,18.5]],[[-98.5,76.7],[-98.2,75.0],[-102.5,75.6],[-98.5,76.7]],[[-93.2,72.8],[-96.0,73.4],[-90.5,73.9],[-93.2,72.8]]];
 function gcMid(a,b){ const f1=a.lat*D2R,l1=a.lng*D2R,f2=b.lat*D2R,l2=b.lng*D2R; const Bx=Math.cos(f2)*Math.cos(l2-l1), By=Math.cos(f2)*Math.sin(l2-l1); const f3=Math.atan2(Math.sin(f1)+Math.sin(f2), Math.sqrt((Math.cos(f1)+Bx)**2+By**2)); const l3=l1+Math.atan2(By, Math.cos(f1)+Bx); return {lat:f3/D2R, lng:l3/D2R}; }
 function gcInterp(a,b,t){ const f1=a.lat*D2R,l1=a.lng*D2R,f2=b.lat*D2R,l2=b.lng*D2R; const d=2*Math.asin(Math.min(1,Math.sqrt(Math.sin((f2-f1)/2)**2+Math.cos(f1)*Math.cos(f2)*Math.sin((l2-l1)/2)**2))); if(d<1e-6) return {lat:a.lat,lng:a.lng}; const A=Math.sin((1-t)*d)/Math.sin(d), B=Math.sin(t*d)/Math.sin(d); const x=A*Math.cos(f1)*Math.cos(l1)+B*Math.cos(f2)*Math.cos(l2); const y=A*Math.cos(f1)*Math.sin(l1)+B*Math.cos(f2)*Math.sin(l2); const z=A*Math.sin(f1)+B*Math.sin(f2); return {lat:Math.atan2(z,Math.sqrt(x*x+y*y))/D2R, lng:Math.atan2(y,x)/D2R}; }
-function renderGlobe(city, home, durSec){
-  const el=$("#track-globe"); if(!el || city.lat==null || home.lat==null) return;
+function renderGlobe(route, home, durSec){
+  let stops = Array.isArray(route) ? route.slice()
+            : [ {lat:route.lat, lng:route.lng, flag:route.flag||'📍', name:route.name},
+                {lat:home.lat, lng:home.lng, flag:'📍', name:home.label||'you', home:true} ];
+  stops = stops.filter(s=>s && s.lat!=null);
+  const el=$("#track-globe"); if(!el || stops.length<2) return;
   const W=300,H=234, cx=150, cy=116, R=92;
-  const o={lat:city.lat,lng:city.lng}, d={lat:home.lat,lng:home.lng};
-  const mid=gcMid(o,d), lat0=mid.lat*D2R, lng0=mid.lng*D2R;
+  const first=stops[0], last=stops[stops.length-1];
+  const mid=gcMid({lat:first.lat,lng:first.lng},{lat:last.lat,lng:last.lng}), lat0=mid.lat*D2R, lng0=mid.lng*D2R;
   const proj=(la,ln)=>{ const f=la*D2R, l=ln*D2R, dl=l-lng0; const cosc=Math.sin(lat0)*Math.sin(f)+Math.cos(lat0)*Math.cos(f)*Math.cos(dl); return { x:cx+R*Math.cos(f)*Math.sin(dl), y:cy-R*(Math.cos(lat0)*Math.sin(f)-Math.sin(lat0)*Math.cos(f)*Math.cos(dl)), front:cosc>=0 }; };
   let grat=""; const seg=(pts)=>{ if(pts.length>1) grat+=`<polyline points="${pts.join(' ')}"/>`; };
   for(let ln=-180; ln<180; ln+=30){ let pts=[]; for(let la=-90;la<=90;la+=5){ const p=proj(la,ln); if(p.front) pts.push(p.x.toFixed(1)+','+p.y.toFixed(1)); else { seg(pts); pts=[]; } } seg(pts); }
   for(let la=-60; la<=60; la+=30){ let pts=[]; for(let ln=-180;ln<=180;ln+=5){ const p=proj(la,ln); if(p.front) pts.push(p.x.toFixed(1)+','+p.y.toFixed(1)); else { seg(pts); pts=[]; } } seg(pts); }
   let land=""; for(const ring of LAND){ let fc=0; const pj=ring.map(c=>{ const q=proj(c[1],c[0]); if(q.front) fc++; return q; }); if(fc<ring.length*0.3) continue; const pp=pj.map(q=>{ if(q.front) return q.x.toFixed(1)+','+q.y.toFixed(1); const dx=q.x-cx,dy=q.y-cy,m=Math.hypot(dx,dy)||1; return (cx+dx/m*R).toFixed(1)+','+(cy+dy/m*R).toFixed(1); }); land+=`<polygon points="${pp.join(' ')}"/>`; }
-  const N=72; let ap=[]; for(let i=0;i<=N;i++){ const t=i/N, g=gcInterp(o,d,t), p=proj(g.lat,g.lng), lift=1+0.18*Math.sin(Math.PI*t); ap.push([cx+(p.x-cx)*lift, cy+(p.y-cy)*lift]); }
+  const Nleg=48; let ap=[]; const legLens=[];
+  for(let s=0;s<stops.length-1;s++){
+    const o={lat:stops[s].lat,lng:stops[s].lng}, d={lat:stops[s+1].lat,lng:stops[s+1].lng};
+    let segLen=0, prev=null;
+    for(let i=(s===0?0:1);i<=Nleg;i++){ const t=i/Nleg, g=gcInterp(o,d,t), p=proj(g.lat,g.lng), lift=1+0.18*Math.sin(Math.PI*t); const xy=[cx+(p.x-cx)*lift, cy+(p.y-cy)*lift]; if(prev) segLen+=Math.hypot(xy[0]-prev[0], xy[1]-prev[1]); prev=xy; ap.push(xy); }
+    legLens.push(segLen);
+  }
+  const totalLen=legLens.reduce((a,b)=>a+b,0)||1; let acc=0; GLOBE_LEGBREAKS=legLens.map(l=>{ acc+=l; return Math.round(acc/totalLen*100); });
   const arcD="M"+ap.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' L');
-  const op=proj(o.lat,o.lng), dp=proj(d.lat,d.lng), oFlag=city.flag||'📍';
+  const dp=proj(last.lat,last.lng);
   const ozx=cx+(dp.x-cx)*0.55, ozy=cy+(dp.y-cy)*0.55;
+  const pins=stops.map(s=>{ const sp=proj(s.lat,s.lng); return `<g><circle class="gpin-dot ${s.home?'gpin-d':'gpin-o'}" cx="${sp.x.toFixed(1)}" cy="${sp.y.toFixed(1)}" r="4.5"/><text x="${sp.x.toFixed(1)}" y="${(sp.y-9).toFixed(1)}" text-anchor="middle" font-size="15">${s.flag}</text></g>`; }).join("");
+  const sp0=proj(first.lat,first.lng);
+  const labelTxt=stops.map(s=>`${s.flag} ${esc(s.name)}`).join(" &nbsp;✈&nbsp; ");
   el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" style="transform-origin:${(ozx/W*100).toFixed(1)}% ${(ozy/H*100).toFixed(1)}%; transform:scale(1); transition:transform 2.4s linear;">
     <defs>
       <radialGradient id="g-ocean" cx="36%" cy="30%" r="80%"><stop offset="0%" stop-color="#cdebff"/><stop offset="45%" stop-color="#8ecdf2"/><stop offset="100%" stop-color="#3d86cf"/></radialGradient>
@@ -1835,11 +1903,10 @@ function renderGlobe(city, home, durSec){
     <circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#g-shine)" pointer-events="none"/>
     <path class="arc-bed" d="${arcD}"/>
     <path class="arc" id="globe-arc-path" d="${arcD}"/>
-    <g><circle class="gpin-dot gpin-o" cx="${op.x.toFixed(1)}" cy="${op.y.toFixed(1)}" r="4.5"/><text x="${op.x.toFixed(1)}" y="${(op.y-9).toFixed(1)}" text-anchor="middle" font-size="15">${oFlag}</text></g>
-    <g><circle class="gpin-dot gpin-d" cx="${dp.x.toFixed(1)}" cy="${dp.y.toFixed(1)}" r="4.5"/><text x="${dp.x.toFixed(1)}" y="${(dp.y-9).toFixed(1)}" text-anchor="middle" font-size="15">📍</text></g>
-    <g class="gplane" id="globe-plane" style="transform:translate(${op.x.toFixed(1)}px,${op.y.toFixed(1)}px)"><g id="globe-plane-rot"><path d="M12,0 L-8,-6.5 L-3.5,0 L-8,6.5 Z"/></g></g>
+    ${pins}
+    <g class="gplane" id="globe-plane" style="transform:translate(${sp0.x.toFixed(1)}px,${sp0.y.toFixed(1)}px)"><g id="globe-plane-rot"><path d="M12,0 L-8,-6.5 L-3.5,0 L-8,6.5 Z"/></g></g>
   </svg>
-  <div class="glabel">${oFlag} ${esc(city.name)} &nbsp;✈&nbsp; 📍 ${esc(home.label||'you')}</div>`;
+  <div class="glabel">${labelTxt}</div>`;
 }
 function globeProgress(p){
   const path=document.getElementById('globe-arc-path'), pos=document.getElementById('globe-plane'), rot=document.getElementById('globe-plane-rot');
@@ -1850,7 +1917,7 @@ function globeProgress(p){
   let pt,pt2; try{ pt=path.getPointAtLength(L*f); pt2=path.getPointAtLength(Math.min(L,L*f+1)); }catch(e){ return; }
   pos.style.transform=`translate(${pt.x.toFixed(1)}px,${pt.y.toFixed(1)}px)`;
   if(rot){ const ang=Math.atan2(pt2.y-pt.y,pt2.x-pt.x)*180/Math.PI; rot.setAttribute('transform',`rotate(${ang.toFixed(1)})`); }
-  const svg=pos.ownerSVGElement; if(svg){ svg.style.transform='scale('+(1+0.5*f).toFixed(3)+')'; }
+  const svg=pos.ownerSVGElement; if(svg){ svg.style.transform='scale('+(1+0.45*f).toFixed(3)+')'; svg.style.transition='transform 2.4s linear'; }
 }
 
 /* ---- affiliate handoff: the ONLY money path, opt-in, never the default ---- */
