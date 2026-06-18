@@ -564,33 +564,35 @@
   /* ----- explore (things to do) ----- */
   .ex-city { background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 10px 14px; font-family: var(--disp); font-weight: 600; font-size: 16px; color: var(--text); box-shadow: 3px 3px 0 var(--ink); cursor: pointer; margin: 2px 0 4px; }
   .ex-city:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
-  .passport { display: flex; align-items: center; gap: 8px; background: #fff3d6; border: 2px solid var(--ink); border-radius: 14px; padding: 9px 12px; margin: 12px 0; font-size: 13px; font-weight: 700; box-shadow: 2px 2px 0 var(--ink); }
-  .passport .psp-ic { font-size: 17px; }
-  .passport b { font-family: var(--disp); }
-  .passport .psp-saved { margin-left: auto; color: var(--muted); }
+  .passport { background: var(--card); border: 2.5px solid var(--ink); border-radius: 14px; padding: 10px 13px; margin: 10px 0 12px; box-shadow: 3px 3px 0 var(--ink); }
+  .passport .pp-top { display: flex; align-items: center; gap: 7px; font-weight: 800; font-size: 13px; margin-bottom: 7px; }
+  .passport .pp-top b { font-family: var(--disp); color: var(--accent); }
+  .passport .pp-saved { margin-left: auto; color: var(--muted); font-size: 12px; }
+  .passport .pp-bar { height: 12px; background: var(--screen); border: 2px solid var(--ink); border-radius: 8px; overflow: hidden; }
+  .passport .pp-fill { height: 100%; background: var(--accent2); border-right: 2px solid var(--ink); transition: width .4s ease; }
   .efilters { display: flex; gap: 7px; overflow-x: auto; padding: 2px 0 12px; }
   .efilters::-webkit-scrollbar { display: none; }
   .efilter { white-space: nowrap; background: var(--card); border: 2px solid var(--ink); color: var(--text); border-radius: 16px; padding: 7px 13px; font-size: 13px; font-weight: 700; font-family: var(--disp); cursor: pointer; flex: 0 0 auto; box-shadow: 2px 2px 0 var(--ink); }
   .efilter.on { background: var(--ink); color: var(--screen); }
-  .acard { background: var(--card); border: 2.5px solid var(--ink); border-radius: 18px; overflow: hidden; margin-bottom: 14px; box-shadow: 4px 4px 0 var(--ink); }
-  .ac-photo { position: relative; height: 150px; background: #ffe9b3; display: flex; align-items: center; justify-content: center; border-bottom: 2.5px solid var(--ink); }
-  .ac-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .ac-photo .ac-emo { font-size: 56px; }
-  .ac-cat { position: absolute; top: 10px; left: 10px; background: var(--card); border: 2px solid var(--ink); border-radius: 12px; padding: 4px 10px; font-size: 12px; font-weight: 800; text-transform: capitalize; box-shadow: 2px 2px 0 var(--ink); }
-  .ac-pet { position: absolute; top: 10px; right: 10px; background: var(--go); border: 2px solid var(--ink); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 15px; box-shadow: 2px 2px 0 var(--ink); }
-  .ac-body { padding: 12px 14px; }
-  .ac-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-  .ac-name { font-size: 16.5px; font-weight: 800; line-height: 1.2; }
-  .ac-save { background: none; border: none; font-size: 24px; color: var(--accent); cursor: pointer; line-height: 1; padding: 0; flex: 0 0 auto; }
-  .ac-meta { font-size: 12.5px; color: var(--muted); margin-top: 5px; }
-  .ac-meta .ac-rate { color: #d98324; font-weight: 800; }
-  .ac-who { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
-  .who-chip { background: var(--screen); border: 2px solid var(--ink); border-radius: 10px; padding: 3px 8px; font-size: 11px; font-weight: 800; text-transform: capitalize; }
-  .ac-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 11px; }
-  .ac-cost { font-family: var(--disp); font-weight: 600; font-size: 18px; color: var(--accent); }
+  /* activity cards — match the restaurant card layout for a consistent feel */
+  .acard { position: relative; display: flex; gap: 13px; padding: 11px; margin-bottom: 14px; background: var(--card); border: 2.5px solid var(--ink); border-radius: 20px; box-shadow: 5px 5px 0 var(--ink); cursor: pointer; transition: transform .12s, box-shadow .12s, background .15s; }
+  .acard:active { transform: translate(2px,3px); box-shadow: 1px 2px 0 var(--ink); }
+  .acard.saved { background: #e9faf0; border-color: var(--go); }
+  .ac-thumb { width: 118px; height: 118px; flex: 0 0 118px; align-self: center; position: relative; border-radius: 15px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #ffe9b3; border: 2.5px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); font-size: 50px; }
+  .ac-thumb .ph-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ac-cat { position: absolute; top: 7px; left: 7px; background: var(--card); border: 2px solid var(--ink); border-radius: 9px; padding: 2px 7px; font-size: 10px; font-weight: 800; text-transform: capitalize; box-shadow: 1.5px 1.5px 0 var(--ink); max-width: 88%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .ac-pet { position: absolute; bottom: 6px; right: 6px; background: var(--go); border: 2px solid var(--ink); border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 13px; box-shadow: 1.5px 1.5px 0 var(--ink); }
+  .ac-meta { flex: 1; min-width: 0; padding-right: 40px; display: flex; flex-direction: column; }
+  .ac-name { font-family: var(--disp); font-weight: 700; font-size: 18px; line-height: 1.1; color: var(--ink); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .ac-sub { font-size: 12.5px; color: var(--muted); font-weight: 600; margin-top: 3px; text-transform: capitalize; }
+  .ac-row { display: flex; align-items: center; gap: 7px; margin-top: 7px; font-size: 12px; color: var(--muted); font-weight: 600; }
+  .ac-row .ac-rate { color: #d98324; font-weight: 800; }
+  .ac-row .ac-w { font-size: 13px; }
+  .ac-cost { margin-top: auto; padding-top: 7px; font-family: var(--disp); font-weight: 700; font-size: 16px; color: var(--accent); }
   .ac-cost .ac-free { color: var(--go); }
-  .ac-deal { background: var(--accent2); border: 2px solid var(--ink); border-radius: 12px; padding: 8px 12px; font-weight: 800; font-size: 12.5px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); color: var(--ink); }
-  .ac-deal:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
+  .ac-save { position: absolute; top: 50%; right: 11px; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); color: #c9bfa6; font-size: 22px; line-height: 1; display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0 var(--ink); }
+  .ac-save.on { color: var(--accent2); background: #fff6df; }
+  .acard.saved .ac-save { color: var(--go); border-color: var(--go); }
 
   @media (max-width: 440px) {
     body { background: var(--screen); display: block; overflow: hidden; }
@@ -770,14 +772,14 @@
 
         <!-- EXPLORE (things to do) -->
         <section class="view" id="view-explore">
-          <div class="brand"><h1 style="font-size:26px">things to do</h1><div class="sub">plan a trip — real or imaginary — across 50 cities</div></div>
-          <button class="ex-city" onclick="cityModal(false)"><span id="explore-city">🗽 New York</span> &nbsp;›</button>
-          <div class="presence" style="margin-top:6px">
-            <div class="live"><span class="dot"></span> <span id="explore-live">843</span> exploring <span id="explore-cityname">tonight</span></div>
-            <div class="ghostline"><span class="ghost-emo">🗺️</span><div class="msg" id="explore-ticker"></div></div>
+          <div class="brand">
+            <h1 style="font-size:26px">things to do</h1>
+            <div class="sub">your someday list — dream the trip, skip the flight 🌙</div>
+            <div class="live-pill"><span class="dot"></span><span class="lp-count"><span id="explore-live">843</span> exploring <span id="explore-cityname">tonight</span></span><span class="lp-sep">·</span><span id="explore-ticker" class="lp-ticker"></span></div>
           </div>
+          <button class="ex-city" onclick="cityModal(false)"><span id="explore-city">🗽 New York</span> &nbsp;›</button>
           <div class="passport" id="explore-passport"></div>
-          <button class="plan-btn" onclick="planMyNight()">📋 plan my night here →</button>
+          <button class="plan-btn" onclick="planMyNight()">📋 plan my someday night here →</button>
           <div class="efilters" id="explore-filters"></div>
           <div id="explore-list"></div>
           <div class="osm-credit">things to do © Google</div>
@@ -2148,16 +2150,17 @@ function citiesExplored(){ const s=new Set(); Object.values(savedActs).forEach(a
 function actCost(a){ return a.free ? `<span class="ac-free">Free</span>` : money(a.costUsd*(curCity().pf||1), curCity().cur); }
 function actCard(a){
   const saved=!!savedActs[a._key];
-  const photo=a.photo?`<img src="${BASE+a.photo}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${a.ic}'))">`:`<span class="ac-emo">${a.ic}</span>`;
-  const who=(a.who||[]).map(w=>`<span class="who-chip">${WHO_ICON[w]||"✨"} ${w}</span>`).join("");
-  return `<div class="acard">
-    <div class="ac-photo">${photo}<span class="ac-cat">${a.ic} ${esc(a.cat)}</span>${a.pet?'<span class="ac-pet" title="pet-friendly">🐶</span>':''}</div>
-    <div class="ac-body">
-      <div class="ac-top"><div class="ac-name">${esc(a.name)}</div><button class="ac-save${saved?' on':''}" onclick="toggleAct('${a._key}',event)">${saved?'★':'☆'}</button></div>
-      <div class="ac-meta"><span class="ac-rate">★ ${a.rate.toFixed(1)}</span><span>(${a.n.toLocaleString()})</span> · ${esc(a.hood)}</div>
-      <div class="ac-who">${who}</div>
-      <div class="ac-foot"><span class="ac-cost">${actCost(a)}</span><!-- DEMO/PRE-AFFILIATE: Groupon "find deals" removed until affiliate live. Re-enable: ${a.free?'':`<button class="ac-deal" onclick="openDeal('${a._key}')">🎟️ find deals</button>`} --></div>
+  const photo=a.photo?`<img class="ph-img" src="${BASE+a.photo}" alt="" loading="lazy" decoding="async" onerror="this.replaceWith(document.createTextNode('${a.ic}'))">`:`<span class="ac-emo">${a.ic}</span>`;
+  const who=(a.who||[]).slice(0,3).map(w=>`<span class="ac-w" title="${w}">${WHO_ICON[w]||"✨"}</span>`).join("");
+  return `<div class="acard${saved?' saved':''}" onclick="toggleAct('${a._key}',event)">
+    <div class="ac-thumb">${photo}<span class="ac-cat">${esc(a.cat)}</span>${a.pet?'<span class="ac-pet">🐶</span>':''}</div>
+    <div class="ac-meta">
+      <div class="ac-name">${esc(a.name)}</div>
+      <div class="ac-sub">${esc(a.hood)}</div>
+      <div class="ac-row"><span class="ac-rate">★ ${a.rate.toFixed(1)}</span><span>(${a.n.toLocaleString()})</span>${who}</div>
+      <div class="ac-cost">${actCost(a)}</div>
     </div>
+    <span class="ac-save${saved?' on':''}" aria-hidden="true">${saved?'★':'☆'}</span>
   </div>`;
 }
 function renderExplore(){
@@ -2165,7 +2168,7 @@ function renderExplore(){
   const cn=$("#explore-city"); if(cn) cn.textContent=`${c.flag} ${c.name}`;
   const en=$("#explore-cityname"); if(en) en.textContent=`${c.name} tonight`;
   const ex=citiesExplored(), psp=$("#explore-passport");
-  if(psp) psp.innerHTML=`<span class="psp-ic">🛂</span><b>${ex.size}/50</b> cities on your map<span class="psp-saved">⭐ ${Object.keys(savedActs).length} saved</span>`;
+  if(psp) psp.innerHTML=`<div class="pp-top"><span>🛂</span> <b>${ex.size}/50</b> cities stamped<span class="pp-saved">⭐ ${Object.keys(savedActs).length} on your list</span></div><div class="pp-bar"><div class="pp-fill" style="width:${Math.round(ex.size/50*100)}%"></div></div>`;
   const ff=$("#explore-filters"); if(ff) ff.innerHTML=EXPLORE_FILTERS.map(f=>{ const n=f.k==="list"?Object.keys(savedActs).length:0; return `<button class="efilter${exploreFilter===f.k?' on':''}" onclick="setExploreFilter('${f.k}')">${f.label}${f.k==="list"&&n?` ${n}`:""}</button>`; }).join("");
   const acts=activitiesData[c.id], list=$("#explore-list"); if(!list) return;
   if(!acts){ list.innerHTML=`<div class="loading"><div class="spinner"></div><div style="margin-top:8px">finding things to do in ${esc(c.name)}…</div></div>`; loadActs(c); return; }
