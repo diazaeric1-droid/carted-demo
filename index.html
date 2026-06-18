@@ -158,8 +158,9 @@
   .pin.shop { left: 14%; top: 80%; } .pin.shop .halo { background: rgba(255,194,61,.55); animation: halo 2.2s ease-in-out infinite; }
   .pin.home { left: 86%; top: 18%; } .pin.home .halo { background: rgba(239,62,88,.5); animation: halo 2.2s ease-in-out .6s infinite; }
   @keyframes halo { 0%,100%{ transform: translate(-50%,-50%) scale(.7); opacity: .4; } 50%{ transform: translate(-50%,-50%) scale(1.25); opacity: .85; } }
-  .rider { position: absolute; left: 14%; top: 80%; font-size: 30px; z-index: 4; transform: translate(-50%,-58%); transition: left .8s ease, top .8s ease, opacity .55s ease; will-change: left, top; }
+  .rider { position: absolute; left: 14%; top: 80%; font-size: 44px; z-index: 4; transform: translate(-50%,-58%); transition: left .8s ease, top .8s ease, opacity .55s ease; will-change: left, top; filter: drop-shadow(2px 2px 0 rgba(34,28,51,.35)); }
   .rider .mort { display: inline-block; animation: bob 1.4s ease-in-out infinite; }
+  .rider .veh { position: absolute; left: 62%; bottom: -2px; font-size: 26px; animation: bob 1.4s ease-in-out .2s infinite; }
   @keyframes bob { 0%,100%{ transform: translateY(0) rotate(-3deg); } 50%{ transform: translateY(-4px) rotate(3deg); } }
   .rider .puff { position: absolute; right: 84%; top: 56%; font-size: 15px; opacity: .55; animation: puff 1.1s ease-out infinite; }
   @keyframes puff { 0%{ opacity: .5; transform: translateX(0) scale(.7); } 100%{ opacity: 0; transform: translateX(-16px) scale(1.1); } }
@@ -184,7 +185,9 @@
   .globe-box .gpin-dot { stroke: var(--ink); stroke-width: 2.5; }
   .globe-box .gpin-o { fill: #ffc23d; } .globe-box .gpin-d { fill: #ff5a3c; }
   .globe-box .gplane { transition: transform 2.4s linear; }
-  .globe-box .gplane path { fill: #ffc23d; stroke: var(--ink); stroke-width: 1.4; stroke-linejoin: round; }
+  .globe-box .gplane .gplane-body { fill: var(--accent2); stroke: var(--ink); stroke-width: 2.2; stroke-linejoin: round; stroke-linecap: round; filter: drop-shadow(1.5px 1.5px 0 var(--ink)); }
+  .globe-box .gplane .gplane-halo { fill: rgba(255,255,255,.7); stroke: none; animation: gplaneHalo 1.3s ease-in-out infinite; }
+  @keyframes gplaneHalo { 0%,100%{ transform: scale(.85); opacity: .35; } 50%{ transform: scale(1.15); opacity: .8; } }
   .globe-box .glabel { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); display: inline-block; max-width: 92%; white-space: nowrap; padding: 3px 11px; border-radius: 999px; background: var(--screen); border: 2px solid var(--ink); box-shadow: 0 2.5px 0 var(--ink); text-align: center; font-family: var(--disp); font-weight: 700; font-size: 12.5px; line-height: 1.25; letter-spacing: .2px; color: var(--ink); }
   @media (prefers-reduced-motion: reduce) {
     .map.arrive, .route .ants, .pin .halo, .rider .mort, .rider .puff { animation: none !important; }
@@ -253,6 +256,18 @@
   .tier-bar { height: 10px; background: #fff; border: 2px solid var(--ink); border-radius: 6px; overflow: hidden; }
   .tier-fill { height: 100%; background: var(--grad); transition: width .5s; }
   .milestone { margin-top: 10px; display: inline-block; background: var(--accent2); color: var(--ink); font-weight: 800; font-size: 13px; padding: 8px 14px; border-radius: 16px; border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); animation: fade .4s ease; }
+  /* ----- gacha courier reveal card ----- */
+  .courier-card { margin: 16px auto 2px; max-width: 230px; background: #fff; border: 2.5px solid var(--ink); border-radius: 20px; padding: 14px 12px 12px; box-shadow: 4px 4px 0 var(--ink); position: relative; animation: pop .5s ease both; }
+  .courier-card .cc-new { display: inline-block; background: var(--rc); color: #fff; font-family: var(--disp); font-weight: 700; font-size: 12px; letter-spacing: .3px; padding: 4px 12px; border-radius: 12px; border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); margin-bottom: 6px; }
+  .courier-card .cc-dup { background: #fff; color: var(--muted); box-shadow: none; }
+  .courier-card .cc-veh { font-size: 64px; line-height: 1.05; width: 96px; height: 96px; margin: 4px auto 2px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: color-mix(in srgb, var(--rc) 16%, #fff); border: 3px solid var(--rc); box-shadow: inset 0 0 0 3px #fff; }
+  .courier-card .cc-name { font-family: var(--disp); font-weight: 700; font-size: 18px; margin-top: 6px; }
+  .courier-card .cc-quip { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 1px; line-height: 1.25; }
+  .courier-card .cc-rarity { display: inline-block; margin-top: 8px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: .6px; color: var(--rc); }
+  .courier-card.is-new .cc-veh { animation: pop .55s ease both, gwiggle .5s ease .55s 2; }
+  .courier-card.rare, .courier-card.legendary { box-shadow: 4px 4px 0 var(--ink), 0 0 22px 2px color-mix(in srgb, var(--rc) 55%, transparent); }
+  .courier-card.legendary { animation: pop .5s ease both, ccGlow 1.4s ease-in-out .5s infinite; }
+  @keyframes ccGlow { 0%,100%{ box-shadow: 4px 4px 0 var(--ink), 0 0 18px 1px color-mix(in srgb, var(--rc) 45%, transparent); } 50%{ box-shadow: 4px 4px 0 var(--ink), 0 0 30px 5px color-mix(in srgb, var(--rc) 75%, transparent); } }
   /* ----- game layer: xp bar, combo, surprise, achievements, food backdrop ----- */
   .xp-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
   .xp-lvl { font-size: 12px; font-weight: 800; color: #d98324; white-space: nowrap; }
@@ -272,6 +287,8 @@
   .achv-ic { font-size: 24px; }
   .achv-name { font-size: 10px; font-weight: 700; margin-top: 4px; }
   .achv-tip { font-size: 8.5px; color: var(--muted); margin-top: 2px; line-height: 1.2; }
+  .achv.drv .drv-veh { font-size: 22px; width: 40px; height: 40px; margin: 0 auto 2px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--card); border: 2px solid #d9cbab; }
+  .achv.drv.on .drv-veh { font-size: 30px; background: color-mix(in srgb, var(--rc) 16%, #fff); border: 2.5px solid var(--rc); box-shadow: inset 0 0 0 2px #fff; }
   .foodfall { position: absolute; top: 0; left: 0; right: 0; height: 180px; overflow: hidden; pointer-events: none; z-index: 0; }
   .foodfall span { position: absolute; bottom: -44px; font-size: 26px; opacity: .16; animation: drift 9s linear infinite; }
   .foodfall span:nth-child(1){ left: 8%; animation-delay: 0s; }
@@ -1609,7 +1626,7 @@ function renderProfile(){
     + `<button class="signin-btn" onclick="toggleSnd()">${sndOn?"🔊 sounds: on":"🔇 sounds: off"}</button>`;
   const owned=stats.drivers||[];
   const driversCard = `<div class="section-label" style="margin:8px 2px 8px">👻 your ghost couriers <span style="color:var(--muted)">${owned.length}/${GACHA.length}</span></div>`
-    + `<div class="achv-grid">` + GACHA.map(d=>{ const on=owned.includes(d.id); return `<div class="achv${on?' on':''}" title="${esc(d.p)}"><div class="achv-ic">${on?d.e:'❔'}</div><div class="achv-name">${on?esc(d.n):'???'}</div><div class="achv-tip" style="color:${on?RARITY_COLOR[d.r]:'var(--muted)'}">${d.r}</div></div>`; }).join("") + `</div>`;
+    + `<div class="achv-grid">` + GACHA.map(d=>{ const on=owned.includes(d.id); return `<div class="achv drv${on?' on':''}" title="${esc(d.p)}" style="--rc:${RARITY_COLOR[d.r]}"><div class="drv-veh">${on?d.e:'❔'}</div><div class="achv-name">${on?esc(d.n):'???'}</div><div class="achv-tip" style="color:${on?RARITY_COLOR[d.r]:'var(--muted)'}">${d.r}${on&&d.r!=='common'?' ✦':''}</div></div>`; }).join("") + `</div>`;
   const bShared = stats.buddy && stats.buddy.sharedStreak!=null ? stats.buddy.sharedStreak : (stats.streak||0);
   const bNote = beOn() ? (stats.buddy && stats.buddy.pending ? "waiting for them to tap your link…" : "synced live") : "prototype — goes live once the backend is configured";
   const buddyCard = stats.buddy
@@ -1747,6 +1764,7 @@ function placeOrder(){
   $("#track-reveal").style.display="none"; $("#track-live").style.display="block";
   const rd=$("#rider"); rd.style.opacity="1";
   const mort=rd.querySelector(".mort"); if(mort) mort.textContent="👻";
+  { let veh=rd.querySelector(".veh"); if(!veh){ veh=document.createElement("span"); veh.className="veh"; rd.appendChild(veh); } veh.textContent = (gd && gd.e && gd.e!=="👻") ? gd.e : "💨"; }
   const mp=$("#track-map"); if(mp) mp.classList.remove("arrive");
   $("#track-others").textContent = 220+Math.floor(Math.random()*80);
   $("#dchat").innerHTML="";
@@ -1807,7 +1825,7 @@ function revealTruth(){
   if(po.city.id===featuredCity().id){ addXp(15); setTimeout(()=>toast("🌟 tonight's featured city — +15 XP bonus"), 1900); }
   lastShare = { usd: po.total, label: money(po.total, USD), streak: stats.streak, tier: newTier, city: (po.cities&&po.cities.length>1)?`${po.cities.length} cities`:po.city.name };
   if(po.flight){ globeProgress(100); $("#track-live").style.display="none"; }
-  else { const rd=$("#rider"); const mort=rd.querySelector(".mort"); if(mort) mort.textContent="👻💨"; rd.style.left="120%"; rd.style.top="-12%"; rd.style.opacity="0"; routeProgress(100); const mp=$("#track-map"); if(mp) mp.classList.add("arrive"); $("#track-live").style.display="none"; }
+  else { const rd=$("#rider"); const mort=rd.querySelector(".mort"); if(mort) mort.textContent="👻"; const veh=rd.querySelector(".veh"); if(veh) veh.textContent="💨"; rd.style.left="120%"; rd.style.top="-12%"; rd.style.opacity="0"; routeProgress(100); const mp=$("#track-map"); if(mp) mp.classList.add("arrive"); $("#track-live").style.display="none"; }
   snd("whoosh");
   const newDriver = po.gachaDriver ? collectDriver(po.gachaDriver) : false;
   if(Math.random()<0.22){ const gift=pick(HONORIFICS); addXp(5); setTimeout(()=>toast(gift), 1500); }
@@ -1825,7 +1843,7 @@ function revealTruth(){
     <div class="sub" style="color:#d98324;font-weight:800;margin-top:6px">🔥 ${stats.streak}-night no-spend streak${usedFreeze?' · 🧊 freeze used':''}</div>
     ${combo>=2?`<div class="combo">⚡ ${combo}× dodge combo!</div>`:""}
     ${milestone?`<div class="milestone">${milestone}</div>`:""}
-    ${po.gachaDriver?`<div class="milestone" style="background:${RARITY_COLOR[po.gachaDriver.r]};color:#fff;border-color:var(--ink)">${newDriver?"🆕 new courier":"🛵 courier"}: ${po.gachaDriver.e} ${esc(po.gachaDriver.n)} · ${po.gachaDriver.r}</div>`:""}
+    ${po.gachaDriver?`<div class="courier-card ${po.gachaDriver.r}${newDriver?' is-new':''}" style="--rc:${RARITY_COLOR[po.gachaDriver.r]}">${newDriver?`<div class="cc-new">🆕 NEW COURIER</div>`:`<div class="cc-new cc-dup">tonight's courier</div>`}<div class="cc-veh">${po.gachaDriver.e}</div><div class="cc-name">${esc(po.gachaDriver.n)}</div><div class="cc-quip">${esc(po.gachaDriver.p)}</div><div class="cc-rarity">${po.gachaDriver.r}${po.gachaDriver.r!=='common'?' ✦':''}</div></div>`:""}
     <div style="margin-top:22px">
       <button class="cta" style="position:static" onclick="shareToRoom()">🌙 share it to the room</button>
       <button class="cta gold" style="position:static" onclick="shareWin()">📸 share the win</button>
@@ -1904,7 +1922,7 @@ function renderGlobe(route, home, durSec){
     <path class="arc-bed" d="${arcD}"/>
     <path class="arc" id="globe-arc-path" d="${arcD}"/>
     ${pins}
-    <g class="gplane" id="globe-plane" style="transform:translate(${sp0.x.toFixed(1)}px,${sp0.y.toFixed(1)}px)"><g id="globe-plane-rot"><path d="M12,0 L-8,-6.5 L-3.5,0 L-8,6.5 Z"/></g></g>
+    <g class="gplane" id="globe-plane" style="transform:translate(${sp0.x.toFixed(1)}px,${sp0.y.toFixed(1)}px)"><g id="globe-plane-rot"><g class="gplane-art"><circle class="gplane-halo" cx="0" cy="0" r="15"/><path class="gplane-body" d="M22,0 L-9,-7 L-3,0 L-15,0 L-9,7 Z M-9,-7 L-9,-13 L-2,-3 M-9,7 L-9,13 L-2,3"/></g></g></g>
   </svg>
   <div class="glabel">${labelTxt}</div>`;
 }
@@ -1918,6 +1936,7 @@ function globeProgress(p){
   pos.style.transform=`translate(${pt.x.toFixed(1)}px,${pt.y.toFixed(1)}px)`;
   if(rot){ const ang=Math.atan2(pt2.y-pt.y,pt2.x-pt.x)*180/Math.PI; rot.setAttribute('transform',`rotate(${ang.toFixed(1)})`); }
   const svg=pos.ownerSVGElement; if(svg){ svg.style.transform='scale('+(1+0.45*f).toFixed(3)+')'; svg.style.transition='transform 2.4s linear'; }
+  const art=pos.querySelector('.gplane-art'); if(art){ art.style.transform='scale('+(1/(1+0.45*f)).toFixed(3)+')'; }
 }
 
 /* ---- affiliate handoff: the ONLY money path, opt-in, never the default ---- */
