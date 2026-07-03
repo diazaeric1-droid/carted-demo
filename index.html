@@ -1179,6 +1179,23 @@ function etaStr(p){ if(p._cityId==="konbini") return "⚡ instant"; const fl = p
 /* photo layer: baked Google photo when available, keyworded stock fallback, emoji last resort */
 const BASE = location.pathname.includes("/carted-demo") ? "/carted-demo/" : "/";
 const DATA_V = "fic1";   // bump when baked data changes — busts HTTP caches on places/activities/menus JSON
+/* ===== native shell (Capacitor) — the same file runs as the iOS app; NATIVE gates the seasoning ===== */
+const NATIVE = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+function haptic(kind){ if(!NATIVE) return; try{ const H=window.Capacitor.Plugins.Haptics; if(!H) return;
+  if(kind==="whoosh"||kind==="levelup") H.notificationOccurred ? H.notificationOccurred({type:"SUCCESS"}) : H.notification({type:"SUCCESS"});
+  else if(kind==="chime") H.impact({style:"MEDIUM"});
+  else H.impact({style:"LIGHT"});
+}catch(e){} }
+/* one-shot "last call" at the user's own habitual order hour — never fires on a night already banked */
+function nextNudgeAt(){ const hr=(stats.nudgeHour!=null?stats.nudgeHour:22); const d=new Date(); d.setHours(hr,30,0,0); if(d<=new Date() || orderedTonight()) d.setDate(d.getDate()+1); return d; }
+async function nativeNudge(){ try{
+  const LN=window.Capacitor.Plugins.LocalNotifications; if(!LN) return false;
+  let p=await LN.checkPermissions(); if(p.display!=="granted") p=await LN.requestPermissions();
+  if(p.display!=="granted") return false;
+  try{ await LN.cancel({notifications:[{id:77}]}); }catch(e){}
+  await LN.schedule({notifications:[{ id:77, title:"Mort 👻", body:"last call — the kitchens close at 4am. your streak's waiting 🔥", schedule:{ at: nextNudgeAt(), allowWhileIdle:true } }]});
+  return true;
+}catch(e){ return false; } }
 /* backend (Supabase) — fill after deploying ~/carted-app/supabase (see supabase/BACKEND.md).
    Leave url:"" and the app runs fully, with push as a local-only demo + local buddy. */
 const CARTED_BE = { url: "https://twndjxqdhqcyxfdsteas.supabase.co/functions/v1", vapidPublic: "BAxbaruJEgg_WXoiGgKVTBzxffQxkiitbym8CX9wh8SgROjG9Tsh6C52DM6RPwYjqzmg4e4aEq-442SNBX9y5vM" };
@@ -1282,7 +1299,7 @@ function nightShift(key, delta){ const a=key.split("-").map(Number); const dt=ne
 /* ---- tiny synth sounds (no assets) + mute toggle ---- */
 let AC = null;
 function tone(f, t0, dur, type, vol){ const o=AC.createOscillator(), g=AC.createGain(); o.type=type||"sine"; o.frequency.value=f; g.gain.setValueAtTime(.0001, AC.currentTime+t0); g.gain.exponentialRampToValueAtTime(vol||.1, AC.currentTime+t0+.012); g.gain.exponentialRampToValueAtTime(.0001, AC.currentTime+t0+dur); o.connect(g); g.connect(AC.destination); o.start(AC.currentTime+t0); o.stop(AC.currentTime+t0+dur+.05); }
-function snd(kind){ if(!sndOn) return; try{
+function snd(kind){ haptic(kind); if(!sndOn) return; try{
   AC = AC || new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==="suspended") AC.resume();
   if(kind==="pop") tone(740,0,.09,"triangle",.09);
   else if(kind==="ding") tone(1175,0,.12,"sine",.07);
@@ -1655,19 +1672,11 @@ function loadAccount(){ try{ account=JSON.parse(localStorage.getItem("carted_acc
 function saveAccount(){ try{ localStorage.setItem("carted_account", JSON.stringify(account)); }catch(e){} }
 function saveStats(){ try{ localStorage.setItem("carted_stats", JSON.stringify(stats)); }catch(e){} }
 function avatarGlyph(){ return account ? "🌙" : "🙂"; }
-function signIn(provider){
-  const h = prompt(`Mock ${provider} sign-in — pick a handle:`, "nightowl");
-  if(!h || !h.trim()) return;
-  account = { handle: h.trim().replace(/^@/,""), provider }; saveAccount();
-  const av=$("#avatar-btn"); if(av) av.textContent=avatarGlyph();
-  renderProfile(); toast("signed in — favorites sync (in prod) ☁️");
-}
-function signOut(){ account=null; saveAccount(); const av=$("#avatar-btn"); if(av) av.textContent=avatarGlyph(); renderProfile(); toast("signed out"); }
+/* no accounts, by design: everything lives on this device. keeps the app private-by-default
+   and out of Apple's 4.8 (Sign in with Apple) + 5.1.1(v) (account deletion) obligations. */
 function renderProfile(){
   const favCount = Object.keys(savedPlaces).length;
-  const head = account
-    ? `<div class="profile-card"><div class="pa">🌙</div><div class="ph">@${esc(account.handle)}</div><div class="pe">signed in with ${esc(account.provider)} · synced</div></div>`
-    : `<div class="profile-card"><div class="pa">🙂</div><div class="ph">browsing as a guest</div><div class="pe">sign in to sync your favorites &amp; streak across devices</div></div>`;
+  const head = `<div class="profile-card"><div class="pa">🌙</div><div class="ph">your night-owl pass</div><div class="pe">no account, no sign-up — everything lives on this device</div></div>`;
   const grid = `
     <div class="pstats">
       <div class="pstat"><div class="v green">$${Math.round(stats.savedUsd).toLocaleString()}</div><div class="k">saved all-time (≈USD)</div></div>
@@ -1681,10 +1690,7 @@ function renderProfile(){
       <div class="pstat"><div class="v">🧊 ${stats.freezes||0}</div><div class="k">streak freezes</div></div>
       <div class="pstat"><div class="v">⚡ ${stats.maxCombo||0}×</div><div class="k">best dodge combo</div></div>
     </div>`;
-  const auth = (account
-    ? `<button class="signin-btn" onclick="signOut()">sign out</button>`
-    : `<button class="signin-btn dark" onclick="signIn('Apple')"> Sign in with Apple</button><button class="signin-btn" onclick="signIn('Google')">Sign in with Google</button>`)
-    + `<button class="signin-btn" onclick="shareWin('streak')">📸 flex your streak card</button>`
+  const auth = `<button class="signin-btn" onclick="shareWin('streak')">📸 flex your streak card</button>`
     + `<button class="signin-btn" onclick="showWrapped()">📊 your week, wrapped</button>`
     + `<button class="signin-btn" onclick="ghostPush()">${stats.pushOptIn?"🔔 ghost texts: on":"🔔 let the ghost text me"}</button>`
     + `<button class="signin-btn" onclick="toggleAsmr()">${asmrOn?"🍳 kitchen ASMR: on":"🍳 kitchen ASMR: off"}</button>`
@@ -1886,7 +1892,9 @@ function revealTruth(){
   if(triedNew){ addXp(8); setTimeout(()=>toast("✨ first time at a new spot — +8 XP"), 2100); }
   const sp=spotlightFor(po.city);
   if(sp && parentKeys.includes(sp._key) && !(stats.spotDone||[]).includes(spotKey(po.city.id))){ stats.spotDone=stats.spotDone||[]; stats.spotDone.push(spotKey(po.city.id)); stats.freezes=Math.min(3,(stats.freezes||0)+1); addXp(30); setTimeout(()=>toast("🎯 spotlight complete! +30 XP & a 🧊 freeze"), 2300); }
+  stats.nudgeHour=new Date().getHours();                 // habitual-hour anchor for the last-call nudge
   saveStats(); checkFitUnlocks();
+  if(NATIVE && stats.pushOptIn) nativeNudge();           // re-arm for tomorrow (never re-fires tonight)
   const newTier=tierFor(stats.savedUsd).t;
   let milestone="";
   if(newTier.name!==beforeTier){ milestone=`${newTier.ic} new rank unlocked: ${newTier.name}!`; stats.freezes=Math.min(3,(stats.freezes||0)+1); saveStats(); }
@@ -2162,6 +2170,12 @@ function fireGhostText(){ const hat=ghostFit().hat||"👻"; const atRisk = stats
   try{ if(navigator.serviceWorker && navigator.serviceWorker.ready){ navigator.serviceWorker.ready.then(reg=>reg.showNotification("Carted 🌙",{body, icon:BASE+"icon-192.png", badge:BASE+"icon-192.png", tag:"carted-ghost", renotify:true})).catch(()=>{ try{ new Notification("Carted 🌙",{body}); }catch(_){} }); } else new Notification("Carted 🌙",{body}); }catch(e){ try{ new Notification("Carted 🌙",{body}); }catch(_){} } }
 function scheduleGhostNudge(){ clearTimeout(window.__ghostNudge); window.__ghostNudge=setTimeout(fireGhostText, 60000); } // demo cadence while tab is alive
 async function ghostPush(){
+  if(NATIVE){
+    const ok = await nativeNudge();
+    if(ok){ stats.pushOptIn=true; saveStats(); const hr=(stats.nudgeHour!=null?stats.nudgeHour:22); showModal(`<div class="m-emoji">🔔</div><div class="m-title">ghost texts: ON</div><div class="m-body">Mort will text you around <b>${hr}:30</b> — your usual carting hour. never on a night you've already dodged.</div><button class="cta" style="position:static" onclick="closeModal()">ok 👻</button>`); }
+    else toast("notifications are off in Settings 🤷");
+    if($("#view-profile").classList.contains("active")) renderProfile(); return;
+  }
   if(!("Notification" in window) || !("serviceWorker" in navigator)){
     const iOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
     const standalone = window.navigator.standalone || matchMedia("(display-mode: standalone)").matches;
@@ -2682,7 +2696,8 @@ document.addEventListener("pointerdown", e=>{ const sc=document.querySelector(".
 trackOpen();
 if(!localStorage.getItem("carted_onboard")){ setTimeout(showOnboard, 500); }
 document.addEventListener("keydown", e=>{ if(e.key==="Enter" && document.activeElement && document.activeElement.id==="composer-input") postFromComposer(); });
-if("serviceWorker" in navigator){ navigator.serviceWorker.register(BASE+"sw.js").catch(()=>{}); }
+if(!NATIVE && "serviceWorker" in navigator){ navigator.serviceWorker.register(BASE+"sw.js").catch(()=>{}); }
+if(NATIVE && stats.pushOptIn) nativeNudge();   // re-arm the one-shot last-call on every native launch
 </script>
 </body>
 </html>
