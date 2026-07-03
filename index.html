@@ -208,6 +208,15 @@
   .post .pmeta { font-size: 11.5px; color: var(--muted); }
   .post .pmeta b { color: var(--text); font-weight: 700; }
   .post .mine-tag { color: var(--accent); font-weight: 700; }
+  .post.ghostp { background: linear-gradient(0deg, rgba(124,77,204,.05), rgba(124,77,204,.05)), var(--card); border-style: dashed; }
+  .post .gtag { color: #7c4dcc; font-weight: 800; }
+  .ghost-note { font-size: 10.5px; color: var(--muted); font-weight: 700; margin-top: 5px; opacity: .85; line-height: 1.35; }
+  .pod-sub { font-size: 11px; color: var(--muted); font-weight: 800; margin-top: 7px; }
+  .kclosed { background: var(--card); border: 2px dashed var(--ink); border-radius: 16px; padding: 15px 16px; text-align: center; font-weight: 800; font-size: 14.5px; margin-top: 4px; box-shadow: 3px 3px 0 var(--ink); }
+  .kclosed .kc-sub { font-size: 11.5px; color: var(--muted); font-weight: 700; margin-top: 6px; }
+  .tk-line { background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 10px 12px; font-size: 12.5px; font-weight: 700; color: var(--muted); margin-bottom: 10px; box-shadow: 2px 2px 0 var(--ink); }
+  .tk-line b { color: var(--text); }
+  .fic-note { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 14px; text-align: center; opacity: .85; }
   .post .ptext { font-size: 14.5px; line-height: 1.45; margin-bottom: 11px; }
   .reacts { display: flex; gap: 8px; }
   .chip { flex: 1; background: var(--screen); border: 2px solid var(--ink); border-radius: 11px; padding: 8px 4px; font-size: 13px; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: transform .1s, background .15s, color .15s; box-shadow: 2px 2px 0 var(--ink); font-weight: 700; }
@@ -683,8 +692,8 @@
           <div class="brand">
             <button class="avatar" id="avatar-btn" onclick="go('profile')">🙂</button>
             <h1>Carted</h1>
-            <div class="sub">browse real places. cart it all. the driver never comes.</div>
-            <div class="live-pill"><span class="dot"></span><span class="lp-count"><span id="live-count">1,247</span> night owls up</span><span class="lp-sep">·</span><span id="ticker-msg" class="lp-ticker"></span></div>
+            <div class="sub">fill the cart in 50 real cities. the driver never comes.</div>
+            <div class="live-pill"><span class="dot"></span><span class="lp-count"><span id="live-count">1,247</span> 👻 ghosts up</span><span class="lp-sep">·</span><span id="ticker-msg" class="lp-ticker"></span></div>
           </div>
 
           <!-- #1+2 consolidated: the 5 "tonight" nudges collapse behind one rotating teaser -->
@@ -750,7 +759,7 @@
               </div>
             </div>
           </div>
-          <div class="osm-credit">📍 places © OpenStreetMap contributors &amp; Google · ratings + photos © Google</div>
+          <div class="osm-credit">🍳 every restaurant here is fictional — the cities are real · dish data &amp; photos from <a href="https://www.themealdb.com" target="_blank" rel="noopener" style="color:inherit">TheMealDB</a></div>
         </section>
 
         <!-- DETAIL -->
@@ -776,7 +785,8 @@
         <section class="view" id="view-room">
           <div class="brand">
             <h1 style="font-size:24px">the 2 am room</h1>
-            <div class="live2"><span class="dot"></span> <b id="room-live" style="color:var(--go);font-weight:800">1,247</b>&nbsp;up worldwide · <b id="room-dodged" style="color:var(--go)">$—</b>&nbsp;dodged tonight</div>
+            <div class="live2"><span class="dot"></span> <b id="room-live" style="color:var(--go);font-weight:800">1,247</b>&nbsp;👻 ghosts up · <b id="room-dodged" style="color:var(--go)">$—</b>&nbsp;on the ghost ledger</div>
+            <div class="ghost-note">👻 = resident ghost — friendly fiction keeping the room warm, not people. your posts burn at sunrise. 🌅</div>
           </div>
           <div id="room-podium"></div>
           <div id="city-board"></div>
@@ -812,7 +822,7 @@
             <div id="track-live">
               <div class="eta"><span id="eta-num">14</span><span class="u"> min</span></div>
               <div class="stage" id="track-stage">confirming your (non-)order…</div>
-              <div class="track-presence" id="track-presence">🚗 <b id="track-others">241</b> people are waiting on a driver who'll never come</div>
+              <div class="track-presence" id="track-presence">👻 <b id="track-others">241</b> ghosts are waiting on a driver who'll never come</div>
               <div class="dchat" id="dchat"></div>
             </div>
             <div id="track-reveal" style="display:none"></div>
@@ -832,14 +842,14 @@
           <div class="brand">
             <h1 style="font-size:26px">things to do</h1>
             <div class="sub">your someday list — dream the trip, skip the flight 🌙</div>
-            <div class="live-pill"><span class="dot"></span><span class="lp-count"><span id="explore-live">843</span> exploring <span id="explore-cityname">tonight</span></span><span class="lp-sep">·</span><span id="explore-ticker" class="lp-ticker"></span></div>
+            <div class="live-pill"><span class="dot"></span><span class="lp-count"><span id="explore-live">843</span> 👻 ghosts exploring <span id="explore-cityname">tonight</span></span><span class="lp-sep">·</span><span id="explore-ticker" class="lp-ticker"></span></div>
           </div>
           <div class="city-bar" id="explore-city-bar"></div>
           <div class="passport" id="explore-passport"></div>
           <button class="plan-btn" onclick="planMyNight()">📋 plan my someday night here →</button>
           <div class="efilters" id="explore-filters"></div>
           <div id="explore-list"></div>
-          <div class="osm-credit">things to do © Google</div>
+          <div class="osm-credit">✨ real places for the someday list — words our own</div>
         </section>
 
       </div>
@@ -857,15 +867,15 @@
 
 <script>
 /* ----------------------------------------------------------
-   Carted — 50 food capitals, pre-baked from Google Places
-   (real ratings, reviews, price levels, photos — see
-   bake-places.mjs) with live OpenStreetMap fallback for
-   un-baked + custom cities. Cross-city orders show the real
-   flight time to your location. You still can't order —
-   that's the whole point. Favorites persist locally.
+   Carted — 50 real food capitals, FICTIONAL restaurants
+   (generated by bake-fictional.mjs from hand-authored city
+   packs; dishes + photos from TheMealDB) with live
+   OpenStreetMap fallback for custom cities. Cross-city
+   orders show the real flight time to your location. You
+   still can't order — that's the whole point.
 ---------------------------------------------------------- */
 
-/* the 50 food capitals — real coords + local currency; pre-baked Google data with live OSM fallback */
+/* the 50 food capitals — real coords + local currency; fictional baked places with live OSM fallback */
 const CITIES = [
   { id:"nyc", name:"New York",     flag:"🗽", region:"am", cur:{sym:"$",dec:2},   pf:1,    delivery:5.99, late:2.99, tax:0.0875, lat:40.7280,  lng:-73.9990,  radius:2200 },
   { id:"la",  name:"Los Angeles",  flag:"🌴", region:"am", cur:{sym:"$",dec:2},   pf:1,    delivery:5.49, late:2.99, tax:0.095,  lat:34.0760,  lng:-118.3700, radius:3000 },
@@ -1052,22 +1062,24 @@ const TICKER = [
   "👻 tonight's drivers: imaginary, as always",
   "somebody just hit a 14-night streak 🔥 unreal",
 ];
+/* resident ghosts: the room's DISCLOSED fictional regulars. every non-"you" post is a
+   named ghost, never presented as a human — the honesty line the whole brand stands on. */
 const ROOM_SEED = [
-  {ic:"🥩", text:"almost DoorDashed $40 of wings. drank water instead 🥲", city:"Brooklyn", ago:"3m", streak:4, r:{hug:42, me:18, go:7}},
-  {ic:"🍕", text:"staring at Joe's pizza for 20 min. not ordering.", city:"Manhattan", ago:"1m", r:{hug:21, me:55, go:12}},
-  {ic:"🍜", text:"carted pho from Hanoi to Houston. 17h flight ETA. driver no-showed (he's a ghost) 🥲", city:"Houston", ago:"4m", streak:12, r:{hug:48, me:22, go:5}},
-  {ic:"🍜", text:"¥980 ramen craving in Shibuya. window-shopped it.", city:"Tokyo", ago:"5m", streak:7, r:{hug:33, me:29, go:3}},
-  {ic:"🌮", text:"carted MX$200 of tacos and closed the app 💪", city:"Mexico City", ago:"2m", r:{hug:14, me:40, go:9}},
-  {ic:"🍣", text:"ordered omakase from Tokyo. it's boarding a fake 787 right now ✈️", city:"Chicago", ago:"6m", streak:21, r:{hug:38, me:17, go:11}},
-  {ic:"🍗", text:"chimaek craving at 2am. held back. tell me i'm strong", city:"Seoul", ago:"8m", streak:9, r:{hug:51, me:11, go:22}},
-  {ic:"🥓", text:"girl dinner = me looking at a Dishoom naan roll", city:"London", ago:"now", r:{hug:67, me:31, go:15}},
+  {ic:"🥩", ghost:"Bea", text:"almost DoorDashed $40 of wings. drank water instead 🥲", city:"Brooklyn", ago:"3m", streak:4, r:{hug:42, me:18, go:7}},
+  {ic:"🍕", ghost:"Louie", text:"staring at a dollar slice for 20 min. not ordering.", city:"Manhattan", ago:"1m", r:{hug:21, me:55, go:12}},
+  {ic:"🍜", ghost:"Pho-be", text:"carted pho from Hanoi to Houston. 17h flight ETA. driver no-showed (he's me) 🥲", city:"Houston", ago:"4m", streak:12, r:{hug:48, me:22, go:5}},
+  {ic:"🍜", ghost:"Momo", text:"¥980 ramen craving in Shibuya. window-shopped it.", city:"Tokyo", ago:"5m", streak:7, r:{hug:33, me:29, go:3}},
+  {ic:"🌮", ghost:"Sal", text:"carted MX$200 of tacos and closed the app 💪", city:"Mexico City", ago:"2m", r:{hug:14, me:40, go:9}},
+  {ic:"🍣", ghost:"Etta", text:"ordered omakase from Tokyo. it's boarding a fake 787 right now ✈️", city:"Chicago", ago:"6m", streak:21, r:{hug:38, me:17, go:11}},
+  {ic:"🍗", ghost:"Gus", text:"chimaek craving at 2am. held back. tell me i'm strong", city:"Seoul", ago:"8m", streak:9, r:{hug:51, me:11, go:22}},
+  {ic:"🥓", ghost:"Nori", text:"girl dinner = me haunting a naan roll photo", city:"London", ago:"now", r:{hug:67, me:31, go:15}},
 ];
 const INCOMING = [
-  {ic:"🍟", text:"just carted cheese fries and bailed", city:"Chicago"},
-  {ic:"🍣", text:"almost spent ¥4000 on sushi. ate cereal.", city:"Tokyo"},
-  {ic:"🍗", text:"no-spend night #2, still up 🎉", city:"Seoul"},
-  {ic:"🍕", text:"window-shopped a whole pizza in Brixton", city:"London"},
-  {ic:"🌯", text:"saved MX$120 on tacos. proud of me.", city:"Mexico City"},
+  {ic:"🍟", ghost:"Clem", text:"just carted cheese fries and bailed", city:"Chicago"},
+  {ic:"🍣", ghost:"Miso", text:"almost spent ¥4000 on sushi. ate cereal.", city:"Tokyo"},
+  {ic:"🍗", ghost:"Wanda", text:"no-spend night #2, still translucent 🎉", city:"Seoul"},
+  {ic:"🍕", ghost:"Pip", text:"window-shopped a whole pizza in Brixton", city:"London"},
+  {ic:"🌯", ghost:"Hattie", text:"saved MX$120 on tacos. proud of me.", city:"Mexico City"},
 ];
 const REACT_META = { hug:"🫂", me:"😋", go:"🔥" };
 const OVERPASS = ["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter","https://maps.mail.ru/osm/tools/overpass/api/interpreter"];
@@ -1166,6 +1178,7 @@ function placeFlight(p){ const fl=flightInfo(cityOf(p)); if(!fl) return null; co
 function etaStr(p){ if(p._cityId==="konbini") return "⚡ instant"; const fl = placeFlight(p); return fl ? `✈️ ${fl.label}` : `⏱ ${etaFor(p)} min`; }
 /* photo layer: baked Google photo when available, keyworded stock fallback, emoji last resort */
 const BASE = location.pathname.includes("/carted-demo") ? "/carted-demo/" : "/";
+const DATA_V = "fic1";   // bump when baked data changes — busts HTTP caches on places/activities/menus JSON
 /* backend (Supabase) — fill after deploying ~/carted-app/supabase (see supabase/BACKEND.md).
    Leave url:"" and the app runs fully, with push as a local-only demo + local buddy. */
 const CARTED_BE = { url: "https://twndjxqdhqcyxfdsteas.supabase.co/functions/v1", vapidPublic: "BAxbaruJEgg_WXoiGgKVTBzxffQxkiitbym8CX9wh8SgROjG9Tsh6C52DM6RPwYjqzmg4e4aEq-442SNBX9y5vM" };
@@ -1193,7 +1206,7 @@ window.cartedReport = function(){ const nights=_aGet("carted_nights",[]); const 
 
 /* ===== first-run onboarding: 3 punchy sticker-pop beats (for cold TikTok traffic) ===== */
 const OB = [
-  { e:"🌍", h:"real food, everywhere", s:"browse actual restaurants from 50 cities — live, worldwide. real photos, real menus." },
+  { e:"🌍", h:"midnight kitchens, everywhere", s:"browse dream restaurants across 50 real cities — real dishes, fictional kitchens, zero consequences." },
   { e:"🛒", h:"cart it, call the ghost", s:"fill your cart with whatever you're craving and a ghost courier flies it across the globe to you." },
   { e:"💸", h:"…it never comes", s:"the driver was never real. you keep every dollar you didn't spend. that's the whole point. 👻" },
 ];
@@ -1434,7 +1447,7 @@ function loadCity(city, force){
   if(!force && city._places){ city._state="ready"; if(curCity().id===city.id){ renderFeed(); teleportLand(city); } return; }
   city._state="loading"; if(curCity().id===city.id) renderFeed();
   // try pre-baked static data first; fall through to Overpass on miss
-  fetch(`${BASE}places/${city.id}.json`)
+  fetch(`${BASE}places/${city.id}.json?v=${DATA_V}`)
     .then(r=>{ if(!r.ok) throw new Error("no bake"); return r.json(); })
     .then(places=>{
       places.forEach(p=>{ placeByKey[p._key]=p; });
@@ -1604,7 +1617,7 @@ function renderFeed(){
     return;
   }
   $("#feed-section-label").textContent = `🔥 craving in ${esc(c.name)} right now`;
-  if(!c._state || c._state==="loading"){ $("#feed-list").innerHTML = `<div class="loading"><div class="ghost-emo" style="font-size:42px">👻</div><div style="margin-top:10px">summoning real places in ${esc(c.name)}…</div><span style="color:var(--muted);font-size:12px;font-weight:600">live from OpenStreetMap</span></div>`; return; }
+  if(!c._state || c._state==="loading"){ $("#feed-list").innerHTML = `<div class="loading"><div class="ghost-emo" style="font-size:42px">👻</div><div style="margin-top:10px">summoning the kitchens of ${esc(c.name)}…</div><span style="color:var(--muted);font-size:12px;font-weight:600">ghost-run establishments only</span></div>`; return; }
   if(c._state==="error"){ $("#feed-list").innerHTML = `<div class="empty"><div class="big">📡</div>couldn't reach OpenStreetMap.<br><span style="font-size:12px">${esc(c._err)}</span><br><br><button class="cta secondary" style="position:static" onclick="loadCity(curCity(),true)">retry</button></div>`; return; }
   if(c._state==="empty"){ $("#feed-list").innerHTML = `<div class="empty"><div class="big">🗺️</div>no places found here.<br>try another city.</div>`; return; }
   const list = applyFilters(c._places);
@@ -1711,12 +1724,10 @@ function openDetail(key){
   $("#d-stats").innerHTML = `<span>★ <b>${p.rate.toFixed(1)}</b> (${p.n.toLocaleString()})</span>${p.lvl?`<span><b>${"$".repeat(p.lvl)}</b></span>`:""}<span><b>${etaStr(p)}</b></span>`;
   const cp=couponFor(p); const dc=$("#d-coupon"); if(dc) dc.innerHTML = cp?`<button class="d-coupon" onclick="claimCoupon('${p._key}')"><span class="dc-tag">🎟️ ${cp.t}</span><span class="dc-d">${esc(cp.d)} · <span style="color:var(--hot)">🔥 ${couponQty(p)} left</span> · tap to clip</span></button>`:"";
   $("#d-menu").innerHTML = renderMenu(p);
-  const real = (p.rv||[]).map(r=>`<div class="review"><div class="top"><span class="stars">${starStr(r.r)}</span><span>${esc(r.a||"a local")} · google</span></div><div class="text">${esc(r.t)}</div></div>`).join("");
-  const mocks = mockFor(p).map(r=>`<div class="review"><div class="top"><span class="stars">${r[1]}</span><span>night owl 👻 · ${(hash(p.name)%23)+1}m ago</span></div><div class="text">${esc(r[0])}</div></div>`).join("");
+  const mocks = mockFor(p).map(r=>`<div class="review"><div class="top"><span class="stars">${r[1]}</span><span>ghost 👻 · ${(hash(p.name)%23)+1}m ago</span></div><div class="text">${esc(r[0])}</div></div>`).join("");
   $("#d-reviews").innerHTML =
-    `<div class="section-label" style="margin-top:18px">${real?"★ real ones (google)":"👻 night owls say (didn't eat)"}</div>`
-    + (real || mocks);
-  if(real) $("#d-reviews").innerHTML += `<div class="section-label">👻 night owls say (didn't eat)</div>${mocks}`;
+    `<div class="section-label" style="margin-top:18px">👻 ghosts say (nobody ate)</div>` + mocks
+    + `<div class="fic-note">👻 this restaurant is fictional — the city's real, the craving's real, the order never will be.</div>`;
   $("#d-add").onclick = ()=>go("cart");
   updateDetailFav(); go("detail");
 }
@@ -1738,7 +1749,7 @@ function renderCart(){
   const body=$("#cart-body"), c=curCity();
   const cityIds=[...new Set(cart.map(p=>p._cityId))], multi=cityIds.length>1;
   $("#cart-sub").textContent = cart.length ? (multi ? `🌍 ${cityIds.length} cities in your cart · don't check out.` : `from ${cart[0]._cityName||c.name} · don't check out.`) : "fill it up. don't check out.";
-  if(!cart.length){ body.innerHTML = `<div class="empty"><div class="big">👻</div>your cart is a ghost town.<br>go fill it up.<br><br><button class="cta secondary" style="position:static" onclick="go('feed')">browse places</button></div>`; return; }
+  if(!cart.length){ body.innerHTML = (orderedTonight()?`<div class="kclosed" style="margin-bottom:14px">🌙 tonight's dodge is banked 🔥 kitchens reopen in <b>${reopenLabel()}</b><div class="kc-sub">one order a night — fill tomorrow's cart in the meantime 🛒</div></div>`:"") + `<div class="empty"><div class="big">👻</div>your cart is a ghost town.<br>go fill it up.<br><br><button class="cta secondary" style="position:static" onclick="go('feed')">browse places</button></div>`; return; }
   const sub=cartSubtotal(), fl=flightInfo(c), quirks=cartQuirkFees();
   body.innerHTML = `
     ${cart.map((p,i)=>`<div class="cart-item"><div class="ci-thumb">${(p._menuItem&&p.photo)?`<img class="ph-img" src="${p.photo}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${p.ic}'))">`:p.ic}</div><div class="nm">${esc(p.dish)}<div style="font-size:11.5px;color:var(--muted);font-weight:400">${p._flag||""} ${esc(p._cityName||p.name)}</div></div><div class="pr">${money(p.price,p._cur)}${cityPfOf(p)!==1?`<div style="font-size:10.5px;color:var(--muted);font-weight:600">≈ ${money(usdOf(p),USD)}</div>`:""}</div><button class="rm" onclick="removeFromCart(${i})">✕</button></div>`).join("")}
@@ -1754,9 +1765,11 @@ function renderCart(){
     </div>
     <div class="boss"><span class="bossic">👹</span><span>the FEE BOSS wants <b style="color:var(--hot)">${money(cartFees(),USD)}</b> in junk fees${quirks.length?` (incl. ${quirks.map(q=>q.label).join(" + ")})`:""}.<br>place the order. dodge him.</span></div>
     <div class="deliver-to">${multi?`✈️ a ghost plane will hit all ${cityIds.length} cities, then you`:(fl?`✈️ flying <b>${esc(c.name)} → ${esc(HOME.label)}</b> · real flight time ${fl.label}`:`🛵 delivering nearby in ${esc(HOME.label)}`)} · <span class="dt-change" onclick="cityModal(true)">change</span></div>
-    <button class="cta" onclick="placeOrder()">place order ${fl?"✈️":"🚗"}</button>
+    ${orderedTonight()
+      ? `<div class="kclosed">🌙 you already dodged tonight — kitchens reopen in <b>${reopenLabel()}</b><div class="kc-sub">one order a night. that's the ritual. your cart keeps till tomorrow.</div></div>`
+      : `<button class="cta" onclick="placeOrder()">place order ${fl?"✈️":"🚗"}</button>`}
     <button class="cta secondary" onclick="go('feed')">keep browsing</button>
-    <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:12px">the button looks real. nothing gets charged.</div>`;
+    <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:12px">${orderedTonight()?"tonight's dodge is banked 🔥 see you at the next open.":"the button looks real. nothing gets charged."}</div>`;
     /* DEMO/PRE-AFFILIATE: real-money handoff removed until partner programs are live.
        Re-enable: <button class="order-real" onclick="orderForReal('cart')">…or just order it for real on a delivery app →</button> */
 }
@@ -1805,6 +1818,7 @@ function buildFlightStages(route){
   return stages;
 }
 function placeOrder(){
+  if(orderedTonight()){ snd("pop"); toast(`🌙 one order a night — kitchens reopen in ${reopenLabel()}`); return; }
   const c=curCity(), gd=rollDriver();
   const cities=[...new Set(cart.map(p=>p._cityId))];
   const route=buildRoute(cart, HOME);
@@ -1903,7 +1917,7 @@ function revealTruth(){
     <div style="margin-top:22px">
       <button class="cta" style="position:static" onclick="shareToRoom()">🌙 share it to the room</button>
       <button class="cta gold" style="position:static" onclick="shareWin()">📸 share the win</button>
-      <button class="cta secondary" style="position:static" onclick="resetCartAndBrowse()">do it again</button>
+      <button class="cta secondary" style="position:static" onclick="resetCartAndBrowse()">keep browsing 🌙</button>
     </div>
     <!-- DEMO/PRE-AFFILIATE: real-money handoff removed until partners live. Re-enable: <button class="order-real" onclick="orderForReal('reveal')">actually… order it for real →</button> -->
     <div class="track-presence" style="margin-top:14px"><b>${220+Math.floor(Math.random()*80)}</b> people didn't order, with you · <span onclick="go('feed')" style="color:var(--accent);cursor:pointer">I'm good</span></div>`;
@@ -2025,21 +2039,24 @@ function tonightBest(){ try{ const t=JSON.parse(localStorage.getItem("carted_ton
 function bumpTonight(usd){ const best=Math.max(tonightBest(), usd); try{ localStorage.setItem("carted_tonight", JSON.stringify({night:nightKey(), best})); }catch(e){} }
 function podiumHTML(){
   const s=hash(nightKey()); const spots=["Brooklyn","Shibuya","Camden","the Mission","Hongdae","Roma Norte","Montrose","Kreuzberg"];
-  let rows=[ {n:"night owl · "+spots[s%spots.length], v:180+(s%160)},
-             {n:"night owl · "+spots[(s>>3)%spots.length], v:Math.round((180+(s%160))*.78)},
-             {n:"night owl · "+spots[(s>>6)%spots.length], v:Math.round((180+(s%160))*.59)} ];
+  const gs=["Bea","Louie","Momo","Etta","Gus","Nori","Clem","Wanda"];
+  let rows=[ {n:"👻 "+gs[s%gs.length]+" · "+spots[s%spots.length], v:180+(s%160)},
+             {n:"👻 "+gs[(s>>3)%gs.length]+" · "+spots[(s>>3)%spots.length], v:Math.round((180+(s%160))*.78)},
+             {n:"👻 "+gs[(s>>6)%gs.length]+" · "+spots[(s>>6)%spots.length], v:Math.round((180+(s%160))*.59)} ];
   const mine=tonightBest();
   if(mine>=rows[2].v){ rows.push({n:"you 🫵", v:Math.round(mine), mine:true}); rows.sort((a,b)=>b.v-a.v); rows=rows.slice(0,3); }
   const medal=["🥇","🥈","🥉"];
-  return `<div class="podium"><div class="pod-title">🏆 tonight's biggest dodges</div>${rows.map((r,i)=>`<div class="prow${r.mine?' mine':''}"><span>${medal[i]}</span><span class="pn">${r.n}</span><b>$${r.v.toLocaleString()}</b></div>`).join("")}</div>`;
+  const beatNote = rows.some(r=>r.mine) ? `<div class="pod-sub">you out-dodged the ghosts tonight 👏</div>` : "";
+  return `<div class="podium"><div class="pod-title">🏆 tonight's biggest dodges · ghost division</div>${rows.map((r,i)=>`<div class="prow${r.mine?' mine':''}"><span>${medal[i]}</span><span class="pn">${r.n}</span><b>$${r.v.toLocaleString()}</b></div>`).join("")}${beatNote}</div>`;
 }
 function renderRoom(){
-  $("#room-podium").innerHTML = podiumHTML();
+  const tk=tonightsKitchen(), tf=featuredCity(); if(!tk) ensureKitchenLoaded();
+  $("#room-podium").innerHTML = (tk?`<div class="tk-line">🍳 tonight's kitchen: <b>${esc(tk.name)}</b> · ${tf.flag} ${esc(tf.name)} — every ghost here is dodging the same menu</div>`:"") + podiumHTML();
   renderCityBoard();
   const back=roomReturnNudge(); if(back) setTimeout(()=>toast(`💬 ${back} people reacted to your posts while you were gone`), 500);
   $("#room-feed").innerHTML = room.map((p,i)=>`
-    <div class="post${p.mine?' mine':''}">
-      <div class="phead"><span class="pic">${p.ic}</span><div class="pmeta">${p.mine?'<span class="mine-tag">you</span>':'<b>anon</b> · '+esc(p.city)} · ${p.ago}${p.streak?` · <span class="sbadge">🔥${p.streak}</span>`:""}</div></div>
+    <div class="post${p.mine?' mine':''}${p.ghost?' ghostp':''}">
+      <div class="phead"><span class="pic">${p.ic}</span><div class="pmeta">${p.mine?'<span class="mine-tag">you</span>':(p.ghost?`<span class="gtag">👻 ${esc(p.ghost)}</span> resident ghost · ${esc(p.city)}`:'<b>anon</b> · '+esc(p.city))} · ${p.ago}${p.streak?` · <span class="sbadge">🔥${p.streak}</span>`:""}</div></div>
       <div class="ptext">${esc(p.text)}</div>
       <div class="reacts">${["hug","me","go"].map(t=>`<button class="chip${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')">${REACT_META[t]} <span class="cnt">${p.r[t]}</span></button>`).join("")}<button class="chip pshare" onclick="sharePost(${i})">📤</button></div>
     </div>`).join("");
@@ -2060,7 +2077,7 @@ function sharePost(i){
 function saveMinePost(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); all.unshift({ic:post.ic,text:post.text,streak:post.streak||0,night:nightKey()}); localStorage.setItem("carted_room_mine", JSON.stringify(all.slice(0,12))); }catch(e){} }
 function loadMinePosts(){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); const live=all.filter(p=>p.night===nightKey()); if(live.length!==all.length){ try{ localStorage.setItem("carted_room_mine", JSON.stringify(live)); }catch(e){} } return live.map(p=>({ic:p.ic,text:p.text,streak:p.streak,city:"you",ago:"tonight",mine:true,r:{hug:1+Math.floor(Math.random()*5),me:Math.floor(Math.random()*4),go:Math.floor(Math.random()*2)},reacted:{}})); }catch(e){ return []; } }
 function makeMine(ic, text){ const post={ic, text, city:"you", ago:"now", mine:true, streak:stats.streak||0, r:{hug:0,me:0,go:0}, reacted:{}}; room.unshift(post); saveMinePost(post); renderRoom(); beSeen(post); track("room_post"); return post; }
-function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; makeMine("🌙", v); inp.value=""; snd("chime"); toast("posted — burns at sunrise 🌅"); addXp(4); questEvent("post"); }
+function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; makeMine("🌙", v); inp.value=""; snd("chime"); toast("posted — the resident ghosts are reading 👻 burns at sunrise 🌅"); addXp(4); questEvent("post"); }
 const CONFESS = ["almost got me. it didn't. 💪","called my name at 2am. i let it ring.","was THIS close. wallet's still shut.","tempted me for 20 whole minutes. survived."];
 function quickConfess(e){ makeMine(e, `${e} ${pick(CONFESS)}`); snd("chime"); toast("confessed to the room 🌙"); addXp(4); questEvent("post"); }
 function shareToRoom(){
@@ -2072,7 +2089,7 @@ function shareToRoom(){
 }
 function beSeen(post){ let n=0; const order=["me","hug","me","go","hug","me","hug"]; const tick=()=>{ if(!post||n>=order.length) return; post.r[order[n]]++; n++; if($("#view-room").classList.contains("active")) renderRoom(); setTimeout(tick, 850+Math.random()*750); }; setTimeout(tick, 650); }
 let lastIncoming=-1;
-function streamIncoming(){ if(!$("#view-room").classList.contains("active")) return; let idx; do { idx=Math.floor(Math.random()*INCOMING.length); } while(idx===lastIncoming && INCOMING.length>1); lastIncoming=idx; const s=INCOMING[idx]; room.unshift({ic:s.ic,text:s.text,city:s.city,ago:"now",streak:Math.random()<.4?2+Math.floor(Math.random()*19):0,r:{hug:Math.floor(Math.random()*6),me:Math.floor(Math.random()*9),go:Math.floor(Math.random()*3)},reacted:{}}); if(room.length>40) room.pop(); renderRoom(); }
+function streamIncoming(){ if(!$("#view-room").classList.contains("active")) return; let idx; do { idx=Math.floor(Math.random()*INCOMING.length); } while(idx===lastIncoming && INCOMING.length>1); lastIncoming=idx; const s=INCOMING[idx]; room.unshift({ic:s.ic,ghost:s.ghost,text:s.text,city:s.city,ago:"now",streak:Math.random()<.4?2+Math.floor(Math.random()*19):0,r:{hug:Math.floor(Math.random()*6),me:Math.floor(Math.random()*9),go:Math.floor(Math.random()*3)},reacted:{}}); if(room.length>40) room.pop(); renderRoom(); }
 
 /* ---- live count + ticker ---- */
 let tIdx=0;
@@ -2232,6 +2249,9 @@ function rtpResult(){ let top="🍽️", max=0; for(const k in rtpScore){ if(rtp
 /* --- 2 sunrise countdown for the room (TTL enforced by night-key in loadMinePosts) --- */
 function msToSunrise(){ const now=new Date(), r=new Date(now); r.setHours(4,0,0,0); if(now.getHours()>=4) r.setDate(r.getDate()+1); return r-now; }
 function burnLabel(){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); return `🌅 posts burn in ${h}h ${String(m).padStart(2,"0")}m`; }
+/* one ghost order a night (4am cutoff) — hard scarcity is what turns a toy into a ritual */
+function orderedTonight(){ return (stats.orders||0)>0 && stats.lastNight===nightKey(); }
+function reopenLabel(){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); return h>0?`${h}h ${String(m).padStart(2,"0")}m`:`${m}m`; }
 
 /* ============================================================
    Menus — tap a place -> a real, browsable menu. Mains are REAL
@@ -2319,7 +2339,7 @@ function loadActsSaved(){ try{ savedActs=JSON.parse(localStorage.getItem("carted
 function saveActs(){ try{ localStorage.setItem("carted_acts", JSON.stringify(savedActs)); }catch(e){} }
 function loadActs(city){
   if(activitiesData[city.id]){ if(curCity().id===city.id && $("#view-explore").classList.contains("active")) renderExplore(); return; }
-  fetch(`${BASE}activities/${city.id}.json`).then(r=>r.ok?r.json():[]).then(acts=>{
+  fetch(`${BASE}activities/${city.id}.json?v=${DATA_V}`).then(r=>r.ok?r.json():[]).then(acts=>{
     acts.forEach(a=>{ actByKey[a._key]=a; }); activitiesData[city.id]=acts;
     if(curCity().id===city.id && $("#view-explore").classList.contains("active")) renderExplore();
   }).catch(()=>{ activitiesData[city.id]=[]; if($("#view-explore").classList.contains("active")) renderExplore(); });
@@ -2482,13 +2502,23 @@ function shareWrapped(){ const w=stats.week||{usd:0,cities:[],crav:{}}, crav=top
 function featuredCity(){ return CITIES[hash(nightKey())%CITIES.length]; }
 const CRAV_NAMES = {"🍕":"pizza","🍜":"ramen","🌮":"tacos","🍔":"a smashburger","🍣":"sushi","🍛":"curry","🥟":"dumplings","🍗":"fried chicken","🥘":"something stewy","🍝":"pasta"};
 function cravingForecast(){ const EMO=Object.keys(CRAV_NAMES); const e=EMO[hash(nightKey()+deviceId())%EMO.length]; return {e, name:CRAV_NAMES[e]}; }
-function renderFeatured(){ const el=$("#featured-banner"); if(!el) return; const f=featuredCity(), cr=cravingForecast(), here=curCity().id===f.id;
-  el.innerHTML=`<button class="feat-banner" onclick="setCity(CITY_INDEX['${f.id}'])"><span class="fb-ic">${f.flag}</span><span class="fb-text"><b>tonight's city: ${esc(f.name)}${here?" ✓":""}</b><span class="fb-sub">dodge a cart here for +15 XP · you'll crave ${cr.e} ${cr.name} tonight</span></span><span class="fb-go">${here?"":"›"}</span></button>`; }
+/* TONIGHT'S KITCHEN — the synchronized shared object: one restaurant, seeded by date only,
+   identical for every user on earth (Wordle's "same word for everyone" mechanic).
+   It's the featured city's spotlight, so the existing +15 city and +30/🧊 spotlight rewards stack. */
+function tonightsKitchen(){ const f=featuredCity(); return (f && f._places && f._places.length) ? spotlightFor(f) : null; }
+function ensureKitchenLoaded(){ const f=featuredCity(); if(f._places || f._state==="loading") return;
+  loadCity(f);
+  const t=setInterval(()=>{ if(f._places){ clearInterval(t); if($("#view-feed").classList.contains("active")) renderFeatured(); if($("#view-room").classList.contains("active")) renderRoom(); } }, 600);
+  setTimeout(()=>clearInterval(t), 15000); }
+function goTonightsKitchen(){ const f=featuredCity(), k=tonightsKitchen(); setCity(CITY_INDEX[f.id]); if(k) setTimeout(()=>openDetail(k._key), 350); }
+function renderFeatured(){ const el=$("#featured-banner"); if(!el) return; const f=featuredCity(), cr=cravingForecast(), here=curCity().id===f.id, k=tonightsKitchen();
+  if(!k) ensureKitchenLoaded();
+  el.innerHTML=`<button class="feat-banner" onclick="goTonightsKitchen()"><span class="fb-ic">🍳</span><span class="fb-text"><b>tonight's kitchen: ${k?esc(k.name):"warming up…"} · ${f.flag} ${esc(f.name)}${here?" ✓":""}</b><span class="fb-sub">everyone on earth dodges the SAME kitchen tonight · order it: +45 XP & a 🧊 · you'll crave ${cr.e} ${cr.name}</span></span><span class="fb-go">›</span></button>`; }
 
 /* --- 5 city leaderboard (simulated; real version needs the backend aggregate) --- */
 function cityBoard(){ const board=CITIES.map(c=>({c, amt: 18000 + (hash(nightKey()+c.id)%190000)})).sort((a,b)=>b.amt-a.amt); const yc=curCity(); const yourRank=board.findIndex(b=>b.c.id===yc.id)+1; return {top:board.slice(0,5), yourRank, yc, yourAmt:board.find(b=>b.c.id===yc.id)?.amt||0}; }
 function renderCityBoard(){ const el=$("#city-board"); if(!el) return; const {top,yourRank,yc}=cityBoard(); const medal=["🥇","🥈","🥉","4","5"];
-  el.innerHTML=`<div class="cb-title">🏙️ cities dodging tonight</div>`+top.map((b,i)=>`<div class="cb-row${b.c.id===yc.id?' mine':''}"><span>${medal[i]}</span><span class="cb-name">${b.c.flag} ${esc(b.c.name)}</span><b>$${Math.round(b.amt).toLocaleString()}</b></div>`).join("")+(yourRank>5?`<div class="cb-row mine"><span>#${yourRank}</span><span class="cb-name">${yc.flag} ${esc(yc.name)} (you're here)</span><b>$${Math.round(cityBoard().yourAmt).toLocaleString()}</b></div>`:""); }
+  el.innerHTML=`<div class="cb-title">🏙️ ghost ledger · cities dodging tonight</div>`+top.map((b,i)=>`<div class="cb-row${b.c.id===yc.id?' mine':''}"><span>${medal[i]}</span><span class="cb-name">${b.c.flag} ${esc(b.c.name)}</span><b>$${Math.round(b.amt).toLocaleString()}</b></div>`).join("")+(yourRank>5?`<div class="cb-row mine"><span>#${yourRank}</span><span class="cb-name">${yc.flag} ${esc(yc.name)} (you're here)</span><b>$${Math.round(cityBoard().yourAmt).toLocaleString()}</b></div>`:""); }
 
 /* --- 2 in-app buddy nudge --- */
 function buddyNudge(){ if(!stats.buddy) return ""; if(stats.lastNight===nightKey()) return "";   // you already dodged
@@ -2634,7 +2664,7 @@ function renderMustTry(){ const el=$("#must-try"); if(!el) return; const c=curCi
 /* ---- boot ---- */
 CITIES.forEach((c,i)=>{ CITY_INDEX[c.id]=i; statsByCity[c.id]={saved:0,orders:0}; });
 loadSaved(); loadAccount(); loadHome(); loadActsSaved();
-fetch(BASE+"menus.json").then(r=>r.ok?r.json():null).then(j=>{ menusData=j; if($("#view-detail").classList.contains("active")&&currentDetailKey) openDetail(currentDetailKey); }).catch(()=>{});
+fetch(BASE+"menus.json?v="+DATA_V).then(r=>r.ok?r.json():null).then(j=>{ menusData=j; if($("#view-detail").classList.contains("active")&&currentDetailKey) openDetail(currentDetailKey); }).catch(()=>{});
 room = loadMinePosts();
 renderCityBar(); renderTally(); renderFeed();
 (function(){ const av=$("#avatar-btn"); if(av) av.textContent=avatarGlyph(); renderHud(); renderQuests(); setPresenceGhost(); })();

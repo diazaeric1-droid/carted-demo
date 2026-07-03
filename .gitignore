@@ -1,2 +1,5 @@
 .env
 .DS_Store
+
+# CNAME is pushed ONLY once IONOS DNS is live (A 185.199.108-111.153) — else github.io 301s to a dead domain
+CNAME

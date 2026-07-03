@@ -1,4 +1,4 @@
-const CACHE = "carted-v33";
+const CACHE = "carted-v34";
 const SHELL = [
   "./",
   "index.html",
@@ -25,8 +25,8 @@ self.addEventListener("fetch", e => {
   // Pass through all third-party API calls (Overpass, Nominatim, Google Fonts).
   // Same-origin check works on any host (github.io OR cartedapp.com).
   if (url.origin !== location.origin) return;
-  // Let the HTTP cache handle baked place + dish photos — keeps SW cache small
-  if (url.pathname.includes("/places/photos/") || url.pathname.includes("/menus/") || url.pathname.includes("/activities/")) return;
+  // Let the HTTP cache handle dish photos — keeps SW cache small
+  if (url.pathname.includes("/menus/")) return;
   e.respondWith(
     caches.match(e.request).then(cached => {
       if (cached) return cached;
