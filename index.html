@@ -223,6 +223,30 @@
   .room-tag { font-size: 12.5px; color: var(--muted); font-weight: 800; margin-top: 3px; }
   .reacts .chip .rlbl { font-size: 10px; font-weight: 800; color: var(--muted); margin: 0 4px 0 4px; }
   .reacts .chip.on .rlbl { color: inherit; }
+  /* the noodle cup — entry bar + the break overlay (our version of damta's cigarette) */
+  .cup-bar { width: 100%; display: flex; align-items: center; gap: 11px; background: #241d38; border: 2.5px solid var(--ink); border-radius: 16px; padding: 12px 13px; margin: 2px 0 12px; box-shadow: 3px 3px 0 var(--ink); cursor: pointer; text-align: left; color: #f7ecd9; }
+  .cup-bar:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
+  .cup-bar .cbr-ic { font-size: 24px; }
+  .cup-bar .cbr-txt { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .cup-bar .cbr-txt b { font-family: var(--disp); font-weight: 600; font-size: 14.5px; }
+  .cup-bar .cbr-sub { font-size: 11.5px; color: #b9a8e6; font-weight: 700; }
+  .cup-bar .cbr-go { font-size: 22px; font-weight: 800; }
+  .cup-ov { position: absolute; inset: 0; z-index: 60; background: linear-gradient(180deg, #241d38, #171226); display: flex; align-items: center; justify-content: center; animation: fade .3s ease; }
+  .cup-scene { text-align: center; color: #f7ecd9; width: 100%; padding: 24px; position: relative; }
+  .cup-x { position: absolute; top: -6px; right: 12px; background: none; border: none; color: #b9a8e6; font-size: 20px; font-weight: 800; cursor: pointer; padding: 8px; }
+  .cup-others { font-size: 12.5px; font-weight: 800; color: #b9a8e6; margin-bottom: 42px; }
+  .cup-stage { position: relative; display: inline-block; cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: none; }
+  .cup-emo { font-size: 110px; line-height: 1.1; filter: drop-shadow(0 12px 26px rgba(0,0,0,.5)); }
+  .cup-steam { position: absolute; left: 50%; top: -30px; transform: translateX(-50%); display: flex; gap: 9px; pointer-events: none; }
+  .cup-steam span { font-size: 21px; color: #cdbcf0; opacity: .8; animation: steam 2.6s ease-in-out infinite; }
+  .cup-steam span:nth-child(2) { animation-delay: .9s; }
+  .cup-steam span:nth-child(3) { animation-delay: 1.7s; }
+  .cup-steam.blown span { animation-duration: .7s; opacity: .25; }
+  @keyframes steam { 0% { transform: translateY(10px) scaleX(1); opacity: 0; } 30% { opacity: .85; } 100% { transform: translateY(-16px) scaleX(1.4); opacity: 0; } }
+  .cup-clock { font-family: var(--disp); font-size: 46px; font-weight: 700; margin-top: 12px; letter-spacing: 2px; }
+  .cup-hint { font-size: 12px; color: #b9a8e6; font-weight: 700; margin-top: 6px; }
+  .cup-ghostline { margin-top: 24px; font-size: 13.5px; font-weight: 700; color: #e8dcc6; opacity: .9; min-height: 20px; }
+  @media (prefers-reduced-motion: reduce) { .cup-steam span { animation: none; } }
   .post .ptext { font-size: 14.5px; line-height: 1.45; margin-bottom: 11px; }
   .reacts { display: flex; gap: 8px; }
   .chip { flex: 1; background: var(--screen); border: 2px solid var(--ink); border-radius: 11px; padding: 8px 4px; font-size: 13px; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: transform .1s, background .15s, color .15s; box-shadow: 2px 2px 0 var(--ink); font-weight: 700; }
@@ -794,6 +818,7 @@
             <div class="live2"><span class="dot"></span> <b id="room-live" style="color:var(--go);font-weight:800">1,247</b>&nbsp;👻 ghosts up · <b id="room-dodged" style="color:var(--go)">$—</b>&nbsp;dodged · <span id="room-burn-top">🌅 —</span></div>
             <div class="ghost-note">👻 = resident ghost — friendly fiction keeping the room warm, not people. your posts burn at sunrise. 🌅</div>
           </div>
+          <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a 3-minute break, taken together · 🍜 <span id="cup-others-n">—</span> steeping now</span></span><span class="cbr-go">›</span></button>
           <div id="room-podium"></div>
           <div id="city-board"></div>
           <div class="prompts"><span class="plabel">tap what almost got you</span><button class="pchip" onclick="quickConfess('🍕')">🍕</button><button class="pchip" onclick="quickConfess('🍜')">🍜</button><button class="pchip" onclick="quickConfess('🍣')">🍣</button><button class="pchip" onclick="quickConfess('🌮')">🌮</button><button class="pchip" onclick="quickConfess('🍔')">🍔</button><button class="pchip" onclick="quickConfess('🍰')">🍰</button></div>
@@ -2081,6 +2106,7 @@ function renderRoom(){
     </div>`).join("");
   const rb=$("#room-burn"); if(rb) rb.innerHTML=`${burnLabel()} · rough night? <a href="tel:988" style="color:inherit;font-weight:800">988</a> is awake too 🤍`;
   const rbt=$("#room-burn-top"); if(rbt){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); rbt.textContent=`🌅 ${h}h ${String(m).padStart(2,"0")}m`; }
+  const con=$("#cup-others-n"); if(con) con.textContent=cupOthers();
 }
 function react(i,t){ const p=room[i]; if(!p) return; if(!p.reacted) p.reacted={}; if(p.reacted[t]) return; p.reacted[t]=true; p.r[t]++;
   // targeted: bump just this chip's count + on-state in place (keeps scroll position, no full room rebuild)
@@ -2110,6 +2136,76 @@ function shareToRoom(){
 function beSeen(post){ let n=0; const order=["me","hug","hug","me","go"]; const tick=()=>{ if(!post||n>=order.length) return; post.r[order[n]]++; n++; if(n===2) toast("👻 the ghosts held this one"); if($("#view-room").classList.contains("active")) renderRoom(); setTimeout(tick, 1600+Math.random()*1400); }; setTimeout(tick, 1100); }
 let lastIncoming=-1;
 function streamIncoming(){ if(!$("#view-room").classList.contains("active")) return; let idx; do { idx=Math.floor(Math.random()*INCOMING.length); } while(idx===lastIncoming && INCOMING.length>1); lastIncoming=idx; const s=INCOMING[idx]; room.unshift({ic:s.ic,ghost:s.ghost,sched:s.sched,text:s.text,city:s.city,ago:"now",streak:Math.random()<.4?2+Math.floor(Math.random()*19):0,r:{hug:Math.floor(Math.random()*6),me:Math.floor(Math.random()*9),go:Math.floor(Math.random()*3)},reacted:{}}); if(room.length>40) room.pop(); renderRoom(); }
+
+/* ===== the 3-minute noodle cup — damta's cigarette, translated =====
+   a sanctioned, self-ending break: steep cup ramen with the ghosts. the cup IS the
+   timer (ends itself at 3:00 = real steep time), blowing the steam is the fidget,
+   and the exit is built in. one +10 XP per night; the rest is just the ritual. */
+let cupTimer=null, cupEnd=0, cupStampMem=null;   // mem stamp backs up localStorage so the nightly +10 XP can't repeat-farm
+function cupOthers(){ const h=new Date().getHours(); return 3 + (hash(nightKey()+"cup"+h)%11); }
+function cupDoneTonight(){ if(cupStampMem===nightKey()) return true; try{ return localStorage.getItem("carted_cup")===nightKey(); }catch(e){ return false; } }
+const CUP_LINES=[
+  "the ghosts are waiting with you 👻",
+  "quiet night. good.",
+  "don't peek. it's not ready.",
+  "you're allowed to just stand here.",
+  "someone in Tokyo just put the kettle on 🫖",
+  "Bea says the wings weren't worth it anyway",
+  "three minutes is three minutes.",
+  "nobody's keeping score tonight 🌙",
+  "저도요 — me too, whatever it is",
+];
+function openCup(){
+  if($("#cup-overlay")) return;
+  track("cup_open");
+  const sc=document.querySelector(".screen"); if(!sc) return;
+  const el=document.createElement("div"); el.id="cup-overlay"; el.className="cup-ov";
+  el.innerHTML=`
+    <div class="cup-scene">
+      <button class="cup-x" onclick="closeCup(true)" aria-label="put the cup down">✕</button>
+      <div class="cup-others">🍜 ${cupOthers()} others steeping right now</div>
+      <div class="cup-stage" id="cup-stage">
+        <div class="cup-steam" id="cup-steam"><span>♨</span><span>♨</span><span>♨</span></div>
+        <div class="cup-emo" id="cup-emo">🥡</div>
+      </div>
+      <div class="cup-clock" id="cup-clock">3:00</div>
+      <div class="cup-hint" id="cup-hint">hold the cup to blow on it — it helps (it doesn't)</div>
+      <div class="cup-ghostline" id="cup-ghostline">${CUP_LINES[0]}</div>
+    </div>`;
+  sc.appendChild(el);
+  cupEnd=Date.now()+180000;
+  const stage=el.querySelector("#cup-stage"), steam=el.querySelector("#cup-steam");
+  const blow=on=>{ steam.classList.toggle("blown",on); if(on) snd("pop"); };
+  stage.addEventListener("pointerdown",e=>{ e.preventDefault(); blow(true); });
+  stage.addEventListener("pointerup",()=>blow(false));
+  stage.addEventListener("pointerleave",()=>blow(false));
+  stage.addEventListener("pointercancel",()=>blow(false));   // iOS: system gestures cancel long holds without a pointerup
+  clearInterval(cupTimer); cupTimer=setInterval(cupTick,1000); cupTick();
+}
+function cupTick(){
+  const el=$("#cup-overlay"); if(!el){ clearInterval(cupTimer); return; }
+  const left=Math.max(0,cupEnd-Date.now());
+  const m=Math.floor(left/60000), s=Math.floor((left%60000)/1000);
+  const ck=$("#cup-clock"); if(ck) ck.textContent=`${m}:${String(s).padStart(2,"0")}`;
+  const gl=$("#cup-ghostline"); if(gl){ const line=CUP_LINES[Math.floor((180000-left)/20000)%CUP_LINES.length]; if(gl.textContent!==line) gl.textContent=line; }
+  if(left<=0){ clearInterval(cupTimer); cupServe(); }
+}
+function cupServe(){
+  const el=$("#cup-overlay"); if(!el) return;
+  snd("chime"); haptic("levelup");
+  const first=!cupDoneTonight();
+  if(first){ cupStampMem=nightKey(); try{ localStorage.setItem("carted_cup", nightKey()); }catch(e){} addXp(10); }
+  track("cup_done",{first});
+  el.querySelector(".cup-scene").innerHTML=`
+    <div class="cup-others">break's over — nicely done</div>
+    <div class="cup-emo">🍜</div>
+    <div class="cup-clock" style="font-size:24px">eat up. in your head.</div>
+    <div class="cup-hint">${first?"+10 XP — first steep tonight ⭐":"the cup's here every night 🌙"}</div>
+    <button class="cta" style="position:static;margin-top:20px" onclick="cupShare()">🌙 tell the room</button>
+    <button class="cta secondary" style="position:static" onclick="closeCup()">back to the room</button>`;
+}
+function cupShare(){ closeCup(); makeMine("🍜","steeped a cup with the ghosts. ordered nothing. rich now."); snd("chime"); addXp(4); questEvent("post"); }
+function closeCup(early){ const el=$("#cup-overlay"); if(el) el.remove(); clearInterval(cupTimer); cupTimer=null; if(early){ toast("the cup keeps. see you later tonight 🥡"); track("cup_close",{early:true}); } }
 
 /* ---- live count + ticker ---- */
 let tIdx=0;
