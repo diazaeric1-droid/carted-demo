@@ -20,6 +20,17 @@
     --disp: "Fredoka", ui-rounded, -apple-system, sans-serif;
     --bodyf: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
+  /* NIGHT SHIFT (10pm–6am): the app gets quieter as the night gets deeper. dusk paper,
+     cream cards still pop, glare and saturation come down. the 2am user is ruminating,
+     not celebrating — low-arousal by design. */
+  body.night {
+    --bg: #332b4e; --screen: #3b3258; --card: #fff8ea; --card-hi: #fff3d9; --soft: #4a4070;
+    --muted: #a99cc9;
+  }
+  body.night .ebanner { filter: saturate(.7); }
+  body.night .store-banner.neon { animation: none; filter: saturate(.65); }
+  body.night .ebanner.night-line { background: transparent; border-style: dashed; color: var(--muted); box-shadow: none; }
+  body.hud-off .hud { display: none; }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
     margin: 0; height: 100%;
@@ -1115,12 +1126,17 @@ const REACT_META = { hug:"🫂", me:"😋", go:"🔥" };
 const REACT_LBL  = { hug:"hang in", me:"me too", go:"send it" };   // 😋 is our 저도요
 const OVERPASS = ["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter","https://maps.mail.ru/osm/tools/overpass/api/interpreter"];
 
+/* night shift: 10pm–6am the whole app dims and hushes (see body.night CSS).
+   declared before the state block — sndOn's initializer depends on it. */
+function isNight(){ const h=new Date().getHours(); return h>=22 || h<6; }
+function applyNight(){ document.body.classList.toggle("night", isNight()); }
+
 /* ---- state ---- */
 let cart = [], liveBase = 1247, courierTimers = [], room = [], lastOrderItems = [], pendingOrder = null;
 let curIdx = 0, feedMode = "all", currentDetailKey = null, GEO_SEQ = 0;
 let savedPlaces = {};
 let account = null, stats = { savedUsd:0, orders:0, streak:0, conversions:0, xp:0, cuisines:[], cities:[], maxCombo:0, earned:[], freezes:1, lastNight:null, quests:null }, handoffTarget = null, combo = 0;
-let sndOn = localStorage.getItem("carted_snd")!=="off", lastTap = {x:195, y:420}, lastShare = null;
+let sndOn = (localStorage.getItem("carted_snd")!=null) ? localStorage.getItem("carted_snd")!=="off" : !isNight(), lastTap = {x:195, y:420}, lastShare = null;   // sounds default OFF at night
 const statsByCity = {}, placeByKey = {}, CITY_INDEX = {};
 
 /* ---- helpers ---- */
@@ -1529,6 +1545,7 @@ function go(view){ track("view",{v:view});
   { const ne=$("#nav-explore"); if(ne) ne.classList.toggle("on", view==="explore"); }   // explore tab retired 2026-07-04
   $("#nav-room").classList.toggle("on", view==="room");
   $("#nav-cart").classList.toggle("on", view==="cart");
+  document.body.classList.toggle("hud-off", view==="room");   // the room is a leveler — no scoreboard hovering over it
   if(view==="cart") renderCart();
   if(view==="room") renderRoom();
   if(view==="profile") renderProfile();
@@ -1867,7 +1884,7 @@ function placeOrder(){
   const flight = isFlight ? { mins: routeMinutes(route), label: fmtFlight(routeMinutes(route)), multi: multi } : null;
   pendingOrder = { items: cart.slice(), total: cartAllIn(), city: c, cities: cities, flight: flight, route: route, driver: gd.n, gachaDriver: gd };
   track("place_order",{cities:cities.length,flight:isFlight,usd:Math.round(cartAllIn())});
-  snd("pop"); burst();
+  snd("pop"); if(!isNight()) burst();
   $("#track-reveal").style.display="none"; $("#track-live").style.display="block";
   const rd=$("#rider"); rd.style.opacity="1";
   const mort=rd.querySelector(".mort"); if(mort) mort.textContent="👻";
@@ -1938,34 +1955,38 @@ function revealTruth(){
   lastShare = { usd: po.total, label: money(po.total, USD), streak: stats.streak, tier: newTier, city: (po.cities&&po.cities.length>1)?`${po.cities.length} cities`:po.city.name };
   if(po.flight){ globeProgress(100); $("#track-live").style.display="none"; }
   else { const rd=$("#rider"); const mort=rd.querySelector(".mort"); if(mort) mort.textContent="👻"; const veh=rd.querySelector(".veh"); if(veh) veh.textContent="💨"; rd.style.left="120%"; rd.style.top="-12%"; rd.style.opacity="0"; routeProgress(100); const mp=$("#track-map"); if(mp) mp.classList.add("arrive"); $("#track-live").style.display="none"; }
+  /* QUIET RECEIPT by default — the reveal is a moment of relief, not a jackpot.
+     fireworks (confetti/fanfare/full courier card) only on milestone nights. */
   snd("whoosh");
   const newDriver = po.gachaDriver ? collectDriver(po.gachaDriver) : false;
-  if(Math.random()<0.22){ const gift=pick(HONORIFICS); addXp(5); setTimeout(()=>toast(gift), 1500); }
+  if(!isNight() && Math.random()<0.22){ const gift=pick(HONORIFICS); addXp(5); setTimeout(()=>toast(gift), 1500); }
   const driver=po.driver||"Marcus", pl=pick(po.flight?FLIGHT_PUNCH:PUNCH);
   const quipCtx={ usd: po.total, flight: !!po.flight, flightH: po.flight?Math.floor(po.flight.mins/60):0, streak: stats.streak, milestone: !!milestone && streakGrew, combo: combo, featured: po.city.id===featuredCity().id };
-  const ghostHype = combo>=3 || quipCtx.usd>=60 || quipCtx.milestone;
+  const firstEver = stats.orders===1;
+  if(firstEver){ try{ localStorage.setItem("carted_first_dodge","1"); }catch(e){} }
   const r=$("#track-reveal"); r.style.display="block"; r.className="reveal";
   r.innerHTML = `
-    ${mortReveal(quipCtx.usd, ghostHype)}
+    ${mortReveal(quipCtx.usd, !!milestone)}
     <div class="ghost-quip">“${ghostQuip(quipCtx)}”</div>
     <div class="punch">${pl.p.replace("{n}",driver)}</div>
     <div class="sub">${pl.s.replace("{n}",driver)}</div>
     <div class="saved" id="reveal-saved">${money(0,USD)} saved</div>
-    <div class="sub">${(po.cities&&po.cities.length>1)?`that's dinner across ${po.cities.length} cities, all dodged. nice.`:(po.flight?`that's dinner in ${esc(po.city.name)} + a ${po.flight.label} flight that never took off.`:`that's what tonight in ${esc(po.city.name)} would've cost. nice.`)}</div>
-    <div class="sub" style="color:#d98324;font-weight:800;margin-top:6px">🔥 ${stats.streak}-night no-spend streak${usedFreeze?' · 🧊 freeze used':''}</div>
-    ${combo>=2?`<div class="combo">⚡ ${combo}× dodge combo!</div>`:""}
+    <div class="sub">${(po.cities&&po.cities.length>1)?`that's dinner across ${po.cities.length} cities, all dodged.`:(po.flight?`that's dinner in ${esc(po.city.name)} + a ${po.flight.label} flight that never took off.`:`that's what tonight in ${esc(po.city.name)} would've cost.`)} it stayed in your pocket.</div>
+    <div class="sub" style="color:#d98324;font-weight:800;margin-top:6px">🔥 night ${stats.streak}${usedFreeze?' · 🧊 freeze used':''}</div>
     ${milestone?`<div class="milestone">${milestone}</div>`:""}
-    ${po.gachaDriver?`<div class="courier-card ${po.gachaDriver.r}${newDriver?' is-new':''}" style="--rc:${RARITY_COLOR[po.gachaDriver.r]}">${newDriver?`<div class="cc-new">🆕 NEW COURIER</div>`:`<div class="cc-new cc-dup">tonight's courier</div>`}<div class="cc-veh">${po.gachaDriver.e}</div><div class="cc-name">${esc(po.gachaDriver.n)}</div><div class="cc-quip">${esc(po.gachaDriver.p)}</div><div class="cc-rarity">${po.gachaDriver.r}${po.gachaDriver.r!=='common'?' ✦':''}</div></div>`:""}
+    ${newDriver?`<div class="courier-card ${po.gachaDriver.r} is-new" style="--rc:${RARITY_COLOR[po.gachaDriver.r]}"><div class="cc-new">🆕 NEW COURIER</div><div class="cc-veh">${po.gachaDriver.e}</div><div class="cc-name">${esc(po.gachaDriver.n)}</div><div class="cc-quip">${esc(po.gachaDriver.p)}</div><div class="cc-rarity">${po.gachaDriver.r}${po.gachaDriver.r!=='common'?' ✦':''}</div></div>`:""}
     <div style="margin-top:22px">
-      <button class="cta" style="position:static" onclick="shareToRoom()">🌙 share it to the room</button>
-      <button class="cta gold" style="position:static" onclick="shareWin()">📸 share the win</button>
-      <button class="cta secondary" style="position:static" onclick="resetCartAndBrowse()">keep browsing 🌙</button>
+      <button class="cta" style="position:static" onclick="shareToRoom()">${firstEver?"🌙 meet the others in the room":"🌙 come sit in the room"}</button>
+      <button class="cta secondary" style="position:static" onclick="shareWin()">📸 share the win</button>
+      <button class="cta secondary" style="position:static" onclick="resetCartAndBrowse()">keep browsing</button>
+      ${!stats.buddy?`<button class="cta secondary" style="position:static" onclick="inviteBuddy()">👯 send tonight's dodge to someone → start a pact</button>`:""}
     </div>
     <!-- DEMO/PRE-AFFILIATE: real-money handoff removed until partners live. Re-enable: <button class="order-real" onclick="orderForReal('reveal')">actually… order it for real →</button> -->
-    <div class="track-presence" style="margin-top:14px"><b>${220+Math.floor(Math.random()*80)}</b> people didn't order, with you · <span onclick="go('feed')" style="color:var(--accent);cursor:pointer">I'm good</span></div>`;
+    <div class="track-presence" style="margin-top:14px"><b>${220+Math.floor(Math.random()*80)}</b> ghosts didn't order, with you · <span onclick="go('feed')" style="color:var(--accent);cursor:pointer">I'm good</span></div>`;
+  if(milestone){ burst(); setTimeout(()=>snd("fanfare"), 300); }
   animateMoney($("#reveal-saved"), po.total, USD);
   setTimeout(()=>snd("chime"), 850);
-  addXp(30 + (combo>=2?combo*5:0));
+  addXp(30);
   questEvent("order");
   if(po.total >= 25) questEvent("bigdodge");
   renderHud();
@@ -2094,6 +2115,9 @@ function podiumHTML(){
 function renderRoom(){
   if(!localStorage.getItem("carted_room_intro")){ try{ localStorage.setItem("carted_room_intro","1"); }catch(e){}
     showModal(`<div class="m-emoji">🌙</div><div class="m-title">welcome to the break room</div><div class="m-body" style="text-align:left">a few house rules:<br><br>👻 posts marked <b>resident ghost</b> are friendly fiction — they keep the room warm, they're not people<br><br>✍️ what <b>you</b> post stays on this device for now<br><br>🌅 everything burns at 4am. nothing is permanent, nobody's keeping score</div><button class="cta" style="position:static" onclick="closeModal()">got it 👻</button>`); }
+  if(localStorage.getItem("carted_first_dodge")==="1"){ try{ localStorage.removeItem("carted_first_dodge"); }catch(e){}
+    room.unshift({ic:"🫂", ghost:"Bea", sched:"~2:40", text:"first dodge. we saw. welcome in 🫂", city:"the stoop", ago:"now", r:{hug:3,me:1,go:0}, reacted:{}});
+  }
   const tk=tonightsKitchen(), tf=featuredCity(); if(!tk) ensureKitchenLoaded();
   $("#room-podium").innerHTML = (tk?`<div class="tk-line">🍳 tonight's kitchen: <b>${esc(tk.name)}</b> · ${tf.flag} ${esc(tf.name)} — every ghost here is dodging the same menu</div>`:"") + podiumHTML();
   renderCityBoard();
@@ -2230,7 +2254,9 @@ const SEASONS = [
 ];
 function currentSeason(){ const d=new Date(), mo=d.getMonth()+1, dy=d.getDate(); const aft=f=>mo>f[0]||(mo===f[0]&&dy>=f[1]); const bef=t=>mo<t[0]||(mo===t[0]&&dy<=t[1]); return SEASONS.find(s=>aft(s.from)&&bef(s.to))||null; }
 function xpMult(){ let m=1; if(isGoldenHour()) m*=2; const s=currentSeason(); if(s) m*=s.xp; return m; }
-function renderBanners(){ const el=$("#event-banners"); if(!el) return; let h=""; const s=currentSeason(); if(s) h+=`<div class="ebanner season">${s.emoji} <b>${esc(s.name)}</b> · ${s.blurb}</div>`; if(isGoldenHour()) h+=`<div class="ebanner golden">🌙 <b>golden hours</b> · 2× XP until 4am — you're up anyway</div>`; el.innerHTML=h; }
+function renderBanners(){ const el=$("#event-banners"); if(!el) return;
+  if(isNight()){ const m=xpMult(); el.innerHTML=`<div class="ebanner night-line">🌙 the kitchens are warm${m>1?` · ${m}× tonight, quietly`:""}</div>`; return; }
+  let h=""; const s=currentSeason(); if(s) h+=`<div class="ebanner season">${s.emoji} <b>${esc(s.name)}</b> · ${s.blurb}</div>`; if(isGoldenHour()) h+=`<div class="ebanner golden">🌙 <b>golden hours</b> · 2× XP until 4am — you're up anyway</div>`; el.innerHTML=h; }
 
 /* --- 5 driver gacha: collectible ghost couriers, rolled per order --- */
 const GACHA = [
@@ -2792,6 +2818,7 @@ renderCityBar(); renderTally(); renderFeed();
 (function(){ const av=$("#avatar-btn"); if(av) av.textContent=avatarGlyph(); renderHud(); renderQuests(); setPresenceGhost(); })();
 loadCity(CITIES[0]);
 room = room.concat(ROOM_SEED.map(p=>({...p, reacted:{}})));
+applyNight(); setInterval(applyNight, 300000);   // re-check the night window every 5 min
 rotateTicker(); setInterval(rotateTicker, 3600); setInterval(driftLive, 2600); setInterval(streamIncoming, 26000);   // sparse cadence — a calm room, not a busy group chat
 initDrawers(); refreshTonightHead(); refreshMoreHead(); setInterval(rotateTonight, 4200);
 rotateExploreTicker(); setInterval(rotateExploreTicker, 4200);
