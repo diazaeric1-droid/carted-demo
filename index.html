@@ -761,7 +761,6 @@
             <div class="seg">
               <button id="seg-all" class="on" onclick="setMode('all')">All</button>
               <button id="seg-saved" onclick="setMode('saved')">♥ Saved <span id="saved-count">0</span></button>
-              <button id="seg-deals" onclick="setMode('deals')">🎟️ Deals <span id="deals-count">0</span></button>
             </div>
             <div class="store-row">
               <button class="store-banner neon" onclick="openKonbini()">
@@ -769,7 +768,6 @@
                 <span class="sb-text"><b>24h corner store</b><span class="sb-sub" id="store-banner-sub">open all night — it's right there</span></span>
                 <span class="sb-go">›</span>
               </button>
-              <button class="surprise-big" onclick="surpriseMe()" aria-label="Surprise me — random dish">🔀</button>
             </div>
             <div class="section-label feed-craving" id="feed-section-label">🔥 craving right now</div>
           </div>
@@ -780,23 +778,16 @@
           <div class="drawer" id="more">
             <button class="dr-head" onclick="toggleDrawer('more')">
               <span class="dr-lead">✨</span>
-              <span class="dr-teaser">more — missions, crawls &amp; extras</span>
+              <span class="dr-teaser">more — tonight's mission &amp; your tally</span>
               <span class="dr-mult" id="more-badge"></span>
               <span class="dr-caret">▾</span>
             </button>
             <div class="dr-body">
-              <div id="must-try"></div>
-              <div id="crawls"></div>
               <div class="tally">
                 <div class="box"><div class="k">saved here tonight</div><div class="v green" id="saved-tally">$0.00</div></div>
                 <div class="box"><div class="k">window-orders</div><div class="v" id="order-count">0</div></div>
               </div>
-              <div id="variety"></div>
               <div id="quests"></div>
-              <div class="hub" id="hub">
-                <button class="hub-tile" onclick="ratePlate()"><span class="ht-ic">🔥</span>rate the plate</button>
-                <button class="hub-tile" onclick="go('profile')"><span class="ht-ic">👻</span>your drivers</button>
-              </div>
             </div>
           </div>
           <div class="osm-credit">🍳 every restaurant here is fictional — the cities are real · dish data &amp; photos from <a href="https://www.themealdb.com" target="_blank" rel="noopener" style="color:inherit">TheMealDB</a></div>
@@ -1152,18 +1143,20 @@ function cityPfOf(item){ if(item && item._pf!=null) return item._pf || 1; const 
 function cityTaxOf(item){ const i=item?CITY_INDEX[item._cityId]:null; if(i!=null && CITIES[i] && CITIES[i].tax!=null) return CITIES[i].tax; return (item && item._tax!=null) ? item._tax : curCity().tax; }
 function usdOf(item){ return (item && item.price!=null ? item.price : 0) / cityPfOf(item); }
 /* ---- quirky judgy fees: deterministic 1-2 per cart/night, each a small USD amount ---- */
+/* quirky fees roast the delivery-fee SYSTEM, never the user — a broke person at 3am
+   gets solidarity, not judgment (the fee boss eats the blame) */
 const QUIRK_FEES = [
-  { id:"odd",   label:"🤨 odd choices but okay",     usd:1.50 },
-  { id:"saw",   label:"👀 we saw that, fee",          usd:1.25 },
-  { id:"2am",   label:"🌙 2am decision tax",          usd:1.99 },
-  { id:"ghost", label:"👻 ghost surge",               usd:1.50 },
-  { id:"main",  label:"✨ main-character tax",         usd:0.99 },
-  { id:"doing", label:"💀 you're really doing this",   usd:2.25 },
-  { id:"notes", label:"🤷 no notes (a few notes)",     usd:0.75 },
-  { id:"moon",  label:"🚀 moon delivery",              usd:3.00 },
-  { id:"rat",   label:"🐀 rat-courier toll",           usd:0.75 },
-  { id:"vibes", label:"🧾 vibes-based pricing",         usd:1.10 },
-  { id:"snack", label:"🫥 phantom snacking fee",        usd:1.40 },
+  { id:"myth",  label:"✨ convenience myth fee",        usd:1.50 },
+  { id:"small", label:"🧾 'small order' racket",        usd:1.25 },
+  { id:"2am",   label:"🌙 2am decision tax (waived in spirit)", usd:1.99 },
+  { id:"ghost", label:"👻 ghost surge (not real, like the rest)", usd:1.50 },
+  { id:"main",  label:"✨ main-character tax",           usd:0.99 },
+  { id:"boss",  label:"👹 fee boss's cut (he gets $0)",  usd:2.25 },
+  { id:"hand",  label:"📦 handling (of nothing)",        usd:0.75 },
+  { id:"moon",  label:"🚀 moon delivery",                usd:3.00 },
+  { id:"rat",   label:"🐀 rat-courier toll",             usd:0.75 },
+  { id:"vibes", label:"🧾 vibes-based pricing",          usd:1.10 },
+  { id:"snack", label:"🫥 phantom snacking fee",         usd:1.40 },
 ];
 function cartQuirkSig(){ const first=cart[0]||{}, last=cart[cart.length-1]||{}; return nightKey()+"|"+cart.length+"|"+(first.dish||"")+"|"+(last.dish||""); }
 function cartQuirkFees(){ if(!cart.length) return []; let h=hash(cartQuirkSig()); const n=1+(h%2); const pool=QUIRK_FEES.slice(), out=[]; for(let k=0;k<n && pool.length;k++){ h=(h*1103515245+12345)>>>0; out.push(pool.splice(h%pool.length,1)[0]); } return out; }
@@ -1360,10 +1353,10 @@ function toggleSnd(){ sndOn=!sndOn; try{ localStorage.setItem("carted_snd", sndO
 function renderHud(){
   const el=$("#hud"); if(!el) return;
   const L=levelInfo(stats.xp||0), done=stats.lastNight===nightKey();
+  /* HUD = the identity spine only: streak + lifetime dodged. levels/XP live on the profile. */
   el.innerHTML = `
     <button class="pill flame${done?' on':''}" onclick="go('profile')">🔥 <b>${stats.streak||0}</b>${done?'':'<span class="hint">tonight?</span>'}</button>
-    <button class="pill lvl" onclick="go('profile')"><span>⭐ ${L.lvl}</span><span class="minibar"><i style="width:${L.pct}%"></i></span></button>
-    <button class="pill" onclick="openStats()">💰 <b>$${Math.round(stats.savedUsd).toLocaleString()}</b></button>
+    <button class="pill lvl" onclick="openStats()" style="justify-content:center">💰 <b>$${Math.round(stats.savedUsd).toLocaleString()}</b> <span class="hint">never spent</span></button>
     <button class="pill" onclick="toggleSnd()">${sndOn?"🔊":"🔇"}</button>`;
 }
 /* ---- stats: money dodged broken out by currency, total in USD ---- */
@@ -1410,8 +1403,9 @@ const QUEST_POOL = [
 function questsToday(){
   const day=nightKey();
   if(!stats.quests || stats.quests.day!==day){
-    let x=hash(day); const pool=QUEST_POOL.slice(), picks=[];
-    for(let k=0;k<3;k++){ x=(x*1103515245+12345)>>>0; picks.push(pool.splice(x%pool.length,1)[0]); }
+    /* ONE mission a night — a 2am brain gets one ask, not three */
+    let x=hash(day); const pool=QUEST_POOL.filter(q=>q.id!=="spin"), picks=[];
+    for(let k=0;k<1;k++){ x=(x*1103515245+12345)>>>0; picks.push(pool.splice(x%pool.length,1)[0]); }
     stats.quests={ day, ids:picks.map(q=>q.id), prog:{}, claimed:[], chest:false }; saveStats();
   }
   return stats.quests;
@@ -1425,7 +1419,7 @@ function renderQuests(){
   const el=$("#quests"); if(!el) return;
   const q=questsToday(), defs=q.ids.map(id=>QUEST_POOL.find(d=>d.id===id)).filter(Boolean);
   const allClaimed = defs.every(d=>q.claimed.includes(d.id));
-  el.innerHTML = `<div class="quests"><div class="qhead"><span>🎯 tonight's missions</span><span class="qday">resets at 4am</span></div>`
+  el.innerHTML = `<div class="quests"><div class="qhead"><span>🎯 tonight's mission</span><span class="qday">resets at 4am</span></div>`
     + defs.map(d=>{ const got=Math.min(d.target, q.prog[d.id]||0), done=got>=d.target, claimed=q.claimed.includes(d.id);
       return `<div class="quest"><div class="qic">${d.ic}</div><div class="qmid"><div class="qname">${d.name}</div><div class="qbar"><div class="qfill" style="width:${Math.round(got/d.target*100)}%"></div></div></div>`
         + (claimed ? `<button class="qbtn done2">✓ done</button>` : done ? `<button class="qbtn ready" onclick="claimQuest('${d.id}')">claim +${d.xp}</button>` : `<button class="qbtn">${got}/${d.target}</button>`)
@@ -1942,7 +1936,7 @@ function revealTruth(){
   markVisited(parentKeys);
   if(triedNew){ addXp(8); setTimeout(()=>toast("✨ first time at a new spot — +8 XP"), 2100); }
   const sp=spotlightFor(po.city);
-  if(sp && parentKeys.includes(sp._key) && !(stats.spotDone||[]).includes(spotKey(po.city.id))){ stats.spotDone=stats.spotDone||[]; stats.spotDone.push(spotKey(po.city.id)); stats.freezes=Math.min(3,(stats.freezes||0)+1); addXp(30); setTimeout(()=>toast("🎯 spotlight complete! +30 XP & a 🧊 freeze"), 2300); }
+  if(po.city.id===featuredCity().id && sp && parentKeys.includes(sp._key) && !(stats.spotDone||[]).includes(spotKey(po.city.id))){ stats.spotDone=stats.spotDone||[]; stats.spotDone.push(spotKey(po.city.id)); stats.freezes=Math.min(3,(stats.freezes||0)+1); addXp(30); setTimeout(()=>toast("🎯 spotlight complete! +30 XP & a 🧊 freeze"), 2300); }
   stats.nudgeHour=new Date().getHours();                 // habitual-hour anchor for the last-call nudge
   saveStats(); checkFitUnlocks();
   if(NATIVE && stats.pushOptIn) nativeNudge();           // re-arm for tomorrow (never re-fires tonight)
@@ -2707,14 +2701,17 @@ const COUPONS = [
   {t:"$10 OFF", d:"$10 off when you spend $40+", lvls:[3,4]},
   {t:"HAPPY HR", d:"half-price drinks till close", lvls:[1,2,3]},
 ];
-function couponFor(p){ if(!p || p._cityId==="konbini" || p._menuItem) return null; const h=hash(p.name+"|"+nightKey()); if(h%10>=4) return null; const pool=COUPONS.filter(c=>c.lvls.includes(p.lvl||2)); return pool.length?pool[h%pool.length]:null; }
+/* coupons retired 2026-07-04: fake scarcity pressure pointed at broke people is DoorDash's
+   move, not ours. (COUPONS data + claim plumbing kept dormant below for a possible calm reuse.) */
+function couponFor(p){ return null; }
 function claimCoupon(key){ const p=placeByKey[key]||savedPlaces[key]; const c=couponFor(p); if(!c) return; stats.coupons=stats.coupons||{}; const id=p._key+"@"+nightKey(); if(!stats.coupons[id]){ stats.coupons[id]={t:c.t, name:p.name, night:nightKey()}; saveStats(); addXp(3); snd("pop"); }
   showModal(`<div class="m-emoji">🎟️</div><div class="m-title">${c.t} · ${esc(p.name)}</div><div class="m-body">${c.d} — clipped to your wallet for tonight 🌙<br><br><span style="font-size:11.5px">it's a fantasy coupon — you're not really ordering, that's the whole point 👻</span></div><button class="cta" style="position:static" onclick="closeModal()">clipped 🎟️</button>`); }
   /* DEMO/PRE-AFFILIATE: removed "use it for real →" + the affiliate-carryover copy. Re-enable: add <button class="order-real" onclick="orderForReal('cart')">use it for real →</button> */
 
 function spotlightFor(city){ const ps=city&&city._places; if(!ps||!ps.length) return null; return ps[hash(nightKey()+"|"+city.id)%ps.length]; }
 function spotKey(cityId){ return cityId+"@"+nightKey(); }
-function renderSpotlight(){ const el=$("#spotlight"); if(!el) return; const c=curCity(), p=spotlightFor(c); if(!p){ el.innerHTML=""; return; }
+function renderSpotlight(){ const el=$("#spotlight"); if(el) el.innerHTML=""; return; /* per-city spotlight retired — tonight's kitchen IS the one nightly target */
+  const c=curCity(), p=spotlightFor(c); if(!p){ el.innerHTML=""; return; }
   const done=(stats.spotDone||[]).includes(spotKey(c.id));
   const media = p.photo
     ? `<img class="ph-img" src="${photoUrl(p,true)}" alt="" width="360" height="150" loading="lazy" decoding="async" onerror="this.parentNode.innerHTML='<span class=&quot;sp-emo&quot;>${p.ic}</span>'">`
@@ -2730,7 +2727,7 @@ function markVisited(keys){ stats.visited=stats.visited||[]; keys.forEach(k=>{ i
    must-try checklist. (all push people toward trying new places)
    ============================================================ */
 let feedFilters = { price:null, cuisine:null };
-function refreshDiscovery(){ renderMortsPick(); renderVariety(); renderMustTry(); renderCrawls(); renderFeedFilters(); renderQuests(); renderTally(); refreshTonightHead(); refreshMoreHead(); const dc=$("#deals-count"); if(dc) dc.textContent=dealsCount(); }
+function refreshDiscovery(){ renderMortsPick(); renderFeedFilters(); renderQuests(); renderTally(); refreshTonightHead(); refreshMoreHead(); }   // variety/must-try/crawls/deals retired in the subtraction pass
 
 /* ---- collapsible feed drawers (#tonight above the list, #more below) ---- */
 function toggleDrawer(id){ const d=$("#"+id); if(!d) return; const open=d.classList.toggle("open"); try{ localStorage.setItem("carted_dr_"+id, open?"1":"0"); }catch(e){} snd("pop"); }
@@ -2739,15 +2736,14 @@ function initDrawers(){ ["tonight","more"].forEach(id=>{ const d=$("#"+id); if(!
 /* rotating "tonight" teaser — one line that replaces the 5 stacked nudge banners */
 let tonightTeasers=[], tnIdx=0;
 function buildTonightTeasers(){
-  const c=curCity(), out=[], doneSpot=(stats.spotDone||[]).includes(spotKey(c.id));
-  const sp=spotlightFor(c); if(sp && !doneSpot) out.push(`🎯 spotlight: ${sp.name} · +30 XP`);
+  const c=curCity(), out=[];
+  /* ONE nightly target: tonight's kitchen. everything else is flavor, and night mode keeps it short. */
+  const f=featuredCity(), tk=tonightsKitchen(), kitchenDone=(stats.spotDone||[]).includes(spotKey(f.id));
+  if(kitchenDone) out.push(`✓ tonight's kitchen dodged — you're done tonight 👻`);
+  else out.push(tk?`🍳 tonight's kitchen: ${tk.name} · ${f.flag} ${f.name}`:`🍳 tonight's kitchen is warming up · ${f.flag} ${f.name}`);
   if(buddyNudge()) out.push(`👯 ${(stats.buddy&&stats.buddy.name)||"your buddy"} dodged — keep the 🔥 streak`);
-  const f=featuredCity(); if(c.id!==f.id){ const cr=cravingForecast(); out.push(`${f.flag} tonight's city: ${f.name} · crave ${cr.e}`); }
-  const s=currentSeason(); if(s) out.push(`${s.emoji} ${s.name} · ${s.xp}× XP all season`);
-  if(isGoldenHour()) out.push(`🌙 golden hours · 2× XP til 4am`);
+  if(!isNight()){ const s=currentSeason(); if(s) out.push(`${s.emoji} ${s.name} · ${s.xp}× XP all season`); }
   const mp=mortsPick(c); if(mp) out.push(`👻 Mort's pick: ${mp.name}`);
-  if(doneSpot) out.push(`✓ tonight's spotlight done — nice one 👻`);
-  if(!out.length) out.push("tap for tonight's picks 🌙");
   return out;
 }
 function refreshTonightHead(){ tonightTeasers=buildTonightTeasers(); const el=$("#tonight-teaser"); if(el && tonightTeasers.length) el.textContent=tonightTeasers[tnIdx%tonightTeasers.length];
