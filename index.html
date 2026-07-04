@@ -1233,7 +1233,7 @@ async function nativeNudge(){ try{
   let p=await LN.checkPermissions(); if(p.display!=="granted") p=await LN.requestPermissions();
   if(p.display!=="granted") return false;
   try{ await LN.cancel({notifications:[{id:77}]}); }catch(e){}
-  await LN.schedule({notifications:[{ id:77, title:"Mort 👻", body:"last call — the kitchens close at 4am. your streak's waiting 🔥", schedule:{ at: nextNudgeAt(), allowWhileIdle:true } }]});
+  await LN.schedule({notifications:[{ id:77, title:`${(stats.ghostName||"Mort")} 👻`, body:"last call — the kitchens close at 4am. your streak's waiting 🔥", schedule:{ at: nextNudgeAt(), allowWhileIdle:true } }]});
   return true;
 }catch(e){ return false; } }
 /* backend (Supabase) — fill after deploying ~/carted-app/supabase (see supabase/BACKEND.md).
@@ -1755,7 +1755,9 @@ function renderProfile(){
   const tt=travelTotals(), flown=citiesFlown();
   const passportCard = `<div class="section-label" style="margin:8px 2px 8px">🛂 flight log <span style="color:var(--muted)">${flown.size}/50 cities</span></div>`
     + `<div class="passport" style="margin-bottom:10px"><div class="pp-top"><span>🛂</span> <b>${flown.size}/50</b> cities flown<span class="pp-saved">✈️ ${(tt.miles||0).toLocaleString()} mi never flown</span></div><div class="pp-bar"><div class="pp-fill" style="width:${Math.round(flown.size/50*100)}%"></div></div>${passportStrip()}</div>`;
-  $("#profile-body").innerHTML = `<div class="brand"><h1 style="font-size:24px">profile</h1></div>` + head + buddyCard + lvlCard + tierCard + grid + achv + renderWardrobe() + driversCard + passportCard + auth
+  const gs=ghostStage(), u=stats.usual;
+  const ghostCard = `<div class="tier-card"><div class="tier-row"><span class="tier-ic">${ghostAvatar(34)}</span><div><div class="tier-name">${esc(ghostName())} · ${gs.name}</div><div class="tier-sub">raised over ${gs.nights} night${gs.nights===1?"":"s"} of showing up${gs.next?` · ${gs.next.min-gs.nights} more → <b>${gs.next.name}</b>`:" · fully grown, still hungry"}${u?`<br>he remembers: you always cart <b>${esc(u.en)}</b>`:""}</div></div></div>`;
+  $("#profile-body").innerHTML = `<div class="brand"><h1 style="font-size:24px">profile</h1></div>` + head + ghostCard + buddyCard + lvlCard + tierCard + grid + achv + renderWardrobe() + driversCard + passportCard + auth
     + `<div style="text-align:center;color:var(--muted);font-size:11.5px;margin-top:14px">no accounts — everything lives on this device 🌙</div>`;
 }
 
@@ -1771,7 +1773,8 @@ function openDetail(key){
     + `<div class="city-tag">${p._flag} ${esc(p._cityName)}</div>`
     + `<button class="d-fav${isFav(p._key)?' on':''}" id="d-fav" onclick="toggleDetailFav()" aria-label="Save place">${isFav(p._key)?'♥':'♡'}</button>`
     + `<div class="hero-name"><div class="hn-title">${esc(p.name)}</div><div class="hn-sub">${esc(p.en)} · ${esc(niceHood(p))}</div></div>`;
-  const dd=$("#d-desc"); if(p.desc){ dd.textContent=p.desc; dd.style.display="block"; } else dd.style.display="none";
+  const dd=$("#d-desc"); const isUsual = stats.usual && cuisineKeyOf(p)===String(stats.usual.en).replace(/[\s-]+/g,"_");
+  if(p.desc || isUsual){ dd.textContent=(p.desc||"") + (isUsual?`${p.desc?" — ":""}👻 ${ghostName()}: “the usual, then?”`:""); dd.style.display="block"; } else dd.style.display="none";
   $("#d-stats").innerHTML = `<span>★ <b>${p.rate.toFixed(1)}</b> (${p.n.toLocaleString()})</span>${p.lvl?`<span><b>${"$".repeat(p.lvl)}</b></span>`:""}<span><b>${etaStr(p)}</b></span>`;
   const cp=couponFor(p); const dc=$("#d-coupon"); if(dc) dc.innerHTML = cp?`<button class="d-coupon" onclick="claimCoupon('${p._key}')"><span class="dc-tag">🎟️ ${cp.t}</span><span class="dc-d">${esc(cp.d)} · <span style="color:var(--hot)">🔥 ${couponQty(p)} left</span> · tap to clip</span></button>`:"";
   $("#d-menu").innerHTML = renderMenu(p);
@@ -1927,6 +1930,15 @@ function revealTruth(){
   stats.maxStreak=maxStreakEver();
   stats.cuisines=stats.cuisines||[]; stats.cities=stats.cities||[];
   (po.items||[]).forEach(it=> uniqPush(stats.cuisines, it.en));
+  /* order memory: after 3+ carts of one cuisine, the ghost knows your usual */
+  stats.cuisineCount=stats.cuisineCount||{};
+  (po.items||[]).forEach(it=>{ if(it.en) stats.cuisineCount[it.en]=(stats.cuisineCount[it.en]||0)+1; });
+  { const top=Object.entries(stats.cuisineCount).sort((a,b)=>b[1]-a[1])[0];
+    const hadUsual=!!stats.usual;
+    if(top && top[1]>=3){ stats.usual={en:top[0], n:top[1]};
+      if((po.items||[]).some(it=>it.en===stats.usual.en)) setTimeout(()=>toast(`👻 ${esc(ghostName())}: the usual. i respect the commitment.`), 2600);
+      else if(!hadUsual) setTimeout(()=>toast(`👻 ${esc(ghostName())} has learned your order.`), 2600);
+    } }
   uniqPush(stats.cities, po.city.id);
   // FLIGHT-LOG PASSPORT: stamp every city the ghost actually flew to (route stops); po.total is USD
   if(po.flight){ const stops=(po.route||[]).filter(s=>s && !s.home && s.id); const per=po.total/(stops.length||1); let firstNew=null; stops.forEach(s=>{ if(!citiesFlown().has(s.id)){ if(!firstNew) firstNew=s; addXp(12); } logFlight(s.id, per, havKm(s, HOME)); }); if(firstNew){ const fn=firstNew; setTimeout(()=>toast(`🛂 new stamp! you flew to ${esc(fn.name)} — a trip that never took off`), 1700); } }
@@ -2227,7 +2239,11 @@ function closeCup(early){ const el=$("#cup-overlay"); if(el) el.remove(); clearI
 
 /* ---- live count + ticker ---- */
 let tIdx=0;
-function rotateTicker(){ const el=$("#ticker-msg"); el.style.opacity="0"; el.style.transform="translateY(-8px)"; setTimeout(()=>{ el.textContent=TICKER[tIdx%TICKER.length]; tIdx++; el.style.opacity="1"; el.style.transform="translateY(0)"; },420); }
+function tickerPool(){ const t=TICKER.slice();
+  if(stats.usual) t.unshift(`👻 ${ghostName()} remembers: you always cart ${stats.usual.en}`);
+  if(isNight() && !orderedTonight()) t.unshift(`👻 ${ghostName()} is waiting by the window`);
+  return t; }
+function rotateTicker(){ const el=$("#ticker-msg"); el.style.opacity="0"; el.style.transform="translateY(-8px)"; setTimeout(()=>{ const pool=tickerPool(); el.textContent=pool[tIdx%pool.length]; tIdx++; el.style.opacity="1"; el.style.transform="translateY(0)"; },420); }
 let dodgedTonight = 61000 + (hash(nightKey())%52000);
 function driftLive(){ liveBase += Math.floor(Math.random()*17)-7; if(liveBase<1180) liveBase=1180; if(liveBase>1390) liveBase=1390; $("#live-count").textContent=liveBase.toLocaleString(); const rl=$("#room-live"); if(rl) rl.textContent=liveBase.toLocaleString(); dodgedTonight += Math.floor(Math.random()*120); const rd=$("#room-dodged"); if(rd) rd.textContent="$"+dodgedTonight.toLocaleString(); const el=$("#explore-live"); if(el){ const base=620+(hash(curCity().id)%900); el.textContent=(base+Math.floor(Math.random()*40)).toLocaleString(); } const to=$("#track-others"); if($("#view-track").classList.contains("active") && $("#track-live").style.display!=="none"){ to.textContent=Math.max(210, parseInt(to.textContent)+(Math.floor(Math.random()*9)-4)); } }
 
@@ -2294,13 +2310,13 @@ function toggleAsmr(){ asmrOn=!asmrOn; try{ localStorage.setItem("carted_asmr", 
 function ghostNudgeMsgs(){ return ["you up? your streak isn't gonna dodge itself 🔥","i'm outside. (i'm not.) 👻","craving incoming in 3… 2… open me instead","banana milk thinks about you too 🥛","2am. the kitchen's 'open'. don't 😌"]; }
 function fireGhostText(){ const hat=ghostFit().hat||"👻"; const atRisk = stats.lastNight!==nightKey() && (stats.streak||0)>0;
   const lines = atRisk ? [`your ${stats.streak}-night streak ends soon 🔥 don't let me down`, `the streak's in danger and I can feel it (spectrally)`, `${stats.streak} nights. don't blow it now, I've got plans`] : ghostNudgeMsgs();
-  const body=`Mort ${hat}: ${pick(lines)}`;
+  const body=`${ghostName()} ${hat}: ${pick(lines)}`;
   try{ if(navigator.serviceWorker && navigator.serviceWorker.ready){ navigator.serviceWorker.ready.then(reg=>reg.showNotification("Carted 🌙",{body, icon:BASE+"icon-192.png", badge:BASE+"icon-192.png", tag:"carted-ghost", renotify:true})).catch(()=>{ try{ new Notification("Carted 🌙",{body}); }catch(_){} }); } else new Notification("Carted 🌙",{body}); }catch(e){ try{ new Notification("Carted 🌙",{body}); }catch(_){} } }
 function scheduleGhostNudge(){ clearTimeout(window.__ghostNudge); window.__ghostNudge=setTimeout(fireGhostText, 60000); } // demo cadence while tab is alive
 async function ghostPush(){
   if(NATIVE){
     const ok = await nativeNudge();
-    if(ok){ stats.pushOptIn=true; saveStats(); const hr=(stats.nudgeHour!=null?stats.nudgeHour:22); showModal(`<div class="m-emoji">🔔</div><div class="m-title">ghost texts: ON</div><div class="m-body">Mort will text you around <b>${hr}:30</b> — your usual carting hour. never on a night you've already dodged.</div><button class="cta" style="position:static" onclick="closeModal()">ok 👻</button>`); }
+    if(ok){ stats.pushOptIn=true; saveStats(); const hr=(stats.nudgeHour!=null?stats.nudgeHour:22); showModal(`<div class="m-emoji">🔔</div><div class="m-title">ghost texts: ON</div><div class="m-body">${esc(ghostName())} will text you around <b>${hr}:30</b> — your usual carting hour. never on a night you've already dodged.</div><button class="cta" style="position:static" onclick="closeModal()">ok 👻</button>`); }
     else toast("notifications are off in Settings 🤷");
     if($("#view-profile").classList.contains("active")) renderProfile(); return;
   }
@@ -2540,6 +2556,31 @@ function rotateExploreTicker(){ const el=$("#explore-ticker"); if(!el) return; e
    lives in a wardrobe on the profile. (lever 8 + mascot prominence)
    ============================================================ */
 function maxStreakEver(){ return Math.max(stats.maxStreak||0, stats.streak||0); }
+/* ===== the attachment arc: a named ghost who grows with your nights and remembers your order =====
+   (Finch's lesson: cosmetics only matter on a creature that's already loved) */
+function ghostName(){ return stats.ghostName || "Mort"; }
+const GHOST_STAGES = [
+  {min:0,  name:"lil wisp"},
+  {min:3,  name:"house ghost"},
+  {min:7,  name:"neighborhood ghost"},
+  {min:14, name:"city haunt"},
+  {min:30, name:"legend of the night kitchen"},
+];
+function ghostStage(){ const n=_aGet("carted_nights",[]).length; let s=GHOST_STAGES[0], next=null;
+  for(const g of GHOST_STAGES){ if(n>=g.min) s=g; else if(!next){ next=g; } }
+  return { name:s.name, nights:n, next }; }
+function maybeNameGhost(){
+  try{ if(localStorage.getItem("carted_named")) return; }catch(e){ return; }
+  if(localStorage.getItem("carted_onboard")!=="2" || $("#modal").style.display==="flex"){ setTimeout(maybeNameGhost, 8000); return; }
+  showModal(`<div class="m-emoji">👻</div><div class="m-title">he needs a name</div><div class="m-body">this little ghost runs your deliveries, roasts your cart, and waits up with you.<br>he's yours now — what do you call him?</div><input id="ghost-name-inp" maxlength="14" placeholder="Mort" style="width:100%;background:var(--card);border:2px solid var(--ink);border-radius:12px;padding:12px;font-size:15px;font-weight:700;font-family:var(--bodyf);text-align:center;margin:6px 0 12px;outline:none"><button class="cta" style="position:static" onclick="nameGhost()">that's his name</button><button class="cta secondary" style="position:static" onclick="nameGhost(true)">Mort is fine</button>`);
+}
+function nameGhost(keepDefault){
+  const inp=$("#ghost-name-inp"); const v=keepDefault?"":(((inp&&inp.value)||"").trim());
+  stats.ghostName=(v||"Mort").slice(0,14); saveStats();
+  try{ localStorage.setItem("carted_named","1"); }catch(e){}
+  closeModal(); snd("chime"); toast(`👻 ${esc(ghostName())} it is. he's yours now.`);
+  if($("#view-profile").classList.contains("active")) renderProfile();
+}
 const GHOST_FITS = [
   {id:"none",   hat:"",   name:"just vibes",       req:"default",          has:()=>true},
   {id:"cap",    hat:"🧢", name:"backwards cap",    req:"3 window-orders",  has:()=>(stats.orders||0)>=3},
@@ -2566,11 +2607,11 @@ function ghostAvatar(size){ size=size||40; const f=ghostFit(); return `<span cla
 /* Post-delivery Mort scene: floats up with the (empty) bag, wiggles, emits a $-scaled puff. */
 function mortReveal(usd, hype){ usd=+usd||0; var puff=["✨","✨","🌙"]; if(usd>=6) puff=["✨","💚","✨","🌙"]; if(usd>=25) puff=["✨","💚","💸","✨","🌟"]; if(usd>=60) puff=["🎉","👑","💸","✨","💚","🌟"]; var reduce=false; try{ reduce=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){} var floaters=reduce?"":puff.map(function(e,i){ var x=(i/(puff.length-1)*2-1)*46; var d=(i*0.12).toFixed(2), dur=(1.5+Math.random()*0.6).toFixed(2); return '<span class="ms-puff" style="--x:'+x.toFixed(0)+'px;animation-delay:'+d+'s;animation-duration:'+dur+'s">'+e+'</span>'; }).join(""); return '<div class="mort-scene'+(hype?' ms-hype':'')+(reduce?' ms-still':'')+'"><div class="ms-puffs">'+floaters+'</div><div class="ms-bag">🛍️</div><div class="ghostrise'+(hype?' ghost-hype':'')+'">'+ghostAvatar(66)+'</div></div>'; }
 function setPresenceGhost(){ const ge=$(".ghost-emo"); if(ge) ge.innerHTML=ghostAvatar(19); }
-function equipFit(id){ let ok=false; if(id.startsWith("city:")) ok=cityVisited(id.slice(5)); else { const f=baseFits().find(x=>x.id===id); ok=f && f.has(); } if(!ok) return; stats.fit=id; saveStats(); snd("pop"); const f=ghostFit(); toast(`👻 Mort's fit: ${f.hat||"naked"} ${f.name}`); if($("#view-profile").classList.contains("active")) renderProfile(); setPresenceGhost(); }
+function equipFit(id){ let ok=false; if(id.startsWith("city:")) ok=cityVisited(id.slice(5)); else { const f=baseFits().find(x=>x.id===id); ok=f && f.has(); } if(!ok) return; stats.fit=id; saveStats(); snd("pop"); const f=ghostFit(); toast(`👻 ${esc(ghostName())}'s fit: ${f.hat||"naked"} ${f.name}`); if($("#view-profile").classList.contains("active")) renderProfile(); setPresenceGhost(); }
 function checkFitUnlocks(){ if(!stats.fitsSeen) stats.fitsSeen=["none"]; let newly=null;
   baseFits().forEach(f=>{ if(f.has && f.has() && !stats.fitsSeen.includes(f.id)){ stats.fitsSeen.push(f.id); newly={hat:f.hat,name:f.name}; } });
   CITIES.forEach(c=>{ const id="city:"+c.id; if(cityVisited(c.id) && !stats.fitsSeen.includes(id)){ stats.fitsSeen.push(id); newly={hat:CITY_HAT[c.id],name:c.name+" souvenir"}; } });
-  if(newly){ saveStats(); setTimeout(()=>toast(`🧳 Mort unlocked: ${newly.hat} ${newly.name} — equip it on your profile`), 1700); } }
+  if(newly){ saveStats(); setTimeout(()=>toast(`🧳 ${esc(ghostName())} unlocked: ${newly.hat} ${newly.name} — equip it on your profile`), 1700); } }
 const GHOST_QUIPS = [
   "I ate your order. you're welcome 👻",
   "tipped myself 20% on a meal that never existed",
@@ -2602,7 +2643,7 @@ function ghostQuip(ctx){ ctx=ctx||{}; const hr=new Date().getHours(); let pool;
   return pick(pool).replace("{s}",ctx.streak||0).replace("{c}",ctx.combo||0).replace("{h}",ctx.flightH||"a few").replace("{hr}",hr); }
 function renderWardrobe(){
   const list=baseFits(), owned=list.filter(f=>f.has());
-  return `<div class="section-label" style="margin:8px 2px 8px">👻 Mort's wardrobe <span style="color:var(--muted)">${owned.length}/${list.length}</span></div>`
+  return `<div class="section-label" style="margin:8px 2px 8px">👻 ${esc(ghostName())}'s wardrobe <span style="color:var(--muted)">${owned.length}/${list.length}</span></div>`
     + `<div class="wardrobe"><div class="wd-ghost">${ghostAvatar(70)}</div>`
     + `<div class="wd-grid">` + list.map(f=>{ const on=f.has(), eq=(stats.fit||"none")===f.id; return `<button class="wd-fit${eq?' eq':''}${on?'':' lock'}" ${on?`onclick="equipFit('${f.id}')"`:""}><span class="wd-hat">${on?(f.hat||"👻"):"🔒"}</span><span class="wd-name">${on?esc(f.name):esc(f.req)}</span></button>`; }).join("") + `</div></div>`
     + renderSouvenirs();
@@ -2743,7 +2784,7 @@ function buildTonightTeasers(){
   else out.push(tk?`🍳 tonight's kitchen: ${tk.name} · ${f.flag} ${f.name}`:`🍳 tonight's kitchen is warming up · ${f.flag} ${f.name}`);
   if(buddyNudge()) out.push(`👯 ${(stats.buddy&&stats.buddy.name)||"your buddy"} dodged — keep the 🔥 streak`);
   if(!isNight()){ const s=currentSeason(); if(s) out.push(`${s.emoji} ${s.name} · ${s.xp}× XP all season`); }
-  const mp=mortsPick(c); if(mp) out.push(`👻 Mort's pick: ${mp.name}`);
+  const mp=mortsPick(c); if(mp) out.push(`👻 ${ghostName()}'s pick: ${mp.name}`);
   return out;
 }
 function refreshTonightHead(){ tonightTeasers=buildTonightTeasers(); const el=$("#tonight-teaser"); if(el && tonightTeasers.length) el.textContent=tonightTeasers[tnIdx%tonightTeasers.length];
@@ -2761,7 +2802,7 @@ function dealsCount(){ return (curCity()._places||[]).filter(p=>couponFor(p)).le
 const MORT_LINES = ["trust me, the {d} here is unreal","i'd haunt this place nightly if i could eat","this one's a vibe. don't @ me 👻","peak 2am energy — you'll thank me","quietly the best {d} in town","i've 'delivered' here 1,000 times. zero regrets","if i had a stomach it'd live here"];
 function mortsPick(city){ const ps=city&&city._places; if(!ps||!ps.length) return null; let i=hash(nightKey()+"mort|"+city.id)%ps.length; const sp=spotlightFor(city); if(sp && ps.length>1 && ps[i]._key===sp._key) i=(i+1)%ps.length; return ps[i]; }
 function renderMortsPick(){ const el=$("#morts-pick"); if(!el) return; const p=mortsPick(curCity()); if(!p){ el.innerHTML=""; return; } const line=pick(MORT_LINES).replace("{d}",(p.dish||"food").toLowerCase());
-  el.innerHTML=`<button class="morts-pick" onclick="openDetail('${p._key}')"><span class="mp-ghost">${ghostAvatar(36)}</span><span class="mp-text"><b>Mort's pick: ${esc(p.name)}</b><span class="mp-quip">“${esc(line)}”</span></span><span class="mp-go">›</span></button>`; }
+  el.innerHTML=`<button class="morts-pick" onclick="openDetail('${p._key}')"><span class="mp-ghost">${ghostAvatar(36)}</span><span class="mp-text"><b>${esc(ghostName())}'s pick: ${esc(p.name)}</b><span class="mp-quip">“${esc(line)}”</span></span><span class="mp-go">›</span></button>`; }
 
 /* 4 — teleport: random place in a random city */
 let teleportPending=false;
@@ -2815,6 +2856,7 @@ renderCityBar(); renderTally(); renderFeed();
 loadCity(CITIES[0]);
 room = room.concat(ROOM_SEED.map(p=>({...p, reacted:{}})));
 applyNight(); setInterval(applyNight, 300000);   // re-check the night window every 5 min
+setTimeout(maybeNameGhost, 2500);                // the naming moment (once, after onboarding)
 rotateTicker(); setInterval(rotateTicker, 3600); setInterval(driftLive, 2600); setInterval(streamIncoming, 26000);   // sparse cadence — a calm room, not a busy group chat
 initDrawers(); refreshTonightHead(); refreshMoreHead(); setInterval(rotateTonight, 4200);
 rotateExploreTicker(); setInterval(rotateExploreTicker, 4200);
