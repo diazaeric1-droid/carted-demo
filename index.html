@@ -1226,6 +1226,29 @@ function haptic(kind){ if(!NATIVE) return; try{ const H=window.Capacitor.Plugins
   else if(kind==="chime") H.impact({style:"MEDIUM"});
   else H.impact({style:"LIGHT"});
 }catch(e){} }
+/* ===== native stats durability: iOS can evict WKWebView localStorage under disk pressure.
+   Mirror every carted_* key into Capacitor Preferences (native-backed, debounced) and restore
+   on boot if the WebView store came up empty. A wiped 30-night streak is an uninstall. ===== */
+const MIRROR_KEYS = ["carted_stats","carted_nights","carted_first_open","carted_device","carted_named",
+  "carted_onboard","carted_room_intro","carted_cup","carted_snd","carted_asmr","carted_saved","carted_acts",
+  "carted_home","carted_tonight","carted_room_mine","carted_funnel","carted_events","carted_account",
+  "carted_dr_tonight","carted_dr_more","carted_first_dodge"];
+let _mirrorT = null;
+function mirrorStats(){ if(!NATIVE) return; clearTimeout(_mirrorT); _mirrorT = setTimeout(async ()=>{ try{
+  const P = window.Capacitor.Plugins.Preferences; if(!P) return;
+  const blob = {}; MIRROR_KEYS.forEach(k=>{ const v = localStorage.getItem(k); if(v!=null) blob[k]=v; });
+  await P.set({ key: "carted_backup", value: JSON.stringify(blob) });
+}catch(e){} }, 2500); }
+async function restoreStats(){ if(!NATIVE) return; try{
+  if(localStorage.getItem("carted_stats")!=null) return;              // store intact — nothing to do
+  if(sessionStorage.getItem("carted_restored")) return;               // loop guard
+  const P = window.Capacitor.Plugins.Preferences; if(!P) return;
+  const r = await P.get({ key: "carted_backup" }); if(!r || !r.value) return;
+  const blob = JSON.parse(r.value); let n = 0;
+  Object.entries(blob).forEach(([k,v])=>{ try{ localStorage.setItem(k, v); n++; }catch(e){} });
+  if(n){ try{ sessionStorage.setItem("carted_restored","1"); }catch(e){} location.reload(); }
+}catch(e){} }
+
 /* one-shot "last call" at the user's own habitual order hour — never fires on a night already banked */
 function nextNudgeAt(){ const hr=(stats.nudgeHour!=null?stats.nudgeHour:22); const d=new Date(); d.setHours(hr,30,0,0); if(d<=new Date() || orderedTonight()) d.setDate(d.getDate()+1); return d; }
 async function nativeNudge(){ try{
@@ -1240,13 +1263,17 @@ async function nativeNudge(){ try{
    Leave url:"" and the app runs fully, with push as a local-only demo + local buddy. */
 const CARTED_BE = { url: "https://twndjxqdhqcyxfdsteas.supabase.co/functions/v1", vapidPublic: "BAxbaruJEgg_WXoiGgKVTBzxffQxkiitbym8CX9wh8SgROjG9Tsh6C52DM6RPwYjqzmg4e4aEq-442SNBX9y5vM" };
 function beOn(){ return !!(CARTED_BE.url); }
+/* LIVE 2AM ROOM — real cross-user posts. OFF until the moderation backend is deployed
+   (supabase/room_live.sql + functions/room) — flip-the-switch runbook: ~/carted-app/ROOM_LIVE.md.
+   NOTE: flipping this changes the App Store age questionnaire to UGC=yes. */
+const ROOM_LIVE = false;
 function deviceId(){ let d=localStorage.getItem("carted_device"); if(!d){ d="d"+Math.random().toString(36).slice(2)+Date.now().toString(36); try{ localStorage.setItem("carted_device", d); }catch(e){} } return d; }
 function bePost(fn, body){ return fetch(CARTED_BE.url+"/"+fn, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)}).then(r=>r.json()).catch(()=>null); }
 
 /* ===== lightweight analytics: funnel counts + return-night tracking (the retention signal) + best-effort beacon ===== */
 const ANALYTICS_URL = (CARTED_BE && CARTED_BE.url) ? CARTED_BE.url + "/track" : "";
 function _aGet(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } }
-function _aSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+function _aSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} mirrorStats(); }
 let _aQueue=[], _aTimer=null;
 function track(ev, props){ try{
   const t=Date.now();
@@ -1712,7 +1739,7 @@ function updateDetailFav(){ const on=isFav(currentDetailKey); const b=$("#d-fav"
 /* ---- account + profile (mock auth; real cross-device sync = backend) ---- */
 function loadAccount(){ try{ account=JSON.parse(localStorage.getItem("carted_account")||"null"); }catch(e){} try{ Object.assign(stats, JSON.parse(localStorage.getItem("carted_stats")||"{}")); }catch(e){} }
 function saveAccount(){ try{ localStorage.setItem("carted_account", JSON.stringify(account)); }catch(e){} }
-function saveStats(){ try{ localStorage.setItem("carted_stats", JSON.stringify(stats)); }catch(e){} }
+function saveStats(){ try{ localStorage.setItem("carted_stats", JSON.stringify(stats)); }catch(e){} mirrorStats(); }
 function avatarGlyph(){ return account ? "🌙" : "🙂"; }
 /* no accounts, by design: everything lives on this device. keeps the app private-by-default
    and out of Apple's 4.8 (Sign in with Apple) + 5.1.1(v) (account deletion) obligations. */
@@ -2124,6 +2151,7 @@ function renderRoom(){
   if(localStorage.getItem("carted_first_dodge")==="1"){ try{ localStorage.removeItem("carted_first_dodge"); }catch(e){}
     room.unshift({ic:"🫂", ghost:"Bea", sched:"~2:40", text:"first dodge. we saw. welcome in 🫂", city:"the stoop", ago:"now", r:{hug:3,me:1,go:0}, reacted:{}});
   }
+  fetchLiveRoom();
   const tk=tonightsKitchen(), tf=featuredCity(); if(!tk) ensureKitchenLoaded();
   $("#room-podium").innerHTML = (tk?`<div class="tk-line">🍳 tonight's kitchen: <b>${esc(tk.name)}</b> · ${tf.flag} ${esc(tf.name)} — every ghost here is dodging the same menu</div>`:"") + podiumHTML();
   renderCityBoard();
@@ -2132,7 +2160,7 @@ function renderRoom(){
     <div class="post${p.mine?' mine':''}${p.ghost?' ghostp':''}">
       <div class="phead"><span class="pic">${p.ic}</span><div class="pmeta">${p.mine?'<span class="mine-tag">you</span>':(p.ghost?`<span class="gtag">👻 ${esc(p.ghost)}</span> resident ghost${p.sched?` · round here ${p.sched}`:""} · ${esc(p.city)}`:'<b>anon</b> · '+esc(p.city))} · ${p.ago}${p.streak?` · <span class="sbadge">🔥${p.streak}</span>`:""}</div></div>
       <div class="ptext">${esc(p.text)}</div>
-      <div class="reacts">${["hug","me","go"].map(t=>`<button class="chip${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')">${REACT_META[t]}<span class="rlbl">${REACT_LBL[t]}</span><span class="cnt">${p.r[t]}</span></button>`).join("")}<button class="chip pshare" onclick="sharePost(${i})">📤</button></div>
+      <div class="reacts">${["hug","me","go"].map(t=>`<button class="chip${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')">${REACT_META[t]}<span class="rlbl">${REACT_LBL[t]}</span><span class="cnt">${p.r[t]}</span></button>`).join("")}<button class="chip pshare" onclick="sharePost(${i})">📤</button>${p.live?`<button class="chip" onclick="reportPost(${i})" aria-label="report">🚩</button>`:""}</div>
     </div>`).join("");
   const rb=$("#room-burn"); if(rb) rb.innerHTML=`${burnLabel()} · rough night? <a href="tel:988" style="color:inherit;font-weight:800">988</a> is awake too 🤍`;
   const rbt=$("#room-burn-top"); if(rbt){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); rbt.textContent=`🌅 ${h}h ${String(m).padStart(2,"0")}m`; }
@@ -2143,7 +2171,8 @@ function react(i,t){ const p=room[i]; if(!p) return; if(!p.reacted) p.reacted={}
   const post=$("#room-feed").children[i];
   if(post){ const chip=post.querySelectorAll(".reacts .chip")[{hug:0,me:1,go:2}[t]]; if(chip){ chip.classList.add("on"); const cnt=chip.querySelector(".cnt"); if(cnt) cnt.textContent=p.r[t]; } }
   else renderRoom();
-  snd("pop"); toast(t==="hug"?"hang in there 🫂":t==="me"?"same 😋":"just send it 🔥"); addXp(3); questEvent("react"); }
+  snd("pop"); toast(t==="hug"?"hang in there 🫂":t==="me"?"same 😋":"just send it 🔥"); addXp(3); questEvent("react");
+  if(p.liveId && ROOM_LIVE && beOn()) bePost("room",{action:"react", post_id:p.liveId, kind:(t==="me"?"metoo":t==="go"?"sendit":"hug")}); }
 function sharePost(i){
   const p=room[i]; if(!p) return;
   const txt=`"${p.text}" — overheard in the 2AM room 🌙 carted.`;
@@ -2152,7 +2181,23 @@ function sharePost(i){
 }
 function saveMinePost(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); all.unshift({ic:post.ic,text:post.text,streak:post.streak||0,night:nightKey()}); localStorage.setItem("carted_room_mine", JSON.stringify(all.slice(0,12))); }catch(e){} }
 function loadMinePosts(){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); const live=all.filter(p=>p.night===nightKey()); if(live.length!==all.length){ try{ localStorage.setItem("carted_room_mine", JSON.stringify(live)); }catch(e){} } return live.map(p=>({ic:p.ic,text:p.text,streak:p.streak,city:"you",ago:"tonight",mine:true,r:{hug:1+Math.floor(Math.random()*5),me:Math.floor(Math.random()*4),go:Math.floor(Math.random()*2)},reacted:{}})); }catch(e){ return []; } }
-function makeMine(ic, text){ const post={ic, text, city:"you", ago:"now", mine:true, streak:stats.streak||0, r:{hug:0,me:0,go:0}, reacted:{}}; room.unshift(post); saveMinePost(post); renderRoom(); beSeen(post); track("room_post"); return post; }
+function makeMine(ic, text){ const post={ic, text, city:"you", ago:"now", mine:true, streak:stats.streak||0, r:{hug:0,me:0,go:0}, reacted:{}}; room.unshift(post); saveMinePost(post); renderRoom(); beSeen(post); track("room_post");
+  if(ROOM_LIVE && beOn()){ bePost("room",{action:"post", device_id:deviceId(), night:nightKey(), ic:post.ic, text:post.text, streak:post.streak||0}).then(r=>{ if(r && r.crisis) show988(); }); }
+  return post; }
+function show988(){ showModal(`<div class="m-emoji">🤍</div><div class="m-title">rough night?</div><div class="m-body">whatever's on your plate tonight, you don't have to carry it alone.<br><br><b>988</b> — the Suicide &amp; Crisis Lifeline — is awake too. call or text, free, 24/7.</div><a class="cta" style="position:static;display:block;text-decoration:none;text-align:center" href="tel:988">call or text 988</a><button class="cta secondary" style="position:static" onclick="closeModal()">back to the room</button>`); }
+/* live-room fetch: merge tonight's real posts (60s throttle; no-op while ROOM_LIVE=false) */
+let _roomFetchT=0;
+function fetchLiveRoom(){ if(!(ROOM_LIVE && beOn())) return; const now=Date.now(); if(now-_roomFetchT<60000) return; _roomFetchT=now;
+  bePost("room",{action:"list", night:nightKey(), device_id:deviceId()}).then(r=>{ if(!(r && r.posts)) return;
+    const seen=new Set(room.filter(p=>p.liveId).map(p=>p.liveId));
+    let added=false;
+    r.posts.forEach(p=>{ if(seen.has(p.id)) return; added=true;
+      room.push({liveId:p.id, ic:p.ic||"🌙", text:p.text, city:"night owl", ago:"tonight", streak:p.streak||0, live:true, r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0}, reacted:{}});
+    });
+    if(room.length>60) room.length=60;
+    if(added && $("#view-room").classList.contains("active")) renderRoom();
+  }); }
+function reportPost(i){ const p=room[i]; if(!p || !p.liveId) return; bePost("room",{action:"report", post_id:p.liveId, device_id:deviceId()}); room.splice(i,1); renderRoom(); toast("reported — a human will look. thank you 🤍"); }
 function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; makeMine("🌙", v); inp.value=""; snd("chime"); toast("posted — the resident ghosts are reading 👻 burns at sunrise 🌅"); addXp(4); questEvent("post"); }
 const CONFESS = ["almost got me. it didn't. 💪","called my name at 2am. i let it ring.","was THIS close. wallet's still shut.","tempted me for 20 whole minutes. survived."];
 function quickConfess(e){ makeMine(e, `${e} ${pick(CONFESS)}`); snd("chime"); toast("confessed to the room 🌙"); addXp(4); questEvent("post"); }
@@ -2871,6 +2916,8 @@ if(!localStorage.getItem("carted_onboard")){ setTimeout(showOnboard, 500); }
 document.addEventListener("keydown", e=>{ if(e.key==="Enter" && document.activeElement && document.activeElement.id==="composer-input") postFromComposer(); });
 if(!NATIVE && "serviceWorker" in navigator){ navigator.serviceWorker.register(BASE+"sw.js").catch(()=>{}); }
 if(NATIVE && stats.pushOptIn) nativeNudge();   // re-arm the one-shot last-call on every native launch
+restoreStats();                                 // native: recover from a WKWebView storage wipe (reloads once if it restores)
+window.addEventListener("pagehide", ()=>{ if(NATIVE){ clearTimeout(_mirrorT); _mirrorT=null; try{ const P=window.Capacitor.Plugins.Preferences; if(P){ const blob={}; MIRROR_KEYS.forEach(k=>{ const v=localStorage.getItem(k); if(v!=null) blob[k]=v; }); P.set({key:"carted_backup", value:JSON.stringify(blob)}); } }catch(e){} } });
 </script>
 </body>
 </html>
