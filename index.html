@@ -1386,6 +1386,18 @@ function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("sh
 /* ---- night clock: a "night" runs 4am→4am so 2am counts as the same night ---- */
 function nightKey(){ const s=new Date(Date.now()-4*3600*1000); const p=n=>String(n).padStart(2,"0"); return `${s.getFullYear()}-${p(s.getMonth()+1)}-${p(s.getDate())}`; }
 function nightShift(key, delta){ const a=key.split("-").map(Number); const dt=new Date(a[0], a[1]-1, a[2]+delta, 12); const p=n=>String(n).padStart(2,"0"); return `${dt.getFullYear()}-${p(dt.getMonth()+1)}-${p(dt.getDate())}`; }
+/* "showing up" advances the streak — sitting in the room or steeping a cup counts, not only the
+   fake order. the streak is "nights you came by", the companion metric, not "nights you did the gag". */
+function markShownUp(gentle){
+  const tonight=nightKey(); if(stats.lastNight===tonight) return false; let usedFreeze=false;
+  if(stats.lastNight===nightShift(tonight,-1)){ stats.streak=(stats.streak||0)+1; }
+  else if(stats.lastNight===nightShift(tonight,-2) && (stats.freezes||0)>0){ stats.freezes--; stats.streak=(stats.streak||0)+1; usedFreeze=true; }
+  else if(!stats.lastNight && stats.streak>0){ stats.streak++; }
+  else { stats.streak=1; }
+  stats.lastNight=tonight; stats.maxStreak=maxStreakEver(); saveStats(); renderHud();
+  if(gentle) setTimeout(()=>toast(`🔥 night ${stats.streak} — you showed up${usedFreeze?' · 🧊 a freeze caught your miss':''}`), 500);
+  return true;
+}
 
 /* ---- tiny synth sounds (no assets) + mute toggle ---- */
 let AC = null;
@@ -1581,6 +1593,7 @@ function go(view){ track("view",{v:view});
   $("#nav-cart").classList.toggle("on", view==="cart");
   document.body.classList.toggle("hud-off", view==="room");   // the room is a leveler — no scoreboard hovering over it
   document.body.classList.toggle("in-room", view==="room");   // dims the page background for the room's calm palette
+  if(view==="room") markShownUp(true);   // coming to the room counts as showing up (once/night)
   if(view==="cart") renderCart();
   if(view==="room") renderRoom();
   if(view==="profile") renderProfile();
@@ -2186,7 +2199,8 @@ function fetchLiveRoom(){ if(!(ROOM_LIVE && beOn())) return; const now=Date.now(
     const seen=new Set(room.filter(p=>p.liveId).map(p=>p.liveId));
     let added=false;
     r.posts.forEach(p=>{ if(seen.has(p.id)) return; added=true;
-      room.push({liveId:p.id, ic:p.ic||"🌙", text:p.text, city:"night owl", ago:"tonight", streak:p.streak||0, live:true, r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0}, reacted:{}});
+      if(p.ghost){ room.unshift({liveId:p.id, ic:p.ic||"🤍", ghost:p.ghost, text:p.text, city:"the room", ago:"just now", r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0}, reacted:{}}); }   // disclosed resident-ghost reply, near the top (it's a reply)
+      else room.push({liveId:p.id, ic:p.ic||"🌙", text:p.text, city:"night owl", ago:"tonight", streak:p.streak||0, live:true, r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0}, reacted:{}});   // real human post — reportable
     });
     if(room.length>60) room.length=60;
     if(added && $("#view-room").classList.contains("active")) renderRoom();
@@ -2273,6 +2287,7 @@ function cupServe(){
   const el=$("#cup-overlay"); if(!el) return;
   snd("chime");
   try{ localStorage.setItem("carted_cup", nightKey()); }catch(e){}   // remembered, but never scored — rest isn't graded
+  markShownUp(false);   // steeping a cup counts as showing up — but SILENTLY, so "no points, nothing owed" stays true on screen
   track("cup_done",{});
   el.querySelector(".cup-scene").innerHTML=`
     <div class="cup-emo">🍜</div>
