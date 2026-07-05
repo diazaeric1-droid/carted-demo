@@ -246,6 +246,12 @@
   .cup-bar .cbr-txt b { font-family: var(--disp); font-weight: 600; font-size: 14.5px; }
   .cup-bar .cbr-sub { font-size: 11.5px; color: #b9a8e6; font-weight: 700; }
   .cup-bar .cbr-go { font-size: 22px; font-weight: 800; }
+  .silence-btn { width: 100%; background: transparent; border: 2px dashed var(--ink); border-radius: 14px; padding: 9px; margin: 0 0 12px; font-family: var(--disp); font-weight: 600; font-size: 12.5px; color: var(--muted); cursor: pointer; }
+  #view-room.quiet .prompts, #view-room.quiet .composer, #view-room.quiet .tk-line { display: none; }
+  .quiet-panel { text-align: center; padding: 40px 20px; color: var(--muted); }
+  .quiet-panel .qp-emo { font-size: 46px; }
+  .quiet-panel .qp-title { font-family: var(--disp); font-weight: 600; font-size: 18px; color: var(--text); margin: 10px 0 8px; }
+  .quiet-panel .qp-sub { font-size: 13px; font-weight: 700; line-height: 1.5; }
   .cup-ov { position: absolute; inset: 0; z-index: 60; background: linear-gradient(180deg, #241d38, #171226); display: flex; align-items: center; justify-content: center; animation: fade .3s ease; }
   .cup-scene { text-align: center; color: #f7ecd9; width: 100%; padding: 24px; position: relative; }
   .cup-x { position: absolute; top: -6px; right: 12px; background: none; border: none; color: #b9a8e6; font-size: 20px; font-weight: 800; cursor: pointer; padding: 8px; }
@@ -766,13 +772,6 @@
               <button id="seg-all" class="on" onclick="setMode('all')">All</button>
               <button id="seg-saved" onclick="setMode('saved')">♥ Saved <span id="saved-count">0</span></button>
             </div>
-            <div class="store-row">
-              <button class="store-banner neon" onclick="openKonbini()">
-                <span class="sb-ic">🏪</span>
-                <span class="sb-text"><b>24h corner store</b><span class="sb-sub" id="store-banner-sub">open all night — it's right there</span></span>
-                <span class="sb-go">›</span>
-              </button>
-            </div>
             <div class="section-label feed-craving" id="feed-section-label">🔥 craving right now</div>
           </div>
 
@@ -789,7 +788,7 @@
             <div class="dr-body">
               <div class="tally">
                 <div class="box"><div class="k">saved here tonight</div><div class="v green" id="saved-tally">$0.00</div></div>
-                <div class="box"><div class="k">window-orders</div><div class="v" id="order-count">0</div></div>
+                <div class="box"><div class="k">dodged here</div><div class="v" id="order-count">0</div></div>
               </div>
               <div id="quests"></div>
             </div>
@@ -824,7 +823,8 @@
             <div class="live2"><span class="dot"></span> <b id="room-live" style="color:var(--go);font-weight:800">1,247</b>&nbsp;👻 ghosts up · <b id="room-dodged" style="color:var(--go)">$—</b>&nbsp;dodged · <span id="room-burn-top">🌅 —</span></div>
             <div class="ghost-note">👻 = resident ghost — friendly fiction keeping the room warm, not people. your posts burn at sunrise. 🌅</div>
           </div>
-          <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a 3-minute break, taken together · 🍜 <span id="cup-others-n">—</span> steeping now</span></span><span class="cbr-go">›</span></button>
+          <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a quiet 3-minute break — the ghosts steep with you 🍜</span></span><span class="cbr-go">›</span></button>
+          <button id="silence-toggle" class="silence-btn" onclick="toggleSilence()">🤫 quiet corner</button>
           <div id="room-podium"></div>
           <div id="city-board"></div>
           <div class="prompts"><span class="plabel">tap what almost got you</span><button class="pchip" onclick="quickConfess('🍕')">🍕</button><button class="pchip" onclick="quickConfess('🍜')">🍜</button><button class="pchip" onclick="quickConfess('🍣')">🍣</button><button class="pchip" onclick="quickConfess('🌮')">🌮</button><button class="pchip" onclick="quickConfess('🍔')">🍔</button><button class="pchip" onclick="quickConfess('🍰')">🍰</button></div>
@@ -1087,16 +1087,16 @@ const CCY = {
   in:{sym:"₹",dec:0,pf:83}, ca:{sym:"C$",dec:2,pf:1.35}, au:{sym:"A$",dec:2,pf:1.5}, sg:{sym:"S$",dec:2,pf:1.35},
 };
 
+/* calm, communal, no comparison/achievement pressure — "we're in this together", not a scoreboard */
 const TICKER = [
-  "🌃 someone in Brooklyn just carted $43 of pastrami and went to bed",
+  "a ghost in Brooklyn window-shopped pastrami and went to bed 🌙",
   "someone in Tokyo is tracking a 🚗 that will never arrive",
-  "1,200 people are not-ordering with you right now 😌",
-  "a stranger in London window-shopped a naan roll and felt better",
-  "tonight we've collectively dodged $84,000 in delivery fees",
-  "someone in Seoul built a ₩60,000 cart and closed the app 🥲",
+  "you're not the only one up 😌",
+  "a ghost in London looked at a naan roll and felt a little better",
   "girl dinner is just looking at the menu, together",
   "👻 tonight's drivers: imaginary, as always",
-  "somebody just hit a 14-night streak 🔥 unreal",
+  "the kitchens are warm. no one's ordering. that's the point.",
+  "whatever you're not buying tonight — same 🤍",
 ];
 /* resident ghosts: the room's DISCLOSED fictional regulars. every non-"you" post is a
    named ghost, never presented as a human — the honesty line the whole brand stands on. */
@@ -1110,13 +1110,27 @@ const ROOM_SEED = [
   {ic:"🍗", ghost:"Gus", sched:"~12:30", text:"chimaek craving at 2am. held back. tell me i'm strong", city:"Seoul", ago:"8m", streak:9, r:{hug:9, me:2, go:4}},
   {ic:"🥓", ghost:"Nori", sched:"~3:20", text:"girl dinner = me haunting a naan roll photo", city:"London", ago:"now", r:{hug:6, me:7, go:1}},
 ];
+/* a bigger repeat cast so the room feels inhabited across the whole night, and each ghost
+   only turns up near its own hour — so "round here ~2:40" is TRUE, not set dressing. */
 const INCOMING = [
-  {ic:"🍟", ghost:"Clem", sched:"~1:30", text:"just carted cheese fries and bailed", city:"Chicago"},
-  {ic:"🍣", ghost:"Miso", sched:"~2:20", text:"almost spent ¥4000 on sushi. ate cereal.", city:"Tokyo"},
-  {ic:"🍗", ghost:"Wanda", sched:"~3:10", text:"no-spend night #2, still translucent 🎉", city:"Seoul"},
+  {ic:"🍜", ghost:"Otto", sched:"~10:20", text:"clocked out, wanted ramen, made toast instead", city:"Berlin"},
+  {ic:"🍕", ghost:"Rel", sched:"~10:50", text:"the pizza place is right there. i am staying here.", city:"Chicago"},
+  {ic:"🍗", ghost:"June", sched:"~11:15", text:"chicken craving logged. wallet closed.", city:"Seoul"},
+  {ic:"🥡", ghost:"Bao", sched:"~11:40", text:"filled a cart with dumplings just to look at it", city:"Hong Kong"},
+  {ic:"🍟", ghost:"Clem", sched:"~12:30", text:"just carted cheese fries and bailed", city:"Chicago"},
   {ic:"🍕", ghost:"Pip", sched:"~12:50", text:"window-shopped a whole pizza in Brixton", city:"London"},
+  {ic:"🌮", ghost:"Rafa", sched:"~1:10", text:"MX$180 of tacos in the cart. good enough.", city:"Mexico City"},
+  {ic:"🍣", ghost:"Miso", sched:"~1:35", text:"almost spent ¥4000 on sushi. ate cereal.", city:"Tokyo"},
   {ic:"🌯", ghost:"Hattie", sched:"~2:05", text:"saved MX$120 on tacos. proud of me.", city:"Mexico City"},
+  {ic:"🍔", ghost:"Del", sched:"~2:25", text:"the 2am burger thought came and went", city:"Austin"},
+  {ic:"🍜", ghost:"Anh", sched:"~2:50", text:"pho cart built, pho cart closed. still warm in here.", city:"Hanoi"},
+  {ic:"🍗", ghost:"Wanda", sched:"~3:10", text:"no-spend night #2, still translucent 🎉", city:"Seoul"},
+  {ic:"🥐", ghost:"Cosette", sched:"~3:35", text:"croissant at 3am is a feeling, not a purchase", city:"Paris"},
+  {ic:"🍩", ghost:"Row", sched:"~4:00", text:"last one up. cart full of donuts. goodnight.", city:"Toronto"},
 ];
+/* sched "~H:MM" (late-night, 12 = midnight) → minutes since midnight */
+function schedMin(s){ const m=String(s||"").replace("~","").split(":"); let h=parseInt(m[0])||0; if(h===12) h=0; return h*60 + (parseInt(m[1])||0); }
+function ghostAwakeNow(g){ const now=new Date(); const nm=now.getHours()*60+now.getMinutes(); const gm=schedMin(g.sched); let d=Math.abs(nm-gm); d=Math.min(d,1440-d); return d<=90; }   // within 90 min of its hour
 const REACT_META = { hug:"🫂", me:"😋", go:"🔥" };
 const REACT_LBL  = { hug:"hang in", me:"me too", go:"send it" };   // 😋 is our 저도요
 const OVERPASS = ["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter","https://maps.mail.ru/osm/tools/overpass/api/interpreter"];
@@ -1260,7 +1274,7 @@ async function nativeNudge(){ try{
   let p=await LN.checkPermissions(); if(p.display!=="granted") p=await LN.requestPermissions();
   if(p.display!=="granted") return false;
   try{ await LN.cancel({notifications:[{id:77}]}); }catch(e){}
-  await LN.schedule({notifications:[{ id:77, title:`${(stats.ghostName||"Mort")} 👻`, body:"last call — the kitchens close at 4am. your streak's waiting 🔥", schedule:{ at: nextNudgeAt(), allowWhileIdle:true } }]});
+  await LN.schedule({notifications:[{ id:77, title:`${(stats.ghostName||"Mort")} 👻`, body:"the room's warm if you're up 🌙 no pressure — just company.", schedule:{ at: nextNudgeAt(), allowWhileIdle:true } }]});
   return true;
 }catch(e){ return false; } }
 /* backend (Supabase) — fill after deploying ~/carted-app/supabase (see supabase/BACKEND.md).
@@ -1335,7 +1349,9 @@ const FLIGHT_PUNCH = [
 ];
 function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
 function levelInfo(xp){ let lvl=1, need=60, acc=0; while(xp>=acc+need){ acc+=need; lvl++; need=Math.round(need*1.35); } return {lvl, pct:Math.round((xp-acc)/need*100)}; }
-function addXp(n){ n=Math.round(n*xpMult()); const before=levelInfo(stats.xp||0).lvl; stats.xp=(stats.xp||0)+n; saveStats(); renderHud(); floatXp(n); const lvl=levelInfo(stats.xp).lvl; if(lvl>before) showLevelUp(lvl); }
+/* XP/levels retired in the Calm Pass — this app is a companion, not a game. addXp is a
+   harmless no-op so the ~20 legacy call sites don't break; nothing accrues or surfaces. */
+function addXp(n){}
 const ACHV = [
   {id:"first", ic:"👻", name:"First Ghost", tip:"window-order once", has:s=>s.orders>=1},
   {id:"fav5", ic:"❤️", name:"Collector", tip:"save 5 places", has:()=>Object.keys(savedPlaces).length>=5},
@@ -1446,21 +1462,10 @@ function questEvent(ev, n){
   q.ids.forEach(id=>{ const d=QUEST_POOL.find(z=>z.id===id); if(!d || d.ev!==ev || q.claimed.includes(id)) return; q.prog[id]=Math.min(d.target,(q.prog[id]||0)+n); changed=true; });
   if(changed){ saveStats(); renderQuests(); }
 }
-function renderQuests(){
-  const el=$("#quests"); if(!el) return;
-  const q=questsToday(), defs=q.ids.map(id=>QUEST_POOL.find(d=>d.id===id)).filter(Boolean);
-  const allClaimed = defs.every(d=>q.claimed.includes(d.id));
-  el.innerHTML = `<div class="quests"><div class="qhead"><span>🎯 tonight's mission</span><span class="qday">resets at 4am</span></div>`
-    + defs.map(d=>{ const got=Math.min(d.target, q.prog[d.id]||0), done=got>=d.target, claimed=q.claimed.includes(d.id);
-      return `<div class="quest"><div class="qic">${d.ic}</div><div class="qmid"><div class="qname">${d.name}</div><div class="qbar"><div class="qfill" style="width:${Math.round(got/d.target*100)}%"></div></div></div>`
-        + (claimed ? `<button class="qbtn done2">✓ done</button>` : done ? `<button class="qbtn ready" onclick="claimQuest('${d.id}')">claim +${d.xp}</button>` : `<button class="qbtn">${got}/${d.target}</button>`)
-        + `</div>`; }).join("")
-    + (allClaimed ? (q.chest ? `<div class="chestrow"><button class="qbtn done2" style="width:100%">🎁 chest opened — see you tomorrow night 🌙</button></div>`
-                             : `<div class="chestrow"><button class="chestbtn" onclick="openChest()">🎁 open tonight's chest · +40 XP</button></div>`) : "")
-    + `</div>`;
-}
-function claimQuest(id){ const q=questsToday(), d=QUEST_POOL.find(z=>z.id===id); if(!d || q.claimed.includes(id) || (q.prog[id]||0)<d.target) return; q.claimed.push(id); saveStats(); snd("chime"); addXp(d.xp); toast(`🎯 mission complete: +${d.xp} XP`); renderQuests(); }
-function openChest(){ const q=questsToday(); if(q.chest) return; q.chest=true; saveStats(); snd("fanfare"); burst(); addXp(40); toast("🎁 nightly chest: +40 XP"); renderQuests(); }
+/* quests/missions/chest retired — the ritual is the nightly dodge + the room, not a checklist */
+function renderQuests(){ const el=$("#quests"); if(el) el.innerHTML=""; }
+function claimQuest(id){}
+function openChest(){}
 
 /* ---- fly-to-cart juice ---- */
 function flyToCart(ev, emo){
@@ -1753,16 +1758,12 @@ function renderProfile(){
   const head = `<div class="profile-card"><div class="pa">🌙</div><div class="ph">your night-owl pass</div><div class="pe">no account, no sign-up — everything lives on this device</div></div>`;
   const grid = `
     <div class="pstats">
-      <div class="pstat"><div class="v green">$${Math.round(stats.savedUsd).toLocaleString()}</div><div class="k">saved all-time (≈USD)</div></div>
-      <div class="pstat"><div class="v streak">🔥 ${stats.streak}</div><div class="k">no-spend streak</div></div>
+      <div class="pstat"><div class="v green">$${Math.round(stats.savedUsd).toLocaleString()}</div><div class="k">kept in your pocket (≈USD)</div></div>
+      <div class="pstat"><div class="v streak">🔥 ${stats.streak}</div><div class="k">nights showing up</div></div>
     </div>
     <div class="pstats">
-      <div class="pstat"><div class="v">${stats.orders}</div><div class="k">window-orders</div></div>
+      <div class="pstat"><div class="v">🧊 ${stats.freezes||0}</div><div class="k">a missed night, forgiven</div></div>
       <div class="pstat"><div class="v">${favCount}</div><div class="k">saved places</div></div>
-    </div>
-    <div class="pstats">
-      <div class="pstat"><div class="v">🧊 ${stats.freezes||0}</div><div class="k">streak freezes</div></div>
-      <div class="pstat"><div class="v">⚡ ${stats.maxCombo||0}×</div><div class="k">best dodge combo</div></div>
     </div>`;
   const auth = `<button class="signin-btn" onclick="shareWin('streak')">📸 flex your streak card</button>`
     + `<button class="signin-btn" onclick="showWrapped()">📊 your week, wrapped</button>`
@@ -1770,20 +1771,18 @@ function renderProfile(){
     + `<button class="signin-btn" onclick="toggleAsmr()">${asmrOn?"🍳 kitchen ASMR: on":"🍳 kitchen ASMR: off"}</button>`
     + `<button class="signin-btn" onclick="toggleSnd()">${sndOn?"🔊 sounds: on":"🔇 sounds: off"}</button>`;
   const owned=stats.drivers||[];
-  const driversCard = `<div class="section-label" style="margin:8px 2px 8px">👻 your ghost couriers <span style="color:var(--muted)">${owned.length}/${GACHA.length}</span></div>`
-    + `<div class="achv-grid">` + GACHA.map(d=>{ const on=owned.includes(d.id); return `<div class="achv drv${on?' on':''}" title="${esc(d.p)}" style="--rc:${RARITY_COLOR[d.r]}"><div class="drv-veh">${on?d.e:'❔'}</div><div class="achv-name">${on?esc(d.n):'???'}</div><div class="achv-tip" style="color:${on?RARITY_COLOR[d.r]:'var(--muted)'}">${d.r}${on&&d.r!=='common'?' ✦':''}</div></div>`; }).join("") + `</div>`;
+  const driversCard = "";   // gacha courier collection retired
   const bShared = stats.buddy && stats.buddy.sharedStreak!=null ? stats.buddy.sharedStreak : (stats.streak||0);
   const bNote = beOn() ? (stats.buddy && stats.buddy.pending ? "waiting for them to tap your link…" : "synced live") : "prototype — goes live once the backend is configured";
   const buddyCard = stats.buddy
     ? `<div class="tier-card"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">${esc(stats.buddy.name||"your buddy")}</div><div class="tier-sub">sharing a 🔥 ${bShared}-night streak — if one caves, you both reset</div></div></div><button class="signin-btn" onclick="inviteBuddy()" style="margin-top:8px">↗ invite another</button><div style="text-align:center;color:var(--muted);font-size:10.5px;margin-top:6px">${bNote}</div></div>`
-    : `<div class="tier-card" style="border-color:var(--accent);box-shadow:4px 4px 0 var(--accent)"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">get a no-spend buddy</div><div class="tier-sub">share one streak with one person — if either caves, you both reset. <b style="color:#d98324">+50 XP</b> when they join 🎁</div></div></div><button class="signin-btn dark" onclick="inviteBuddy()" style="margin-top:8px">↗ invite a buddy</button></div>`;
+    : `<div class="tier-card" style="border-color:var(--accent);box-shadow:4px 4px 0 var(--accent)"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">do this with someone</div><div class="tier-sub">share one streak with one person — if either of you caves, you both reset. you're in it together 🤍</div></div></div><button class="signin-btn dark" onclick="inviteBuddy()" style="margin-top:8px">↗ invite a friend</button></div>`;
   const {t,next}=tierFor(stats.savedUsd);
   const prog = next ? Math.max(5, Math.min(100, Math.round((stats.savedUsd-t.min)/(next.min-t.min)*100))) : 100;
   const tierCard = `<div class="tier-card"><div class="tier-row"><span class="tier-ic">${t.ic}</span><div><div class="tier-name">${t.name}</div><div class="tier-sub">${next?`$${Math.max(0,Math.round(next.min-stats.savedUsd))} more saved → <b>${next.name}</b> ${next.ic}`:"max rank — legend 🏆"}</div></div></div><div class="tier-bar"><div class="tier-fill" style="width:${prog}%"></div></div></div>`;
   const L=levelInfo(stats.xp||0);
-  const lvlCard = `<div class="lvl-card"><div class="lvl-top"><span>⭐ Level ${L.lvl}</span><span style="color:var(--muted)">${stats.xp||0} XP</span></div><div class="xp-track"><div class="xp-fill" style="width:${L.pct}%"></div></div></div>`;
-  if(!stats.earned) stats.earned=[];
-  const achv = `<div class="section-label" style="margin:6px 2px 8px">🏅 achievements</div><div class="achv-grid">` + ACHV.map(a=>{ const on=a.has(stats); return `<div class="achv${on?' on':''}"><div class="achv-ic">${on?a.ic:'🔒'}</div><div class="achv-name">${a.name}</div><div class="achv-tip">${on?'unlocked':a.tip}</div></div>`; }).join("") + `</div>`;
+  const lvlCard = "";   // XP/levels retired
+  const achv = "";   // achievement badges retired — this is a companion, not a trophy case
   const tt=travelTotals(), flown=citiesFlown();
   const passportCard = `<div class="section-label" style="margin:8px 2px 8px">🛂 flight log <span style="color:var(--muted)">${flown.size}/50 cities</span></div>`
     + `<div class="passport" style="margin-bottom:10px"><div class="pp-top"><span>🛂</span> <b>${flown.size}/50</b> cities flown<span class="pp-saved">✈️ ${(tt.miles||0).toLocaleString()} mi never flown</span></div><div class="pp-bar"><div class="pp-fill" style="width:${Math.round(flown.size/50*100)}%"></div></div>${passportStrip()}</div>`;
@@ -1835,7 +1834,7 @@ function renderCart(){
   const body=$("#cart-body"), c=curCity();
   const cityIds=[...new Set(cart.map(p=>p._cityId))], multi=cityIds.length>1;
   $("#cart-sub").textContent = cart.length ? (multi ? `🌍 ${cityIds.length} cities in your cart · don't check out.` : `from ${cart[0]._cityName||c.name} · don't check out.`) : "fill it up. don't check out.";
-  if(!cart.length){ body.innerHTML = (orderedTonight()?`<div class="kclosed" style="margin-bottom:14px">🌙 tonight's dodge is banked 🔥 kitchens reopen in <b>${reopenLabel()}</b><div class="kc-sub">one order a night — fill tomorrow's cart in the meantime 🛒</div></div>`:"") + `<div class="empty"><div class="big">👻</div>your cart is a ghost town.<br>go fill it up.<br><br><button class="cta secondary" style="position:static" onclick="go('feed')">browse places</button></div>`; return; }
+  if(!cart.length){ body.innerHTML = (orderedTonight()?`<div class="kclosed" style="margin-bottom:14px">🌙 that's your dodge for tonight — nicely done<div class="kc-sub">one order a night is the whole ritual. your cart keeps till you're back 🛒</div></div>`:"") + `<div class="empty"><div class="big">👻</div>your cart is a ghost town.<br>go fill it up.<br><br><button class="cta secondary" style="position:static" onclick="go('feed')">browse places</button></div>`; return; }
   const sub=cartSubtotal(), fl=flightInfo(c), quirks=cartQuirkFees();
   body.innerHTML = `
     ${cart.map((p,i)=>`<div class="cart-item"><div class="ci-thumb">${(p._menuItem&&p.photo)?`<img class="ph-img" src="${p.photo}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${p.ic}'))">`:p.ic}</div><div class="nm">${esc(p.dish)}<div style="font-size:11.5px;color:var(--muted);font-weight:400">${p._flag||""} ${esc(p._cityName||p.name)}</div></div><div class="pr">${money(p.price,p._cur)}${cityPfOf(p)!==1?`<div style="font-size:10.5px;color:var(--muted);font-weight:600">≈ ${money(usdOf(p),USD)}</div>`:""}</div><button class="rm" onclick="removeFromCart(${i})">✕</button></div>`).join("")}
@@ -1852,7 +1851,7 @@ function renderCart(){
     <div class="boss"><span class="bossic">👹</span><span>the FEE BOSS wants <b style="color:var(--hot)">${money(cartFees(),USD)}</b> in junk fees${quirks.length?` (incl. ${quirks.map(q=>q.label).join(" + ")})`:""}.<br>place the order. dodge him.</span></div>
     <div class="deliver-to">${multi?`✈️ a ghost plane will hit all ${cityIds.length} cities, then you`:(fl?`✈️ flying <b>${esc(c.name)} → ${esc(HOME.label)}</b> · real flight time ${fl.label}`:`🛵 delivering nearby in ${esc(HOME.label)}`)} · <span class="dt-change" onclick="cityModal(true)">change</span></div>
     ${orderedTonight()
-      ? `<div class="kclosed">🌙 you already dodged tonight — kitchens reopen in <b>${reopenLabel()}</b><div class="kc-sub">one order a night. that's the ritual. your cart keeps till tomorrow.</div></div>`
+      ? `<div class="kclosed">🌙 you've dodged tonight — that's enough<div class="kc-sub">one order a night is the whole ritual. your cart's saved for tomorrow.</div></div>`
       : `<button class="cta" onclick="placeOrder()">place order ${fl?"✈️":"🚗"}</button>`}
     <button class="cta secondary" onclick="go('feed')">keep browsing</button>
     <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:12px">${orderedTonight()?"tonight's dodge is banked 🔥 see you at the next open.":"the button looks real. nothing gets charged."}</div>`;
@@ -1904,7 +1903,7 @@ function buildFlightStages(route){
   return stages;
 }
 function placeOrder(){
-  if(orderedTonight()){ snd("pop"); toast(`🌙 one order a night — kitchens reopen in ${reopenLabel()}`); return; }
+  if(orderedTonight()){ snd("pop"); toast(`🌙 that's enough for tonight — see you tomorrow`); return; }
   const c=curCity(), gd=rollDriver();
   const cities=[...new Set(cart.map(p=>p._cityId))];
   const route=buildRoute(cart, HOME);
@@ -1957,81 +1956,61 @@ function revealTruth(){
   }
   stats.orders++; stats.savedUsd += po.total;          // po.total is already USD
   bumpTonight(po.total); buddyPing(); bumpWeek(po.total, po.city.id, (po.items[0]||{}).ic);
-  bumpVariety([...new Set((po.items||[]).map(it=>it.en).filter(Boolean))]);
-  combo++; if(combo>(stats.maxCombo||0)) stats.maxCombo=combo;
   stats.maxStreak=maxStreakEver();
   stats.cuisines=stats.cuisines||[]; stats.cities=stats.cities||[];
   (po.items||[]).forEach(it=> uniqPush(stats.cuisines, it.en));
-  /* order memory: after 3+ carts of one cuisine, the ghost knows your usual */
+  /* order memory: after 3+ carts of one cuisine the ghost quietly knows your usual —
+     surfaced in-context on the detail page ("the usual, then?"), never announced at you */
   stats.cuisineCount=stats.cuisineCount||{};
   (po.items||[]).forEach(it=>{ if(it.en) stats.cuisineCount[it.en]=(stats.cuisineCount[it.en]||0)+1; });
-  { const top=Object.entries(stats.cuisineCount).sort((a,b)=>b[1]-a[1])[0];
-    const hadUsual=!!stats.usual;
-    if(top && top[1]>=3){ stats.usual={en:top[0], n:top[1]};
-      if((po.items||[]).some(it=>it.en===stats.usual.en)) setTimeout(()=>toast(`👻 ${esc(ghostName())}: the usual. i respect the commitment.`), 2600);
-      else if(!hadUsual) setTimeout(()=>toast(`👻 ${esc(ghostName())} has learned your order.`), 2600);
-    } }
+  { const top=Object.entries(stats.cuisineCount).sort((a,b)=>b[1]-a[1])[0]; if(top && top[1]>=3) stats.usual={en:top[0], n:top[1]}; }
   uniqPush(stats.cities, po.city.id);
-  // FLIGHT-LOG PASSPORT: stamp every city the ghost actually flew to (route stops); po.total is USD
-  if(po.flight){ const stops=(po.route||[]).filter(s=>s && !s.home && s.id); const per=po.total/(stops.length||1); let firstNew=null; stops.forEach(s=>{ if(!citiesFlown().has(s.id)){ if(!firstNew) firstNew=s; addXp(12); } logFlight(s.id, per, havKm(s, HOME)); }); if(firstNew){ const fn=firstNew; setTimeout(()=>toast(`🛂 new stamp! you flew to ${esc(fn.name)} — a trip that never took off`), 1700); } }
-  // breadth + spotlight rewards: which restaurants did this order touch?
+  // FLIGHT-LOG PASSPORT: stamp every city the ghost flew to — silent, visible on the profile
+  if(po.flight){ const stops=(po.route||[]).filter(s=>s && !s.home && s.id); const per=po.total/(stops.length||1); stops.forEach(s=>logFlight(s.id, per, havKm(s, HOME))); }
   const parentKeys=[...new Set((po.items||[]).map(it=>String(it._key).split("::")[0]))];
-  const triedNew = parentKeys.some(k=>isNewPlace({_key:k}));
   markVisited(parentKeys);
-  if(triedNew){ addXp(8); setTimeout(()=>toast("✨ first time at a new spot — +8 XP"), 2100); }
   const sp=spotlightFor(po.city);
-  if(po.city.id===featuredCity().id && sp && parentKeys.includes(sp._key) && !(stats.spotDone||[]).includes(spotKey(po.city.id))){ stats.spotDone=stats.spotDone||[]; stats.spotDone.push(spotKey(po.city.id)); stats.freezes=Math.min(3,(stats.freezes||0)+1); addXp(30); setTimeout(()=>toast("🎯 spotlight complete! +30 XP & a 🧊 freeze"), 2300); }
-  stats.nudgeHour=new Date().getHours();                 // habitual-hour anchor for the last-call nudge
+  if(po.city.id===featuredCity().id && sp && parentKeys.includes(sp._key) && !(stats.spotDone||[]).includes(spotKey(po.city.id))){ stats.spotDone=stats.spotDone||[]; stats.spotDone.push(spotKey(po.city.id)); stats.freezes=Math.min(3,(stats.freezes||0)+1); }
+  stats.nudgeHour=new Date().getHours();                 // habitual-hour anchor for the gentle nudge
   saveStats(); checkFitUnlocks();
   if(NATIVE && stats.pushOptIn) nativeNudge();           // re-arm for tomorrow (never re-fires tonight)
   const newTier=tierFor(stats.savedUsd).t;
   let milestone="";
-  if(newTier.name!==beforeTier){ milestone=`${newTier.ic} new rank unlocked: ${newTier.name}!`; stats.freezes=Math.min(3,(stats.freezes||0)+1); saveStats(); }
-  else if(streakGrew && [3,7,14,30,50,100,200].includes(stats.streak)){ milestone=`🔥 ${stats.streak}-night streak milestone!`; if(stats.streak>=7){ stats.freezes=Math.min(3,(stats.freezes||0)+1); saveStats(); } }
+  if(newTier.name!==beforeTier){ milestone=`${newTier.ic} you've saved your way to ${esc(newTier.name)}`; stats.freezes=Math.min(3,(stats.freezes||0)+1); saveStats(); }
+  else if(streakGrew && [3,7,14,30,50,100,200].includes(stats.streak)){ milestone=`🔥 ${stats.streak} nights, together`; if(stats.streak>=7){ stats.freezes=Math.min(3,(stats.freezes||0)+1); saveStats(); } }
   if(po.city.id===curCity().id) renderTally();
-  if(po.city.id===featuredCity().id){ addXp(15); setTimeout(()=>toast("🌟 tonight's featured city — +15 XP bonus"), 1900); }
   lastShare = { usd: po.total, label: money(po.total, USD), streak: stats.streak, tier: newTier, city: (po.cities&&po.cities.length>1)?`${po.cities.length} cities`:po.city.name };
   if(po.flight){ globeProgress(100); $("#track-live").style.display="none"; }
   else { const rd=$("#rider"); const mort=rd.querySelector(".mort"); if(mort) mort.textContent="👻"; const veh=rd.querySelector(".veh"); if(veh) veh.textContent="💨"; rd.style.left="120%"; rd.style.top="-12%"; rd.style.opacity="0"; routeProgress(100); const mp=$("#track-map"); if(mp) mp.classList.add("arrive"); $("#track-live").style.display="none"; }
-  /* QUIET RECEIPT by default — the reveal is a moment of relief, not a jackpot.
-     fireworks (confetti/fanfare/full courier card) only on milestone nights. */
+  /* QUIET RECEIPT — a moment of relief, not a jackpot. no XP, no confetti, no cascade of toasts. */
   snd("whoosh");
-  const newDriver = po.gachaDriver ? collectDriver(po.gachaDriver) : false;
-  if(!isNight() && Math.random()<0.22){ const gift=pick(HONORIFICS); addXp(5); setTimeout(()=>toast(gift), 1500); }
-  const driver=po.driver||"Marcus", pl=pick(po.flight?FLIGHT_PUNCH:PUNCH);
-  const quipCtx={ usd: po.total, flight: !!po.flight, flightH: po.flight?Math.floor(po.flight.mins/60):0, streak: stats.streak, milestone: !!milestone && streakGrew, combo: combo, featured: po.city.id===featuredCity().id };
   const firstEver = stats.orders===1;
-  if(firstEver){ try{ localStorage.setItem("carted_first_dodge","1"); }catch(e){} }
+  if(firstEver){ try{ localStorage.setItem("carted_first_dodge","1"); }catch(e){} setTimeout(maybeNameGhost, 1400); }   // name him now that he's flown for you
   const r=$("#track-reveal"); r.style.display="block"; r.className="reveal";
   r.innerHTML = `
-    ${mortReveal(quipCtx.usd, !!milestone)}
-    <div class="ghost-quip">“${ghostQuip(quipCtx)}”</div>
-    <div class="punch">${pl.p.replace("{n}",driver)}</div>
-    <div class="sub">${pl.s.replace("{n}",driver)}</div>
+    ${mortReveal(po.total, false)}
+    <div class="ghost-quip">the driver was never real. neither was the bill.</div>
     <div class="saved" id="reveal-saved">${money(0,USD)} saved</div>
-    <div class="sub">${(po.cities&&po.cities.length>1)?`that's dinner across ${po.cities.length} cities, all dodged.`:(po.flight?`that's dinner in ${esc(po.city.name)} + a ${po.flight.label} flight that never took off.`:`that's what tonight in ${esc(po.city.name)} would've cost.`)} it stayed in your pocket.</div>
-    <div class="sub" style="color:#d98324;font-weight:800;margin-top:6px">🔥 night ${stats.streak}${usedFreeze?' · 🧊 freeze used':''}</div>
+    <div class="sub">${(po.cities&&po.cities.length>1)?`dinner across ${po.cities.length} cities, all dodged`:(po.flight?`dinner in ${esc(po.city.name)}, a ${po.flight.label} flight that never took off`:`what tonight in ${esc(po.city.name)} would've cost`)} — it stayed in your pocket.</div>
+    <div class="sub" style="color:#d98324;font-weight:800;margin-top:6px">🔥 night ${stats.streak}${usedFreeze?' · 🧊 a freeze caught your miss':''}</div>
     ${milestone?`<div class="milestone">${milestone}</div>`:""}
-    ${newDriver?`<div class="courier-card ${po.gachaDriver.r} is-new" style="--rc:${RARITY_COLOR[po.gachaDriver.r]}"><div class="cc-new">🆕 NEW COURIER</div><div class="cc-veh">${po.gachaDriver.e}</div><div class="cc-name">${esc(po.gachaDriver.n)}</div><div class="cc-quip">${esc(po.gachaDriver.p)}</div><div class="cc-rarity">${po.gachaDriver.r}${po.gachaDriver.r!=='common'?' ✦':''}</div></div>`:""}
-    <div style="margin-top:22px">
+    <div style="margin-top:24px">
       <button class="cta" style="position:static" onclick="shareToRoom()">${firstEver?"🌙 meet the others in the room":"🌙 come sit in the room"}</button>
-      <button class="cta secondary" style="position:static" onclick="shareWin()">📸 share the win</button>
-      <button class="cta secondary" style="position:static" onclick="resetCartAndBrowse()">keep browsing</button>
-      ${!stats.buddy?`<button class="cta secondary" style="position:static" onclick="inviteBuddy()">👯 send tonight's dodge to someone → start a pact</button>`:""}
+      <button class="cta secondary" style="position:static" onclick="goodnight()">good night 🌙</button>
     </div>
-    <!-- DEMO/PRE-AFFILIATE: real-money handoff removed until partners live. Re-enable: <button class="order-real" onclick="orderForReal('reveal')">actually… order it for real →</button> -->
-    <div class="track-presence" style="margin-top:14px"><b>${220+Math.floor(Math.random()*80)}</b> ghosts didn't order, with you · <span onclick="go('feed')" style="color:var(--accent);cursor:pointer">I'm good</span></div>`;
-  if(milestone){ burst(); setTimeout(()=>snd("fanfare"), 300); }
+    <div class="sub" style="margin-top:12px;text-align:center"><span onclick="resetCartAndBrowse()" style="color:var(--muted);cursor:pointer">keep browsing</span></div>`;
   animateMoney($("#reveal-saved"), po.total, USD);
   setTimeout(()=>snd("chime"), 850);
-  addXp(30);
-  questEvent("order");
-  if(po.total >= 25) questEvent("bigdodge");
   renderHud();
   checkAchv();
   cart=[]; updateBadge();
 }
 function resetCartAndBrowse(){ go("feed"); toast("ok. let's get hungry again 🌙"); }
+/* the goodnight off-ramp — permission to stop. damta's cigarette burns out; so should the night. */
+function goodnight(){ track("goodnight"); const sc=$(".screen"); if(!sc || $("#gn-overlay")) return;
+  const el=document.createElement("div"); el.id="gn-overlay"; el.className="cup-ov";
+  el.innerHTML=`<div class="cup-scene"><div class="cup-emo">🌙</div><div class="cup-clock" style="font-size:26px">that's the night.</div><div class="cup-hint">you kept your money and you showed up. that's enough for one night.<br>${esc(ghostName())}'ll keep the light on. sleep well 🤍</div><button class="cta secondary" style="position:static;margin-top:22px" onclick="this.closest('#gn-overlay').remove()">actually, i'm still up</button></div>`;
+  sc.appendChild(el); snd("chime"); }
 function stopCourier(){ courierTimers.forEach(clearTimeout); courierTimers=[]; if(typeof cancelGlobePlane==='function') cancelGlobePlane(); }
 /* drive the SVG route: fill the curve to p% and ride Mort + ETA chip along it */
 function routeProgress(p){
@@ -2160,18 +2139,23 @@ function renderRoom(){
   }
   fetchLiveRoom();
   const tk=tonightsKitchen(), tf=featuredCity(); if(!tk) ensureKitchenLoaded();
-  $("#room-podium").innerHTML = (tk?`<div class="tk-line">🍳 tonight's kitchen: <b>${esc(tk.name)}</b> · ${tf.flag} ${esc(tf.name)} — every ghost here is dodging the same menu</div>`:"") + podiumHTML();
-  renderCityBoard();
-  const back=roomReturnNudge(); if(back) setTimeout(()=>toast(`💬 ${back} people reacted to your posts while you were gone`), 500);
-  $("#room-feed").innerHTML = room.map((p,i)=>`
+  /* the room is a leveler — no leaderboard, no "biggest dodge" competition. just the shared
+     kitchen (we're all here for the same one) and the murmur. */
+  $("#room-podium").innerHTML = tk?`<div class="tk-line">🍳 tonight's kitchen: <b>${esc(tk.name)}</b> · ${tf.flag} ${esc(tf.name)} — we're all dodging the same menu tonight</div>`:"";
+  { const cb=$("#city-board"); if(cb) cb.innerHTML=""; }
+  const vr=$("#view-room"); if(vr) vr.classList.toggle("quiet", roomSilent);
+  if(roomSilent){
+    $("#room-feed").innerHTML = `<div class="quiet-panel"><div class="qp-emo">🌙</div><div class="qp-title">quiet corner</div><div class="qp-sub">no one's talking here. the ghosts are around, and so are you.<br>nothing to do, nothing owed. just breathe — the room will hold.</div></div>`;
+  } else {
+    $("#room-feed").innerHTML = room.map((p,i)=>`
     <div class="post${p.mine?' mine':''}${p.ghost?' ghostp':''}">
       <div class="phead"><span class="pic">${p.ic}</span><div class="pmeta">${p.mine?'<span class="mine-tag">you</span>':(p.ghost?`<span class="gtag">👻 ${esc(p.ghost)}</span> resident ghost${p.sched?` · round here ${p.sched}`:""} · ${esc(p.city)}`:'<b>anon</b> · '+esc(p.city))} · ${p.ago}${p.streak?` · <span class="sbadge">🔥${p.streak}</span>`:""}</div></div>
       <div class="ptext">${esc(p.text)}</div>
       <div class="reacts">${["hug","me","go"].map(t=>`<button class="chip${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')">${REACT_META[t]}<span class="rlbl">${REACT_LBL[t]}</span><span class="cnt">${p.r[t]}</span></button>`).join("")}<button class="chip pshare" onclick="sharePost(${i})">📤</button>${p.live?`<button class="chip" onclick="reportPost(${i})" aria-label="report">🚩</button>`:""}</div>
     </div>`).join("");
+  }
   const rb=$("#room-burn"); if(rb) rb.innerHTML=`${burnLabel()} · rough night? <a href="tel:988" style="color:inherit;font-weight:800">988</a> is awake too 🤍`;
   const rbt=$("#room-burn-top"); if(rbt){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); rbt.textContent=`🌅 ${h}h ${String(m).padStart(2,"0")}m`; }
-  const con=$("#cup-others-n"); if(con) con.textContent=cupOthers();
 }
 function react(i,t){ const p=room[i]; if(!p) return; if(!p.reacted) p.reacted={}; if(p.reacted[t]) return; p.reacted[t]=true; p.r[t]++;
   // targeted: bump just this chip's count + on-state in place (keeps scroll position, no full room rebuild)
@@ -2217,7 +2201,9 @@ function shareToRoom(){
 }
 function beSeen(post){ let n=0; const order=["me","hug","hug","me","go"]; const tick=()=>{ if(!post||n>=order.length) return; post.r[order[n]]++; n++; if(n===2) toast("👻 the ghosts held this one"); if($("#view-room").classList.contains("active")) renderRoom(); setTimeout(tick, 1600+Math.random()*1400); }; setTimeout(tick, 1100); }
 let lastIncoming=-1;
-function streamIncoming(){ if(!$("#view-room").classList.contains("active")) return; let idx; do { idx=Math.floor(Math.random()*INCOMING.length); } while(idx===lastIncoming && INCOMING.length>1); lastIncoming=idx; const s=INCOMING[idx]; room.unshift({ic:s.ic,ghost:s.ghost,sched:s.sched,text:s.text,city:s.city,ago:"now",streak:Math.random()<.4?2+Math.floor(Math.random()*19):0,r:{hug:Math.floor(Math.random()*6),me:Math.floor(Math.random()*9),go:Math.floor(Math.random()*3)},reacted:{}}); if(room.length>40) room.pop(); renderRoom(); }
+function streamIncoming(){ if(roomSilent || !$("#view-room").classList.contains("active")) return;
+  const awake=INCOMING.filter(ghostAwakeNow); if(!awake.length) return;   // only ghosts near their hour show up — schedules are honest
+  const s=pick(awake); room.unshift({ic:s.ic,ghost:s.ghost,sched:s.sched,text:s.text,city:s.city,ago:"now",streak:Math.random()<.4?2+Math.floor(Math.random()*19):0,r:{hug:Math.floor(Math.random()*6),me:Math.floor(Math.random()*9),go:Math.floor(Math.random()*3)},reacted:{}}); if(room.length>40) room.pop(); renderRoom(); }
 
 /* ===== the 3-minute noodle cup — damta's cigarette, translated =====
    a sanctioned, self-ending break: steep cup ramen with the ghosts. the cup IS the
@@ -2245,7 +2231,7 @@ function openCup(){
   el.innerHTML=`
     <div class="cup-scene">
       <button class="cup-x" onclick="closeCup(true)" aria-label="put the cup down">✕</button>
-      <div class="cup-others">🍜 ${cupOthers()} others steeping right now</div>
+      <div class="cup-others">🍜 the ghosts are steeping with you</div>
       <div class="cup-stage" id="cup-stage">
         <div class="cup-steam" id="cup-steam"><span>♨</span><span>♨</span><span>♨</span></div>
         <div class="cup-emo" id="cup-emo">🥡</div>
@@ -2274,20 +2260,21 @@ function cupTick(){
 }
 function cupServe(){
   const el=$("#cup-overlay"); if(!el) return;
-  snd("chime"); haptic("levelup");
-  const first=!cupDoneTonight();
-  if(first){ cupStampMem=nightKey(); try{ localStorage.setItem("carted_cup", nightKey()); }catch(e){} addXp(10); }
-  track("cup_done",{first});
+  snd("chime");
+  try{ localStorage.setItem("carted_cup", nightKey()); }catch(e){}   // remembered, but never scored — rest isn't graded
+  track("cup_done",{});
   el.querySelector(".cup-scene").innerHTML=`
-    <div class="cup-others">break's over — nicely done</div>
     <div class="cup-emo">🍜</div>
-    <div class="cup-clock" style="font-size:24px">eat up. in your head.</div>
-    <div class="cup-hint">${first?"+10 XP — first steep tonight ⭐":"the cup's here every night 🌙"}</div>
-    <button class="cta" style="position:static;margin-top:20px" onclick="cupShare()">🌙 tell the room</button>
-    <button class="cta secondary" style="position:static" onclick="closeCup()">back to the room</button>`;
+    <div class="cup-clock" style="font-size:26px">break's over.</div>
+    <div class="cup-hint">that's all it was. no points, nothing owed.<br>the cup's here every night if you want it 🌙</div>
+    <button class="cta secondary" style="position:static;margin-top:22px" onclick="closeCup()">back to the room</button>`;
 }
-function cupShare(){ closeCup(); makeMine("🍜","steeped a cup with the ghosts. ordered nothing. rich now."); snd("chime"); addXp(4); questEvent("post"); }
 function closeCup(early){ const el=$("#cup-overlay"); if(el) el.remove(); clearInterval(cupTimer); cupTimer=null; if(early){ toast("the cup keeps. see you later tonight 🥡"); track("cup_close",{early:true}); } }
+
+/* ---- quiet corner (침묵의 방): presence-only, the stream pauses, no one's talking ---- */
+let roomSilent=false;
+function toggleSilence(){ roomSilent=!roomSilent; snd("pop"); renderRoom();
+  const b=$("#silence-toggle"); if(b) b.textContent = roomSilent ? "🔊 rejoin the murmur" : "🤫 quiet corner"; }
 
 /* ---- live count + ticker ---- */
 let tIdx=0;
@@ -2296,8 +2283,15 @@ function tickerPool(){ const t=TICKER.slice();
   if(isNight() && !orderedTonight()) t.unshift(`👻 ${ghostName()} is waiting by the window`);
   return t; }
 function rotateTicker(){ const el=$("#ticker-msg"); el.style.opacity="0"; el.style.transform="translateY(-8px)"; setTimeout(()=>{ const pool=tickerPool(); el.textContent=pool[tIdx%pool.length]; tIdx++; el.style.opacity="1"; el.style.transform="translateY(0)"; },420); }
-let dodgedTonight = 61000 + (hash(nightKey())%52000);
-function driftLive(){ liveBase += Math.floor(Math.random()*17)-7; if(liveBase<1180) liveBase=1180; if(liveBase>1390) liveBase=1390; $("#live-count").textContent=liveBase.toLocaleString(); const rl=$("#room-live"); if(rl) rl.textContent=liveBase.toLocaleString(); dodgedTonight += Math.floor(Math.random()*120); const rd=$("#room-dodged"); if(rd) rd.textContent="$"+dodgedTonight.toLocaleString(); const el=$("#explore-live"); if(el){ const base=620+(hash(curCity().id)%900); el.textContent=(base+Math.floor(Math.random()*40)).toLocaleString(); } const to=$("#track-others"); if($("#view-track").classList.contains("active") && $("#track-live").style.display!=="none"){ to.textContent=Math.max(210, parseInt(to.textContent)+(Math.floor(Math.random()*9)-4)); } }
+/* presence numbers are the DISCLOSED resident-ghost fiction (the house-rules card says so).
+   deterministic + stable — they breathe slowly across the night, never a nervous fake live-ticker
+   the user can catch churning. real counts replace these the moment ROOM_LIVE flips. */
+function driftLive(){ const d=new Date(), h=d.getHours(), mm=d.getMinutes();
+  const n = 900 + (hash("live"+nightKey()+h)%620) + (mm%18);
+  const lc=$("#live-count"); if(lc) lc.textContent=n.toLocaleString();
+  const rl=$("#room-live"); if(rl) rl.textContent=n.toLocaleString();
+  const dd = 38000 + (hash("dodge"+nightKey())%84000);
+  const rd=$("#room-dodged"); if(rd) rd.textContent="$"+dd.toLocaleString(); }
 
 /* ============================================================
    Korea-trend features (도파민 사이트 playbook)
@@ -2315,10 +2309,9 @@ const SEASONS = [
   {id:"chicken", name:"Korean Fried Chicken Day",  from:[12,9],to:[12,9], xp:2,   emoji:"🍗", blurb:"치킨데이 — 2× XP, chimaek strong"},
 ];
 function currentSeason(){ const d=new Date(), mo=d.getMonth()+1, dy=d.getDate(); const aft=f=>mo>f[0]||(mo===f[0]&&dy>=f[1]); const bef=t=>mo<t[0]||(mo===t[0]&&dy<=t[1]); return SEASONS.find(s=>aft(s.from)&&bef(s.to))||null; }
-function xpMult(){ let m=1; if(isGoldenHour()) m*=2; const s=currentSeason(); if(s) m*=s.xp; return m; }
+function xpMult(){ return 1; }   // seasonal/golden-hour XP multipliers retired
 function renderBanners(){ const el=$("#event-banners"); if(!el) return;
-  if(isNight()){ const m=xpMult(); el.innerHTML=`<div class="ebanner night-line">🌙 the kitchens are warm${m>1?` · ${m}× tonight, quietly`:""}</div>`; return; }
-  let h=""; const s=currentSeason(); if(s) h+=`<div class="ebanner season">${s.emoji} <b>${esc(s.name)}</b> · ${s.blurb}</div>`; if(isGoldenHour()) h+=`<div class="ebanner golden">🌙 <b>golden hours</b> · 2× XP until 4am — you're up anyway</div>`; el.innerHTML=h; }
+  el.innerHTML = isNight() ? `<div class="ebanner night-line">🌙 the kitchens are warm. you're up — so are the others.</div>` : ""; }
 
 /* --- 5 driver gacha: collectible ghost couriers, rolled per order --- */
 const GACHA = [
@@ -2333,7 +2326,8 @@ const GACHA = [
   {id:"ghost", n:"The Original Ghost", e:"👻", p:"the first courier. 0 deliveries, all-time.", r:"legendary"},
 ];
 const RARITY_COLOR = {common:"#6b6580", rare:"#7c4dcc", legendary:"#ff5a3c"};
-function rollDriver(){ const x=Math.floor(Math.random()*100), tier = x<6?"legendary": x<33?"rare":"common"; const pool=GACHA.filter(d=>d.r===tier); return pick(pool.length?pool:GACHA); }
+/* gacha rarity/collection retired — the courier is just a ghost with a name for the flight bubbles */
+function rollDriver(){ return pick(GACHA); }
 function collectDriver(d){ stats.drivers=stats.drivers||[]; if(stats.drivers.includes(d.id)) return false; stats.drivers.push(d.id); saveStats(); return true; }
 
 /* --- 10 honorific easter eggs: the 사장님 throws in service --- */
@@ -2359,10 +2353,11 @@ function stopAsmr(){ if(asmrNode){ try{ asmrNode.src.stop(); }catch(e){} asmrNod
 function toggleAsmr(){ asmrOn=!asmrOn; try{ localStorage.setItem("carted_asmr", asmrOn?"on":"off"); }catch(e){} if(asmrOn) startAsmr(); else stopAsmr(); toast(asmrOn?"🍳 kitchen ASMR on":"kitchen ASMR off"); if($("#view-profile").classList.contains("active")) renderProfile(); }
 
 /* --- 1 ghost-driver push (local notifications now; remote/timed = backend, stubbed in sw.js) --- */
-function ghostNudgeMsgs(){ return ["you up? your streak isn't gonna dodge itself 🔥","i'm outside. (i'm not.) 👻","craving incoming in 3… 2… open me instead","banana milk thinks about you too 🥛","2am. the kitchen's 'open'. don't 😌"]; }
-function fireGhostText(){ const hat=ghostFit().hat||"👻"; const atRisk = stats.lastNight!==nightKey() && (stats.streak||0)>0;
-  const lines = atRisk ? [`your ${stats.streak}-night streak ends soon 🔥 don't let me down`, `the streak's in danger and I can feel it (spectrally)`, `${stats.streak} nights. don't blow it now, I've got plans`] : ghostNudgeMsgs();
-  const body=`${ghostName()} ${hat}: ${pick(lines)}`;
+/* nudges are a PRESENCE INVITATION, never a streak threat. no "don't let me down", no loss-aversion —
+   this audience is at its most fragile at this hour; the ghost invites, it never demands. */
+function ghostNudgeMsgs(){ return ["the room's warm if you're up 🌙","can't sleep? come stand outside with us 👻","the kitchens are open. no pressure, no charge.","couldn't sleep either. i'm around if you want company.","a few of us are up. steep a cup?"]; }
+function fireGhostText(){ const hat=ghostFit().hat||"👻";
+  const body=`${ghostName()} ${hat}: ${pick(ghostNudgeMsgs())}`;   // same invite whether or not a night was missed — a miss is never punished
   try{ if(navigator.serviceWorker && navigator.serviceWorker.ready){ navigator.serviceWorker.ready.then(reg=>reg.showNotification("Carted 🌙",{body, icon:BASE+"icon-192.png", badge:BASE+"icon-192.png", tag:"carted-ghost", renotify:true})).catch(()=>{ try{ new Notification("Carted 🌙",{body}); }catch(_){} }); } else new Notification("Carted 🌙",{body}); }catch(e){ try{ new Notification("Carted 🌙",{body}); }catch(_){} } }
 function scheduleGhostNudge(){ clearTimeout(window.__ghostNudge); window.__ghostNudge=setTimeout(fireGhostText, 60000); } // demo cadence while tab is alive
 async function ghostPush(){
@@ -2635,8 +2630,8 @@ function nameGhost(keepDefault){
 }
 const GHOST_FITS = [
   {id:"none",   hat:"",   name:"just vibes",       req:"default",          has:()=>true},
-  {id:"cap",    hat:"🧢", name:"backwards cap",    req:"3 window-orders",  has:()=>(stats.orders||0)>=3},
-  {id:"shades", hat:"🕶️", name:"2am shades",       req:"6 window-orders",  has:()=>(stats.orders||0)>=6},
+  {id:"cap",    hat:"🧢", name:"backwards cap",    req:"3 nights in",  has:()=>(stats.orders||0)>=3},
+  {id:"shades", hat:"🕶️", name:"2am shades",       req:"6 nights in",  has:()=>(stats.orders||0)>=6},
   {id:"party",  hat:"🥳", name:"party ghost",      req:"3-night streak",   has:()=>maxStreakEver()>=3},
   {id:"chef",   hat:"🍳", name:"chef ghost",       req:"8 cuisines tried", has:()=>(stats.cuisines||[]).length>=8},
   {id:"tophat", hat:"🎩", name:"fancy top hat",    req:"$200 dodged",      has:()=>(stats.savedUsd||0)>=200},
@@ -2908,8 +2903,9 @@ renderCityBar(); renderTally(); renderFeed();
 loadCity(CITIES[0]);
 room = room.concat(ROOM_SEED.map(p=>({...p, reacted:{}})));
 applyNight(); setInterval(applyNight, 300000);   // re-check the night window every 5 min
-setTimeout(maybeNameGhost, 2500);                // the naming moment (once, after onboarding)
-rotateTicker(); setInterval(rotateTicker, 3600); setInterval(driftLive, 2600); setInterval(streamIncoming, 26000);   // sparse cadence — a calm room, not a busy group chat
+/* naming moment is triggered by the FIRST reveal (where "he waited up / roasted your cart" is
+   finally earned), not a cold timer on the browse feed — see revealTruth's firstEver branch */
+rotateTicker(); setInterval(rotateTicker, 3600); driftLive(); setInterval(driftLive, 60000); setInterval(streamIncoming, 26000);   // presence refreshes slowly (60s), not a nervous ticker; sparse ghost cadence
 initDrawers(); refreshTonightHead(); refreshMoreHead(); setInterval(rotateTonight, 4200);
 rotateExploreTicker(); setInterval(rotateExploreTicker, 4200);
 renderBanners(); setInterval(renderBanners, 60000);
