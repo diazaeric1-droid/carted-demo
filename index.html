@@ -746,7 +746,7 @@
             <button class="avatar" id="avatar-btn" onclick="go('profile')">🙂</button>
             <h1>Carted</h1>
             <div class="sub">fill the cart in 50 real cities. the driver never comes.</div>
-            <div class="live-pill"><span class="dot"></span><span class="lp-count"><span id="live-count">1,247</span> 👻 ghosts up</span><span class="lp-sep">·</span><span id="ticker-msg" class="lp-ticker"></span></div>
+            <div class="live-pill"><span class="dot"></span><span class="lp-count" id="live-count">night owls are up 🌙</span><span class="lp-sep">·</span><span id="ticker-msg" class="lp-ticker"></span></div>
           </div>
 
           <!-- #1+2 consolidated: the 5 "tonight" nudges collapse behind one rotating teaser -->
@@ -783,7 +783,7 @@
           <div class="drawer" id="more">
             <button class="dr-head" onclick="toggleDrawer('more')">
               <span class="dr-lead">✨</span>
-              <span class="dr-teaser">more — tonight's mission &amp; your tally</span>
+              <span class="dr-teaser">more — your quiet tally</span>
               <span class="dr-mult" id="more-badge"></span>
               <span class="dr-caret">▾</span>
             </button>
@@ -822,7 +822,7 @@
           <div class="brand">
             <h1 style="font-size:24px">the 2 am room</h1>
             <div class="room-tag">the break room — come stand outside with us for a while 🌙</div>
-            <div class="live2"><span class="dot"></span> <b id="room-live" style="color:var(--go);font-weight:800">1,247</b>&nbsp;👻 ghosts up · <b id="room-dodged" style="color:var(--go)">$—</b>&nbsp;dodged · <span id="room-burn-top">🌅 —</span></div>
+            <div class="live2"><span class="dot"></span> <b style="color:var(--go);font-weight:800">the room's awake</b>&nbsp;🌙 · <span id="room-burn-top">🌅 —</span></div>
             <div class="ghost-note">👻 = resident ghost — friendly fiction keeping the room warm, not people. your posts burn at sunrise. 🌅</div>
           </div>
           <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a quiet 3-minute break — the ghosts steep with you 🍜</span></span><span class="cbr-go">›</span></button>
@@ -862,7 +862,7 @@
             <div id="track-live">
               <div class="eta"><span id="eta-num">14</span><span class="u"> min</span></div>
               <div class="stage" id="track-stage">confirming your (non-)order…</div>
-              <div class="track-presence" id="track-presence">👻 <b id="track-others">241</b> ghosts are waiting on a driver who'll never come</div>
+              <div class="track-presence" id="track-presence">👻 other ghosts are waiting on drivers who'll never come, too</div>
               <div class="dchat" id="dchat"></div>
             </div>
             <div id="track-reveal" style="display:none"></div>
@@ -1314,6 +1314,7 @@ const OB = [
   { e:"🌍", h:"midnight kitchens, everywhere", s:"browse dream restaurants across 50 real cities — real dishes, fictional kitchens, zero consequences." },
   { e:"🛒", h:"cart it, call the ghost", s:"fill your cart with whatever you're craving and a ghost courier flies it across the globe to you." },
   { e:"💸", h:"…it never comes", s:"the driver was never real. you keep every dollar you didn't spend. that's the whole point. 👻" },
+  { e:"🌙", h:"and you're not up alone", s:"the 2 am room is a quiet place to stand around with other night owls, and a little ghost who waits up with you. come back tomorrow — we'll be here." },
 ];
 let obIdx=0;
 function showOnboard(){ obIdx=0; let el=$("#onboard"); if(!el){ el=document.createElement("div"); el.className="onboard"; el.id="onboard"; const sc=$(".screen")||document.body; sc.appendChild(el); } el.style.display="flex"; renderOnboard(); track("onboard_start"); }
@@ -1405,7 +1406,7 @@ function renderHud(){
   const L=levelInfo(stats.xp||0), done=stats.lastNight===nightKey();
   /* HUD = the identity spine only: streak + lifetime dodged. levels/XP live on the profile. */
   el.innerHTML = `
-    <button class="pill flame${done?' on':''}" onclick="go('profile')">🔥 <b>${stats.streak||0}</b>${done?'':'<span class="hint">tonight?</span>'}</button>
+    <button class="pill flame${done?' on':''}" onclick="go('profile')">🔥 <b>${stats.streak||0}</b>${done?'<span class="hint">tonight ✓</span>':''}</button>
     <button class="pill lvl" onclick="openStats()" style="justify-content:center">💰 <b>$${Math.round(stats.savedUsd).toLocaleString()}</b> <span class="hint">never spent</span></button>
     <button class="pill" onclick="toggleSnd()">${sndOn?"🔊":"🔇"}</button>`;
 }
@@ -1778,8 +1779,8 @@ function renderProfile(){
   const bShared = stats.buddy && stats.buddy.sharedStreak!=null ? stats.buddy.sharedStreak : (stats.streak||0);
   const bNote = beOn() ? (stats.buddy && stats.buddy.pending ? "waiting for them to tap your link…" : "synced live") : "prototype — goes live once the backend is configured";
   const buddyCard = stats.buddy
-    ? `<div class="tier-card"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">${esc(stats.buddy.name||"your buddy")}</div><div class="tier-sub">sharing a 🔥 ${bShared}-night streak — if one caves, you both reset</div></div></div><button class="signin-btn" onclick="inviteBuddy()" style="margin-top:8px">↗ invite another</button><div style="text-align:center;color:var(--muted);font-size:10.5px;margin-top:6px">${bNote}</div></div>`
-    : `<div class="tier-card" style="border-color:var(--accent);box-shadow:4px 4px 0 var(--accent)"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">do this with someone</div><div class="tier-sub">share one streak with one person — if either of you caves, you both reset. you're in it together 🤍</div></div></div><button class="signin-btn dark" onclick="inviteBuddy()" style="margin-top:8px">↗ invite a friend</button></div>`;
+    ? `<div class="tier-card"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">${esc(stats.buddy.name||"your buddy")}</div><div class="tier-sub">you two show up on the same nights — ${bShared} together so far 🤍</div></div></div><button class="signin-btn" onclick="inviteBuddy()" style="margin-top:8px">↗ invite another</button><div style="text-align:center;color:var(--muted);font-size:10.5px;margin-top:6px">${bNote}</div></div>`
+    : `<div class="tier-card" style="border-color:var(--accent);box-shadow:4px 4px 0 var(--accent)"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">do this with someone</div><div class="tier-sub">bring one person — you'll both know the other is up, some nights. no pressure, no reset, just company 🤍</div></div></div><button class="signin-btn dark" onclick="inviteBuddy()" style="margin-top:8px">↗ invite a friend</button></div>`;
   const {t,next}=tierFor(stats.savedUsd);
   const prog = next ? Math.max(5, Math.min(100, Math.round((stats.savedUsd-t.min)/(next.min-t.min)*100))) : 100;
   const tierCard = `<div class="tier-card"><div class="tier-row"><span class="tier-ic">${t.ic}</span><div><div class="tier-name">${t.name}</div><div class="tier-sub">${next?`$${Math.max(0,Math.round(next.min-stats.savedUsd))} more saved → <b>${next.name}</b> ${next.ic}`:"max rank — legend 🏆"}</div></div></div><div class="tier-bar"><div class="tier-fill" style="width:${prog}%"></div></div></div>`;
@@ -1921,7 +1922,6 @@ function placeOrder(){
   const mort=rd.querySelector(".mort"); if(mort) mort.textContent="👻";
   { let veh=rd.querySelector(".veh"); if(!veh){ veh=document.createElement("span"); veh.className="veh"; rd.appendChild(veh); } veh.textContent = (gd && gd.e && gd.e!=="👻") ? gd.e : "💨"; }
   const mp=$("#track-map"); if(mp) mp.classList.remove("arrive");
-  $("#track-others").textContent = 220+Math.floor(Math.random()*80);
   $("#dchat").innerHTML="";
   const useGlobe=isFlight, globeBox=$("#track-globe");
   if(useGlobe){ if(mp) mp.style.display="none"; if(globeBox) globeBox.style.display="block"; renderGlobe(route, HOME, 0); }
@@ -2152,7 +2152,7 @@ function renderRoom(){
   } else {
     $("#room-feed").innerHTML = room.map((p,i)=>`
     <div class="post${p.mine?' mine':''}${p.ghost?' ghostp':''}">
-      <div class="phead"><span class="pic">${p.ic}</span><div class="pmeta">${p.mine?'<span class="mine-tag">you</span>':(p.ghost?`<span class="gtag">👻 ${esc(p.ghost)}</span> resident ghost${p.sched?` · round here ${p.sched}`:""} · ${esc(p.city)}`:'<b>anon</b> · '+esc(p.city))} · ${p.ago}${p.streak?` · <span class="sbadge">🔥${p.streak}</span>`:""}</div></div>
+      <div class="phead"><span class="pic">${p.ic}</span><div class="pmeta">${p.mine?'<span class="mine-tag">you</span>':(p.ghost?`<span class="gtag">👻 ${esc(p.ghost)}</span> resident ghost${p.sched?` · round here ${p.sched}`:""} · ${esc(p.city)}`:'<b>anon</b> · '+esc(p.city))} · ${p.ago}</div></div>
       <div class="ptext">${esc(p.text)}</div>
       <div class="reacts">${["hug","me","go"].map(t=>`<button class="chip${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')">${REACT_META[t]}<span class="rlbl">${REACT_LBL[t]}</span><span class="cnt">${p.r[t]}</span></button>`).join("")}<button class="chip pshare" onclick="sharePost(${i})">📤</button>${p.live?`<button class="chip" onclick="reportPost(${i})" aria-label="report">🚩</button>`:""}</div>
     </div>`).join("");
@@ -2295,14 +2295,10 @@ function tickerPool(){ const t=TICKER.slice();
   return t; }
 function rotateTicker(){ const el=$("#ticker-msg"); el.style.opacity="0"; el.style.transform="translateY(-8px)"; setTimeout(()=>{ const pool=tickerPool(); el.textContent=pool[tIdx%pool.length]; tIdx++; el.style.opacity="1"; el.style.transform="translateY(0)"; },420); }
 /* presence numbers are the DISCLOSED resident-ghost fiction (the house-rules card says so).
-   deterministic + stable — they breathe slowly across the night, never a nervous fake live-ticker
-   the user can catch churning. real counts replace these the moment ROOM_LIVE flips. */
-function driftLive(){ const d=new Date(), h=d.getHours(), mm=d.getMinutes();
-  const n = 900 + (hash("live"+nightKey()+h)%620) + (mm%18);
-  const lc=$("#live-count"); if(lc) lc.textContent=n.toLocaleString();
-  const rl=$("#room-live"); if(rl) rl.textContent=n.toLocaleString();
-  const dd = 38000 + (hash("dodge"+nightKey())%84000);
-  const rd=$("#room-dodged"); if(rd) rd.textContent="$"+dd.toLocaleString(); }
+   presence is now a NON-FALSIFIABLE phrase, not a precise fake headcount — a specific number next
+   to a live dot is the one dishonesty a user can catch (open twice, it doesn't move). when the live
+   room has real concurrency to report, wire a real count here; until then, no number. */
+function driftLive(){}
 
 /* ============================================================
    Korea-trend features (도파민 사이트 playbook)
@@ -2416,7 +2412,7 @@ function inviteBuddy(){
   if(beOn()) bePost("buddy", { action:"join", code, device_id:deviceId() });
   if(!stats.buddy){ stats.buddy={ code, since:nightKey(), name:"your buddy", role:"creator", pending:true }; saveStats(); }
   awardBuddyXp();
-  const txt=`be my no-spend buddy on Carted 🌙 we share one streak — if either of us caves, we both reset. you in? ${link}`;
+  const txt=`be my 2am person on Carted 🌙 we'll both know the other's up on the rough nights. no pressure. ${link}`;
   if(navigator.share){ navigator.share({text:txt}).catch(()=>{}); } else if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>toast("invite copied 👯 send it to one person")); } else toast(link);
   if($("#view-profile").classList.contains("active")) renderProfile();
 }
@@ -2765,7 +2761,7 @@ function renderCityBoard(){ const el=$("#city-board"); if(!el) return; const {to
 function buddyNudge(){ if(!stats.buddy) return ""; if(stats.lastNight===nightKey()) return "";   // you already dodged
   const buddyIn = (stats.buddy.bothIn) || (hash(nightKey()+(stats.buddy.code||""))%3!==0);       // backend signal, else simulated ~2/3 nights
   if(!buddyIn) return "";
-  return `<button class="buddy-nudge" onclick="go('feed')">👯 <b>${esc(stats.buddy.name||"your buddy")}</b> already dodged tonight — your shared 🔥 streak needs you. don't be the one who breaks it.</button>`; }
+  return `<button class="buddy-nudge" onclick="go('feed')">👯 <b>${esc(stats.buddy.name||"your buddy")}</b> is up tonight too — you're not the only one 🤍</button>`; }
 
 /* --- 7 async room: reactions piled up while you were away --- */
 function roomReturnNudge(){ let mine=0; try{ mine=(JSON.parse(localStorage.getItem("carted_room_mine")||"[]")).filter(p=>p.night===nightKey()).length; }catch(e){}
@@ -2850,7 +2846,7 @@ function refreshTonightHead(){ tonightTeasers=buildTonightTeasers(); const el=$(
 function rotateTonight(){ const d=$("#tonight"); if(!d || d.classList.contains("open")) return; const el=$("#tonight-teaser"); if(!el) return;
   tonightTeasers=buildTonightTeasers(); if(tonightTeasers.length<=1){ refreshTonightHead(); return; }
   el.style.opacity="0"; el.style.transform="translateY(-6px)"; setTimeout(()=>{ tnIdx++; el.textContent=tonightTeasers[tnIdx%tonightTeasers.length]; el.style.opacity="1"; el.style.transform="translateY(0)"; },360); }
-function refreshMoreHead(){ const b=$("#more-badge"); if(!b) return; const q=questsToday(); const n=(q.claimed||[]).length, tot=(q.ids||[]).length||3; b.textContent=`missions ${n}/${tot}`; }
+function refreshMoreHead(){ const b=$("#more-badge"); if(b) b.textContent=""; }   // missions retired
 
 /* 1+2 — coupon scarcity ("N left"); coupons already refresh nightly via couponFor + burn at the 4am sunrise */
 function couponQty(p){ return 2 + (hash(p.name+"q"+nightKey())%8); }
