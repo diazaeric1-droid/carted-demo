@@ -1284,7 +1284,7 @@ function beOn(){ return !!(CARTED_BE.url); }
 /* LIVE 2AM ROOM — real cross-user posts. OFF until the moderation backend is deployed
    (supabase/room_live.sql + functions/room) — flip-the-switch runbook: ~/carted-app/ROOM_LIVE.md.
    NOTE: flipping this changes the App Store age questionnaire to UGC=yes. */
-const ROOM_LIVE = false;
+const ROOM_LIVE = true;
 function deviceId(){ let d=localStorage.getItem("carted_device"); if(!d){ d="d"+Math.random().toString(36).slice(2)+Date.now().toString(36); try{ localStorage.setItem("carted_device", d); }catch(e){} } return d; }
 function bePost(fn, body){ return fetch(CARTED_BE.url+"/"+fn, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)}).then(r=>r.json()).catch(()=>null); }
 
@@ -1362,7 +1362,7 @@ const ACHV = [
   {id:"save100", ic:"💰", name:"Budget Boss", tip:"save $100", has:s=>s.savedUsd>=100},
   {id:"sensei", ic:"🐉", name:"Sensei", tip:"top rank", has:s=>s.savedUsd>=1200},
 ];
-function checkAchv(){ if(!stats.earned) stats.earned=[]; ACHV.forEach(a=>{ if(a.has(stats) && !stats.earned.includes(a.id)){ stats.earned.push(a.id); saveStats(); toast(`🏅 unlocked: ${a.name}`); } }); }
+function checkAchv(){}   // achievement badges + unlock toasts retired with the profile trophy case
 function uniqPush(arr, v){ if(v && !arr.includes(v)) arr.push(v); }
 function animateMoney(el, target, cur){ if(!el) return; const start=performance.now(), dur=750; (function step(t){ const k=Math.min(1,(t-start)/dur); const v=target*(1-Math.pow(1-k,3)); el.textContent=money(v,cur)+" saved"; if(k<1) requestAnimationFrame(step); else el.textContent=money(target,cur)+" saved"; })(performance.now()); }
 function surpriseMe(){
@@ -2743,7 +2743,7 @@ function ensureKitchenLoaded(){ const f=featuredCity(); if(f._places || f._state
 function goTonightsKitchen(){ const f=featuredCity(), k=tonightsKitchen(); setCity(CITY_INDEX[f.id]); if(k) setTimeout(()=>openDetail(k._key), 350); }
 function renderFeatured(){ const el=$("#featured-banner"); if(!el) return; const f=featuredCity(), cr=cravingForecast(), here=curCity().id===f.id, k=tonightsKitchen();
   if(!k) ensureKitchenLoaded();
-  el.innerHTML=`<button class="feat-banner" onclick="goTonightsKitchen()"><span class="fb-ic">🍳</span><span class="fb-text"><b>tonight's kitchen: ${k?esc(k.name):"warming up…"} · ${f.flag} ${esc(f.name)}${here?" ✓":""}</b><span class="fb-sub">everyone on earth dodges the SAME kitchen tonight · order it: +45 XP & a 🧊 · you'll crave ${cr.e} ${cr.name}</span></span><span class="fb-go">›</span></button>`; }
+  el.innerHTML=`<button class="feat-banner" onclick="goTonightsKitchen()"><span class="fb-ic">🍳</span><span class="fb-text"><b>tonight's kitchen: ${k?esc(k.name):"warming up…"} · ${f.flag} ${esc(f.name)}${here?" ✓":""}</b><span class="fb-sub">we're all dodging the same one tonight — you'll crave ${cr.e} ${cr.name}</span></span><span class="fb-go">›</span></button>`; }
 
 /* --- 5 city leaderboard (simulated; real version needs the backend aggregate) --- */
 function cityBoard(){ const board=CITIES.map(c=>({c, amt: 18000 + (hash(nightKey()+c.id)%190000)})).sort((a,b)=>b.amt-a.amt); const yc=curCity(); const yourRank=board.findIndex(b=>b.c.id===yc.id)+1; return {top:board.slice(0,5), yourRank, yc, yourAmt:board.find(b=>b.c.id===yc.id)?.amt||0}; }
