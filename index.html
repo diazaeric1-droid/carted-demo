@@ -30,6 +30,17 @@
   body.night .ebanner { filter: saturate(.7); }
   body.night .store-banner.neon { animation: none; filter: saturate(.65); }
   body.night .ebanner.night-line { background: transparent; border-style: dashed; color: var(--muted); box-shadow: none; }
+  /* NIGHT MODE DEPTH — an intimate lamp-lit room, not a flat dark background. a soft warm pool of
+     light near the top where content lives, deepening to near-black indigo at the edges. */
+  body.night .screen { background:
+    radial-gradient(130% 78% at 50% 20%, #453a6b 0%, #382f57 42%, #2c2447 72%, #221b39 100%); }
+  body.night.in-room .screen { background:
+    radial-gradient(120% 70% at 50% 16%, #40356a 0%, #332a52 48%, #271f40 100%); }
+  /* cream cards get a faint warm halo at night so they feel lit, not pasted on */
+  body.night .card, body.night .tier-card, body.night .feat-banner, body.night .cup-bar,
+  body.night .tk-line, body.night .post, body.night .composer input, body.night .prompts,
+  body.night .passport, body.night .kclosed { box-shadow: 4px 4px 0 var(--ink), 0 0 26px rgba(255,214,150,.07); }
+  body.night .brand h1 { text-shadow: 0 0 26px rgba(255,120,90,.28); }
   body.hud-off .hud { display: none; }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
@@ -181,11 +192,18 @@
   .eta .u { font-size: 16px; color: var(--muted); font-weight: 600; }
   .stage { color: var(--muted); font-size: 15px; margin-top: 6px; min-height: 22px; }
   .track-presence { margin-top: 16px; font-size: 12.5px; color: var(--muted); }
-  .reveal { animation: fade .4s ease; }
+  .reveal { animation: fade .4s ease; text-align: center; padding: 4px 6px 8px; }
   .reveal .moon { font-size: 56px; }
   .reveal .punch { font-size: 19px; font-weight: 800; margin: 12px 0 6px; line-height: 1.4; }
-  .reveal .saved { font-size: 32px; font-weight: 800; color: var(--go); margin: 6px 0 4px; }
-  .reveal .sub { color: var(--muted); font-size: 13.5px; }
+  /* the $-saved is the hero of the whole app — the TikTok money number. big, green, unmissable. */
+  .reveal .saved { font-family: var(--disp); font-size: 50px; font-weight: 700; line-height: 1; color: var(--go); margin: 10px 0 6px; letter-spacing: -1px; text-shadow: 2px 2px 0 rgba(12,166,120,.18); }
+  .reveal .saved .cur { font-size: 30px; vertical-align: 8px; }
+  .reveal .sub { color: var(--muted); font-size: 13.5px; line-height: 1.45; max-width: 300px; margin-left: auto; margin-right: auto; }
+  body.night .reveal .saved { text-shadow: 0 0 22px rgba(45,212,150,.35); }
+  .track-skip { margin-top: 14px; background: transparent; border: none; color: var(--muted); font-family: var(--disp); font-weight: 600; font-size: 12.5px; cursor: pointer; opacity: .8; text-decoration: underline; }
+  /* feed identity band — makes the first frame read as THE anti-delivery app, not a food-delivery clone */
+  .feed-identity { display: flex; align-items: center; gap: 7px; justify-content: center; text-align: center; background: linear-gradient(90deg, rgba(255,90,60,.12), rgba(255,194,61,.14)); border: 2px dashed var(--ink); border-radius: 14px; padding: 9px 12px; margin: 2px 0 14px; font-family: var(--disp); font-weight: 600; font-size: 12.5px; color: var(--text); }
+  body.night .feed-identity { background: linear-gradient(90deg, rgba(255,90,60,.16), rgba(124,77,204,.18)); color: #f3e9d4; }
   /* ----- globe: international flight route ----- */
   .globe-box { height: 234px; margin: 6px 0 14px; position: relative; overflow: hidden; }
   .globe-box .land polygon { fill: #84cf92; stroke: #2f7a48; stroke-width: .5; stroke-linejoin: round; }
@@ -254,7 +272,8 @@
   .quiet-panel .qp-emo { font-size: 46px; }
   .quiet-panel .qp-title { font-family: var(--disp); font-weight: 600; font-size: 18px; color: var(--text); margin: 10px 0 8px; }
   .quiet-panel .qp-sub { font-size: 13px; font-weight: 700; line-height: 1.5; }
-  .cup-ov { position: absolute; inset: 0; z-index: 60; background: linear-gradient(180deg, #241d38, #171226); display: flex; align-items: center; justify-content: center; animation: fade .3s ease; }
+  .cup-ov { position: absolute; inset: 0; z-index: 60; background: radial-gradient(70% 50% at 50% 44%, #322a4e 0%, #241d38 52%, #150f22 100%); display: flex; align-items: center; justify-content: center; animation: fade .3s ease; }
+  .cup-emo, .cup-scene .cup-emo { filter: drop-shadow(0 14px 30px rgba(0,0,0,.5)) drop-shadow(0 0 34px rgba(255,200,140,.14)); }
   .cup-scene { text-align: center; color: #f7ecd9; width: 100%; padding: 24px; position: relative; }
   .cup-x { position: absolute; top: -6px; right: 12px; background: none; border: none; color: #b9a8e6; font-size: 20px; font-weight: 800; cursor: pointer; padding: 8px; }
   .cup-others { font-size: 12.5px; font-weight: 800; color: #b9a8e6; margin-bottom: 42px; }
@@ -745,7 +764,7 @@
           <div class="brand">
             <button class="avatar" id="avatar-btn" onclick="go('profile')">🙂</button>
             <h1>Carted</h1>
-            <div class="sub">fill the cart in 50 real cities. the driver never comes.</div>
+            <div class="sub">the anti-delivery app for night owls 🌙</div>
             <div class="live-pill"><span class="dot"></span><span class="lp-count" id="live-count">night owls are up 🌙</span><span class="lp-sep">·</span><span id="ticker-msg" class="lp-ticker"></span></div>
           </div>
 
@@ -774,6 +793,7 @@
               <button id="seg-all" class="on" onclick="setMode('all')">All</button>
               <button id="seg-saved" onclick="setMode('saved')">♥ Saved <span id="saved-count">0</span></button>
             </div>
+            <div class="feed-identity">✈️ nobody's delivering tonight. order anyway — see what the ghost does 👻</div>
             <div class="section-label feed-craving" id="feed-section-label">🔥 craving right now</div>
           </div>
 
@@ -864,6 +884,7 @@
               <div class="stage" id="track-stage">confirming your (non-)order…</div>
               <div class="track-presence" id="track-presence">👻 other ghosts are waiting on drivers who'll never come, too</div>
               <div class="dchat" id="dchat"></div>
+              <button class="track-skip" onclick="skipToReveal()">skip to the reveal ›</button>
             </div>
             <div id="track-reveal" style="display:none"></div>
           </div>
@@ -1246,7 +1267,7 @@ function placeFlight(p){ const fl=flightInfo(cityOf(p)); if(!fl) return null; co
 function etaStr(p){ if(p._cityId==="konbini") return "⚡ instant"; const fl = placeFlight(p); return fl ? `✈️ ${fl.label}` : `⏱ ${etaFor(p)} min`; }
 /* photo layer: baked Google photo when available, keyworded stock fallback, emoji last resort */
 const BASE = location.pathname.includes("/carted-demo") ? "/carted-demo/" : "/";
-const DATA_V = "fic1";   // bump when baked data changes — busts HTTP caches on places/activities/menus JSON
+const DATA_V = "fic2";   // bump when baked data changes — busts HTTP caches on places/activities/menus JSON
 /* ===== native shell (Capacitor) — the same file runs as the iOS app; NATIVE gates the seasoning ===== */
 const NATIVE = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
 function haptic(kind){ if(!NATIVE) return; try{ const H=window.Capacitor.Plugins.Haptics; if(!H) return;
@@ -1598,7 +1619,7 @@ function go(view){ track("view",{v:view});
   { const ne=$("#nav-explore"); if(ne) ne.classList.toggle("on", view==="explore"); }   // explore tab retired 2026-07-04
   $("#nav-room").classList.toggle("on", view==="room");
   $("#nav-cart").classList.toggle("on", view==="cart");
-  document.body.classList.toggle("hud-off", view==="room");   // the room is a leveler — no scoreboard hovering over it
+  document.body.classList.toggle("hud-off", view==="room" || view==="track");   // the room is a leveler; the reveal is the money shot — keep both frames clean
   document.body.classList.toggle("in-room", view==="room");   // dims the page background for the room's calm palette
   if(view==="room") markShownUp(true);   // coming to the room counts as showing up (once/night)
   if(view==="cart") renderCart();
@@ -1951,8 +1972,13 @@ function placeOrder(){
   if(useGlobe) globeProgress(0); else routeProgress(0);
   const stages = isFlight ? buildFlightStages(route) : STAGES;
   driverSay(pendingOrder.driver, isFlight ? `tonight's ghost courier. your order is ${flight.label} away by air. i fly free.` : "tonight's ghost courier. i don't exist, but i'm fast.");
+  /* first-EVER order gets a near-instant reveal — a cold user must feel the payoff before they
+     bounce; the full ~12s courier atmosphere is restored on every later order. */
+  const firstOrder = (stats.orders||0)===0;
+  const seq = (firstOrder && stages.length>2) ? [stages[0], stages[stages.length-1]] : stages;
+  const pace = firstOrder ? 850 : 2400, revDelay = firstOrder ? 900 : 2600;
   let i=0;
-  const step=()=>{ const s=stages[i];
+  const step=()=>{ const s=seq[i];
     if(useGlobe){ globeProgress(s.p); } else { routeProgress(s.p); if(mort) mort.textContent="👻"; }
     $("#track-stage").textContent=s.txt.replace("{n}", pendingOrder.driver);
     $("#eta-num").textContent = flight ? fmtMins(flight.mins*(1-s.p/100)) : ([14,11,6,2,1][i]||1);
@@ -1961,7 +1987,7 @@ function placeOrder(){
     { const ec=$("#eta-chip"); if(ec) ec.textContent = (s.p>=92 ? "almost!" : etaTxt); }
     if(s.say) driverSay(pendingOrder.driver, s.say);
     i++;
-    if(i<stages.length){ courierTimers.push(setTimeout(step,2400)); } else { courierTimers.push(setTimeout(revealTruth,2600)); } };
+    if(i<seq.length){ courierTimers.push(setTimeout(step,pace)); } else { courierTimers.push(setTimeout(revealTruth,revDelay)); } };
   step();
 }
 function revealTruth(){
@@ -2018,11 +2044,11 @@ function revealTruth(){
     <div class="sub">${(po.cities&&po.cities.length>1)?`dinner across ${po.cities.length} cities, all dodged`:(po.flight?`dinner in ${esc(po.city.name)}, a ${po.flight.label} flight that never took off`:`what tonight in ${esc(po.city.name)} would've cost`)} — it stayed in your pocket.</div>
     <div class="sub" style="color:#d98324;font-weight:800;margin-top:6px">🔥 night ${stats.streak}${usedFreeze?' · 🧊 a freeze caught your miss':''}</div>
     ${milestone?`<div class="milestone">${milestone}</div>`:""}
-    <div style="margin-top:24px">
+    <div style="margin-top:22px">
+      <button class="cta gold" style="position:static" onclick="shareWin()">📸 share the win</button>
       <button class="cta" style="position:static" onclick="shareToRoom()">${firstEver?"🌙 meet the others in the room":"🌙 come sit in the room"}</button>
-      <button class="cta secondary" style="position:static" onclick="goodnight()">good night 🌙</button>
     </div>
-    <div class="sub" style="margin-top:12px;text-align:center"><span onclick="resetCartAndBrowse()" style="color:var(--muted);cursor:pointer">keep browsing</span></div>`;
+    <div class="sub" style="margin-top:14px;text-align:center"><span onclick="goodnight()" style="color:var(--muted);cursor:pointer">good night 🌙</span> &nbsp;·&nbsp; <span onclick="resetCartAndBrowse()" style="color:var(--muted);cursor:pointer">keep browsing</span></div>`;
   animateMoney($("#reveal-saved"), po.total, USD);
   setTimeout(()=>snd("chime"), 850);
   renderHud();
@@ -2036,6 +2062,8 @@ function goodnight(){ track("goodnight"); const sc=$(".screen"); if(!sc || $("#g
   el.innerHTML=`<div class="cup-scene"><div class="cup-emo">🌙</div><div class="cup-clock" style="font-size:26px">that's the night.</div><div class="cup-hint">you kept your money and you showed up. that's enough for one night.<br>${esc(ghostName())}'ll keep the light on. sleep well 🤍</div><button class="cta secondary" style="position:static;margin-top:22px" onclick="this.closest('#gn-overlay').remove()">actually, i'm still up</button></div>`;
   sc.appendChild(el); snd("chime"); }
 function stopCourier(){ courierTimers.forEach(clearTimeout); courierTimers=[]; if(typeof cancelGlobePlane==='function') cancelGlobePlane(); }
+/* tap-to-skip: impatient users (and cold TikTok arrivals) jump straight to the payoff */
+function skipToReveal(){ if(!pendingOrder) return; if($("#track-reveal").style.display==="block") return; stopCourier(); if(pendingOrder.flight) globeProgress(100); else routeProgress(100); revealTruth(); }
 /* drive the SVG route: fill the curve to p% and ride Mort + ETA chip along it */
 function routeProgress(p){
   const path=$("#route-path"), done=$("#road-done"); if(!path||!done) return;
@@ -2197,7 +2225,7 @@ function sharePost(i){
 function saveMinePost(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); all.unshift({ic:post.ic,text:post.text,streak:post.streak||0,night:nightKey()}); localStorage.setItem("carted_room_mine", JSON.stringify(all.slice(0,12))); }catch(e){} }
 function loadMinePosts(){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); const live=all.filter(p=>p.night===nightKey()); if(live.length!==all.length){ try{ localStorage.setItem("carted_room_mine", JSON.stringify(live)); }catch(e){} } return live.map(p=>({ic:p.ic,text:p.text,streak:p.streak,city:"you",ago:"tonight",mine:true,r:{hug:1+Math.floor(Math.random()*5),me:Math.floor(Math.random()*4),go:Math.floor(Math.random()*2)},reacted:{}})); }catch(e){ return []; } }
 function makeMine(ic, text){ const post={ic, text, city:"you", ago:"now", mine:true, streak:stats.streak||0, r:{hug:0,me:0,go:0}, reacted:{}}; room.unshift(post); saveMinePost(post); renderRoom(); beSeen(post); track("room_post");
-  if(ROOM_LIVE && beOn()){ bePost("room",{action:"post", device_id:deviceId(), night:nightKey(), ic:post.ic, text:post.text, streak:post.streak||0}).then(r=>{ if(r && r.crisis) show988(); }); }
+  if(ROOM_LIVE && beOn()){ bePost("room",{action:"post", device_id:deviceId(), night:nightKey(), ic:post.ic, text:post.text, streak:post.streak||0, hour:new Date().getHours()}).then(r=>{ if(r && r.crisis) show988(); }); }
   return post; }
 function show988(){ showModal(`<div class="m-emoji">🤍</div><div class="m-title">rough night?</div><div class="m-body">whatever's on your plate tonight, you don't have to carry it alone.<br><br><b>988</b> — the Suicide &amp; Crisis Lifeline — is awake too. call or text, free, 24/7.</div><a class="cta" style="position:static;display:block;text-decoration:none;text-align:center" href="tel:988">call or text 988</a><button class="cta secondary" style="position:static" onclick="closeModal()">back to the room</button>`); }
 /* live-room fetch: merge tonight's real posts (60s throttle; no-op while ROOM_LIVE=false) */

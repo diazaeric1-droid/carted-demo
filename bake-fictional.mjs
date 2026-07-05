@@ -103,6 +103,33 @@ const DESC = [
 
 function fill(tpl, ctx){ return tpl.replace("{W2}", ctx.w2).replace("{W}", ctx.w).replace("{S}", ctx.s).replace("{N}", ctx.n); }
 
+/* TheMealDB's per-cuisine pools are loosely categorized, so a dish can land under the wrong cuisine
+   (a Vietnamese tempura in the "french" pool). Re-derive the DISPLAYED cuisine from the dish's own
+   name so the card tag never contradicts its photo (no more "burger" showing pho). */
+const DISH_CUISINE = [
+  [/\b(pho|banh|lok lak|goi cuon|nuoc cham|vietnam)/i, "vietnamese"],
+  [/\b(katsu|ramen|sushi|teriyaki|udon|miso|tempura|yaki|donburi|bento|onigiri|gyoza|mochi)/i, "japanese"],
+  [/\b(margherita|calzone|pepperoni pizza|neapolitan)/i, "pizza"],
+  [/\b(rigatoni|alfredo|carbonara|lasagn|pasta|risotto|parmigiana|gnocchi|cacio|spaghetti|penne|ravioli|tiramisu|osso)/i, "italian"],
+  [/\b(taco|burrito|quesadilla|enchilada|al pastor|elote|chilaquil|mole)/i, "mexican"],
+  [/\b(cheeseburger|hamburger|smashburger|\bburger\b|patty melt)/i, "burger"],
+  [/\b(falafel|hummus|shawarma|za'?atar|mezze|baba ganoush|tabbouleh|kibbeh)/i, "middle_eastern"],
+  [/\b(kebab|doner|ocakbasi|lahmacun|iskender|baklava)/i, "turkish"],
+  [/\b(tikka|masala|biryani|\bnaan\b|korma|vindaloo|samosa|paneer|dal|curry)/i, "indian"],
+  [/\b(pad thai|tom yum|green curry|massaman|som tam)/i, "thai"],
+  [/\b(bibimbap|bulgogi|kimchi|chimaek|tteok|gochujang|japchae)/i, "korean"],
+  [/\b(lo mein|kung pao|wonton|general tso|chow mein|fried rice|char siu|mapo|dim sum|dumpling|szechuan|cantonese|peking)/i, "chinese"],
+  [/\b(croissant|baguette|\bbrie\b|coq au vin|ratatouille|creme brulee|souffle|quiche|escargot|bourguignon)/i, "french"],
+  [/\b(paella|tapas|chorizo|gazpacho|patatas|tortilla espanola)/i, "spanish"],
+  [/\b(gyro|souvlaki|moussaka|spanakopita|tzatziki|dolma)/i, "greek"],
+  [/\b(schnitzel|bratwurst|sauerbraten|spaetzle|currywurst)/i, "german"],
+  [/\b(pancake|waffle|omelette|omelet|breakfast|french toast|shakshuka|frittata|benedict)/i, "breakfast"],
+  [/\b(cake|brownie|pudding|\btart\b|\bpie\b|cheesecake|cookie|donut|doughnut|eclair|cobbler|crumble|mousse)/i, "dessert"],
+  [/\b(oyster|shrimp|salmon|ceviche|lobster|crab|scallop|calamari|mussels|fish and chips|grilled fish)/i, "seafood"],
+  [/\b(jollof|injera|tagine|couscous|bobotie|jerk)/i, "moroccan"],
+];
+function dishCuisine(name){ for(const [re,c] of DISH_CUISINE){ if(re.test(name)) return c; } return null; }
+
 function genCity(city){
   const pack = packs.find(p=>p.id===city.id);
   if(!pack){ console.error("no pack for", city.id); return; }
@@ -110,19 +137,27 @@ function genCity(city){
   const pickR = a => a[Math.floor(r()*a.length)];
   const pool = [];
   pack.cuisines.forEach(c=>{ if(menus[c.key] || CUISINE[c.key]) for(let i=0;i<c.w;i++) pool.push(c.key); });
-  const used = new Set(), places = [];
+  const used = new Set(), usedPhotos = new Set(), places = [];
   let guard = 0;
   while(places.length < PER_CITY && guard++ < PER_CITY*30){
     const key = pickR(pool);
-    const meta = CUISINE[key] || { ic:"🍽️", base:15 };
+    let meta = CUISINE[key] || { ic:"🍽️", base:15 };
     const tpls = FAM[key] || DEF_TPL;
     const ctx = { w:pickR(pack.flavor.words), w2:pickR(pack.flavor.words), s:pickR(pack.flavor.surnames), n:pickR(NOUNS) };
     if(ctx.w2===ctx.w) ctx.w2 = pickR(pack.flavor.words);
     const name = fill(pickR(r()<0.82 ? tpls : DEF_TPL), ctx);
     if(used.has(name.toLowerCase()) || denied(name)) continue;
-    used.add(name.toLowerCase());
     const mains = (menus[key]||[]).filter(m=>m.photo);
-    const sig = mains.length ? pickR(mains) : null;
+    // prefer a dish whose photo hasn't been used in this city yet (kills feed repetition)
+    let sig = null;
+    if(mains.length){ const fresh = mains.filter(m=>!usedPhotos.has(m.photo)); sig = pickR(fresh.length ? fresh : mains); }
+    if(sig && usedPhotos.has(sig.photo) && places.length < mains.length) continue;   // one more try for a unique photo
+    used.add(name.toLowerCase());
+    if(sig && sig.photo) usedPhotos.add(sig.photo);
+    // re-derive the displayed cuisine from the actual dish so the tag never contradicts the photo
+    const trueKey = sig ? (dishCuisine(sig.name) || key) : key;
+    const shownEn = trueKey.replace(/_/g," ");
+    if(CUISINE[trueKey]) meta = { ...meta, ic: CUISINE[trueKey].ic };
     const lvl = Math.min(4, Math.max(1, Math.round((meta.base/9) + (r()*1.6-0.8)) ));
     const usd = meta.base * (0.75 + 0.28*lvl) * (0.9 + r()*0.35);
     const price = city.cur.dec===0 ? Math.round(usd*city.pf/10)*10 || Math.round(usd*city.pf) : Math.round(usd*city.pf*100)/100;
@@ -135,7 +170,7 @@ function genCity(city){
       ic: meta.ic, name,
       hood,
       dish: sig ? sig.name : meta.dish,
-      en: key.replace(/_/g," "),
+      en: shownEn,
       rate: Math.min(4.9, rate), n,
       price, lvl,
       lat: city.lat + (r()*2-1)*0.035,
