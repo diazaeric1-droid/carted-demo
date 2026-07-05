@@ -247,6 +247,8 @@
   .cup-bar .cbr-sub { font-size: 11.5px; color: #b9a8e6; font-weight: 700; }
   .cup-bar .cbr-go { font-size: 22px; font-weight: 800; }
   .silence-btn { width: 100%; background: transparent; border: 2px dashed var(--ink); border-radius: 14px; padding: 9px; margin: 0 0 12px; font-family: var(--disp); font-weight: 600; font-size: 12.5px; color: var(--muted); cursor: pointer; }
+  .room-rules-line { font-size: 10.5px; color: var(--muted); font-weight: 700; margin: -8px 0 14px; text-align: center; }
+  .room-rules-line a { color: inherit; text-decoration: underline; }
   #view-room.quiet .prompts, #view-room.quiet .composer, #view-room.quiet .tk-line { display: none; }
   .quiet-panel { text-align: center; padding: 40px 20px; color: var(--muted); }
   .quiet-panel .qp-emo { font-size: 46px; }
@@ -829,6 +831,7 @@
           <div id="city-board"></div>
           <div class="prompts"><span class="plabel">tap what almost got you</span><button class="pchip" onclick="quickConfess('🍕')">🍕</button><button class="pchip" onclick="quickConfess('🍜')">🍜</button><button class="pchip" onclick="quickConfess('🍣')">🍣</button><button class="pchip" onclick="quickConfess('🌮')">🌮</button><button class="pchip" onclick="quickConfess('🍔')">🍔</button><button class="pchip" onclick="quickConfess('🍰')">🍰</button></div>
           <div class="composer"><input id="composer-input" placeholder="…or type it. burns at sunrise 🌅" maxlength="90" /><button onclick="postFromComposer()">post</button></div>
+          <div class="room-rules-line">be kind — the room is a leveler. <a href="terms.html" target="_blank" rel="noopener">community rules</a> · report any post with 🚩</div>
           <div id="room-feed"></div>
           <div class="osm-credit" id="room-burn">🌅 posts burn at sunrise</div>
         </section>
@@ -2189,16 +2192,24 @@ function fetchLiveRoom(){ if(!(ROOM_LIVE && beOn())) return; const now=Date.now(
     if(added && $("#view-room").classList.contains("active")) renderRoom();
   }); }
 function reportPost(i){ const p=room[i]; if(!p || !p.liveId) return; bePost("room",{action:"report", post_id:p.liveId, device_id:deviceId()}); room.splice(i,1); renderRoom(); toast("reported — a human will look. thank you 🤍"); }
-function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; makeMine("🌙", v); inp.value=""; snd("chime"); toast("posted — the resident ghosts are reading 👻 burns at sunrise 🌅"); addXp(4); questEvent("post"); }
+/* ===== community rules gate (App Store Guideline 1.2: agree to terms before posting to live UGC) =====
+   only gates when ROOM_LIVE (posts are visible to others). device-local posting needs no agreement. */
+function agreedRoomTerms(){ try{ return localStorage.getItem("carted_terms")==="1"; }catch(e){ return false; } }
+function withRoomTerms(cb){ if(!ROOM_LIVE || agreedRoomTerms()){ cb(); return; }
+  showModal(`<div class="m-emoji">🤍</div><div class="m-title">before you post</div><div class="m-body" style="text-align:left">the 2 am room is a kind place. by posting you agree:<br><br>• <b>zero tolerance</b> for hateful, harassing, sexual, or objectionable content<br>• be gentle with the people here — <b>abusive users are removed</b><br>• posts can be reported, hidden, and deleted; repeat offenders are blocked<br>• everything burns at sunrise 🌅<br><br><span style="font-size:11.5px;color:var(--muted)">the full <a href="terms.html" target="_blank" rel="noopener" style="color:inherit">community terms</a> &amp; <a href="privacy.html" target="_blank" rel="noopener" style="color:inherit">privacy policy</a>. questions: localcardhouse@gmail.com</span></div><button class="cta" style="position:static" onclick="acceptRoomTerms()">i agree — post 🌙</button><button class="cta secondary" style="position:static" onclick="closeModal()">not yet</button>`);
+  window.__pendingPost = cb;
+}
+function acceptRoomTerms(){ try{ localStorage.setItem("carted_terms","1"); }catch(e){} closeModal(); const cb=window.__pendingPost; window.__pendingPost=null; if(typeof cb==="function") cb(); }
+function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; withRoomTerms(()=>{ makeMine("🌙", v); inp.value=""; snd("chime"); toast("posted — the room's reading 👻 burns at sunrise 🌅"); questEvent("post"); }); }
 const CONFESS = ["almost got me. it didn't. 💪","called my name at 2am. i let it ring.","was THIS close. wallet's still shut.","tempted me for 20 whole minutes. survived."];
-function quickConfess(e){ makeMine(e, `${e} ${pick(CONFESS)}`); snd("chime"); toast("confessed to the room 🌙"); addXp(4); questEvent("post"); }
-function shareToRoom(){
+function quickConfess(e){ withRoomTerms(()=>{ makeMine(e, `${e} ${pick(CONFESS)}`); snd("chime"); toast("confessed to the room 🌙"); questEvent("post"); }); }
+function shareToRoom(){ withRoomTerms(()=>{
   const po=pendingOrder, c=po?po.city:curCity(); const place=lastOrderItems[0];
   const sum = lastOrderItems.length>1 ? `${place.name} +${lastOrderItems.length-1} more` : (place?place.name:"late-night food");
   const flightBit = po&&po.flight ? ` (a ${po.flight.label} flight away)` : "";
   makeMine(place?place.ic:"🌙", `almost spent ${money(po?po.total:0,c.cur)} at ${sum} in ${c.name}${flightBit}. closed the app instead 🌙`);
-  go("room"); snd("chime"); addXp(4); questEvent("post");
-}
+  go("room"); snd("chime"); questEvent("post");
+}); }
 function beSeen(post){ let n=0; const order=["me","hug","hug","me","go"]; const tick=()=>{ if(!post||n>=order.length) return; post.r[order[n]]++; n++; if(n===2) toast("👻 the ghosts held this one"); if($("#view-room").classList.contains("active")) renderRoom(); setTimeout(tick, 1600+Math.random()*1400); }; setTimeout(tick, 1100); }
 let lastIncoming=-1;
 function streamIncoming(){ if(roomSilent || !$("#view-room").classList.contains("active")) return;
