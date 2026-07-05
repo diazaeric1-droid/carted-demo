@@ -229,7 +229,11 @@
   .tk-line b { color: var(--text); }
   .fic-note { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 14px; text-align: center; opacity: .85; }
   /* the 2am room runs dimmer + warmer than the daylight feed — low-arousal by design */
-  #view-room { background: linear-gradient(180deg, #f0e3cf, #ece0d2); margin: 0 -16px; padding: 0 16px 16px; border-radius: 18px 18px 0 0; }
+  /* the room runs a touch dimmer + warmer than the daylight feed (low-arousal by design) —
+     tint the page background (.screen) so it adapts to Night Shift, and keep the room's
+     content on the SAME 18px inset as every other view (no bleed, no misalignment). */
+  body.in-room .screen { background: #efe2ca; }
+  body.night.in-room .screen { background: #362d54; }
   #view-room .post { animation-duration: .6s; }
   .room-tag { font-size: 12.5px; color: var(--muted); font-weight: 800; margin-top: 3px; }
   .reacts .chip .rlbl { font-size: 10px; font-weight: 800; color: var(--muted); margin: 0 4px 0 4px; }
@@ -1567,6 +1571,7 @@ function go(view){ track("view",{v:view});
   $("#nav-room").classList.toggle("on", view==="room");
   $("#nav-cart").classList.toggle("on", view==="cart");
   document.body.classList.toggle("hud-off", view==="room");   // the room is a leveler — no scoreboard hovering over it
+  document.body.classList.toggle("in-room", view==="room");   // dims the page background for the room's calm palette
   if(view==="cart") renderCart();
   if(view==="room") renderRoom();
   if(view==="profile") renderProfile();
@@ -2134,11 +2139,13 @@ function confirmOrderReal(){
 function tonightBest(){ try{ const t=JSON.parse(localStorage.getItem("carted_tonight")||"null"); return (t && t.night===nightKey()) ? t.best : 0; }catch(e){ return 0; } }
 function bumpTonight(usd){ const best=Math.max(tonightBest(), usd); try{ localStorage.setItem("carted_tonight", JSON.stringify({night:nightKey(), best})); }catch(e){} }
 function podiumHTML(){
-  const s=hash(nightKey()); const spots=["Brooklyn","Shibuya","Camden","the Mission","Hongdae","Roma Norte","Montrose","Kreuzberg"];
-  const gs=["Bea","Louie","Momo","Etta","Gus","Nori","Clem","Wanda"];
-  let rows=[ {n:"👻 "+gs[s%gs.length]+" · "+spots[s%spots.length], v:180+(s%160)},
-             {n:"👻 "+gs[(s>>3)%gs.length]+" · "+spots[(s>>3)%spots.length], v:Math.round((180+(s%160))*.78)},
-             {n:"👻 "+gs[(s>>6)%gs.length]+" · "+spots[(s>>6)%spots.length], v:Math.round((180+(s%160))*.59)} ];
+  const s=hash(nightKey()); const spots=["Brooklyn","Shibuya","Camden","the Mission","Hongdae","Roma Norte","Montrose","Kreuzberg"].slice();
+  const gp=["Bea","Louie","Momo","Etta","Gus","Nori","Clem","Wanda"].slice();
+  let x=s; const pick=a=>{ x=(x*1103515245+12345)>>>0; return a.splice(x%a.length,1)[0]; };   // distinct picks — no ghost wins twice
+  const base=180+(s%160);
+  let rows=[ {n:"👻 "+pick(gp)+" · "+pick(spots), v:base},
+             {n:"👻 "+pick(gp)+" · "+pick(spots), v:Math.round(base*.78)},
+             {n:"👻 "+pick(gp)+" · "+pick(spots), v:Math.round(base*.59)} ];
   const mine=tonightBest();
   if(mine>=rows[2].v){ rows.push({n:"you 🫵", v:Math.round(mine), mine:true}); rows.sort((a,b)=>b.v-a.v); rows=rows.slice(0,3); }
   const medal=["🥇","🥈","🥉"];
