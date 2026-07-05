@@ -1140,8 +1140,15 @@ const OVERPASS = ["https://overpass-api.de/api/interpreter","https://overpass.ku
 
 /* night shift: 10pm–6am the whole app dims and hushes (see body.night CSS).
    declared before the state block — sndOn's initializer depends on it. */
-function isNight(){ const h=new Date().getHours(); return h>=22 || h<6; }
+/* night shift can be forced on/off, or follow the clock (10pm–6am). pref: "auto" | "on" | "off" */
+function nightPref(){ try{ return localStorage.getItem("carted_night") || "auto"; }catch(e){ return "auto"; } }
+function isNight(){ const p=nightPref(); if(p==="on") return true; if(p==="off") return false; const h=new Date().getHours(); return h>=22 || h<6; }
 function applyNight(){ document.body.classList.toggle("night", isNight()); }
+function cycleNight(){ const order=["auto","on","off"], p=nightPref(); const next=order[(order.indexOf(p)+1)%3];
+  try{ localStorage.setItem("carted_night", next); }catch(e){} applyNight(); snd("pop");
+  toast(next==="on"?"🌙 night mode: always on":next==="off"?"☀️ night mode: off":"🌗 night mode: follows the clock");
+  if($("#view-profile").classList.contains("active")) renderProfile(); }
+function nightLabel(){ const p=nightPref(); return p==="on"?"🌙 night mode: always on":p==="off"?"☀️ night mode: off":"🌗 night mode: auto (10pm–6am)"; }
 
 /* ---- state ---- */
 let cart = [], liveBase = 1247, courierTimers = [], room = [], lastOrderItems = [], pendingOrder = null;
@@ -1785,6 +1792,7 @@ function renderProfile(){
   const auth = `<button class="signin-btn" onclick="shareWin('streak')">📸 flex your streak card</button>`
     + `<button class="signin-btn" onclick="showWrapped()">📊 your week, wrapped</button>`
     + `<button class="signin-btn" onclick="ghostPush()">${stats.pushOptIn?"🔔 ghost texts: on":"🔔 let the ghost text me"}</button>`
+    + `<button class="signin-btn" onclick="cycleNight()">${nightLabel()}</button>`
     + `<button class="signin-btn" onclick="toggleAsmr()">${asmrOn?"🍳 kitchen ASMR: on":"🍳 kitchen ASMR: off"}</button>`
     + `<button class="signin-btn" onclick="toggleSnd()">${sndOn?"🔊 sounds: on":"🔇 sounds: off"}</button>`;
   const owned=stats.drivers||[];
