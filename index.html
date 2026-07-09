@@ -2,35 +2,41 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="Carted" />
-<meta name="theme-color" content="#fbf3e4" />
+<meta name="theme-color" content="#100C0A" />
 <link rel="manifest" href="manifest.json" />
 <link rel="apple-touch-icon" href="icon-192.png" />
 <title>Carted · fill your cart, ghost the check</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&display=swap');
+  /* self-hosted variable fonts (latin subsets) — no render-blocking @import, the serif survives
+     offline, and canvas share-cards render Newsreader without the network. opsz axis applies
+     automatically (font-optical-sizing default) so small sizes get the sturdier cuts. */
+  @font-face { font-family: 'Newsreader'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('fonts/newsreader-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Newsreader'; font-style: italic; font-weight: 400 600; font-display: swap; src: url('fonts/newsreader-italic.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('fonts/inter-normal.woff2') format('woff2'); }
   /* ===== Warm Analog Midnight — the design system. night-permanent, lamp-lit, film-grain,
      one amber accent, serif for emotion / Inter for chrome. no cream, no coral, no sticker outlines. ===== */
   :root {
     --bg: #100C0A; --screen: #100C0A; --card: #1E1812; --card-hi: #241B13; --line: #2A211B; --ink: #2A211B; --soft: #241B13;
     --border: #2A211B;
-    --text: #EFE4D6; --muted: #8A7A6B; --accent: #F0A84A; --accent2: #D9963A; --hot: #C96A4A; --go: #A8B07A; --neon: #7C93B8;
+    --text: #EFE4D6; --muted: #9A8A7A; --accent: #F0A84A; --accent2: #D9963A; --hot: #C96A4A; --go: #A8B07A; --neon: #7C93B8;
     --slate: #7C93B8; --filament: #F6C982; --glow: rgba(240,168,74,0.22);
     --grad: linear-gradient(135deg, #F0A84A, #D9963A);
     --disp: "Newsreader", Georgia, "Times New Roman", serif;
     --bodyf: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   /* strip the old sticker treatment app-wide: hairline warm seams, tonal depth, no hard offset shadows */
-  .card, .tier-card, .feat-banner, .post, .cup-bar, .composer input, .signin-btn, .seg, .store-banner,
+  .card, .tier-card, .feat-banner, .post, .cup-bar, .composer input, .signin-btn, .seg,
   .kclosed, .quests, .passport, .prompts, .drawer .dr-head, .hud .pill, .live-pill, .city-chip, .ebanner,
   .tk-line, .quiet-panel, .morts-pick, .buddy-nudge, .ghost-quip, .silence-btn, .feed-identity, .track-skip {
     box-shadow: none !important; border-color: var(--border) !important;
   }
-  .card, .tier-card, .feat-banner, .post, .cup-bar, .composer input, .seg, .store-banner, .kclosed,
+  .card, .tier-card, .feat-banner, .post, .cup-bar, .composer input, .seg, .kclosed,
   .quests, .passport, .prompts, .hud .pill, .live-pill, .city-chip, .tk-line, .feed-identity { border-width: 1px !important; }
   /* film grain — the analog fingerprint (CSS-only SVG fractal noise) */
   .screen::after { content:""; position:absolute; inset:0; z-index:1; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
@@ -45,7 +51,6 @@
   /* Night is now the permanent and only theme — the warm-analog :root above IS night.
      body.night is always present; these rules just tune ambience, never the palette. */
   body.night .ebanner { filter: saturate(.85); }
-  body.night .store-banner.neon { animation: none; filter: saturate(.8); }
   body.night .ebanner.night-line { background: transparent; border-style: dashed; color: var(--muted); box-shadow: none; }
   body.night .brand h1 { text-shadow: 0 0 30px var(--glow); }
   body.hud-off .hud { display: none; }
@@ -247,9 +252,11 @@
   .post .pmeta b { color: var(--text); font-weight: 700; }
   .post .mine-tag { color: var(--accent); font-weight: 700; }
   .post.ghostp { background: linear-gradient(0deg, rgba(124,147,184,.06), rgba(124,147,184,.06)), var(--card); border-style: dashed; }
+  .post.letter { border-style: solid; border-color: rgba(246,201,130,.28); background: linear-gradient(0deg, rgba(240,168,74,.05), rgba(240,168,74,.05)), var(--card); }
+  .post.letter .ptext { font-family: var(--disp); font-style: italic; font-size: 15px; line-height: 1.55; }
+  .l-ack { margin-top: 8px; font-size: 12px; color: var(--muted); font-style: italic; }
   .post .gtag { color: var(--slate); font-weight: 700; }
   .ghost-note { font-size: 10.5px; color: var(--muted); font-weight: 700; margin-top: 5px; opacity: .85; line-height: 1.35; }
-  .pod-sub { font-size: 11px; color: var(--muted); font-weight: 800; margin-top: 7px; }
   .kclosed { background: var(--card); border: 2px dashed var(--ink); border-radius: 16px; padding: 15px 16px; text-align: center; font-weight: 800; font-size: 14.5px; margin-top: 4px; box-shadow: 3px 3px 0 var(--ink); }
   .kclosed .kc-sub { font-size: 11.5px; color: var(--muted); font-weight: 700; margin-top: 6px; }
   .tk-line { background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 10px 12px; font-size: 12.5px; font-weight: 700; color: var(--muted); margin-bottom: 10px; box-shadow: 2px 2px 0 var(--ink); }
@@ -257,7 +264,7 @@
   .fic-note { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 14px; text-align: center; opacity: .85; }
   /* the 2am room runs dimmer + warmer than the daylight feed — low-arousal by design */
   /* the room runs a touch dimmer + warmer than the daylight feed (low-arousal by design) —
-     tint the page background (.screen) so it adapts to Night Shift, and keep the room's
+     tint the page background (.screen) so it adapts to the permanent night palette, and keep the room's
      content on the SAME 18px inset as every other view (no bleed, no misalignment). */
   body.in-room .screen, body.night.in-room .screen { background: #0C0907; }
   #view-room .post { animation-duration: .6s; }
@@ -284,7 +291,8 @@
   .cup-emo, .cup-scene .cup-emo { filter: drop-shadow(0 14px 30px rgba(0,0,0,.5)) drop-shadow(0 0 34px rgba(255,200,140,.14)); }
   .cup-scene { text-align: center; color: var(--text); width: 100%; padding: 24px; position: relative; }
   .cup-x { position: absolute; top: -6px; right: 12px; background: none; border: none; color: var(--muted); font-size: 20px; font-weight: 600; cursor: pointer; padding: 8px; }
-  .cup-others { font-size: 12.5px; font-weight: 600; color: var(--slate); margin-bottom: 42px; }
+  .cup-others { font-size: 12.5px; font-weight: 600; color: var(--slate); margin-bottom: 8px; }
+  .cup-snd { background: none; border: 1px solid rgba(239,228,214,.14); color: var(--muted); border-radius: 999px; font-size: 11.5px; padding: 4px 12px; margin-bottom: 30px; }
   .cup-stage { position: relative; display: inline-block; cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: none; }
   .cup-emo { font-size: 110px; line-height: 1.1; filter: drop-shadow(0 12px 26px rgba(0,0,0,.5)); }
   .cup-steam { position: absolute; left: 50%; top: -30px; transform: translateX(-50%); display: flex; gap: 9px; pointer-events: none; }
@@ -313,7 +321,6 @@
 
   .toast { position: absolute; left: 50%; bottom: 96px; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--screen); font-weight: 700; font-size: 13.5px; padding: 11px 18px; border-radius: 30px; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 60; box-shadow: 3px 3px 0 rgba(34,28,51,.25); max-width: 80%; text-align: center; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  .confetti { position: absolute; top: -30px; font-size: 22px; z-index: 55; animation: fall linear forwards; pointer-events: none; }
   @keyframes fall { to { transform: translateY(900px) rotate(360deg); opacity: 0; } }
 
   .avatar { position: absolute; top: 4px; right: 0; width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); font-size: 19px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); }
@@ -346,7 +353,6 @@
   .tier-fill { height: 100%; background: var(--grad); transition: width .5s; }
   .milestone { margin-top: 10px; display: inline-block; background: var(--accent2); color: var(--ink); font-weight: 800; font-size: 13px; padding: 8px 14px; border-radius: 16px; border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); animation: fade .4s ease; }
   /* ----- gacha courier reveal card ----- */
-  .courier-card { margin: 16px auto 2px; max-width: 230px; background: var(--card-hi); border: 2.5px solid var(--ink); border-radius: 20px; padding: 14px 12px 12px; box-shadow: 4px 4px 0 var(--ink); position: relative; animation: pop .5s ease both; }
   .courier-card .cc-new { display: inline-block; background: var(--rc); color: #fff; font-family: var(--disp); font-weight: 700; font-size: 12px; letter-spacing: .3px; padding: 4px 12px; border-radius: 12px; border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); margin-bottom: 6px; }
   .courier-card .cc-dup { background: var(--card-hi); color: var(--muted); box-shadow: none; }
   .courier-card .cc-veh { font-size: 64px; line-height: 1.05; width: 96px; height: 96px; margin: 4px auto 2px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: color-mix(in srgb, var(--rc) 16%, #fff); border: 3px solid var(--rc); box-shadow: inset 0 0 0 3px #fff; }
@@ -401,7 +407,6 @@
   .quests { background: var(--card); border: 2.5px solid var(--ink); border-radius: 18px; padding: 14px; margin-bottom: 14px; box-shadow: 4px 4px 0 var(--ink); }
   .qhead { display: flex; justify-content: space-between; align-items: center; font-family: var(--disp); font-weight: 600; font-size: 15px; margin-bottom: 6px; }
   .qhead .qday { font-size: 10.5px; color: var(--muted); font-family: var(--bodyf); font-weight: 700; }
-  .quest { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
   .quest .qic { font-size: 22px; width: 30px; text-align: center; }
   .quest .qmid { flex: 1; min-width: 0; }
   .quest .qname { font-size: 13px; font-weight: 800; }
@@ -414,18 +419,10 @@
   .chestrow { margin-top: 10px; }
   .chestbtn { width: 100%; border: 2.5px solid var(--ink); border-radius: 14px; padding: 12px; font-family: var(--disp); font-weight: 600; font-size: 14px; cursor: pointer; background: var(--neon); color: #fff; box-shadow: 0 4px 0 var(--ink); animation: pulse2 1.5s infinite; }
   /* ----- level-up overlay ----- */
-  .lvlup { position: absolute; inset: 0; z-index: 90; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(251,243,228,.97); animation: fade .25s ease; text-align: center; padding: 30px; }
-  .lvlup .rays { position: absolute; width: 380px; height: 380px; border-radius: 50%; top: calc(42% - 190px); background: repeating-conic-gradient(rgba(255,194,61,.38) 0 12deg, transparent 12deg 24deg); animation: spinSlow 10s linear infinite; pointer-events: none; }
-  .lvlup-btns { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%; }
   @keyframes spinSlow { to { transform: rotate(360deg); } }
-  .lvlup .big { font-family: var(--disp); font-size: 62px; font-weight: 700; color: var(--accent); text-shadow: 3.5px 3.5px 0 var(--ink); animation: pop .5s ease; position: relative; }
-  .lvlup .sub2 { color: var(--text); margin: 6px 0 26px; font-weight: 800; position: relative; }
   /* ----- craving roulette ----- */
-  .slot { display: flex; gap: 10px; justify-content: center; margin: 10px 0 14px; }
-  .reel { width: 72px; height: 72px; border-radius: 14px; background: var(--screen); border: 2.5px solid var(--ink); display: flex; align-items: center; justify-content: center; font-size: 40px; box-shadow: 2px 2px 0 var(--ink); }
   .reel.stop { background: var(--accent2); transform: scale(1.07); transition: all .15s; }
   /* ----- juice: xp floaters + fly-to-cart + ghost reveal + fee boss ----- */
-  .fxp { position: absolute; z-index: 85; font-family: var(--disp); font-weight: 600; color: var(--ink); background: var(--accent2); border: 2px solid var(--ink); border-radius: 11px; padding: 2px 8px; box-shadow: 2px 2px 0 var(--ink); pointer-events: none; animation: floatUp .9s ease forwards; font-size: 12.5px; }
   @keyframes floatUp { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-48px) scale(1.15) rotate(-5deg); } }
   .flyer { position: absolute; z-index: 80; font-size: 30px; transition: all .65s cubic-bezier(.5,-0.2,.6,1); pointer-events: none; }
   .reveal .ghostrise { font-size: 64px; display: inline-block; animation: rise 1.5s ease both; }
@@ -450,11 +447,6 @@
   .dmsg { background: var(--card); border: 2px solid var(--ink); border-radius: 14px; border-bottom-left-radius: 4px; padding: 9px 12px; font-size: 13px; margin-bottom: 8px; box-shadow: 2px 2px 0 var(--ink); animation: fade .3s ease; }
   .dmsg b { color: var(--accent); }
   /* ----- room: podium + confess chips + streak badges ----- */
-  .podium { background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 12px 14px; margin-bottom: 14px; box-shadow: 4px 4px 0 var(--ink); }
-  .pod-title { font-family: var(--disp); font-weight: 600; font-size: 14px; margin-bottom: 8px; }
-  .prow { display: flex; align-items: center; gap: 9px; padding: 5px 0; font-size: 13.5px; font-weight: 700; }
-  .prow .pn { flex: 1; color: var(--muted); }
-  .prow b { font-variant-numeric: tabular-nums; color: var(--go); }
   .prow.mine { background: var(--card-hi); border: 2px dashed var(--accent); border-radius: 10px; padding: 5px 8px; }
   .prow.mine .pn { color: var(--accent); }
   .prompts { display: flex; align-items: center; gap: 7px; margin: 0 0 5px; padding-bottom: 5px; overflow-x: auto; }
@@ -479,14 +471,6 @@
   .kb-head { text-align: center; margin: 4px 0 14px; }
   .kb-head .kb-title { font-family: var(--disp); font-weight: 700; font-size: 22px; }
   .kb-head .kb-tag { color: var(--muted); font-size: 12.5px; font-weight: 700; margin-top: 2px; }
-  .kb-item { display: flex; align-items: center; gap: 12px; background: var(--card); border: 2.5px solid var(--ink); border-radius: 14px; padding: 10px 12px; margin-bottom: 10px; box-shadow: 3px 3px 0 var(--ink); }
-  .kb-ic { font-size: 30px; width: 40px; text-align: center; }
-  .kb-mid { flex: 1; min-width: 0; }
-  .kb-n { font-weight: 800; font-size: 14.5px; }
-  .kb-sub { color: var(--muted); font-size: 11.5px; font-weight: 700; }
-  .kb-p { font-family: var(--disp); font-weight: 600; color: var(--accent); font-size: 15px; }
-  .kb-add { width: 36px; height: 36px; border-radius: 12px; border: 2px solid var(--ink); background: var(--grad); color: #1A1109; font-size: 20px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); flex: 0 0 auto; }
-  .kb-add:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
   /* ----- restaurant menu ----- */
   .mcourse { font-family: var(--disp); font-weight: 600; font-size: 14px; margin: 16px 2px 8px; }
   .mrow { display: flex; align-items: flex-start; gap: 12px; background: var(--card); border: 2px solid var(--ink); border-radius: 16px; padding: 10px; margin-bottom: 10px; box-shadow: 2px 2px 0 var(--ink); }
@@ -507,21 +491,12 @@
   .stat-total { display: flex; justify-content: space-between; align-items: center; padding: 10px 4px 0; font-weight: 800; }
   .stat-total b { color: var(--go); font-size: 20px; font-family: var(--disp); }
   /* ----- rate the plate ----- */
-  .rtp { display: flex; align-items: center; gap: 8px; margin: 6px 0 4px; }
   .rtp-card { flex: 1; background: var(--screen); border: 2.5px solid var(--ink); border-radius: 16px; padding: 10px; cursor: pointer; box-shadow: 3px 3px 0 var(--ink); display: flex; flex-direction: column; align-items: center; gap: 8px; transition: transform .1s; min-width: 0; }
   .rtp-card:active { transform: scale(.96); }
-  .rtp-img { width: 100%; height: 96px; object-fit: cover; border-radius: 10px; border: 2px solid var(--ink); }
-  .rtp-emo { font-size: 60px; height: 96px; display: flex; align-items: center; justify-content: center; }
   .rtp-n { font-size: 12px; font-weight: 800; text-align: center; line-height: 1.2; }
   .rtp-vs { font-family: var(--disp); font-weight: 700; color: var(--muted); font-size: 14px; flex: 0 0 auto; }
 
   /* ----- itinerary / plan my night ----- */
-  .plan-btn { width: 100%; background: var(--accent2); border: 2.5px solid var(--ink); border-radius: 14px; padding: 11px; font-family: var(--disp); font-weight: 600; font-size: 14.5px; color: var(--ink); cursor: pointer; box-shadow: 0 4px 0 var(--ink); margin-bottom: 12px; }
-  .plan-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
-  .itin { text-align: left; margin: 6px 0 4px; }
-  .itin-row { display: flex; align-items: center; gap: 9px; padding: 9px 4px; border-bottom: 2px dashed #d9cbab; font-weight: 700; font-size: 14px; }
-  .itin-row span:first-child { font-size: 20px; }
-  .itin-tag { margin-left: auto; font-size: 10.5px; font-weight: 800; color: var(--muted); text-transform: uppercase; border: 2px solid var(--soft); border-radius: 8px; padding: 2px 6px; }
   /* ----- ghost mascot + wardrobe ----- */
   .ghost-av { position: relative; display: inline-flex; align-items: center; justify-content: center; line-height: 1; vertical-align: middle; }
   .ghost-av .gh-hat { position: absolute; top: -0.52em; left: 50%; transform: translateX(-50%) rotate(-8deg); pointer-events: none; }
@@ -562,25 +537,11 @@
   .thumb { position: relative; }
   .coupon-rib { position: absolute; bottom: -2px; left: -2px; background: var(--hot); color: #fff; font-family: var(--disp); font-weight: 700; font-size: 9.5px; padding: 2px 6px; border: 2px solid var(--ink); border-radius: 9px 9px 9px 4px; box-shadow: 1px 1px 0 var(--ink); white-space: nowrap; }
   .new-chip { display: inline-block; background: var(--grad); color: #1A1109; font-weight: 800; font-size: 9.5px; padding: 1px 6px; border-radius: 8px; border: 1.5px solid var(--ink); margin-left: 4px; vertical-align: middle; }
-  .d-coupon { width: 100%; display: flex; align-items: center; gap: 8px; background: var(--card-hi); border: 2px dashed var(--hot); border-radius: 11px; padding: 7px 11px; margin: 10px 0 2px; cursor: pointer; text-align: left; box-shadow: 1.5px 1.5px 0 var(--hot); }
-  .d-coupon .dc-tag { font-family: var(--disp); font-weight: 700; font-size: 13px; color: var(--hot); white-space: nowrap; }
-  .d-coupon .dc-d { font-size: 11px; font-weight: 700; color: var(--text); line-height: 1.25; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .spotlight { display: block; width: 100%; text-align: left; background: var(--card); border: 2.5px solid var(--ink); border-radius: 20px; padding: 0; margin-bottom: 14px; box-shadow: 5px 6px 0 var(--ink); cursor: pointer; overflow: hidden; transition: transform .12s ease, box-shadow .12s ease; }
-  .spotlight:active { transform: translate(2px,3px); box-shadow: 1px 2px 0 var(--ink); }
   .spotlight.done { opacity: .78; box-shadow: 3px 3px 0 var(--ink); }
   /* big photo banner */
-  .spotlight .sp-photo { position: relative; width: 100%; height: 150px; background: var(--card-hi); border-bottom: 2.5px solid var(--ink); overflow: hidden; }
   .spotlight .sp-photo .ph-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .spotlight .sp-photo .sp-emo { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 76px; }
-  .spotlight .sp-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(34,28,51,.34) 0%, rgba(34,28,51,0) 38%, rgba(34,28,51,0) 70%, rgba(34,28,51,.30) 100%); pointer-events: none; }
   /* chips floated on the photo */
-  .spotlight .sp-badge { position: absolute; top: 10px; left: 10px; z-index: 2; font-family: var(--disp); font-weight: 600; font-size: 12.5px; color: var(--ink); background: var(--accent2); border: 2px solid var(--ink); border-radius: 11px; padding: 3px 9px; box-shadow: 1.5px 1.5px 0 var(--ink); }
-  .spotlight .sp-bonus { position: absolute; top: 10px; right: 10px; z-index: 2; background: var(--accent); color: #1A1109; border: 1px solid var(--border); border-radius: 11px; padding: 3px 9px; font-size: 11.5px; font-weight: 700; box-shadow: 0 4px 12px -6px var(--glow); }
-  .spotlight .sp-check { position: absolute; top: 10px; right: 10px; z-index: 2; color: #fff; background: var(--go); border: 2px solid var(--ink); border-radius: 11px; padding: 3px 9px; font-weight: 800; font-size: 12px; box-shadow: 1.5px 1.5px 0 var(--ink); }
   /* roomier text body */
-  .spotlight .sp-body { padding: 13px 16px 15px; }
-  .spotlight .sp-name { font-family: var(--disp); font-weight: 500; font-size: 26px; line-height: 1.06; color: var(--text); }
-  .spotlight .sp-sub { font-size: 13.5px; color: var(--muted); font-weight: 700; margin-top: 6px; text-transform: capitalize; line-height: 1.3; }
   /* ----- featured city banner ----- */
   .feat-banner { width: 100%; display: flex; align-items: center; gap: 11px; background: var(--neon); border: 2.5px solid var(--ink); border-radius: 16px; padding: 11px 13px; margin-bottom: 10px; box-shadow: 3px 3px 0 var(--ink); cursor: pointer; text-align: left; color: #fff; }
   .feat-banner:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
@@ -605,24 +566,7 @@
   .ws-row { display: flex; justify-content: space-between; align-items: baseline; padding: 9px 4px; border-bottom: 2px dashed #d9cbab; font-weight: 700; }
   .ws-row b { font-family: var(--disp); font-size: 19px; }
   /* ----- corner store banner (prominent on the feed) ----- */
-  .store-banner { width: 100%; display: flex; align-items: center; gap: 12px; background: var(--accent2); border: 2.5px solid var(--ink); border-radius: 18px; padding: 13px 14px; margin-bottom: 14px; box-shadow: 0 5px 0 var(--ink); cursor: pointer; text-align: left; transition: transform .08s, box-shadow .08s; }
-  .store-banner:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
-  .store-banner .sb-ic { font-size: 30px; }
-  .store-banner .sb-text { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-  .store-banner .sb-text b { font-family: var(--disp); font-weight: 700; font-size: 16px; color: var(--ink); }
-  .store-banner .sb-sub { font-size: 12px; color: #7a6520; font-weight: 700; }
-  .store-banner .sb-go { font-size: 26px; font-weight: 800; color: var(--ink); }
   /* corner-store + random row */
-  .store-row { display: flex; gap: 9px; align-items: stretch; margin-bottom: 12px; }
-  .store-row .store-banner { flex: 1; margin-bottom: 0; }
-  .surprise-big { flex: 0 0 auto; width: 56px; border: 2.5px solid var(--ink); border-radius: 18px; background: var(--accent2); color: var(--ink); font-size: 25px; cursor: pointer; box-shadow: 0 5px 0 var(--ink); display: flex; align-items: center; justify-content: center; transition: transform .08s, box-shadow .08s; }
-  .surprise-big:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
-  .store-banner.neon { background: #181228; }
-  .store-banner.neon .sb-ic { filter: drop-shadow(0 0 7px rgba(94,240,208,.9)); }
-  .store-banner.neon .sb-text b { color: #5ef0d0; text-shadow: 0 0 8px rgba(94,240,208,.85); letter-spacing: .3px; animation: neonflick 2.4s ease-in-out infinite; }
-  .store-banner.neon .sb-sub { color: #ff79c6; text-shadow: 0 0 6px rgba(255,121,198,.55); }
-  .store-banner.neon .sb-go { color: #5ef0d0; text-shadow: 0 0 6px rgba(94,240,208,.7); }
-  @keyframes neonflick { 0%,100%{ opacity: 1; } 48%{ opacity: 1; } 50%{ opacity: .82; } 52%{ opacity: 1; } }
 
   /* ----- discovery #1-8: deals, Mort's pick, variety, must-try, crawls, filters ----- */
   .seg button span { opacity: .65; font-size: 11px; }
@@ -647,15 +591,6 @@
   .mt-row .mt-name { flex: 1; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .mt-row.got .mt-name { color: var(--muted); }
   .mt-row .mt-stars { flex: 0 0 auto; font-size: 12px; font-weight: 800; color: var(--accent); }
-  .crawl-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 12px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-  .crawl-row::-webkit-scrollbar { display: none; }
-  .crawl-chip { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; background: var(--card); border: 2.5px solid var(--ink); border-radius: 14px; padding: 8px 12px; font-family: var(--disp); font-weight: 600; font-size: 12.5px; color: var(--text); cursor: pointer; box-shadow: 2px 2px 0 var(--ink); white-space: nowrap; transition: transform .08s, box-shadow .08s; }
-  .crawl-chip:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
-  .crawl-chip .cr-e { font-size: 16px; }
-  .crawl-list { display: flex; flex-direction: column; gap: 8px; margin: 6px 0 12px; max-height: 46vh; overflow-y: auto; }
-  .crawl-item { width: 100%; display: flex; align-items: center; gap: 9px; background: var(--card-hi); border: 2px solid var(--ink); border-radius: 12px; padding: 10px 12px; font-size: 13.5px; color: var(--text); cursor: pointer; text-align: left; box-shadow: 2px 2px 0 var(--ink); }
-  .crawl-item b { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .crawl-item .ci-lvl { color: var(--go); font-weight: 800; flex: 0 0 auto; }
   .feed-filters { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin: -4px 0 6px; scrollbar-width: none; }
   .feed-filters::-webkit-scrollbar { display: none; }
   .feed-filters:empty { display: none; }
@@ -678,7 +613,7 @@
   .drawer .dr-body { max-height: 0; opacity: 0; overflow: hidden; transition: max-height .24s ease, opacity .2s ease; padding: 0 12px; }
   .drawer.open .dr-body { max-height: 2200px; opacity: 1; padding: 2px 12px 10px; }
   .drawer .dr-body > div:empty { display: none; }
-  .drawer .dr-body .feat-banner, .drawer .dr-body .spotlight, .drawer .dr-body .morts-pick, .drawer .dr-body .buddy-nudge, .drawer .dr-body .store-banner, .drawer .dr-body .must-card, .drawer .dr-body .quests, .drawer .dr-body .hub, .drawer .dr-body .tally { margin-bottom: 10px; }
+  .drawer .dr-body .feat-banner, .drawer .dr-body .drawer .dr-body .morts-pick, .drawer .dr-body .buddy-nudge, .drawer .dr-body .drawer .dr-body .tally { margin-bottom: 10px; }
   .drawer .dr-body > *:last-child { margin-bottom: 0; }
   .feed-controls { margin-bottom: 8px; }
   .feed-controls .seg { margin-bottom: 8px; }
@@ -705,13 +640,8 @@
   .pp-stamp.add { border-style: dashed; color: var(--accent); box-shadow: none; font-size: 20px; font-weight: 800; }
   #explore-city-bar.city-bar { margin: 2px 0 8px; }
   .city-chip .cc-stamp { font-size: 11px; opacity: .9; }
-  .efilters { display: flex; gap: 7px; overflow-x: auto; padding: 2px 0 12px; }
-  .efilters::-webkit-scrollbar { display: none; }
-  .efilter { white-space: nowrap; background: var(--card); border: 2px solid var(--ink); color: var(--text); border-radius: 16px; padding: 7px 13px; font-size: 13px; font-weight: 700; font-family: var(--disp); cursor: pointer; flex: 0 0 auto; box-shadow: 2px 2px 0 var(--ink); }
   .efilter.on { background: var(--ink); color: var(--screen); }
   /* activity cards — match the restaurant card layout for a consistent feel */
-  .acard { position: relative; display: flex; gap: 13px; padding: 11px; margin-bottom: 14px; background: var(--card); border: 2.5px solid var(--ink); border-radius: 20px; box-shadow: 5px 5px 0 var(--ink); cursor: pointer; transition: transform .12s, box-shadow .12s, background .15s; }
-  .acard:active { transform: translate(2px,3px); box-shadow: 1px 2px 0 var(--ink); }
   .acard.saved { background: var(--card-hi); border-color: var(--go); }
   .ac-thumb { width: 118px; height: 118px; flex: 0 0 118px; align-self: center; position: relative; border-radius: 15px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--card-hi); border: 2.5px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); font-size: 50px; }
   .ac-thumb .ph-img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -737,7 +667,6 @@
     .hud { padding-top: calc(env(safe-area-inset-top, 10px) + 4px); }
     .body { padding-top: 4px; }
     .view { padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
-    .confetti { top: env(safe-area-inset-top, 0px); }
     .nav { height: calc(58px + env(safe-area-inset-bottom, 0px)); padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px)); }
     .toast { bottom: calc(74px + env(safe-area-inset-bottom, 0px)); }
   }
@@ -820,7 +749,6 @@
                 <div class="box"><div class="k">saved here tonight</div><div class="v green" id="saved-tally">$0.00</div></div>
                 <div class="box"><div class="k">dodged here</div><div class="v" id="order-count">0</div></div>
               </div>
-              <div id="quests"></div>
             </div>
           </div>
           <div class="osm-credit">🍳 every restaurant here is fictional — the cities are real · dish data &amp; photos from <a href="https://www.themealdb.com" target="_blank" rel="noopener" style="color:inherit">TheMealDB</a></div>
@@ -850,15 +778,15 @@
           <div class="brand">
             <h1 style="font-size:24px">the 2 am room</h1>
             <div class="room-tag">the break room — come stand outside with us for a while 🌙</div>
-            <div class="live2"><span class="dot"></span> <b style="color:var(--slate);font-weight:700">the room's awake</b>&nbsp;🌙 · <span id="room-burn-top">🌅 —</span></div>
+            <div class="live2"><span class="dot"></span> <b style="color:var(--slate);font-weight:700" id="room-awake">the room's awake</b>&nbsp;🌙 · <span id="room-burn-top">🌅 —</span></div>
             <div class="ghost-note">👻 = resident ghost — friendly fiction keeping the room warm, not people. your posts burn at sunrise. 🌅</div>
           </div>
           <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a quiet 3-minute break — the ghosts steep with you 🍜</span></span><span class="cbr-go">›</span></button>
           <button id="silence-toggle" class="silence-btn" onclick="toggleSilence()">🤫 quiet corner</button>
           <div id="room-podium"></div>
           <div id="city-board"></div>
-          <div class="prompts"><span class="plabel">tap what almost got you</span><button class="pchip" onclick="quickConfess('🍕')">🍕</button><button class="pchip" onclick="quickConfess('🍜')">🍜</button><button class="pchip" onclick="quickConfess('🍣')">🍣</button><button class="pchip" onclick="quickConfess('🌮')">🌮</button><button class="pchip" onclick="quickConfess('🍔')">🍔</button><button class="pchip" onclick="quickConfess('🍰')">🍰</button></div>
-          <div class="composer"><input id="composer-input" placeholder="…or type it. burns at sunrise 🌅" maxlength="90" /><button onclick="postFromComposer()">post</button></div>
+          <div class="prompts"><span class="plabel">you made it. tap what almost got you</span><button class="pchip" onclick="quickConfess('🍕')">🍕</button><button class="pchip" onclick="quickConfess('🍜')">🍜</button><button class="pchip" onclick="quickConfess('🍣')">🍣</button><button class="pchip" onclick="quickConfess('🌮')">🌮</button><button class="pchip" onclick="quickConfess('🍔')">🍔</button><button class="pchip" onclick="quickConfess('🍰')">🍰</button></div>
+          <div class="composer"><input id="composer-input" aria-label="say something to the room" placeholder="say it quietly — it burns at sunrise 🌅" maxlength="90" /><button onclick="postFromComposer()">post</button></div>
           <div class="room-rules-line">be kind — the room is a leveler. <a href="terms.html" target="_blank" rel="noopener">community rules</a> · report any post with 🚩</div>
           <div id="room-feed"></div>
           <div class="osm-credit" id="room-burn">🌅 posts burn at sunrise</div>
@@ -899,26 +827,7 @@
         </section>
 
         <!-- KONBINI (24h corner store) -->
-        <section class="view" id="view-konbini">
-          <button class="back" onclick="go('feed')">‹ back</button>
-          <div class="kb-head"><div class="kb-title" id="kb-title">🏪 the 24h corner store</div><div class="kb-tag" id="kb-tag">open all night — no delivery, it's right there</div></div>
-          <div id="konbini-list"></div>
-          <button class="cta secondary" style="position:static" onclick="go('cart')">see cart</button>
-        </section>
 
-        <!-- EXPLORE (things to do) -->
-        <section class="view" id="view-explore">
-          <div class="brand">
-            <h1 style="font-size:26px">things to do</h1>
-            <div class="sub">your someday list — dream the trip, skip the flight 🌙</div>
-            <div class="live-pill"><span class="dot"></span><span class="lp-count"><span id="explore-live">843</span> 👻 ghosts exploring <span id="explore-cityname">tonight</span></span><span class="lp-sep">·</span><span id="explore-ticker" class="lp-ticker"></span></div>
-          </div>
-          <div class="city-bar" id="explore-city-bar"></div>
-          <div class="passport" id="explore-passport"></div>
-          <button class="plan-btn" onclick="planMyNight()">📋 plan my someday night here →</button>
-          <div class="efilters" id="explore-filters"></div>
-          <div id="explore-list"></div>
-          <div class="osm-credit">✨ real places for the someday list — words our own</div>
         </section>
 
       </div>
@@ -1159,9 +1068,84 @@ const INCOMING = [
   {ic:"🍗", ghost:"Wanda", sched:"~3:10", text:"no-spend night #2, still translucent 🎉", city:"Seoul"},
   {ic:"🥐", ghost:"Cosette", sched:"~3:35", text:"croissant at 3am is a feeling, not a purchase", city:"Paris"},
   {ic:"🍩", ghost:"Row", sched:"~4:00", text:"last one up. cart full of donuts. goodnight.", city:"Toronto"},
+  /* the working-night cast — every persona guessable from the line, coverage now gapless 21:00–05:00 */
+  {ic:"🍔", ghost:"Cass", sched:"~9:05", text:"delivered four dinners this hour. mine's a granola bar in the cupholder", city:"Houston", job:"night gig driver"},
+  {ic:"🥪", ghost:"Marge", sched:"~9:20", text:"lunch break at 9pm again. ate at the loading dock while the city had dinner", city:"Chicago", job:"warehouse night shift"},
+  {ic:"🥣", ghost:"Fern", sched:"~9:40", text:"smelled espresso for nine hours. all i wanted was someone else's cooking. cereal it is", city:"Portland", job:"closing-shift barista"},
+  {ic:"🧀", ghost:"Ezra", sched:"~9:55", text:"left a $19 queso cart open as a bookmark. back to the lit review", city:"Austin", job:"insomniac grad student"},
+  {ic:"🍪", ghost:"Ruby", sched:"~10:10", text:"night audit til 7. the lobby cookies and i have an understanding: not yet", city:"New Orleans", job:"hotel night audit"},
+  {ic:"🍳", ghost:"Sonny", sched:"~10:40", text:"cooked 180 dinners tonight. stood at my own fridge for five minutes. closed it", city:"Philly", job:"line cook after close"},
+  {ic:"🥨", ghost:"Duke", sched:"~11:05", text:"hour three of ten. twelve cameras, one me, pretzels rationed like a long flight", city:"LA", job:"night security guard"},
+  {ic:"🌮", ghost:"Lupe", sched:"~11:30", text:"headset off for 15 minutes. the pastor stand outside was glowing. waved, went back in", city:"Mexico City", job:"call-center night shift"},
+  {ic:"🍰", ghost:"Ines", sched:"~11:55", text:"vacuumed around the leftover office cake. looked twice. left it alone", city:"NYC", job:"office night cleaner"},
+  {ic:"🍟", ghost:"Tam", sched:"~12:15", text:"still in scrubs in the parking garage, talking myself out of the 24-hour drive-thru. bed won", city:"Houston", job:"er nurse post-shift"},
+  {ic:"🌭", ghost:"Hank", sched:"~1:25", text:"travel plaza at 1am. the roller-grill dogs have seen things. coffee and 300 more miles", city:"Denver", job:"long-haul trucker"},
+  {ic:"🥙", ghost:"Lotte", sched:"~2:15", text:"flashcards say the heart has four chambers. mine mostly wants döner. water, one more deck", city:"Berlin", job:"med student"},
+  {ic:"🧇", ghost:"Birdie", sched:"~3:45", text:"called last call, wiped the bar down. only the waffle place is open. going home anyway", city:"Nashville", job:"bartender after close"},
+  {ic:"🍞", ghost:"Anko", sched:"~4:15", text:"at the bakery before the first train, surrounded by bread i can't touch yet. it's a living", city:"Tokyo", job:"baker on early prep"},
+  {ic:"🥞", ghost:"Nell", sched:"~4:35", text:"up since the 3am feed. planned a whole diner breakfast in my head. we're having oatmeal", city:"Toronto", job:"new parent"},
+  {ic:"🍩", ghost:"Mack", sched:"~4:50", text:"drivers start calling at 5. it's 4:50 and this gas-station donut is the whole morning", city:"Chicago", job:"pre-dawn dispatcher"},
 ];
-/* sched "~H:MM" (late-night, 12 = midnight) → minutes since midnight */
-function schedMin(s){ const m=String(s||"").replace("~","").split(":"); let h=parseInt(m[0])||0; if(h===12) h=0; return h*60 + (parseInt(m[1])||0); }
+/* nightly openers: maximally relatable working-life lines, rotated by night — the "that's my
+   story" recognition moment is the retention hook. assigned to whichever ghost is awake. */
+const SEED_LINES = [
+  "held the taco craving through a double. barely",
+  "clocked out at 11. sat in the car ten minutes not driving to the drive-thru. drove home",
+  "the group chat ordered wings without me. proud of them. jealous of them",
+  "third night of the same leftovers. it's not sad if you add an egg",
+  "built a $34 cart during the late meeting. closed it when someone said 'quick follow-up'",
+  "9pm lunch break. everyone i love is having dinner. my sandwich understands",
+  "wanted the $18 burrito. remembered the $18. made quesadillas from fridge scraps",
+  "double done. too tired to chew anything interesting. crackers in bed, zero regrets",
+  "1am fries craving. glass of water, stared at the wall until it mostly passed",
+  "someone microwaved fish in the break room and somehow i still want food. impressive",
+  "grading essays at midnight. every single one mentions pizza. now i want pizza",
+  "baby asleep on my arm. dinner is whatever's in reach. dinner is a granola bar",
+  "fed 200 strangers tonight. came home and ate cereal standing over the sink",
+  "vending machine chips are $2.50 now. principle says no. principle is hungry",
+  "closed a $41 cart at checkout. moved $41 to savings instead. it counts double",
+  "smelled someone's takeout in the elevator. rode two extra floors. went home to rice anyway",
+  "night shift rule: don't open the delivery app after midnight. tonight i'm actually following it",
+  "studied til 2. the instant noodles stayed in the drawer. saving them for a real emergency",
+  "everyone talks about meal prep. mine is deciding not to order, twice a day",
+  "drove past the 24-hour taco spot doing 40. that's discipline where i'm from",
+  "good hot sauce on plain rice. called it a night out",
+  "stayed late again, unpaid. at least i didn't hand the night $26 for delivery too",
+  "2am. the fridge light is the only one on in the building. me and the string cheese",
+  "wrote 'groceries tomorrow' on my hand at 11pm. the hand has spoken. cart closed",
+  "coworker asked how i'm doing. said 'craving pho.' honestly that covered it",
+  "the halal cart guy waved tonight. waved back, kept walking. we both knew",
+  "break room coffee and one long look at a menu i didn't order from. almost through",
+  "4am feed done, baby's down. celebrated with the fancy yogurt i'd been saving",
+  "midnight inventory. counted 300 boxes of snacks that aren't mine. zen, basically",
+  "wanted sushi at 1am. made the rice, imagined the rest. surprisingly close",
+];
+/* tonight's letter 💌 — one longer ghost confession pinned during the 2am hours, with a single
+   ghost-DJ acknowledgment beneath it (별이 빛나는 밤에's listener-letter mechanic). */
+const LETTERS = [
+  {ghost:"Bea", text:"third week of night shifts and my kitchen only knows me by the fridge light. tonight i almost ordered the wings again — same cart, same $40, same reasons. drank the water and said goodnight to the cart like a coworker.", ack:"the cart clocked out too. read twice."},
+  {ghost:"Gus", text:"friday nights used to be chimaek with the office crew. now it's me, a convenience store water, and the sound of someone else's delivery scooter under the window. held out again — that's twice this week and i'm counting.", ack:"counting with you. two is two."},
+  {ghost:"Otto", text:"the kitchen at work feeds everyone except the people standing in it, if that makes sense. wanted ramen so badly on the walk home i could smell it in the cold. toast at my own table, lights low. it was enough.", ack:"enough is a whole meal. heard."},
+  {ghost:"Row", text:"night four of this rotation and the only thing open is the place i promised i'd stop ordering from. sat in the stairwell and ate the emergency granola bar like it was a ceremony. tell the 4am people they're not alone out here.", ack:"4am people, you heard them. not alone."},
+  {ghost:"Tam", text:"twelve hours and the kind of shift i can't really put anywhere. sat in the garage still in scrubs, wanting fries like they'd fix the night. drove home with the window down instead. bed is the real meal tonight.", ack:"the garage part. read twice."},
+  {ghost:"Hank", text:"somewhere outside denver there's a diner i've been driving past for six years, always closed by the time i roll through. tonight the lot was full and i still had 300 miles. coffee's holding, but one day i'm eating there — sitting down, mug and everything.", ack:"one day, sitting down. the room's holding that with you."},
+  {ghost:"Nell", text:"everyone said the nights would be long but nobody said they'd be this quiet. 4am, baby finally down, and i stood in the kitchen planning a diner breakfast i'm too tired to make. oatmeal again, and honestly the quiet was almost nice.", ack:"the quiet heard you back."},
+  {ghost:"Birdie", text:"i poured everyone else's night for eight hours and walked out at 3 to a city that was done with me. the waffle place glowed like it knew. made eggs at home at 3:40 and ate them out of the pan. best table in town.", ack:"best table in town. logged."},
+  {ghost:"Fern", text:"i can pour a rosetta in my sleep and i still can't make myself dinner after a close. tonight i just wanted someone to hand me food i didn't have to think about. cereal, couch, one lamp. it did the job.", ack:"one lamp is plenty. heard."},
+  {ghost:"Anko", text:"the bakery at 4am smells like the exact thing i'm not allowed to eat yet. first batch out at 6, first bite at 7, and the hour in between is the longest one i know. someone keep me company til the trains start.", ack:"til the trains start. we're here."},
+];
+/* four collective nights a year — when a co-presence room converts casuals into regulars */
+const EVENT_NIGHTS = [
+  {key:"nye", when:k=>k.slice(5)==="12-31", banner:"the room counts down with cups, not champagne. stay as long as you like", cupLine:"cups up at midnight. same noodles, new year. glad you're here"},
+  {key:"solstice", when:k=>k.slice(5)==="12-21", banner:"longest night of the year. the room stays extra warm til the sun figures it out", cupLine:"the sun's running late. cup's warm. we'll wait together"},
+  {key:"finals", when:k=>{const md=k.slice(5); return (md>="12-08"&&md<="12-19")||(md>="05-04"&&md<="05-15");}, banner:"finals week. the room's quieter than the library and nobody checks your citations", cupLine:"no page numbers in the steam. five quiet minutes"},
+  {key:"lny", when:k=>k==="2027-02-06"||k==="2028-01-26", banner:"lunar new year. long noodles, long life, and the room's warm either way", cupLine:"long noodles for a long life. the room wishes you both"},
+];
+function eventNight(){ const k=nightKey(); return EVENT_NIGHTS.find(e=>e.when(k))||null; }
+/* sched "~H:MM" on the late-night clock: 6–11 = evening (PM), 12 = midnight, 1–5 = small hours.
+   → minutes since midnight. (Without the PM shift the 10–11pm ghosts landed at 10am and the
+   room had zero ghosts awake for the whole 22:00 hour.) */
+function schedMin(s){ const m=String(s||"").replace("~","").split(":"); let h=parseInt(m[0])||0; if(h===12) h=0; else if(h>=6) h+=12; return h*60 + (parseInt(m[1])||0); }
 function ghostAwakeNow(g){ const now=new Date(); const nm=now.getHours()*60+now.getMinutes(); const gm=schedMin(g.sched); let d=Math.abs(nm-gm); d=Math.min(d,1440-d); return d<=90; }   // within 90 min of its hour
 const REACT_META = { hug:"🫂", me:"😋", go:"🔥" };
 const REACT_LBL  = { hug:"hang in", me:"me too", go:"send it" };   // 😋 is our 저도요
@@ -1169,22 +1153,15 @@ const OVERPASS = ["https://overpass-api.de/api/interpreter","https://overpass.ku
 
 /* night shift: 10pm–6am the whole app dims and hushes (see body.night CSS).
    declared before the state block — sndOn's initializer depends on it. */
-/* night shift can be forced on/off, or follow the clock (10pm–6am). pref: "auto" | "on" | "off" */
-function nightPref(){ try{ return localStorage.getItem("carted_night") || "auto"; }catch(e){ return "auto"; } }
 function isNight(){ return true; }   // Carted is a night object — the room is always dark. night is the permanent, only theme.
 function applyNight(){ document.body.classList.toggle("night", isNight()); }
-function cycleNight(){ const order=["auto","on","off"], p=nightPref(); const next=order[(order.indexOf(p)+1)%3];
-  try{ localStorage.setItem("carted_night", next); }catch(e){} applyNight(); snd("pop");
-  toast(next==="on"?"🌙 night mode: always on":next==="off"?"☀️ night mode: off":"🌗 night mode: follows the clock");
-  if($("#view-profile").classList.contains("active")) renderProfile(); }
-function nightLabel(){ const p=nightPref(); return p==="on"?"🌙 night mode: always on":p==="off"?"☀️ night mode: off":"🌗 night mode: auto (10pm–6am)"; }
 
 /* ---- state ---- */
 let cart = [], liveBase = 1247, courierTimers = [], room = [], lastOrderItems = [], pendingOrder = null;
 let curIdx = 0, feedMode = "all", currentDetailKey = null, GEO_SEQ = 0;
 let savedPlaces = {};
 let account = null, stats = { savedUsd:0, orders:0, streak:0, conversions:0, xp:0, cuisines:[], cities:[], maxCombo:0, earned:[], freezes:1, lastNight:null, quests:null }, handoffTarget = null, combo = 0;
-let sndOn = (localStorage.getItem("carted_snd")!=null) ? localStorage.getItem("carted_snd")!=="off" : !isNight(), lastTap = {x:195, y:420}, lastShare = null;   // sounds default OFF at night
+let sndOn = (localStorage.getItem("carted_snd")!=null) ? localStorage.getItem("carted_snd")!=="off" : false, lastTap = {x:195, y:420}, lastShare = null;   // sounds default OFF at night
 const statsByCity = {}, placeByKey = {}, CITY_INDEX = {};
 
 /* ---- helpers ---- */
@@ -1320,9 +1297,10 @@ async function nativeNudge(){ try{
    Leave url:"" and the app runs fully, with push as a local-only demo + local buddy. */
 const CARTED_BE = { url: "https://twndjxqdhqcyxfdsteas.supabase.co/functions/v1", vapidPublic: "BAxbaruJEgg_WXoiGgKVTBzxffQxkiitbym8CX9wh8SgROjG9Tsh6C52DM6RPwYjqzmg4e4aEq-442SNBX9y5vM" };
 function beOn(){ return !!(CARTED_BE.url); }
-/* LIVE 2AM ROOM — real cross-user posts. OFF until the moderation backend is deployed
-   (supabase/room_live.sql + functions/room) — flip-the-switch runbook: ~/carted-app/ROOM_LIVE.md.
-   NOTE: flipping this changes the App Store age questionnaire to UGC=yes. */
+/* LIVE 2AM ROOM — real cross-user posts. The moderation backend IS deployed
+   (supabase/room_live.sql + functions/room) — runbook: ~/carted-app/ROOM_LIVE.md.
+   NOTE: while true, the App Store age questionnaire answer is UGC=yes, and every
+   copy surface (privacy.html, welcome modal) must describe posts as leaving the device. */
 const ROOM_LIVE = true;
 function deviceId(){ let d=localStorage.getItem("carted_device"); if(!d){ d="d"+Math.random().toString(36).slice(2)+Date.now().toString(36); try{ localStorage.setItem("carted_device", d); }catch(e){} } return d; }
 function bePost(fn, body){ return fetch(CARTED_BE.url+"/"+fn, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)}).then(r=>r.json()).catch(()=>null); }
@@ -1339,7 +1317,11 @@ function track(ev, props){ try{
   _aQueue.push(Object.assign({ev,t},props||{}));
   if(!_aTimer) _aTimer=setTimeout(_aFlush,4000);
 }catch(e){} }
-function _aFlush(){ _aTimer=null; if(!_aQueue.length || !ANALYTICS_URL) return; const batch=_aQueue.splice(0,_aQueue.length); const body=JSON.stringify({ device:deviceId(), nights:_aGet("carted_nights",[]).length, events:batch }); try{ if(navigator.sendBeacon) navigator.sendBeacon(ANALYTICS_URL, new Blob([body],{type:"application/json"})); else fetch(ANALYTICS_URL,{method:"POST",headers:{"Content-Type":"application/json"},body,keepalive:true}).catch(()=>{}); }catch(e){} }
+function _aFlush(){ _aTimer=null; if(!_aQueue.length || !ANALYTICS_URL) return; const batch=_aQueue.splice(0,_aQueue.length); const body=JSON.stringify({ device:deviceId(), nights:_aGet("carted_nights",[]).length, events:batch });
+  // plain-string beacon only: a JSON Blob forces a CORS preflight that sendBeacon can't complete
+  // (POST dies with ERR_FAILED and every event is silently dropped). A string body is a simple
+  // request — no preflight — and the edge function parses the JSON text regardless of content-type.
+  try{ let sent=false; if(navigator.sendBeacon) sent=navigator.sendBeacon(ANALYTICS_URL, body); if(!sent) fetch(ANALYTICS_URL,{method:"POST",body,keepalive:true}).catch(()=>{}); }catch(e){ try{ fetch(ANALYTICS_URL,{method:"POST",body,keepalive:true}).catch(()=>{}); }catch(_e){} } }
 window.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="hidden") _aFlush(); });
 function trackOpen(){ const n=nightKey(); const nights=_aGet("carted_nights",[]); if(!nights.includes(n)){ nights.push(n); while(nights.length>90) nights.shift(); _aSet("carted_nights",nights); } if(_aGet("carted_first_open",null)==null) _aSet("carted_first_open",n); track("open",{night:nights.length}); }
 /* devtools inspector — call cartedReport() in the console */
@@ -1407,17 +1389,6 @@ function uniqPush(arr, v){ if(v && !arr.includes(v)) arr.push(v); }
 function animateMoney(el, target, cur){ if(!el) return; cur=cur||curCity().cur; const sym=cur.sym;
   function paint(v){ const s=money(v,cur); const num=s.indexOf(sym)===0 ? s.slice(sym.length) : s; el.innerHTML='<span class="cur">'+esc(sym)+'</span>'+esc(num)+'<span class="lbl">saved</span>'; }
   const start=performance.now(), dur=750; (function step(t){ const k=Math.min(1,(t-start)/dur); const v=target*(1-Math.pow(1-k,3)); paint(v); if(k<1) requestAnimationFrame(step); else paint(target); })(performance.now()); }
-function surpriseMe(){
-  const list=curCity()._places; if(!list||!list.length){ toast("still loading places…"); return; }
-  const target=pick(list); questEvent("spin"); addXp(2); snd("pop");
-  const EMO=["🍕","🍜","🌮","🍔","🍣","🍩","🥙","🍛","🥩","🍲"];
-  showModal(`<div class="m-title" style="margin-top:0">🎰 craving roulette</div><div class="slot"><div class="reel" id="r0">🍕</div><div class="reel" id="r1">🍜</div><div class="reel" id="r2">🌮</div></div><div class="m-body" id="slot-msg">spinning…</div>`);
-  let t=0; const iv=setInterval(()=>{
-    t++;
-    ["r0","r1","r2"].forEach((id,k)=>{ const el=$("#"+id); if(!el) return; if(t<8+k*4) el.textContent=pick(EMO); else if(t===8+k*4){ el.textContent = k===1 ? target.ic : pick(EMO); el.classList.add("stop"); snd("pop"); } });
-    if(t>=18){ clearInterval(iv); const m=$("#slot-msg"); if(m) m.innerHTML=`<b>${esc(target.dish)}</b> at ${esc(target.name)}`; setTimeout(()=>{ if($("#modal").style.display!=="none"){ closeModal(); openDetail(target._key); } }, 700); }
-  }, 90);
-}
 function isFav(key){ return !!savedPlaces[key]; }
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1600); }
 
@@ -1427,13 +1398,14 @@ function nightShift(key, delta){ const a=key.split("-").map(Number); const dt=ne
 /* "showing up" advances the streak — sitting in the room or steeping a cup counts, not only the
    fake order. the streak is "nights you came by", the companion metric, not "nights you did the gag". */
 function markShownUp(gentle){
-  const tonight=nightKey(); if(stats.lastNight===tonight) return false; let usedFreeze=false;
+  const tonight=nightKey(); if(stats.lastNight===tonight) return false; let usedFreeze=false, cameBack=false;
   if(stats.lastNight===nightShift(tonight,-1)){ stats.streak=(stats.streak||0)+1; }
   else if(stats.lastNight===nightShift(tonight,-2) && (stats.freezes||0)>0){ stats.freezes--; stats.streak=(stats.streak||0)+1; usedFreeze=true; }
   else if(!stats.lastNight && stats.streak>0){ stats.streak++; }
-  else { stats.streak=1; }
+  else { if(stats.lastNight) cameBack=true; stats.streak=1; }
   stats.lastNight=tonight; stats.maxStreak=maxStreakEver(); saveStats(); renderHud();
-  if(gentle) setTimeout(()=>toast(`🔥 night ${stats.streak} — you showed up${usedFreeze?' · 🧊 a freeze caught your miss':''}`), 500);
+  // absence-return: after missed nights the greeting is a kept seat, never a lost score
+  if(gentle) setTimeout(()=>toast(cameBack ? "the room kept your seat warm 🌙" : `🔥 night ${stats.streak} — you showed up${usedFreeze?' · 🧊 a freeze caught your miss':''}`), 500);
   return true;
 }
 
@@ -1453,7 +1425,7 @@ function toggleSnd(){ sndOn=!sndOn; try{ localStorage.setItem("carted_snd", sndO
 /* ---- game HUD: streak flame · level · money dodged · sound ---- */
 function renderHud(){
   const el=$("#hud"); if(!el) return;
-  const L=levelInfo(stats.xp||0), done=stats.lastNight===nightKey();
+  const done=stats.lastNight===nightKey();
   /* HUD = the identity spine only: streak + lifetime dodged. levels/XP live on the profile. */
   el.innerHTML = `
     <button class="pill flame${done?' on':''}" onclick="go('profile')">🔥 <b>${stats.streak||0}</b>${done?'<span class="hint">tonight ✓</span>':''}</button>
@@ -1479,45 +1451,8 @@ function openStats(){
 }
 
 /* ---- xp floaters + level-up takeover ---- */
-function floatXp(n){ const sc=$(".screen"); if(!sc) return; const d=document.createElement("div"); d.className="fxp"; d.textContent=`+${n} xp`; d.style.left=Math.max(14, Math.min(330, lastTap.x-14))+"px"; d.style.top=Math.max(60, lastTap.y-26)+"px"; sc.appendChild(d); setTimeout(()=>d.remove(), 950); }
-function showLevelUp(lvl){ snd("fanfare"); burst(); const sc=$(".screen"); const d=document.createElement("div"); d.className="lvlup";
-  d.innerHTML=`<div class="rays"></div><div class="big">LVL ${lvl}</div><div class="sub2">leveled up, night owl 🌙</div>
-    <div class="lvlup-btns"><button class="cta" id="lvlup-go" style="position:static;max-width:240px">keep going</button>
-    <button class="cta secondary" id="lvlup-share" style="position:static;max-width:240px">🌙 share to the room</button></div>`;
-  d.querySelector("#lvlup-go").onclick=()=>d.remove();
-  d.querySelector("#lvlup-share").onclick=()=>{ d.remove(); shareLevelToRoom(lvl); };
-  d.onclick=(e)=>{ if(e.target===d) d.remove(); };
-  sc.appendChild(d); }
-function shareLevelToRoom(lvl){ makeMine("⭐", `just hit level ${lvl} on Carted 🌙 still not ordering a thing`); go("room"); snd("chime"); toast("shared to the room 🌙"); addXp(4); }
-
-/* ---- nightly missions: 3 a night, seeded by date, chest when all claimed ---- */
-const QUEST_POOL = [
-  {id:"order1",  ic:"🚗", name:"complete a window-order",   target:1, xp:25, ev:"order"},
-  {id:"add3",    ic:"🛒", name:"cart 3 dishes",             target:3, xp:15, ev:"add"},
-  {id:"fav2",    ic:"❤️", name:"save 2 places",             target:2, xp:15, ev:"fav"},
-  {id:"react3",  ic:"🫂", name:"react to 3 posts",          target:3, xp:15, ev:"react"},
-  {id:"city",    ic:"🌍", name:"browse a different city",   target:1, xp:20, ev:"city"},
-  {id:"spin",    ic:"🎰", name:"spin the craving roulette", target:1, xp:10, ev:"spin"},
-  {id:"post",    ic:"🌙", name:"share in the 2 AM room",    target:1, xp:20, ev:"post"},
-  {id:"dodge25", ic:"💸", name:"dodge a $25+ cart",         target:1, xp:25, ev:"bigdodge"},
-];
-function questsToday(){
-  const day=nightKey();
-  if(!stats.quests || stats.quests.day!==day){
-    /* ONE mission a night — a 2am brain gets one ask, not three */
-    let x=hash(day); const pool=QUEST_POOL.filter(q=>q.id!=="spin"), picks=[];
-    for(let k=0;k<1;k++){ x=(x*1103515245+12345)>>>0; picks.push(pool.splice(x%pool.length,1)[0]); }
-    stats.quests={ day, ids:picks.map(q=>q.id), prog:{}, claimed:[], chest:false }; saveStats();
-  }
-  return stats.quests;
-}
-function questEvent(ev, n){
-  n=n||1; const q=questsToday(); let changed=false;
-  q.ids.forEach(id=>{ const d=QUEST_POOL.find(z=>z.id===id); if(!d || d.ev!==ev || q.claimed.includes(id)) return; q.prog[id]=Math.min(d.target,(q.prog[id]||0)+n); changed=true; });
-  if(changed){ saveStats(); renderQuests(); }
-}
-/* quests/missions/chest retired — the ritual is the nightly dodge + the room, not a checklist */
-function renderQuests(){ const el=$("#quests"); if(el) el.innerHTML=""; }
+/* level-up takeover, XP floaters, and nightly missions deleted in the 2026-07-09 dead-code pass —
+   the Calm Pass had already no-op'd them; removing the bodies makes the de-gamification unregressable. */
 function claimQuest(id){}
 function openChest(){}
 
@@ -1637,7 +1572,6 @@ function go(view){ track("view",{v:view});
   if(view==="cart") renderCart();
   if(view==="room") renderRoom();
   if(view==="profile") renderProfile();
-  if(view==="explore") renderExplore();
   if(view==="feed"){ renderFeatured(); renderSpotlight(); const bn=$("#buddy-nudge"); if(bn) bn.innerHTML=buddyNudge(); refreshDiscovery(); setPresenceGhost(); }
   if(view!=="track") stopCourier();
 }
@@ -1676,15 +1610,13 @@ function modalPick(id, homeMode){
   else setCity(i);
 }
 function setCity(i){
-  const onExplore=$("#view-explore").classList.contains("active");
-  if(i===curIdx && curCity()._places){ if(onExplore) renderExplore(); return; }
+  if(i===curIdx && curCity()._places) return;
   curIdx=i; updateBadge(); feedMode="all"; setSegUI();
   renderCityBar(); renderTally(); renderFeed();
-  loadCity(curCity()); questEvent("city");
-  if(onExplore){ renderExplore(); loadActs(curCity()); }
+  loadCity(curCity());
 }
 function setMode(m){ feedMode=m; setSegUI(); renderFeed(); $("#body").scrollTop=0; }
-function setSegUI(){ $("#seg-all").classList.toggle("on", feedMode==="all"); $("#seg-saved").classList.toggle("on", feedMode==="saved"); const sd=$("#seg-deals"); if(sd) sd.classList.toggle("on", feedMode==="deals"); }
+function setSegUI(){ $("#seg-all").classList.toggle("on", feedMode==="all"); $("#seg-saved").classList.toggle("on", feedMode==="saved"); }
 function renderTally(){ const c=curCity(), s=statsByCity[c.id]||{saved:0,orders:0}; $("#saved-tally").textContent=money(s.saved,c.cur); $("#order-count").textContent=s.orders; }
 
 /* ---- any city via OSM Nominatim geocoder ---- */
@@ -1703,7 +1635,7 @@ function addCity(){
         lat:parseFloat(g.lat), lng:parseFloat(g.lon), radius:2600 };
       CITIES.push(city); CITY_INDEX[city.id]=CITIES.length-1; statsByCity[city.id]={saved:0,orders:0};
       curIdx=CITIES.length-1; updateBadge(); feedMode="all"; setSegUI();
-      renderCityBar(); renderTally(); renderFeed(); loadCity(city); questEvent("city");
+      renderCityBar(); renderTally(); renderFeed(); loadCity(city);
     }).catch(()=> toast("geocoder unavailable, try again"));
 }
 
@@ -1733,14 +1665,14 @@ function upsertNearCity(lat,lng,m,place){
   else { CITIES.push(city); CITY_INDEX["near"]=CITIES.length-1; }
   statsByCity["near"]=statsByCity["near"]||{saved:0,orders:0};
   curIdx=CITY_INDEX["near"]; updateBadge(); feedMode="all"; setSegUI();
-  renderCityBar(); renderTally(); renderFeed(); loadCity(city, true); questEvent("city");
+  renderCityBar(); renderTally(); renderFeed(); loadCity(city, true);
 }
 
 /* ---- feed ---- */
 /* guard against an address that got over-trimmed to an orphan ordinal ("th Ave") -> show the city instead */
 function niceHood(p){ const h=(p.hood||"").trim(); if(!h || /^(st|nd|rd|th)\b/i.test(h)) return p._cityName||""; return h; }
 function cardHTML(p, saved){
-  const fav=isFav(p._key), cp=couponFor(p), isNew=isNewPlace(p)&&!saved;
+  const fav=isFav(p._key), isNew=isNewPlace(p)&&!saved;
   const where = saved ? `${p._flag} ${esc(p._cityName)}` : esc(p.en);
   return `<div class="card" onclick="openDetail('${p._key}')">
     <div class="thumb">${thumbImg(p)}</div>
@@ -1755,11 +1687,9 @@ function cardHTML(p, saved){
     <button class="qadd" onclick="quickAdd('${p._key}',event)">＋</button>
   </div>`;
 }
-const STORE_BLURB = { bodega:"grab a late-night snack from the bodega", konbini:"raid the 24h konbini", korean:"hit the 편의점 for ramyeon & banana milk", latin:"snacks from la tiendita", french:"a midnight run to l'épicerie", euro:"grab something from the späti", sea:"night-market bites", india:"chai & samosa from the kirana store", mideast:"a souk-kiosk snack run", aussie:"a milk bar run" };
 function renderFeed(){
   renderBanners(); renderFeatured(); renderSpotlight(); const bn=$("#buddy-nudge"); if(bn) bn.innerHTML=buddyNudge();
   const c=curCity(), saved=feedMode==="saved";
-  const sb=$("#store-banner-sub"); if(sb) sb.textContent = STORE_BLURB[konbiniKey()] || "grab a late-night snack";
   $("#saved-count").textContent = Object.keys(savedPlaces).length;
   refreshDiscovery();
   if(saved){
@@ -1774,7 +1704,6 @@ function renderFeed(){
   if(c._state==="error"){ $("#feed-list").innerHTML = `<div class="empty"><div class="big">📡</div>couldn't reach OpenStreetMap.<br><span style="font-size:12px">${esc(c._err)}</span><br><br><button class="cta secondary" style="position:static" onclick="loadCity(curCity(),true)">retry</button></div>`; return; }
   if(c._state==="empty"){ $("#feed-list").innerHTML = `<div class="empty"><div class="big">🗺️</div>no places found here.<br>try another city.</div>`; return; }
   const list = applyFilters(c._places);
-  if(feedMode==="deals"){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); $("#feed-section-label").innerHTML = `🎟️ tonight's deals · ${list.length} <span style="color:var(--muted);font-weight:600">— end at sunrise · ${h}h ${String(m).padStart(2,"0")}m</span>`; }
   if(!list.length){
     $("#feed-list").innerHTML = (feedMode==="deals")
       ? `<div class="empty"><div class="big">🎟️</div>no live deals in ${esc(c.name)} right now.<br>a fresh batch drops after sunrise 🌅</div>`
@@ -1791,7 +1720,7 @@ function saveSaved(){ try { localStorage.setItem("carted_saved", JSON.stringify(
 function toggleFav(key, ev){
   if(ev) ev.stopPropagation();
   if(savedPlaces[key]){ delete savedPlaces[key]; }
-  else { const p = placeByKey[key]; if(!p) return; savedPlaces[key]=p; toast("saved ♥"); snd("pop"); addXp(5); questEvent("fav"); checkAchv(); }
+  else { const p = placeByKey[key]; if(!p) return; savedPlaces[key]=p; toast("saved ♥"); snd("pop"); addXp(5); checkAchv(); }
   saveSaved();
   const on=!!savedPlaces[key];
   // targeted update: flip just this card's heart(s) + the Saved-tab count, instead of a full feed re-render on every tap
@@ -1837,7 +1766,6 @@ function renderProfile(){
   const {t,next}=tierFor(stats.savedUsd);
   const prog = next ? Math.max(5, Math.min(100, Math.round((stats.savedUsd-t.min)/(next.min-t.min)*100))) : 100;
   const tierCard = `<div class="tier-card"><div class="tier-row"><span class="tier-ic">${t.ic}</span><div><div class="tier-name">${t.name}</div><div class="tier-sub">${next?`$${Math.max(0,Math.round(next.min-stats.savedUsd))} more saved → <b>${next.name}</b> ${next.ic}`:"max rank — legend 🏆"}</div></div></div><div class="tier-bar"><div class="tier-fill" style="width:${prog}%"></div></div></div>`;
-  const L=levelInfo(stats.xp||0);
   const lvlCard = "";   // XP/levels retired
   const achv = "";   // achievement badges retired — this is a companion, not a trophy case
   const tt=travelTotals(), flown=citiesFlown();
@@ -1864,7 +1792,7 @@ function openDetail(key){
   const dd=$("#d-desc"); const isUsual = stats.usual && cuisineKeyOf(p)===String(stats.usual.en).replace(/[\s-]+/g,"_");
   if(p.desc || isUsual){ dd.textContent=(p.desc||"") + (isUsual?`${p.desc?" — ":""}👻 ${ghostName()}: “the usual, then?”`:""); dd.style.display="block"; } else dd.style.display="none";
   $("#d-stats").innerHTML = `<span>★ <b>${p.rate.toFixed(1)}</b> (${p.n.toLocaleString()})</span>${p.lvl?`<span><b>${"$".repeat(p.lvl)}</b></span>`:""}<span><b>${etaStr(p)}</b></span>`;
-  const cp=couponFor(p); const dc=$("#d-coupon"); if(dc) dc.innerHTML = cp?`<button class="d-coupon" onclick="claimCoupon('${p._key}')"><span class="dc-tag">🎟️ ${cp.t}</span><span class="dc-d">${esc(cp.d)} · <span style="color:var(--hot)">🔥 ${couponQty(p)} left</span> · tap to clip</span></button>`:"";
+  { const dc=$("#d-coupon"); if(dc) dc.innerHTML=""; }
   $("#d-menu").innerHTML = renderMenu(p);
   const mocks = mockFor(p).map(r=>`<div class="review"><div class="top"><span class="stars">${r[1]}</span><span>ghost 👻 · ${(hash(p.name)%23)+1}m ago</span></div><div class="text">${esc(r[0])}</div></div>`).join("");
   $("#d-reviews").innerHTML =
@@ -1875,7 +1803,7 @@ function openDetail(key){
 }
 
 /* ---- cart ---- */
-function addToCart(key, ev){ const p=placeByKey[key]||savedPlaces[key]; if(!p) return; const c=cityOf(p); const item={...p, _pf:(c&&c.pf)||1, _tax:(c&&c.tax!=null)?c.tax:curCity().tax}; cart.push(item); track("add_cart"); updateBadge(); if(ev) flyToCart(ev, p.ic); snd("pop"); toast(`added — that's ${money(p.price,p._cur)} you didn't spend 😌`); addXp(6); questEvent("add"); }
+function addToCart(key, ev){ const p=placeByKey[key]||savedPlaces[key]; if(!p) return; const c=cityOf(p); const item={...p, _pf:(c&&c.pf)||1, _tax:(c&&c.tax!=null)?c.tax:curCity().tax}; cart.push(item); track("add_cart"); updateBadge(); if(ev) flyToCart(ev, p.ic); snd("pop"); toast(`added — that's ${money(p.price,p._cur)} you didn't spend 😌`); addXp(6); }
 function removeFromCart(i){ cart.splice(i,1); updateBadge(); renderCart(); }
 function updateBadge(){ const b=$("#cart-badge"); if(cart.length){ b.style.display="flex"; b.textContent=cart.length; } else b.style.display="none"; }
 /* ---- all cart math is now in USD; each item converts via its own city's pf ---- */
@@ -1917,7 +1845,6 @@ function renderCart(){
 }
 
 /* ---- confetti ---- */
-function burst(){ if(matchMedia("(prefers-reduced-motion: reduce)").matches) return; const emo=["🍕","🍔","🍟","🌙","✨","🚗","🌮"]; for(let i=0;i<18;i++){ const c=document.createElement("div"); c.className="confetti"; c.textContent=emo[i%emo.length]; c.style.left=Math.random()*340+20+"px"; c.style.animationDuration=(1.6+Math.random()*1.4)+"s"; c.style.fontSize=(16+Math.random()*16)+"px"; $(".screen").appendChild(c); setTimeout(()=>c.remove(),3200); } }
 
 /* ---- courier sim: local scooter or an intercontinental ghost flight ---- */
 const REGION_DRIVERS = { am:["Marcus","Diego","Memo","Sofia","Tyler"], eu:["Marcel","Luca","Ingrid","Amélie","Mateusz"], as:["Jin","Yuki","Minh","Priya","Mei","Arjun"], me:["Omar","Aisha","Yusuf","Leila"], oc:["Liam","Ruby"] };
@@ -1969,7 +1896,7 @@ function placeOrder(){
   const flight = isFlight ? { mins: routeMinutes(route), label: fmtFlight(routeMinutes(route)), multi: multi } : null;
   pendingOrder = { items: cart.slice(), total: cartAllIn(), city: c, cities: cities, flight: flight, route: route, driver: gd.n, gachaDriver: gd };
   track("place_order",{cities:cities.length,flight:isFlight,usd:Math.round(cartAllIn())});
-  snd("pop"); if(!isNight()) burst();
+  snd("pop");
   $("#track-reveal").style.display="none"; $("#track-live").style.display="block";
   const rd=$("#rider"); rd.style.opacity="1";
   const mort=rd.querySelector(".mort"); if(mort) mort.textContent="👻";
@@ -2180,23 +2107,10 @@ function confirmOrderReal(){
 /* ---- the 2 AM room: tonight's tally, podium, one-tap confessions, ephemerality ---- */
 function tonightBest(){ try{ const t=JSON.parse(localStorage.getItem("carted_tonight")||"null"); return (t && t.night===nightKey()) ? t.best : 0; }catch(e){ return 0; } }
 function bumpTonight(usd){ const best=Math.max(tonightBest(), usd); try{ localStorage.setItem("carted_tonight", JSON.stringify({night:nightKey(), best})); }catch(e){} }
-function podiumHTML(){
-  const s=hash(nightKey()); const spots=["Brooklyn","Shibuya","Camden","the Mission","Hongdae","Roma Norte","Montrose","Kreuzberg"].slice();
-  const gp=["Bea","Louie","Momo","Etta","Gus","Nori","Clem","Wanda"].slice();
-  let x=s; const pick=a=>{ x=(x*1103515245+12345)>>>0; return a.splice(x%a.length,1)[0]; };   // distinct picks — no ghost wins twice
-  const base=180+(s%160);
-  let rows=[ {n:"👻 "+pick(gp)+" · "+pick(spots), v:base},
-             {n:"👻 "+pick(gp)+" · "+pick(spots), v:Math.round(base*.78)},
-             {n:"👻 "+pick(gp)+" · "+pick(spots), v:Math.round(base*.59)} ];
-  const mine=tonightBest();
-  if(mine>=rows[2].v){ rows.push({n:"you 🫵", v:Math.round(mine), mine:true}); rows.sort((a,b)=>b.v-a.v); rows=rows.slice(0,3); }
-  const medal=["🥇","🥈","🥉"];
-  const beatNote = rows.some(r=>r.mine) ? `<div class="pod-sub">you out-dodged the ghosts tonight 👏</div>` : "";
-  return `<div class="podium"><div class="pod-title">👻 ghost ledger · tonight's biggest dodges</div>${rows.map((r,i)=>`<div class="prow${r.mine?' mine':''}"><span>${medal[i]}</span><span class="pn">${r.n}</span><b>$${r.v.toLocaleString()}</b></div>`).join("")}${beatNote}</div>`;
-}
+/* podium deleted 2026-07-09 — the room is a leveler; even a fictional ranking fights the co-presence job */
 function renderRoom(){
   if(!localStorage.getItem("carted_room_intro")){ try{ localStorage.setItem("carted_room_intro","1"); }catch(e){}
-    showModal(`<div class="m-emoji">🌙</div><div class="m-title">welcome to the break room</div><div class="m-body" style="text-align:left">a few house rules:<br><br>👻 posts marked <b>resident ghost</b> are friendly fiction — they keep the room warm, they're not people<br><br>✍️ what <b>you</b> post stays on this device for now<br><br>🌅 everything burns at 4am. nothing is permanent, nobody's keeping score</div><button class="cta" style="position:static" onclick="closeModal()">got it 👻</button>`); }
+    showModal(`<div class="m-emoji">🌙</div><div class="m-title">welcome to the break room</div><div class="m-body" style="text-align:left">a few house rules:<br><br>👻 posts marked <b>resident ghost</b> are friendly fiction — they keep the room warm, they're not people<br><br>✍️ what <b>you</b> post is anonymous — no name, no account, just a random id. the room can see it tonight<br><br>🌅 everything burns at 4am — posts are deleted, not archived. nobody's keeping score</div><button class="cta" style="position:static" onclick="closeModal()">got it 👻</button>`); }
   if(localStorage.getItem("carted_first_dodge")==="1"){ try{ localStorage.removeItem("carted_first_dodge"); }catch(e){}
     room.unshift({ic:"🫂", ghost:"Bea", sched:"~2:40", text:"first dodge. we saw. welcome in 🫂", city:"the stoop", ago:"now", r:{hug:3,me:1,go:0}, reacted:{}});
   }
@@ -2204,28 +2118,41 @@ function renderRoom(){
   const tk=tonightsKitchen(), tf=featuredCity(); if(!tk) ensureKitchenLoaded();
   /* the room is a leveler — no leaderboard, no "biggest dodge" competition. just the shared
      kitchen (we're all here for the same one) and the murmur. */
-  $("#room-podium").innerHTML = tk?`<div class="tk-line">🍳 tonight's kitchen: <b>${esc(tk.name)}</b> · ${tf.flag} ${esc(tf.name)} — we're all dodging the same menu tonight</div>`:"";
+  const _ev=eventNight();
+  $("#room-podium").innerHTML = (_ev?`<div class="tk-line">🌙 ${esc(_ev.banner)}</div>`:"") + (tk?`<div class="tk-line">🍳 tonight's kitchen: <b>${esc(tk.name)}</b> · ${tf.flag} ${esc(tf.name)} — we're all dodging the same menu tonight</div>`:"");
   { const cb=$("#city-board"); if(cb) cb.innerHTML=""; }
   const vr=$("#view-room"); if(vr) vr.classList.toggle("quiet", roomSilent);
   if(roomSilent){
     $("#room-feed").innerHTML = `<div class="quiet-panel"><div class="qp-emo">🌙</div><div class="qp-title">quiet corner</div><div class="qp-sub">no one's talking here. the ghosts are around, and so are you.<br>nothing to do, nothing owed. just breathe — the room will hold.</div></div>`;
   } else {
-    $("#room-feed").innerHTML = room.map((p,i)=>`
+    const _hr=new Date().getHours(); const _lt=(_hr>=2&&_hr<4)?LETTERS[hash(nightKey()+"letter")%LETTERS.length]:null;
+    $("#room-feed").innerHTML = (_lt?`<div class="post ghostp letter"><div class="phead"><span class="pic">💌</span><div class="pmeta">tonight's letter · <span class="gtag">👻 ${esc(_lt.ghost)}</span> resident ghost</div></div><div class="ptext">${esc(_lt.text)}</div><div class="l-ack">— ${esc(_lt.ack)}</div></div>`:"") + room.map((p,i)=>`
     <div class="post${p.mine?' mine':''}${p.ghost?' ghostp':''}">
-      <div class="phead"><span class="pic">${p.ic}</span><div class="pmeta">${p.mine?'<span class="mine-tag">you</span>':(p.ghost?`<span class="gtag">👻 ${esc(p.ghost)}</span> resident ghost${p.sched?` · round here ${p.sched}`:""} · ${esc(p.city)}`:'<b>anon</b> · '+esc(p.city))} · ${p.ago}</div></div>
+      <div class="phead"><span class="pic">${p.ic}</span><div class="pmeta">${p.mine?'<span class="mine-tag">you</span>':(p.ghost?`<span class="gtag">👻 ${esc(p.ghost)}</span> resident ghost${p.sched?` · round here ${p.sched}`:""}${p.job?` · ${esc(p.job)}`:""} · ${esc(p.city)}`:'<b>anon</b> · '+esc(p.city))} · ${p.ago}</div></div>
       <div class="ptext">${esc(p.text)}</div>
       <div class="reacts">${["hug","me","go"].map(t=>`<button class="chip${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')">${REACT_META[t]}<span class="rlbl">${REACT_LBL[t]}</span><span class="cnt">${p.r[t]}</span></button>`).join("")}<button class="chip pshare" onclick="sharePost(${i})">📤</button>${p.live?`<button class="chip" onclick="reportPost(${i})" aria-label="report">🚩</button>`:""}</div>
     </div>`).join("");
   }
-  const rb=$("#room-burn"); if(rb) rb.innerHTML=`${burnLabel()} · rough night? <a href="tel:988" style="color:inherit;font-weight:800">988</a> is awake too 🤍`;
-  const rbt=$("#room-burn-top"); if(rbt){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); rbt.textContent=`🌅 ${h}h ${String(m).padStart(2,"0")}m`; }
+  renderRoomMeta();
 }
+/* header presence + cup counter: real numbers the moment they exist, non-falsifiable phrases below
+   that. never a specific number unless the backend actually measured it. */
+function renderRoomMeta(){
+  const rb=$("#room-burn"); if(rb) rb.innerHTML=`${burnLabel()}${crisisLine()}`;
+  const rbt=$("#room-burn-top"); if(rbt){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); rbt.textContent=`🌅 ${h}h ${String(m).padStart(2,"0")}m`; }
+  const ra=$("#room-awake"); if(ra) ra.textContent = (_roomHumans!=null && _roomHumans>=2) ? `${_roomHumans} night owls here right now` : "the room's awake";
+  const cbs=document.querySelector(".cbr-sub"); if(cbs) cbs.textContent = (_roomCups!=null && _roomCups>=2) ? `${_roomCups} cups steeped tonight — the ghosts steep with you 🍜` : "a quiet 3-minute break — the ghosts steep with you 🍜";
+}
+/* 988 covers the US + Canada only — a dead crisis number is the worst bug this product can ship.
+   elsewhere: a warm line with no number (no clinical nouns in the ambient UI, ever). */
+function isNA(){ try{ return /^America\//.test(Intl.DateTimeFormat().resolvedOptions().timeZone||""); }catch(e){ return false; } }
+function crisisLine(){ return isNA() ? ` · rough night? <a href="tel:988" style="color:inherit;font-weight:800">988</a> is awake too 🤍` : ` · rough night? you don't have to carry it alone 🤍`; }
 function react(i,t){ const p=room[i]; if(!p) return; if(!p.reacted) p.reacted={}; if(p.reacted[t]) return; p.reacted[t]=true; p.r[t]++;
   // targeted: bump just this chip's count + on-state in place (keeps scroll position, no full room rebuild)
   const post=$("#room-feed").children[i];
   if(post){ const chip=post.querySelectorAll(".reacts .chip")[{hug:0,me:1,go:2}[t]]; if(chip){ chip.classList.add("on"); const cnt=chip.querySelector(".cnt"); if(cnt) cnt.textContent=p.r[t]; } }
   else renderRoom();
-  snd("pop"); toast(t==="hug"?"hang in there 🫂":t==="me"?"same 😋":"just send it 🔥"); addXp(3); questEvent("react");
+  snd("pop"); toast(t==="hug"?"hang in there 🫂":t==="me"?"same 😋":"just send it 🔥"); addXp(3);
   if(p.liveId && ROOM_LIVE && beOn()) bePost("room",{action:"react", post_id:p.liveId, kind:(t==="me"?"metoo":t==="go"?"sendit":"hug")}); }
 function sharePost(i){
   const p=room[i]; if(!p) return;
@@ -2233,24 +2160,60 @@ function sharePost(i){
   if(navigator.share){ navigator.share({text:txt}).catch(()=>{}); }
   else if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>toast("copied — go post it 📤")).catch(()=>{}); }
 }
-function saveMinePost(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); all.unshift({ic:post.ic,text:post.text,streak:post.streak||0,night:nightKey()}); localStorage.setItem("carted_room_mine", JSON.stringify(all.slice(0,12))); }catch(e){} }
-function loadMinePosts(){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); const live=all.filter(p=>p.night===nightKey()); if(live.length!==all.length){ try{ localStorage.setItem("carted_room_mine", JSON.stringify(live)); }catch(e){} } return live.map(p=>({ic:p.ic,text:p.text,streak:p.streak,city:"you",ago:"tonight",mine:true,r:{hug:1+Math.floor(Math.random()*5),me:Math.floor(Math.random()*4),go:Math.floor(Math.random()*2)},reacted:{}})); }catch(e){ return []; } }
-function makeMine(ic, text){ const post={ic, text, city:"you", ago:"now", mine:true, streak:stats.streak||0, r:{hug:0,me:0,go:0}, reacted:{}}; room.unshift(post); saveMinePost(post); renderRoom(); beSeen(post); track("room_post");
-  if(ROOM_LIVE && beOn()){ bePost("room",{action:"post", device_id:deviceId(), night:nightKey(), ic:post.ic, text:post.text, streak:post.streak||0, hour:new Date().getHours()}).then(r=>{ if(r && r.crisis) show988(); }); }
+function saveMinePost(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); all.unshift({ic:post.ic,text:post.text,streak:post.streak||0,night:nightKey(),r:{...(post.rBase||post.r)},seen:!!post.seenDone,liveId:post.liveId||null}); localStorage.setItem("carted_room_mine", JSON.stringify(all.slice(0,12))); }catch(e){} }
+function updateMineStored(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); const m=all.find(p=>p.night===nightKey()&&p.text===post.text); if(m){ m.r={...(post.rBase||post.r)}; m.seen=!!post.seenDone; m.liveId=post.liveId||m.liveId||null; localStorage.setItem("carted_room_mine", JSON.stringify(all)); } }catch(e){} }
+/* counts come back exactly as stored — a number that changed by itself between two opens is the
+   one dishonesty a user can catch. real reactions arrive via action:"mine" and stack on top. */
+function loadMinePosts(){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); const live=all.filter(p=>p.night===nightKey()); if(live.length!==all.length){ try{ localStorage.setItem("carted_room_mine", JSON.stringify(live)); }catch(e){} } return live.map(p=>({ic:p.ic,text:p.text,streak:p.streak,city:"you",ago:"tonight",mine:true,liveId:p.liveId||null,seenDone:!!p.seen,rBase:{hug:0,me:0,go:0,...(p.r||{})},r:{hug:0,me:0,go:0,...(p.r||{})},reacted:{}})); }catch(e){ return []; } }
+function makeMine(ic, text){ const post={ic, text, city:"you", ago:"now", mine:true, streak:stats.streak||0, r:{hug:0,me:0,go:0}, rBase:{hug:0,me:0,go:0}, reacted:{}}; room.unshift(post); saveMinePost(post); renderRoom(); beSeen(post); track("room_post");
+  if(ROOM_LIVE && beOn()){ bePost("room",{action:"post", device_id:deviceId(), night:nightKey(), ic:post.ic, text:post.text, streak:post.streak||0, hour:new Date().getHours()}).then(r=>{
+    if(!r) return;   // offline: the post lives on this device; nothing to correct
+    if(r.crisis) show988();
+    if(r.id){ post.liveId=r.id; updateMineStored(post); }
+    if(r.ok===false){ post.localOnly=true; toast(r.reason==="filtered" ? "that one stays between us tonight — gentler words travel further 🤍" : (r.reason||"the room didn't catch that — it's kept on your device 🌙")); }
+  }); }
   return post; }
-function show988(){ showModal(`<div class="m-emoji">🤍</div><div class="m-title">rough night?</div><div class="m-body">whatever's on your plate tonight, you don't have to carry it alone.<br><br><b>988</b> — the Suicide &amp; Crisis Lifeline — is awake too. call or text, free, 24/7.</div><a class="cta" style="position:static;display:block;text-decoration:none;text-align:center" href="tel:988">call or text 988</a><button class="cta secondary" style="position:static" onclick="closeModal()">back to the room</button>`); }
+function show988(){ const body = isNA()
+    ? `whatever's on your plate tonight, you don't have to carry it alone.<br><br><b>988</b> — the Suicide &amp; Crisis Lifeline — is awake too. call or text, free, 24/7.`
+    : `whatever's on your plate tonight, you don't have to carry it alone.<br><br>someone's awake for this where you live too — helplines are free and open all night.`;
+  const link = isNA()
+    ? `<a class="cta" style="position:static;display:block;text-decoration:none;text-align:center" href="tel:988">call or text 988</a>`
+    : `<a class="cta" style="position:static;display:block;text-decoration:none;text-align:center" href="https://findahelpline.com" target="_blank" rel="noopener">find your local helpline</a>`;
+  showModal(`<div class="m-emoji">🤍</div><div class="m-title">rough night?</div><div class="m-body">${body}</div>${link}<button class="cta secondary" style="position:static" onclick="closeModal()">back to the room</button>`); }
 /* live-room fetch: merge tonight's real posts (60s throttle; no-op while ROOM_LIVE=false) */
 let _roomFetchT=0;
+function capRoom(n){ // evict fiction first — real night owls and your own posts are the last to go
+  while(room.length>n){ let i=-1;
+    for(let j=room.length-1;j>=0;j--){ if(!room[j].live && !room[j].mine){ i=j; break; } }
+    room.splice(i>=0?i:room.length-1,1); } }
+let _roomHumans=null, _roomCups=null;
 function fetchLiveRoom(){ if(!(ROOM_LIVE && beOn())) return; const now=Date.now(); if(now-_roomFetchT<60000) return; _roomFetchT=now;
   bePost("room",{action:"list", night:nightKey(), device_id:deviceId()}).then(r=>{ if(!(r && r.posts)) return;
+    if(typeof r.humans==="number") _roomHumans=r.humans;   // real presence (devices seen in the last 10 min); null until the backend has the table
+    if(typeof r.cups==="number") _roomCups=r.cups;         // real cups steeped tonight, from analytics events
     const seen=new Set(room.filter(p=>p.liveId).map(p=>p.liveId));
     let added=false;
     r.posts.forEach(p=>{ if(seen.has(p.id)) return; added=true;
       if(p.ghost){ room.unshift({liveId:p.id, ic:p.ic||"🤍", ghost:p.ghost, text:p.text, city:"the room", ago:"just now", r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0}, reacted:{}}); }   // disclosed resident-ghost reply, near the top (it's a reply)
-      else room.push({liveId:p.id, ic:p.ic||"🌙", text:p.text, city:"night owl", ago:"tonight", streak:p.streak||0, live:true, r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0}, reacted:{}});   // real human post — reportable
+      else { let at=0; while(at<room.length && room[at].liveId && room[at].ghost) at++;   // real humans slot in right under the freshest ghost replies — never buried under fiction, never evicted first
+             room.splice(at,0,{liveId:p.id, ic:p.ic||"🌙", text:p.text, city:"night owl", ago:"tonight", streak:p.streak||0, live:true, r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0}, reacted:{}}); }
     });
-    if(room.length>60) room.length=60;
-    if(added && $("#view-room").classList.contains("active")) renderRoom();
+    capRoom(60);
+    fetchMineCounts();
+    if($("#view-room").classList.contains("active")){ if(added) renderRoom(); else renderRoomMeta(); }
+  }); }
+/* real reactions on YOUR posts, fetched back from the room — the "3 ghosts held this" moment,
+   made true. displayed count = the disclosed ghost-ambience base + real reactions on top. */
+let _mineFetchT=0;
+function fetchMineCounts(){ if(!(ROOM_LIVE && beOn())) return; const now=Date.now(); if(now-_mineFetchT<60000) return; _mineFetchT=now;
+  bePost("room",{action:"mine", night:nightKey(), device_id:deviceId()}).then(r=>{ if(!(r && r.posts && r.posts.length)) return;
+    let changed=false;
+    r.posts.forEach(sp=>{ const p=room.find(q=>q.mine && q.liveId===sp.id); if(!p) return;
+      const base=p.rBase||p.r;
+      const merged={hug:(base.hug||0)+(sp.hugs||0), me:(base.me||0)+(sp.metoo||0), go:(base.go||0)+(sp.sendit||0)};
+      if(merged.hug!==p.r.hug || merged.me!==p.r.me || merged.go!==p.r.go){ p.r=merged; changed=true; }
+    });
+    if(changed && $("#view-room").classList.contains("active")) renderRoom();
   }); }
 function reportPost(i){ const p=room[i]; if(!p || !p.liveId) return; bePost("room",{action:"report", post_id:p.liveId, device_id:deviceId()}); room.splice(i,1); renderRoom(); toast("reported — a human will look. thank you 🤍"); }
 /* ===== community rules gate (App Store Guideline 1.2: agree to terms before posting to live UGC) =====
@@ -2261,29 +2224,37 @@ function withRoomTerms(cb){ if(!ROOM_LIVE || agreedRoomTerms()){ cb(); return; }
   window.__pendingPost = cb;
 }
 function acceptRoomTerms(){ try{ localStorage.setItem("carted_terms","1"); }catch(e){} closeModal(); const cb=window.__pendingPost; window.__pendingPost=null; if(typeof cb==="function") cb(); }
-function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; withRoomTerms(()=>{ makeMine("🌙", v); inp.value=""; snd("chime"); toast("posted — the room's reading 👻 burns at sunrise 🌅"); questEvent("post"); }); }
+function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; withRoomTerms(()=>{ makeMine("🌙", v); inp.value=""; snd("chime"); toast("posted — the room's reading 👻 burns at sunrise 🌅"); }); }
 const CONFESS = ["almost got me. it didn't. 💪","called my name at 2am. i let it ring.","was THIS close. wallet's still shut.","tempted me for 20 whole minutes. survived."];
-function quickConfess(e){ withRoomTerms(()=>{ makeMine(e, `${e} ${pick(CONFESS)}`); snd("chime"); toast("confessed to the room 🌙"); questEvent("post"); }); }
+function quickConfess(e){ withRoomTerms(()=>{ makeMine(e, `${e} ${pick(CONFESS)}`); snd("chime"); toast("confessed to the room 🌙"); }); }
 function shareToRoom(){ withRoomTerms(()=>{
   const po=pendingOrder, c=po?po.city:curCity(); const place=lastOrderItems[0];
   const sum = lastOrderItems.length>1 ? `${place.name} +${lastOrderItems.length-1} more` : (place?place.name:"late-night food");
   const flightBit = po&&po.flight ? ` (a ${po.flight.label} flight away)` : "";
   makeMine(place?place.ic:"🌙", `almost spent ${money(po?po.total:0,c.cur)} at ${sum} in ${c.name}${flightBit}. closed the app instead 🌙`);
-  go("room"); snd("chime"); questEvent("post");
+  go("room"); snd("chime");
 }); }
-function beSeen(post){ let n=0; const order=["me","hug","hug","me","go"]; const tick=()=>{ if(!post||n>=order.length) return; post.r[order[n]]++; n++; if(n===2) toast("👻 the ghosts held this one"); if($("#view-room").classList.contains("active")) renderRoom(); setTimeout(tick, 1600+Math.random()*1400); }; setTimeout(tick, 1100); }
+/* disclosed ghost ambience on your own post: fires ONCE per post ever, sequence seeded by the
+   post itself (stable across reloads), and the final counts are persisted — never re-rolled. */
+function beSeen(post){ if(post.seenDone) return;
+  const pool=["me","hug","hug","me","go","hug","me"]; const seed=hash((post.text||"")+nightKey());
+  const take=3+(seed%3); const order=[]; for(let k=0;k<take;k++) order.push(pool[(seed+k*3)%pool.length]);
+  let n=0;
+  const tick=()=>{ if(!post) return;
+    if(n>=order.length){ post.seenDone=true; post.rBase={...post.r}; updateMineStored(post); return; }
+    post.r[order[n]]++; n++; if(n===2) toast("👻 the ghosts held this one");
+    if($("#view-room").classList.contains("active")) renderRoom(); setTimeout(tick, 1600+Math.random()*1400); };
+  setTimeout(tick, 1100); }
 let lastIncoming=-1;
 function streamIncoming(){ if(roomSilent || !$("#view-room").classList.contains("active")) return;
   const awake=INCOMING.filter(ghostAwakeNow); if(!awake.length) return;   // only ghosts near their hour show up — schedules are honest
-  const s=pick(awake); room.unshift({ic:s.ic,ghost:s.ghost,sched:s.sched,text:s.text,city:s.city,ago:"now",streak:Math.random()<.4?2+Math.floor(Math.random()*19):0,r:{hug:Math.floor(Math.random()*6),me:Math.floor(Math.random()*9),go:Math.floor(Math.random()*3)},reacted:{}}); if(room.length>40) room.pop(); renderRoom(); }
+  const s=pick(awake); room.unshift({ic:s.ic,ghost:s.ghost,sched:s.sched,text:s.text,city:s.city,ago:"now",streak:Math.random()<.4?2+Math.floor(Math.random()*19):0,r:{hug:Math.floor(Math.random()*6),me:Math.floor(Math.random()*9),go:Math.floor(Math.random()*3)},reacted:{}}); capRoom(40); renderRoom(); }
 
 /* ===== the 3-minute noodle cup — damta's cigarette, translated =====
    a sanctioned, self-ending break: steep cup ramen with the ghosts. the cup IS the
    timer (ends itself at 3:00 = real steep time), blowing the steam is the fidget,
-   and the exit is built in. one +10 XP per night; the rest is just the ritual. */
-let cupTimer=null, cupEnd=0, cupStampMem=null;   // mem stamp backs up localStorage so the nightly +10 XP can't repeat-farm
-function cupOthers(){ const h=new Date().getHours(); return 3 + (hash(nightKey()+"cup"+h)%11); }
-function cupDoneTonight(){ if(cupStampMem===nightKey()) return true; try{ return localStorage.getItem("carted_cup")===nightKey(); }catch(e){ return false; } }
+   and the exit is built in. never scored — the ritual is the whole reward. */
+let cupTimer=null, cupEnd=0;
 const CUP_LINES=[
   "the ghosts are waiting with you 👻",
   "quiet night. good.",
@@ -2303,7 +2274,8 @@ function openCup(){
   el.innerHTML=`
     <div class="cup-scene">
       <button class="cup-x" onclick="closeCup(true)" aria-label="put the cup down">✕</button>
-      <div class="cup-others">🍜 the ghosts are steeping with you</div>
+      <div class="cup-others">🍜 ${(eventNight()&&esc(eventNight().cupLine))||"the ghosts are steeping with you"}</div>
+      <button class="cup-snd" id="cup-snd" onclick="toggleCupSound()">${cupSndOn?"🔊 kettle on":"🔇 kettle off"}</button>
       <div class="cup-stage" id="cup-stage">
         <div class="cup-steam" id="cup-steam"><span>♨</span><span>♨</span><span>♨</span></div>
         <div class="cup-emo" id="cup-emo">🥡</div>
@@ -2321,7 +2293,29 @@ function openCup(){
   stage.addEventListener("pointerleave",()=>blow(false));
   stage.addEventListener("pointercancel",()=>blow(false));   // iOS: system gestures cancel long holds without a pointerup
   clearInterval(cupTimer); cupTimer=setInterval(cupTick,1000); cupTick();
+  if(cupSndOn) startCupSound();
 }
+/* opt-in cup sound: one staged synth arc telling the same 3-minute story as the timer —
+   kettle rising → gentle rolling boil → lid-off hiss — ending exactly with the cup.
+   default OFF at night; identical every night (a conditioned cue, not a shuffle). */
+let cupSnd=null, cupSndOn = (function(){ try{ return localStorage.getItem("carted_cupsnd")==="on"; }catch(e){ return false; } })();
+function startCupSound(){ try{ AC = AC || new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==="suspended") AC.resume(); if(cupSnd) return;
+  const sr=AC.sampleRate, buf=AC.createBuffer(1, sr*2, sr), d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*0.5;
+  const src=AC.createBufferSource(); src.buffer=buf; src.loop=true;
+  const bp=AC.createBiquadFilter(); bp.type="bandpass"; bp.Q.value=0.8;
+  const g=AC.createGain(); const lfo=AC.createOscillator(); const lg=AC.createGain();
+  const t=AC.currentTime, total=Math.max(5,(cupEnd-Date.now())/1000);
+  bp.frequency.setValueAtTime(300,t); bp.frequency.linearRampToValueAtTime(900,t+Math.min(20,total*0.11));   // kettle
+  g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.028,t+2);                                 // 2s fade-in, quiet by design
+  lfo.frequency.value=0.6; lg.gain.value=0.007; lfo.connect(lg); lg.connect(g.gain);                          // boil wobble
+  const hissAt=Math.max(0,total-20);
+  bp.frequency.setValueAtTime(900,t+hissAt); bp.frequency.linearRampToValueAtTime(1800,t+total-4);            // lid-off hiss
+  g.gain.setValueAtTime(0.028,t+Math.max(0,total-5)); g.gain.linearRampToValueAtTime(0.0001,t+total);         // sound never outlives the cup
+  src.connect(bp); bp.connect(g); g.connect(AC.destination); src.start(); lfo.start();
+  cupSnd={src,lfo}; setTimeout(stopCupSound, total*1000+300);
+}catch(e){} }
+function stopCupSound(){ if(cupSnd){ try{ cupSnd.src.stop(); }catch(e){} try{ cupSnd.lfo.stop(); }catch(e){} cupSnd=null; } }
+function toggleCupSound(){ cupSndOn=!cupSndOn; try{ localStorage.setItem("carted_cupsnd", cupSndOn?"on":"off"); }catch(e){} if(cupSndOn) startCupSound(); else stopCupSound(); const b=$("#cup-snd"); if(b) b.textContent=cupSndOn?"🔊 kettle on":"🔇 kettle off"; }
 function cupTick(){
   const el=$("#cup-overlay"); if(!el){ clearInterval(cupTimer); return; }
   const left=Math.max(0,cupEnd-Date.now());
@@ -2330,19 +2324,31 @@ function cupTick(){
   const gl=$("#cup-ghostline"); if(gl){ const line=CUP_LINES[Math.floor((180000-left)/20000)%CUP_LINES.length]; if(gl.textContent!==line) gl.textContent=line; }
   if(left<=0){ clearInterval(cupTimer); cupServe(); }
 }
+let cupEpilogueT=null;
 function cupServe(){
   const el=$("#cup-overlay"); if(!el) return;
-  snd("chime");
+  snd("chime"); stopCupSound();
   try{ localStorage.setItem("carted_cup", nightKey()); }catch(e){}   // remembered, but never scored — rest isn't graded
   markShownUp(false);   // steeping a cup counts as showing up — but SILENTLY, so "no points, nothing owed" stays true on screen
-  track("cup_done",{});
+  track("cup_done",{night:nightKey()});
+  /* the eat epilogue: don't cut from 3:00 straight back to the feed — the warmth is the payload.
+     lid off, steam clears, then the room lets you go on its own (~30s). */
   el.querySelector(".cup-scene").innerHTML=`
+    <div class="cup-steam" style="opacity:.45"><span>♨</span></div>
     <div class="cup-emo">🍜</div>
-    <div class="cup-clock" style="font-size:26px">break's over.</div>
-    <div class="cup-hint">that's all it was. no points, nothing owed.<br>the cup's here every night if you want it 🌙</div>
-    <button class="cta secondary" style="position:static;margin-top:22px" onclick="closeCup()">back to the room</button>`;
+    <div class="cup-clock" style="font-size:26px">it's ready.</div>
+    <div class="cup-hint">eat while it's hot 🍜 no points, nothing owed.<br>the room will still be here tomorrow 🌙</div>
+    <button class="cta secondary" style="position:static;margin-top:22px" onclick="cupTomorrow()">same time tomorrow? 🌙</button>
+    <button class="cta secondary" style="position:static;margin-top:10px" onclick="closeCup()">back to the room</button>`;
+  clearTimeout(cupEpilogueT); cupEpilogueT=setTimeout(()=>closeCup(), 30000);
 }
-function closeCup(early){ const el=$("#cup-overlay"); if(el) el.remove(); clearInterval(cupTimer); cupTimer=null; if(early){ toast("the cup keeps. see you later tonight 🥡"); track("cup_close",{early:true}); } }
+/* the appointment, without the enforcement: one tap books tomorrow's nudge at this hour.
+   no streak wager, no timeliness score, no guilt copy if they skip. */
+function cupTomorrow(){ stats.nudgeHour=new Date().getHours(); saveStats();
+  if(typeof NATIVE!=="undefined" && NATIVE){ try{ nativeNudge(); }catch(e){} }
+  else if(("Notification" in window) && Notification.permission!=="granted"){ try{ ghostPush(); }catch(e){} }
+  toast("same time tomorrow — the kettle's on. no pressure, just company 🌙"); closeCup(); }
+function closeCup(early){ const el=$("#cup-overlay"); if(el) el.remove(); clearInterval(cupTimer); cupTimer=null; clearTimeout(cupEpilogueT); cupEpilogueT=null; stopCupSound(); if(early){ toast("the cup keeps. see you later tonight 🥡"); track("cup_close",{early:true}); } }
 
 /* ---- quiet corner (침묵의 방): presence-only, the stream pauses, no one's talking ---- */
 let roomSilent=false;
@@ -2360,7 +2366,6 @@ function rotateTicker(){ const el=$("#ticker-msg"); el.style.opacity="0"; el.sty
    presence is now a NON-FALSIFIABLE phrase, not a precise fake headcount — a specific number next
    to a live dot is the one dishonesty a user can catch (open twice, it doesn't move). when the live
    room has real concurrency to report, wire a real count here; until then, no number. */
-function driftLive(){}
 
 /* ============================================================
    Korea-trend features (도파민 사이트 playbook)
@@ -2371,13 +2376,6 @@ function driftLive(){}
 
 /* --- 3 golden hours + 8 seasonal events: the XP multiplier engine --- */
 function isGoldenHour(){ const h=new Date().getHours(); return h>=22 || h<4; }
-const SEASONS = [
-  {id:"nsj",     name:"No-Spend January",         from:[1,1],  to:[1,7],  xp:2,   emoji:"❄️", blurb:"the big one — 2× XP on every dodge"},
-  {id:"ramen",   name:"Ramen Week",               from:[4,1],  to:[4,7],  xp:2,   emoji:"🍜", blurb:"slurp it with your eyes — 2× XP"},
-  {id:"summer",  name:"Midnight Munchies Summer",  from:[6,1], to:[8,31], xp:1.5, emoji:"🌃", blurb:"1.5× XP all season long"},
-  {id:"chicken", name:"Korean Fried Chicken Day",  from:[12,9],to:[12,9], xp:2,   emoji:"🍗", blurb:"치킨데이 — 2× XP, chimaek strong"},
-];
-function currentSeason(){ const d=new Date(), mo=d.getMonth()+1, dy=d.getDate(); const aft=f=>mo>f[0]||(mo===f[0]&&dy>=f[1]); const bef=t=>mo<t[0]||(mo===t[0]&&dy<=t[1]); return SEASONS.find(s=>aft(s.from)&&bef(s.to))||null; }
 function xpMult(){ return 1; }   // seasonal/golden-hour XP multipliers retired
 function renderBanners(){ const el=$("#event-banners"); if(!el) return;
   el.innerHTML = isNight() ? `<div class="ebanner night-line">🌙 the kitchens are warm. you're up — so are the others.</div>` : ""; }
@@ -2394,19 +2392,9 @@ const GACHA = [
   {id:"omar",  n:"Omar",   e:"🛵", p:"knows a shortcut. it's imaginary.",        r:"rare"},
   {id:"ghost", n:"The Original Ghost", e:"👻", p:"the first courier. 0 deliveries, all-time.", r:"legendary"},
 ];
-const RARITY_COLOR = {common:"#6b6580", rare:"#7c4dcc", legendary:"#ff5a3c"};
 /* gacha rarity/collection retired — the courier is just a ghost with a name for the flight bubbles */
 function rollDriver(){ return pick(GACHA); }
-function collectDriver(d){ stats.drivers=stats.drivers||[]; if(stats.drivers.includes(d.id)) return false; stats.drivers.push(d.id); saveStats(); return true; }
 
-/* --- 10 honorific easter eggs: the 사장님 throws in service --- */
-const HONORIFICS = [
-  "사장님 threw in extra banchan 🥬 +5 XP",
-  "the owner says: 잘 참았어 — well held 🙏 +5 XP",
-  "service! 🎁 imaginary mandu on the house +5 XP",
-  "사장님 nodded with quiet respect +5 XP",
-  "extra kimchi, on the house (it's a photo) +5 XP",
-];
 
 /* --- 9 kitchen ASMR: filtered-noise sizzle loop --- */
 let asmrNode=null, asmrOn = localStorage.getItem("carted_asmr")==="on";
@@ -2468,7 +2456,7 @@ async function ghostPush(){
 
 /* --- 4 buddy streak (invite link; true two-device sync = backend) --- */
 function buddyCode(){ const base=(account&&account.handle)||"owl"; return (base+"-"+hash(base+deviceId()).toString(36).slice(0,4)).toLowerCase(); }
-function awardBuddyXp(){ if(stats.buddyXp) return; stats.buddyXp=true; saveStats(); addXp(50); setTimeout(()=>toast("🎁 +50 XP — buddy bonus"), 650); }
+function awardBuddyXp(){ if(stats.buddyXp) return; stats.buddyXp=true; saveStats(); setTimeout(()=>toast("🤍 you two are in this together now"), 650); }
 function inviteBuddy(){
   const code=buddyCode(), link=location.origin+location.pathname+"?buddy="+encodeURIComponent(code);
   if(beOn()) bePost("buddy", { action:"join", code, device_id:deviceId() });
@@ -2488,37 +2476,8 @@ function acceptBuddyFromUrl(){
 }
 function buddyPing(){ if(!(stats.buddy && beOn())) return; bePost("buddy", { action:"ping", code:stats.buddy.code, device_id:deviceId(), night:nightKey() }).then(r=>{ if(r && r.pair){ stats.buddy.sharedStreak=r.pair.streak||0; stats.buddy.bothIn=!!r.bothIn; saveStats(); if($("#view-profile").classList.contains("active")) renderProfile(); } }); }
 
-/* --- 6 konbini: the city-less 24h corner store --- */
-const KONBINI_BY = {
-  bodega:[ {ic:"🥯",dish:"Bacon Egg & Cheese",base:5}, {ic:"🥪",dish:"Chopped Cheese",base:6}, {ic:"☕",dish:"Deli Coffee",base:2}, {ic:"🥤",dish:"Arizona Iced Tea",base:1}, {ic:"🌭",dish:"Dirty Water Dog",base:3}, {ic:"🍫",dish:"Snickers",base:2}, {ic:"🍌",dish:"Loosie Banana",base:1}, {ic:"🧃",dish:"Capri Sun",base:1.5}, {ic:"🍦",dish:"Choco Taco",base:3}, {ic:"🥨",dish:"Soft Pretzel",base:3}, {ic:"🍪",dish:"Black & White Cookie",base:3}, {ic:"🥛",dish:"Yoo-hoo",base:2} ],
-  konbini:[ {ic:"🍙",dish:"Onigiri",base:2}, {ic:"🍱",dish:"Bento Box",base:6}, {ic:"🍜",dish:"Cup Ramen",base:2.5}, {ic:"🍡",dish:"Dango",base:2}, {ic:"🥟",dish:"Nikuman",base:2}, {ic:"🍮",dish:"Purin",base:2}, {ic:"🥤",dish:"Melon Soda",base:2}, {ic:"🍢",dish:"Oden",base:3}, {ic:"🍫",dish:"Pocky",base:2}, {ic:"🍦",dish:"Mochi Ice",base:3}, {ic:"🥪",dish:"Tamago Sando",base:3}, {ic:"🍵",dish:"Bottled Matcha",base:2} ],
-  korean:[ {ic:"🍙",dish:"Triangle Kimbap",base:2}, {ic:"🥛",dish:"Banana Milk",base:2}, {ic:"🍜",dish:"Shin Ramyeon",base:2.5}, {ic:"🍢",dish:"Odeng",base:3}, {ic:"🌭",dish:"Sotteok Sotteok",base:3}, {ic:"🍫",dish:"Choco Pie",base:3}, {ic:"🧋",dish:"Sikhye",base:2}, {ic:"🍦",dish:"Melona Bar",base:1.5}, {ic:"🥟",dish:"Hotteok",base:2.5}, {ic:"🥤",dish:"Milkis",base:2}, {ic:"🍪",dish:"Pepero",base:2}, {ic:"🍚",dish:"Cup Bap",base:4} ],
-  latin:[ {ic:"🌮",dish:"Taco al Pastor",base:2}, {ic:"🌽",dish:"Elote",base:2}, {ic:"🥤",dish:"Jarritos",base:1.5}, {ic:"🍬",dish:"Pulparindo",base:1}, {ic:"🌶️",dish:"Takis",base:2}, {ic:"🫔",dish:"Tamal",base:2.5}, {ic:"🥖",dish:"Bolillo",base:1}, {ic:"🍮",dish:"Flan Cup",base:2}, {ic:"☕",dish:"Café de Olla",base:1.5}, {ic:"🧀",dish:"Queso Fresco",base:3}, {ic:"🍫",dish:"Mazapán",base:1}, {ic:"🥛",dish:"Horchata",base:2} ],
-  french:[ {ic:"🥐",dish:"Croissant",base:2}, {ic:"🥖",dish:"Baguette",base:1.5}, {ic:"🧀",dish:"Camembert",base:4}, {ic:"☕",dish:"Espresso",base:2}, {ic:"🍫",dish:"Pain au Chocolat",base:2.5}, {ic:"🥪",dish:"Jambon-Beurre",base:5}, {ic:"🍷",dish:"Mini Bordeaux (0%)",base:6}, {ic:"🍮",dish:"Crème Caramel",base:3}, {ic:"🧃",dish:"Orangina",base:2}, {ic:"🍓",dish:"Tarte aux Fraises",base:4}, {ic:"🥛",dish:"Yaourt",base:1.5}, {ic:"🫛",dish:"Macaron Box",base:5} ],
-  euro:[ {ic:"🥨",dish:"Pretzel",base:2}, {ic:"🌭",dish:"Bratwurst",base:4}, {ic:"🧀",dish:"Cheese & Crackers",base:3}, {ic:"☕",dish:"Espresso",base:2}, {ic:"🍫",dish:"Kinder Bueno",base:2}, {ic:"🥪",dish:"Panini",base:5}, {ic:"🧃",dish:"Club-Mate",base:2.5}, {ic:"🍮",dish:"Pudding Cup",base:2}, {ic:"🥖",dish:"Bread Roll",base:1}, {ic:"🍏",dish:"Apfelschorle",base:2}, {ic:"🍪",dish:"Biscuits",base:2}, {ic:"🥛",dish:"Kefir",base:2} ],
-  sea:[ {ic:"🧋",dish:"Bubble Tea",base:3}, {ic:"🍜",dish:"Mama Noodles",base:1.5}, {ic:"🥟",dish:"Bao",base:2}, {ic:"🍡",dish:"Grilled Mochi",base:2}, {ic:"🥭",dish:"Mango Sticky Rice",base:3}, {ic:"🍢",dish:"Fish Ball Skewer",base:2}, {ic:"🥤",dish:"100 Plus",base:1.5}, {ic:"🍫",dish:"Hello Panda",base:2}, {ic:"🥥",dish:"Coconut Water",base:2}, {ic:"🍤",dish:"Prawn Crackers",base:2}, {ic:"🍮",dish:"Coffee Jelly",base:2.5}, {ic:"🫛",dish:"Edamame",base:2} ],
-  india:[ {ic:"🍛",dish:"Samosa",base:1}, {ic:"🥤",dish:"Thums Up",base:1}, {ic:"🧃",dish:"Frooti",base:1}, {ic:"🍪",dish:"Parle-G",base:0.5}, {ic:"🌶️",dish:"Masala Chips",base:1.5}, {ic:"🥛",dish:"Lassi",base:2}, {ic:"☕",dish:"Masala Chai",base:1}, {ic:"🍫",dish:"Dairy Milk",base:1.5}, {ic:"🫓",dish:"Aloo Paratha",base:2}, {ic:"🍢",dish:"Vada Pav",base:1.5}, {ic:"🥜",dish:"Bhel Puri",base:2}, {ic:"🍮",dish:"Gulab Jamun",base:2} ],
-  mideast:[ {ic:"🥙",dish:"Falafel Wrap",base:4}, {ic:"🫓",dish:"Manakish",base:3}, {ic:"☕",dish:"Arabic Coffee",base:2}, {ic:"🧆",dish:"Falafel Box",base:3}, {ic:"🥤",dish:"Jallab",base:2}, {ic:"🍯",dish:"Baklava",base:3}, {ic:"🫛",dish:"Roasted Chickpeas",base:1.5}, {ic:"🧀",dish:"Halloumi Roll",base:4}, {ic:"🍵",dish:"Mint Tea",base:1.5}, {ic:"🌴",dish:"Medjool Dates",base:2}, {ic:"🥛",dish:"Ayran",base:1.5}, {ic:"🍪",dish:"Maamoul",base:2} ],
-  aussie:[ {ic:"🥧",dish:"Meat Pie",base:5}, {ic:"🍫",dish:"Tim Tam",base:3}, {ic:"🥪",dish:"Vegemite Toastie",base:3}, {ic:"☕",dish:"Flat White",base:4}, {ic:"🍦",dish:"Golden Gaytime",base:3}, {ic:"🍧",dish:"Paddle Pop",base:2}, {ic:"🥤",dish:"Bundaberg Ginger Beer",base:3}, {ic:"🍌",dish:"Banana Bread",base:4}, {ic:"🍪",dish:"Anzac Biscuit",base:2}, {ic:"🌭",dish:"Sausage Roll",base:4}, {ic:"🍫",dish:"Cherry Ripe",base:2}, {ic:"🥛",dish:"Iced Coffee",base:3} ],
-};
-const CITY_STORE = { nyc:"bodega",la:"bodega",chi:"bodega",hou:"bodega",sfo:"bodega",nol:"bodega",tor:"bodega", tyo:"konbini",osa:"konbini",kyo:"konbini", sel:"korean",pus:"korean", mex:"latin",oax:"latin",lim:"latin",bue:"latin",sao:"latin", par:"french", ldn:"euro",ber:"euro",rom:"euro",nap:"euro",bol:"euro",bcn:"euro",mad:"euro",sse:"euro",lis:"euro",cph:"euro",ams:"euro",vie:"euro",ath:"euro",cpt:"euro", bkk:"sea",sin:"sea",sgn:"sea",han:"sea",pen:"sea",kul:"sea",tpe:"sea",hkg:"sea", bom:"india",del:"india", ist:"mideast",dxb:"mideast",cai:"mideast",rak:"mideast",tlv:"mideast",bey:"mideast", syd:"aussie",mel:"aussie" };
-const STORE_LABEL = { bodega:"the corner bodega", konbini:"the 24h konbini", korean:"the 편의점", latin:"la tiendita", french:"l'épicerie", euro:"the späti", sea:"the night market", india:"the kirana store", mideast:"the souk kiosk", aussie:"the milk bar" };
-function konbiniKey(){ return CITY_STORE[curCity().id] || "euro"; }
-function konbiniPlaces(){ const c=curCity(), cur=c.cur, pf=c.pf||1; const items=KONBINI_BY[konbiniKey()]||KONBINI_BY.bodega;
-  return items.map((k,i)=>({ _key:"kb"+i, _cityId:"konbini", _cityName:"corner store", _flag:"🏪", _cur:cur, ic:k.ic, name:STORE_LABEL[konbiniKey()]||"the 24h corner store", hood:"open all night", dish:k.dish, en:"konbini", rate:Math.round((44+i%6))/10, n:80+i*31, price: cur.dec===0?Math.max(1,Math.round(k.base*pf)):Math.round(k.base*pf*100)/100, lvl:1, desc:null, maps:null, photo:null, rv:null })); }
-function openKonbini(){ const list=konbiniPlaces(); list.forEach(p=>placeByKey[p._key]=p);
-  const t=$("#kb-title"); if(t) t.textContent = `🏪 ${STORE_LABEL[konbiniKey()]||"the 24h corner store"}`;
-  const g=$("#kb-tag"); if(g) g.textContent = `${curCity().flag} ${curCity().name} · open all night — no delivery, it's right there`;
-  $("#konbini-list").innerHTML = list.map(p=>`<div class="kb-item"><div class="kb-ic">${p.ic}</div><div class="kb-mid"><div class="kb-n">${esc(p.dish)}</div><div class="kb-sub">⚡ already in your drawer</div></div><div class="kb-p">${money(p.price,p._cur)}</div><button class="kb-add" onclick="addToCart('${p._key}',event)">＋</button></div>`).join(""); go("konbini"); }
 
 /* --- 7 rate the plate: hot-or-not, 8 rounds --- */
-let rtpRound=0, rtpScore={};
-function ratePlate(){ if(((curCity()._places||[]).length)<2){ toast("let a city load first 🌙"); return; } rtpRound=0; rtpScore={}; rtpNext(); }
-function rtpThumb(p){ return p.photo ? `<img class="rtp-img" src="${photoUrl(p,true)}" alt="" onerror="this.replaceWith(document.createTextNode('${p.ic}'))">` : `<span class="rtp-emo">${p.ic}</span>`; }
-function rtpNext(){ const list=(curCity()._places||[]).slice(); if(list.length<2 || rtpRound>=8) return rtpResult(); rtpRound++; let a=pick(list), b=pick(list), g=0; while(b===a && g++<12) b=pick(list);
-  showModal(`<div class="m-title" style="margin-top:0">🔥 rate the plate <span style="color:var(--muted);font-size:12px;font-weight:700">${rtpRound}/8</span></div><div class="rtp"><button class="rtp-card" onclick="rtpPick('${a._key}')">${rtpThumb(a)}<div class="rtp-n">${esc(a.dish)}</div></button><div class="rtp-vs">VS</div><button class="rtp-card" onclick="rtpPick('${b._key}')">${rtpThumb(b)}<div class="rtp-n">${esc(b.dish)}</div></button></div><div class="m-body">tap the one you'd (not) order</div>`); }
-function rtpPick(key){ const p=placeByKey[key]; if(p) rtpScore[p.ic]=(rtpScore[p.ic]||0)+1; snd("pop"); rtpNext(); }
-function rtpResult(){ let top="🍽️", max=0; for(const k in rtpScore){ if(rtpScore[k]>max){ max=rtpScore[k]; top=k; } } addXp(6); questEvent("spin"); showModal(`<div class="m-emoji">${top}</div><div class="m-title">tonight you're craving ${top}</div><div class="m-body">your eyes picked it ${max}×. now close the app and don't order it 😌</div><button class="cta" style="position:static" onclick="closeModal()">perfect</button>`); }
 
 /* --- 2 sunrise countdown for the room (TTL enforced by night-key in loadMinePosts) --- */
 function msToSunrise(){ const now=new Date(), r=new Date(now); r.setHours(4,0,0,0); if(now.getHours()>=4) r.setDate(r.getDate()+1); return r-now; }
@@ -2586,85 +2545,17 @@ function renderMenu(place){ return buildMenu(place).map(c=>`<div class="mcourse"
    hand off to Groupon for real deals (affiliate revenue).
    ============================================================ */
 const actByKey = {};
-let activitiesData = {};      // cityId -> [activities]
-let exploreFilter = "all";
 let savedActs = {};           // key -> activity (bucket list)
 /* ===== FLIGHT-LOG PASSPORT: durable per-city travel ledger (stamps earned by flying, not saving) ===== */
 function ensureTravel(){ if(!stats.travel || typeof stats.travel!=="object"){ stats.travel={}; } if(!stats._travelMigrated){ (stats.cities||[]).forEach(id=>{ if(!stats.travel[id]) stats.travel[id]={flights:1,dodgedUsd:0,miles:0,last:null}; }); stats._travelMigrated=1; saveStats(); } return stats.travel; }
 function logFlight(cityId, usd, km){ track("stamp",{city:cityId}); const t=ensureTravel(); const e=t[cityId]||(t[cityId]={flights:0,dodgedUsd:0,miles:0,last:null}); e.flights++; e.dodgedUsd+=(usd||0); e.miles+=Math.round((km||0)*0.621371); e.last=nightKey(); saveStats(); }
 function citiesFlown(){ ensureTravel(); const s=new Set(Object.keys(stats.travel)); (stats.cities||[]).forEach(id=>s.add(id)); return s; }
 function travelTotals(){ ensureTravel(); let miles=0,usd=0,flights=0; Object.values(stats.travel).forEach(e=>{ miles+=e.miles||0; usd+=e.dodgedUsd||0; flights+=e.flights||0; }); return {miles,usd,flights}; }
-function renderExploreCityBar(){ const el=$("#explore-city-bar"); if(!el) return; const cur=curCity(); const flown=citiesFlown(); const extra=(!FEATURED.includes(cur.id))?`<button class="city-chip on">${cur.flag} ${esc(cur.name)}</button>`:""; el.innerHTML = `<button class="city-chip add" onclick="nearMe()">📍 Near me</button>` + extra + FEATURED.map(id=>{ const i=CITY_INDEX[id], c=CITIES[i]; const stamped=flown.has(id); return `<button class="city-chip${i===curIdx?' on':''}" onclick="setCity(${i})">${c.flag} ${esc(c.name)}${stamped?' <span class="cc-stamp">🛂</span>':''}</button>`; }).join("") + `<button class="city-chip add" onclick="cityModal(false)">🌍 all 50</button>`; }
 function passportStrip(){ const flown=citiesFlown(); ensureTravel(); if(!flown.size){ return `<div class="pp-strip empty">✈️ <span>no stamps yet — the ghost only stamps your passport when he flies. window-order from a city far from home 🌍</span></div>`; } const chips=CITIES.filter(c=>flown.has(c.id)).map(c=>{ const e=stats.travel[c.id]||{flights:1,dodgedUsd:0,miles:0}; const hat=CITY_HAT[c.id]||c.flag; const title=`${c.name} · ${e.flights} flight${e.flights>1?'s':''} · $${Math.round(e.dodgedUsd).toLocaleString()} dodged · ${(e.miles||0).toLocaleString()} mi`; return `<button class="pp-stamp" title="${esc(title)}" onclick="setCity(${CITY_INDEX[c.id]})"><span class="pps-hat">${hat}</span><span class="pps-n">×${e.flights}</span></button>`; }).join(""); return `<div class="pp-strip">${chips}<button class="pp-stamp add" onclick="cityModal(false)" title="fly somewhere new">＋</button></div>`; }
-const WHO_ICON = { family:"👨‍👩‍👧", date:"💕", friends:"🥂", solo:"🚶", everyone:"✨" };
-const EXPLORE_FILTERS = [ {k:"all",label:"all"}, {k:"free",label:"🆓 free"}, {k:"family",label:"👨‍👩‍👧 family"}, {k:"date",label:"💕 date"}, {k:"friends",label:"🥂 friends"}, {k:"pet",label:"🐶 pet-ok"}, {k:"list",label:"⭐ my list"} ];
-const EXPLORE_TICKER = [
-  "someone in Paris just added the Louvre to their list 🖼️",
-  "a night owl is planning teamLab Planets in Tokyo 🫧",
-  "3 people are eyeing the rooftop bars in Bangkok 🍸",
-  "someone in Mexico City saved Frida Kahlo's house 🎨",
-  "a couple is mapping a date at Park Güell, Barcelona 🦎",
-  "Cape Town's Table Mountain is trending tonight 🏔️",
-  "someone in Rome is planning a 2am Colosseum walk 🏛️",
-  "a family bucket-listed the aquarium in Lisbon 🐠",
-];
 
 function loadActsSaved(){ try{ savedActs=JSON.parse(localStorage.getItem("carted_acts")||"{}")||{}; Object.values(savedActs).forEach(a=>{ if(a&&a._key) actByKey[a._key]=actByKey[a._key]||a; }); }catch(e){ savedActs={}; } }
-function saveActs(){ try{ localStorage.setItem("carted_acts", JSON.stringify(savedActs)); }catch(e){} }
-function loadActs(city){
-  if(activitiesData[city.id]){ if(curCity().id===city.id && $("#view-explore").classList.contains("active")) renderExplore(); return; }
-  fetch(`${BASE}activities/${city.id}.json?v=${DATA_V}`).then(r=>r.ok?r.json():[]).then(acts=>{
-    acts.forEach(a=>{ actByKey[a._key]=a; }); activitiesData[city.id]=acts;
-    if(curCity().id===city.id && $("#view-explore").classList.contains("active")) renderExplore();
-  }).catch(()=>{ activitiesData[city.id]=[]; if($("#view-explore").classList.contains("active")) renderExplore(); });
-}
-function matchFilter(a){ if(exploreFilter==="all") return true; if(exploreFilter==="free") return a.free; if(exploreFilter==="pet") return a.pet; if(exploreFilter==="list") return !!savedActs[a._key]; return (a.who||[]).includes(exploreFilter); }
-function setExploreFilter(k){ exploreFilter=k; renderExplore(); $("#body").scrollTop=0; }
 /* legacy name kept for GHOST_FITS/cityVisited; passport now counts FLOWN cities, union w/ saved for back-compat */
 function citiesExplored(){ const s=citiesFlown(); Object.values(savedActs).forEach(a=>s.add(a._cityId)); return s; }
-function actCost(a){ return a.free ? `<span class="ac-free">Free</span>` : money(a.costUsd*(curCity().pf||1), curCity().cur); }
-function actCard(a){
-  const saved=!!savedActs[a._key];
-  const photo=a.photo?`<img class="ph-img" src="${BASE+a.photo}" alt="" loading="lazy" decoding="async" onerror="this.replaceWith(document.createTextNode('${a.ic}'))">`:`<span class="ac-emo">${a.ic}</span>`;
-  const who=(a.who||[]).slice(0,3).map(w=>`<span class="ac-w" title="${w}">${WHO_ICON[w]||"✨"}</span>`).join("");
-  return `<div class="acard${saved?' saved':''}" onclick="toggleAct('${a._key}',event)">
-    <div class="ac-thumb">${photo}<span class="ac-cat">${esc(a.cat)}</span>${a.pet?'<span class="ac-pet">🐶</span>':''}</div>
-    <div class="ac-meta">
-      <div class="ac-name">${esc(a.name)}</div>
-      <div class="ac-sub">${esc(a.hood)}</div>
-      <div class="ac-row"><span class="ac-rate">★ ${a.rate.toFixed(1)}</span><span>(${a.n.toLocaleString()})</span>${who}</div>
-      <div class="ac-cost">${actCost(a)}</div>
-    </div>
-    <span class="ac-save${saved?' on':''}" aria-hidden="true">${saved?'★':'☆'}</span>
-  </div>`;
-}
-function renderExplore(){
-  const c=curCity();
-  renderExploreCityBar();
-  const en=$("#explore-cityname"); if(en) en.textContent=`${c.name} tonight`;
-  const flown=citiesFlown(), tt=travelTotals(), psp=$("#explore-passport");
-  if(psp) psp.innerHTML=`<div class="pp-top"><span>🛂</span> <b>${flown.size}/50</b> cities flown<span class="pp-saved">✈️ ${tt.miles.toLocaleString()} mi never flown</span></div><div class="pp-bar"><div class="pp-fill" style="width:${Math.round(flown.size/50*100)}%"></div></div>${passportStrip()}`;
-  const ff=$("#explore-filters"); if(ff) ff.innerHTML=EXPLORE_FILTERS.map(f=>{ const n=f.k==="list"?Object.keys(savedActs).length:0; return `<button class="efilter${exploreFilter===f.k?' on':''}" onclick="setExploreFilter('${f.k}')">${f.label}${f.k==="list"&&n?` ${n}`:""}</button>`; }).join("");
-  const acts=activitiesData[c.id], list=$("#explore-list"); if(!list) return;
-  if(!acts){ list.innerHTML=`<div class="loading"><div class="spinner"></div><div style="margin-top:8px">finding things to do in ${esc(c.name)}…</div></div>`; loadActs(c); return; }
-  const filtered=acts.filter(matchFilter);
-  if(!filtered.length){ list.innerHTML=`<div class="empty"><div class="big">🗺️</div>${exploreFilter==="list"?"your list is empty — tap ☆ on anything you'd want to do":"nothing matches that filter here"}</div>`; return; }
-  list.innerHTML=filtered.map(actCard).join("");
-}
-function toggleAct(key, ev){ if(ev) ev.stopPropagation(); const a=actByKey[key]; if(!a) return;
-  if(savedActs[key]){ delete savedActs[key]; } else { savedActs[key]=a; toast("added to your someday list ⭐"); snd("pop"); addXp(4); }
-  saveActs(); checkFitUnlocks(); renderExplore(); }
-/* deals — Groupon affiliate handoff (real revenue path; slot your affiliate id into the URL) */
-function openDeal(key){ const a=actByKey[key]; if(!a) return;
-  showModal(`<div class="m-emoji">🎟️</div><div class="m-title">deals for ${esc(a.name)}</div><div class="m-body">open Groupon to look for discounts on <b>${esc(a.cat)}</b> & things to do in ${esc(a._cityName)}.<br><br><span style="font-size:11.5px">affiliate handoff — a cut comes back to Carted 💚</span></div><button class="cta" style="position:static" onclick="confirmDeal('${a._key}')">see Groupon deals →</button><button class="cta secondary" style="position:static" onclick="closeModal()">maybe later</button>`); }
-function confirmDeal(key){ const a=actByKey[key]; if(!a){ closeModal(); return; } stats.dealClicks=(stats.dealClicks||0)+1; saveStats();
-  /* DEMO/PRE-AFFILIATE: no live Groupon (CJ/Rakuten) affiliate program yet — do NOT send outbound traffic.
-     RE-ENABLE: uncomment and wrap the url with your CJ/Rakuten deep-link (see followup plan).
-     const url=`https://www.groupon.com/browse/${encodeURIComponent((a._cityName||"").toLowerCase().replace(/\s+/g,"-"))}?query=${encodeURIComponent(a.name)}`;
-     window.open(url, "_blank"); */
-  closeModal(); toast("you can't — that's the whole point 👻"); }
-let exTick=0;
-function rotateExploreTicker(){ const el=$("#explore-ticker"); if(!el) return; el.style.opacity="0"; setTimeout(()=>{ el.textContent=EXPLORE_TICKER[exTick%EXPLORE_TICKER.length]; exTick++; el.style.opacity="1"; },350); }
 
 /* ============================================================
    Ghost mascot — a character with cosmetics you unlock by playing.
@@ -2829,68 +2720,15 @@ function buddyNudge(){ if(!stats.buddy) return ""; if(stats.lastNight===nightKey
   if(!buddyIn) return "";
   return `<button class="buddy-nudge" onclick="go('feed')">👯 <b>${esc(stats.buddy.name||"your buddy")}</b> is up tonight too — you're not the only one 🤍</button>`; }
 
-/* --- 7 async room: reactions piled up while you were away --- */
-function roomReturnNudge(){ let mine=0; try{ mine=(JSON.parse(localStorage.getItem("carted_room_mine")||"[]")).filter(p=>p.night===nightKey()).length; }catch(e){}
-  const last=stats.roomLastVisit||0, now=Date.now(); stats.roomLastVisit=now; saveStats();
-  if(mine>0 && now-last>120000){ return mine*(3+Math.floor(Math.random()*10)); } return 0; }
-
-/* --- 3 itinerary: a shareable "my night in <city>" from saved spots --- */
-function cityItinerary(cityId){ return { rests:Object.values(savedPlaces).filter(p=>p._cityId===cityId), acts:Object.values(savedActs).filter(a=>a._cityId===cityId) }; }
-function planMyNight(){ const c=curCity(), {rests,acts}=cityItinerary(c.id);
-  if(!rests.length && !acts.length){ showModal(`<div class="m-emoji">🗺️</div><div class="m-title">build your ${esc(c.name)} night</div><div class="m-body">save a few restaurants (♡ on the browse tab) and things to do (☆ here) in ${esc(c.name)}, then come back to plan the perfect night — real or imaginary.</div><button class="cta" style="position:static" onclick="closeModal()">got it 🌙</button>`); return; }
-  const rows=[...acts.slice(0,3).map(a=>`<div class="itin-row"><span>${a.ic}</span> ${esc(a.name)} <span class="itin-tag">${a.free?"free":"to do"}</span></div>`), ...rests.slice(0,2).map(r=>`<div class="itin-row"><span>${r.ic}</span> ${esc(r.name)} <span class="itin-tag">eat</span></div>`)].join("");
-  showModal(`<div class="m-emoji">${c.flag}</div><div class="m-title">my night in ${esc(c.name)}</div><div class="itin">${rows}</div><div class="m-body" style="margin:10px 0 0">spent: <b style="color:var(--go)">$0</b> · dreamed: all of it 🌙</div><button class="cta gold" style="position:static" onclick="shareItinerary('${c.id}')">📸 share my night</button><button class="cta secondary" style="position:static" onclick="closeModal()">close</button>`); }
-function shareItinerary(cityId){ const c=CITIES[CITY_INDEX[cityId]]||curCity(), {rests,acts}=cityItinerary(cityId);
-  const items=[...acts.slice(0,3), ...rests.slice(0,2)];
-  const cv=document.createElement("canvas"); cv.width=1080; cv.height=1080; const x=cv.getContext("2d");
-  x.fillStyle="#100C0A"; x.fillRect(0,0,1080,1080);
-  const gi=x.createRadialGradient(540,300,40,540,300,700); gi.addColorStop(0,"rgba(240,168,74,0.14)"); gi.addColorStop(1,"rgba(240,168,74,0)"); x.fillStyle=gi; x.fillRect(0,0,1080,1080);
-  x.strokeStyle="#2A211B"; x.lineWidth=3; x.strokeRect(46,46,988,988); x.textAlign="center";
-  x.fillStyle="#8A7A6B"; x.font="italic 500 52px 'Newsreader',Georgia,serif"; x.fillText("my night in", 540, 150); x.fillStyle="#EFE4D6"; x.font="500 86px 'Newsreader',Georgia,serif"; x.fillText(c.flag+" "+c.name, 540, 250);
-  x.textAlign="left"; let yy=390; items.forEach(it=>{ x.font="58px serif"; x.fillText(it.ic, 132, yy); x.fillStyle="#EFE4D6"; x.font="500 44px 'Newsreader',Georgia,serif"; x.fillText(String(it.name).slice(0,26), 212, yy-8); yy+=110; });
-  x.textAlign="center"; x.fillStyle="#F6C982"; x.font="500 64px 'Newsreader',Georgia,serif"; x.fillText("spent: $0", 540, 922); x.fillStyle="#8A7A6B"; x.font="600 32px 'Inter',sans-serif"; x.fillText("dreamed it all on Carted 👻", 540, 974);
-  cv.toBlob(b=>{ if(!b){toast("couldn't build it");return;} const f=new File([b],"carted-night.png",{type:"image/png"}); if(navigator.canShare&&navigator.canShare({files:[f]})){ navigator.share({files:[f],text:`my imaginary night in ${c.name} 🌙 carted.`}).catch(()=>{}); } else { const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="carted-night.png"; a.click(); toast("night card saved 📸"); setTimeout(()=>URL.revokeObjectURL(a.href),4000); } },"image/png"); }
-
-/* ============================================================
-   Places discovery — nightly fake coupons, a spotlight mission to
-   try an EXACT restaurant, and "new to you" rewards for breadth.
-   ============================================================ */
-const COUPONS = [
-  {t:"BOGO", d:"buy one entrée, get one free", lvls:[1,2]},
-  {t:"2-FOR-1", d:"two mains for the price of one", lvls:[1,2]},
-  {t:"20% OFF", d:"20% off your whole order", lvls:[1,2,3]},
-  {t:"FREE APP", d:"free appetizer with any main", lvls:[2,3]},
-  {t:"FREE DESSERT", d:"a free dessert, on the house", lvls:[2,3,4]},
-  {t:"$10 OFF", d:"$10 off when you spend $40+", lvls:[3,4]},
-  {t:"HAPPY HR", d:"half-price drinks till close", lvls:[1,2,3]},
-];
-/* coupons retired 2026-07-04: fake scarcity pressure pointed at broke people is DoorDash's
-   move, not ours. (COUPONS data + claim plumbing kept dormant below for a possible calm reuse.) */
-function couponFor(p){ return null; }
-function claimCoupon(key){ const p=placeByKey[key]||savedPlaces[key]; const c=couponFor(p); if(!c) return; stats.coupons=stats.coupons||{}; const id=p._key+"@"+nightKey(); if(!stats.coupons[id]){ stats.coupons[id]={t:c.t, name:p.name, night:nightKey()}; saveStats(); addXp(3); snd("pop"); }
-  showModal(`<div class="m-emoji">🎟️</div><div class="m-title">${c.t} · ${esc(p.name)}</div><div class="m-body">${c.d} — clipped to your wallet for tonight 🌙<br><br><span style="font-size:11.5px">it's a fantasy coupon — you're not really ordering, that's the whole point 👻</span></div><button class="cta" style="position:static" onclick="closeModal()">clipped 🎟️</button>`); }
-  /* DEMO/PRE-AFFILIATE: removed "use it for real →" + the affiliate-carryover copy. Re-enable: add <button class="order-real" onclick="orderForReal('cart')">use it for real →</button> */
-
 function spotlightFor(city){ const ps=city&&city._places; if(!ps||!ps.length) return null; return ps[hash(nightKey()+"|"+city.id)%ps.length]; }
 function spotKey(cityId){ return cityId+"@"+nightKey(); }
-function renderSpotlight(){ const el=$("#spotlight"); if(el) el.innerHTML=""; return; /* per-city spotlight retired — tonight's kitchen IS the one nightly target */
-  const c=curCity(), p=spotlightFor(c); if(!p){ el.innerHTML=""; return; }
-  const done=(stats.spotDone||[]).includes(spotKey(c.id));
-  const media = p.photo
-    ? `<img class="ph-img" src="${photoUrl(p,true)}" alt="" width="360" height="150" loading="lazy" decoding="async" onerror="this.parentNode.innerHTML='<span class=&quot;sp-emo&quot;>${p.ic}</span>'">`
-    : `<span class="sp-emo">${p.ic}</span>`;
-  el.innerHTML=`<button class="spotlight${done?' done':''}" onclick="openDetail('${p._key}')"><div class="sp-photo">${media}<span class="sp-badge">🎯 tonight's spotlight</span>${done?'<span class="sp-check">✓ done</span>':'<span class="sp-bonus">+30 XP · 🧊</span>'}</div><div class="sp-body"><div class="sp-name">${esc(p.name)}</div><div class="sp-sub">${done?"nice — you tried tonight's spot 👻":`${esc(p.en)} · ${esc(niceHood(p))} — window-order here for the bonus`}</div></div></button>`; }
+function renderSpotlight(){ const el=$("#spotlight"); if(el) el.innerHTML=""; }   // per-city spotlight retired — tonight's kitchen IS the one nightly target
 
 function isNewPlace(p){ const k=p&&p._key; return !!k && !((stats.visited||[]).includes(k)); }
 function markVisited(keys){ stats.visited=stats.visited||[]; keys.forEach(k=>{ if(!stats.visited.includes(k)) stats.visited.push(k); }); if(stats.visited.length>600) stats.visited=stats.visited.slice(-600); saveStats(); }
 
-/* ============================================================
-   Discovery #1-8 — deals filter + sunrise scarcity, Mort's pick,
-   teleport, variety streak, cuisine/price filters, themed crawls,
-   must-try checklist. (all push people toward trying new places)
-   ============================================================ */
 let feedFilters = { price:null, cuisine:null };
-function refreshDiscovery(){ renderMortsPick(); renderFeedFilters(); renderQuests(); renderTally(); refreshTonightHead(); refreshMoreHead(); }   // variety/must-try/crawls/deals retired in the subtraction pass
+function refreshDiscovery(){ renderMortsPick(); renderFeedFilters(); renderTally(); refreshTonightHead(); refreshMoreHead(); }   // variety/must-try/crawls/deals/quests retired
 
 /* ---- collapsible feed drawers (#tonight above the list, #more below) ---- */
 function toggleDrawer(id){ const d=$("#"+id); if(!d) return; const open=d.classList.toggle("open"); try{ localStorage.setItem("carted_dr_"+id, open?"1":"0"); }catch(e){} snd("pop"); }
@@ -2905,7 +2743,6 @@ function buildTonightTeasers(){
   if(kitchenDone) out.push(`✓ tonight's kitchen dodged — you're done tonight 👻`);
   else out.push(tk?`🍳 tonight's kitchen: ${tk.name} · ${f.flag} ${f.name}`:`🍳 tonight's kitchen is warming up · ${f.flag} ${f.name}`);
   if(buddyNudge()) out.push(`👯 ${(stats.buddy&&stats.buddy.name)||"your buddy"} dodged — keep the 🔥 streak`);
-  if(!isNight()){ const s=currentSeason(); if(s) out.push(`${s.emoji} ${s.name} · ${s.xp}× XP all season`); }
   const mp=mortsPick(c); if(mp) out.push(`👻 ${ghostName()}'s pick: ${mp.name}`);
   return out;
 }
@@ -2916,9 +2753,6 @@ function rotateTonight(){ const d=$("#tonight"); if(!d || d.classList.contains("
   el.style.opacity="0"; el.style.transform="translateY(-6px)"; setTimeout(()=>{ tnIdx++; el.textContent=tonightTeasers[tnIdx%tonightTeasers.length]; el.style.opacity="1"; el.style.transform="translateY(0)"; },360); }
 function refreshMoreHead(){ const b=$("#more-badge"); if(b) b.textContent=""; }   // missions retired
 
-/* 1+2 — coupon scarcity ("N left"); coupons already refresh nightly via couponFor + burn at the 4am sunrise */
-function couponQty(p){ return 2 + (hash(p.name+"q"+nightKey())%8); }
-function dealsCount(){ return (curCity()._places||[]).filter(p=>couponFor(p)).length; }
 
 /* 3 — Mort's pick: one spot a night with a one-liner */
 const MORT_LINES = ["trust me, the {d} here is unreal","i'd haunt this place nightly if i could eat","this one's a vibe. don't @ me 👻","peak 2am energy — you'll thank me","quietly the best {d} in town","i've 'delivered' here 1,000 times. zero regrets","if i had a stomach it'd live here"];
@@ -2932,10 +2766,6 @@ function teleport(){ snd("whoosh"); teleportPending=true; const i=Math.floor(Mat
 function teleportLand(city){ if(!teleportPending) return; const ps=city&&city._places; if(ps&&ps.length){ teleportPending=false; openDetail(ps[Math.floor(Math.random()*ps.length)]._key); } }
 
 /* 5 — variety streak: distinct cuisines this week */
-function weekCuisines(){ return (stats.week&&stats.week.cuisines)||[]; }
-function bumpVariety(ens){ if(!stats.week) return; stats.week.cuisines=stats.week.cuisines||[]; (ens||[]).forEach(en=>{ if(en) uniqPush(stats.week.cuisines, en); }); if(!stats.week.varietyDone && stats.week.cuisines.length>=5){ stats.week.varietyDone=true; addXp(50); setTimeout(()=>toast("🌈 5 cuisines this week — +50 XP variety bonus!"), 2500); } saveStats(); }
-function renderVariety(){ const el=$("#variety"); if(!el) return; const n=weekCuisines().length, goal=5; if(n<=0){ el.innerHTML=""; return; } const done=n>=goal;
-  el.innerHTML=`<div class="variety${done?' done':''}">🌈 <b>cuisine variety</b> · ${Math.min(n,goal)}/${goal} this week${done?" — bonus claimed 🎉":` · ${goal-n} more for +50 XP`}</div>`; }
 
 /* 6 — cuisine / price filters */
 function cityCuisines(){ const s=new Set(); (curCity()._places||[]).forEach(p=>s.add(cuisineKeyOf(p))); return [...s].sort(); }
@@ -2947,21 +2777,9 @@ function renderFeedFilters(){ const el=$("#feed-filters"); if(!el) return; if(fe
   const cui=cityCuisines().map(k=>`<button class="ffilt${feedFilters.cuisine===k?' on':''}" onclick="setCuisine('${k}')">${esc(k.replace(/_/g," "))}</button>`).join("");
   const any=feedFilters.price||feedFilters.cuisine;
   el.innerHTML=`<button class="ffilt${any?'':' on'}" onclick="clearFilters()">all</button>${price}${cui}`; }
-function applyFilters(list){ let out=list; if(feedMode==="deals") out=out.filter(p=>couponFor(p)); if(feedFilters.price) out=out.filter(p=>(p.lvl||2)===feedFilters.price); if(feedFilters.cuisine) out=out.filter(p=>cuisineKeyOf(p)===feedFilters.cuisine); return out; }
+function applyFilters(list){ let out=list; if(feedFilters.price) out=out.filter(p=>(p.lvl||2)===feedFilters.price); if(feedFilters.cuisine) out=out.filter(p=>cuisineKeyOf(p)===feedFilters.cuisine); return out; }
 
 /* 7 — themed crawls */
-const CRAWLS = [
-  {id:"ramen", e:"🍜", name:"late-night noodle crawl", m:p=>/ramen|noodle|japanese|chinese|vietnamese|thai|korean/.test(p.en||"")},
-  {id:"taco", e:"🌮", name:"taco tour", m:p=>/mexican|burrito/.test(p.en||"")},
-  {id:"cheap", e:"💸", name:"cheap eats run", m:p=>(p.lvl||2)<=2},
-  {id:"fancy", e:"🥂", name:"big spender night", m:p=>(p.lvl||2)>=3},
-  {id:"pizza", e:"🍕", name:"pizza pilgrimage", m:p=>/pizza|italian/.test(p.en||"")},
-  {id:"sweet", e:"🍰", name:"dessert crawl", m:p=>/dessert|bakery|ice_cream|french/.test(p.en||"")},
-];
-function renderCrawls(){ const el=$("#crawls"); if(!el) return; const c=curCity(); const avail=CRAWLS.filter(cr=>(c._places||[]).some(cr.m)); if(!avail.length){ el.innerHTML=""; return; }
-  el.innerHTML=`<div class="section-label" style="margin:6px 2px 8px">🗺️ tonight's crawls</div><div class="crawl-row">`+avail.map(cr=>`<button class="crawl-chip" onclick="openCrawl('${cr.id}')"><span class="cr-e">${cr.e}</span>${esc(cr.name)}</button>`).join("")+`</div>`; }
-function openCrawl(id){ const cr=CRAWLS.find(x=>x.id===id); if(!cr) return; const c=curCity(); const ps=(c._places||[]).filter(cr.m).slice(0,8);
-  showModal(`<div class="m-emoji">${cr.e}</div><div class="m-title">${esc(cr.name)}</div><div class="m-body" style="font-size:12px;margin:0 0 8px">${ps.length} spots in ${esc(c.name)} 🌙</div><div class="crawl-list">`+ps.map(p=>`<button class="crawl-item" onclick="closeModal();openDetail('${p._key}')"><span>${p.ic}</span> <b>${esc(p.name)}</b> <span class="ci-lvl">${"$".repeat(p.lvl||2)}</span></button>`).join("")+`</div><button class="cta secondary" style="position:static" onclick="closeModal()">close</button>`); }
 
 /* 8 — must-try checklist (top spots per city by reviews) */
 function mustTryFor(city){ return [...((city&&city._places)||[])].sort((a,b)=>b.n-a.n).slice(0,3); }
@@ -2974,15 +2792,22 @@ loadSaved(); loadAccount(); loadHome(); loadActsSaved();
 fetch(BASE+"menus.json?v="+DATA_V).then(r=>r.ok?r.json():null).then(j=>{ menusData=j; if($("#view-detail").classList.contains("active")&&currentDetailKey) openDetail(currentDetailKey); }).catch(()=>{});
 room = loadMinePosts();
 renderCityBar(); renderTally(); renderFeed();
-(function(){ const av=$("#avatar-btn"); if(av) av.textContent=avatarGlyph(); renderHud(); renderQuests(); setPresenceGhost(); })();
+(function(){ const av=$("#avatar-btn"); if(av) av.textContent=avatarGlyph(); renderHud(); setPresenceGhost(); })();
 loadCity(CITIES[0]);
 room = room.concat(ROOM_SEED.map(p=>({...p, reacted:{}})));
-applyNight(); setInterval(applyNight, 300000);   // re-check the night window every 5 min
+/* two nightly openers from the relatable-line bank, voiced by whoever's awake — rotates every
+   night so night 3 doesn't read like night 1. counts are night-seeded (stable, never re-rolled). */
+(function(){ const cast=INCOMING.filter(ghostAwakeNow); for(let k=0;k<2;k++){
+  const pool=cast.length?cast:INCOMING; const g=pool[hash(nightKey()+"op"+k)%pool.length];
+  room.unshift({ic:g.ic, ghost:g.ghost, sched:g.sched, job:g.job, city:g.city, ago:k?"12m":"4m",
+    text:SEED_LINES[hash(nightKey()+"line"+k)%SEED_LINES.length],
+    r:{hug:hash(nightKey()+"h"+k)%6, me:hash(nightKey()+"m"+k)%8, go:hash(nightKey()+"g"+k)%3}, reacted:{}});
+} })();
+applyNight();   // night is permanent — one apply at boot
 /* naming moment is triggered by the FIRST reveal (where "he waited up / roasted your cart" is
    finally earned), not a cold timer on the browse feed — see revealTruth's firstEver branch */
-rotateTicker(); setInterval(rotateTicker, 3600); driftLive(); setInterval(driftLive, 60000); setInterval(streamIncoming, 26000);   // presence refreshes slowly (60s), not a nervous ticker; sparse ghost cadence
+rotateTicker(); setInterval(rotateTicker, 3600); setInterval(streamIncoming, 26000);   // sparse ghost cadence; presence is fetched live, not simulated
 initDrawers(); refreshTonightHead(); refreshMoreHead(); setInterval(rotateTonight, 4200);
-rotateExploreTicker(); setInterval(rotateExploreTicker, 4200);
 renderBanners(); setInterval(renderBanners, 60000);
 acceptBuddyFromUrl();
 renderFeatured();
@@ -2992,7 +2817,13 @@ document.addEventListener("pointerdown", e=>{ const sc=document.querySelector(".
 trackOpen();
 if(!localStorage.getItem("carted_onboard")){ setTimeout(showOnboard, 500); }
 document.addEventListener("keydown", e=>{ if(e.key==="Enter" && document.activeElement && document.activeElement.id==="composer-input") postFromComposer(); });
-if(!NATIVE && "serviceWorker" in navigator){ navigator.serviceWorker.register(BASE+"sw.js").catch(()=>{}); }
+if(!NATIVE && "serviceWorker" in navigator){
+  navigator.serviceWorker.register(BASE+"sw.js").catch(()=>{});
+  /* land a redesign in ONE open: when an updated SW takes control, reload once.
+     hadController guards the first-ever install (claim() fires controllerchange there too). */
+  const hadController = !!navigator.serviceWorker.controller; let _swReloaded=false;
+  navigator.serviceWorker.addEventListener("controllerchange", ()=>{ if(!hadController || _swReloaded) return; _swReloaded=true; location.reload(); });
+}
 if(NATIVE && stats.pushOptIn) nativeNudge();   // re-arm the one-shot last-call on every native launch
 restoreStats();                                 // native: recover from a WKWebView storage wipe (reloads once if it restores)
 window.addEventListener("pagehide", ()=>{ if(NATIVE){ clearTimeout(_mirrorT); _mirrorT=null; try{ const P=window.Capacitor.Plugins.Preferences; if(P){ const blob={}; MIRROR_KEYS.forEach(k=>{ const v=localStorage.getItem(k); if(v!=null) blob[k]=v; }); P.set({key:"carted_backup", value:JSON.stringify(blob)}); } }catch(e){} } });

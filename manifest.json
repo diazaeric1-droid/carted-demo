@@ -1,13 +1,13 @@
 {
   "name": "Carted — the no-spend food game",
   "short_name": "Carted",
-  "description": "Fill your cart. Ghost the check. A midnight food game powered by real restaurants.",
+  "description": "Fill your cart. Ghost the check. A calm midnight ritual — fictional kitchens, real company.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#fbf3e4",
-  "theme_color": "#fbf3e4",
+  "background_color": "#100C0A",
+  "theme_color": "#100C0A",
   "categories": ["games", "food"],
   "icons": [
     {

@@ -1,9 +1,13 @@
-const CACHE = "carted-v49";
+const CACHE = "carted-v50";
 const SHELL = [
   "./",
   "index.html",
+  "manifest.json",
   "icon-192.png",
   "icon-512.png",
+  "fonts/newsreader-normal.woff2",
+  "fonts/newsreader-italic.woff2",
+  "fonts/inter-normal.woff2",
 ];
 
 self.addEventListener("install", e => {
@@ -22,7 +26,7 @@ self.addEventListener("activate", e => {
 
 self.addEventListener("fetch", e => {
   const url = new URL(e.request.url);
-  // Pass through all third-party API calls (Overpass, Nominatim, Google Fonts).
+  // Pass through all third-party API calls (Overpass, Nominatim, Supabase).
   // Same-origin check works on any host (github.io OR cartedapp.com).
   if (url.origin !== location.origin) return;
   // Let the HTTP cache handle dish photos — keeps SW cache small
@@ -36,20 +40,24 @@ self.addEventListener("fetch", e => {
           caches.open(CACHE).then(c => c.put(e.request, clone));
         }
         return res;
-      }).catch(() => caches.match("index.html"));
+      }).catch(() =>
+        // offline fallback only for page navigations — a failed places/*.json fetch must
+        // reject (JSON parse would choke on HTML), letting the caller's own fallback run
+        e.request.mode === "navigate" ? caches.match("index.html") : Promise.reject(new Error("offline"))
+      );
     })
   );
 });
 
 // Push notification handler (ready for when backend sends streak reminders)
 self.addEventListener("push", e => {
-  const data = e.data ? e.data.json() : { title: "Carted 🔥", body: "Your streak is waiting." };
+  const data = e.data ? e.data.json() : { title: "Carted 🌙", body: "the kitchens are warm. no pressure — just company." };
   e.waitUntil(
     self.registration.showNotification(data.title, {
       body: data.body,
       icon: "icon-192.png",
       badge: "icon-192.png",
-      tag: "carted-streak",
+      tag: "carted-night",
       renotify: true,
       data: { url: "./" }
     })
