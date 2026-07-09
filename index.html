@@ -553,8 +553,6 @@
   /* ----- buddy nudge ----- */
   .buddy-nudge { width: 100%; text-align: left; background: var(--card-hi); border: 2.5px dashed var(--accent); border-radius: 14px; padding: 10px 13px; margin-bottom: 10px; font-size: 12.5px; font-weight: 700; color: var(--text); cursor: pointer; box-shadow: 2px 2px 0 var(--accent); }
   /* ----- city leaderboard (room) ----- */
-  #city-board { background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 12px 14px; margin-bottom: 14px; box-shadow: 4px 4px 0 var(--ink); }
-  #city-board:empty { display: none; }
   .cb-title { font-family: var(--disp); font-weight: 600; font-size: 14px; margin-bottom: 8px; }
   .cb-row { display: flex; align-items: center; gap: 9px; padding: 5px 0; font-size: 13.5px; font-weight: 700; }
   .cb-row .cb-name { flex: 1; color: var(--muted); }
@@ -784,7 +782,6 @@
           <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a quiet 3-minute break — the ghosts steep with you 🍜</span></span><span class="cbr-go">›</span></button>
           <button id="silence-toggle" class="silence-btn" onclick="toggleSilence()">🤫 quiet corner</button>
           <div id="room-podium"></div>
-          <div id="city-board"></div>
           <div class="prompts"><span class="plabel">you made it. tap what almost got you</span><button class="pchip" onclick="quickConfess('🍕')">🍕</button><button class="pchip" onclick="quickConfess('🍜')">🍜</button><button class="pchip" onclick="quickConfess('🍣')">🍣</button><button class="pchip" onclick="quickConfess('🌮')">🌮</button><button class="pchip" onclick="quickConfess('🍔')">🍔</button><button class="pchip" onclick="quickConfess('🍰')">🍰</button></div>
           <div class="composer"><input id="composer-input" aria-label="say something to the room" placeholder="say it quietly — it burns at sunrise 🌅" maxlength="90" /><button onclick="postFromComposer()">post</button></div>
           <div class="room-rules-line">be kind — the room is a leveler. <a href="terms.html" target="_blank" rel="noopener">community rules</a> · report any post with 🚩</div>
@@ -2120,7 +2117,6 @@ function renderRoom(){
      kitchen (we're all here for the same one) and the murmur. */
   const _ev=eventNight();
   $("#room-podium").innerHTML = (_ev?`<div class="tk-line">🌙 ${esc(_ev.banner)}</div>`:"") + (tk?`<div class="tk-line">🍳 tonight's kitchen: <b>${esc(tk.name)}</b> · ${tf.flag} ${esc(tf.name)} — we're all dodging the same menu tonight</div>`:"");
-  { const cb=$("#city-board"); if(cb) cb.innerHTML=""; }
   const vr=$("#view-room"); if(vr) vr.classList.toggle("quiet", roomSilent);
   if(roomSilent){
     $("#room-feed").innerHTML = `<div class="quiet-panel"><div class="qp-emo">🌙</div><div class="qp-title">quiet corner</div><div class="qp-sub">no one's talking here. the ghosts are around, and so are you.<br>nothing to do, nothing owed. just breathe — the room will hold.</div></div>`;
@@ -2710,11 +2706,6 @@ function renderFeatured(){ const el=$("#featured-banner"); if(!el) return; const
   el.innerHTML=`<button class="feat-banner" onclick="goTonightsKitchen()"><span class="fb-ic">🍳</span><span class="fb-text"><b>tonight's kitchen: ${k?esc(k.name):"warming up…"} · ${f.flag} ${esc(f.name)}${here?" ✓":""}</b><span class="fb-sub">we're all dodging the same one tonight — you'll crave ${cr.e} ${cr.name}</span></span><span class="fb-go">›</span></button>`; }
 
 /* --- 5 city leaderboard (simulated; real version needs the backend aggregate) --- */
-function cityBoard(){ const board=CITIES.map(c=>({c, amt: 18000 + (hash(nightKey()+c.id)%190000)})).sort((a,b)=>b.amt-a.amt); const yc=curCity(); const yourRank=board.findIndex(b=>b.c.id===yc.id)+1; return {top:board.slice(0,5), yourRank, yc, yourAmt:board.find(b=>b.c.id===yc.id)?.amt||0}; }
-function renderCityBoard(){ const el=$("#city-board"); if(!el) return; const {top,yourRank,yc}=cityBoard(); const medal=["🥇","🥈","🥉","4","5"];
-  el.innerHTML=`<div class="cb-title">👻 ghost ledger · cities tonight</div>`+top.map((b,i)=>`<div class="cb-row${b.c.id===yc.id?' mine':''}"><span>${medal[i]}</span><span class="cb-name">${b.c.flag} ${esc(b.c.name)}</span><b>$${Math.round(b.amt).toLocaleString()}</b></div>`).join("")+(yourRank>5?`<div class="cb-row mine"><span>#${yourRank}</span><span class="cb-name">${yc.flag} ${esc(yc.name)} (you're here)</span><b>$${Math.round(cityBoard().yourAmt).toLocaleString()}</b></div>`:""); }
-
-/* --- 2 in-app buddy nudge --- */
 function buddyNudge(){ if(!stats.buddy) return ""; if(stats.lastNight===nightKey()) return "";   // you already dodged
   const buddyIn = (stats.buddy.bothIn) || (hash(nightKey()+(stats.buddy.code||""))%3!==0);       // backend signal, else simulated ~2/3 nights
   if(!buddyIn) return "";
