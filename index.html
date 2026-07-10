@@ -1676,7 +1676,6 @@ function cardHTML(p, saved){
     <div class="meta">
       <div class="name">${esc(p.name)}${isNew?'<span class="new-chip">✨ new</span>':''}</div>
       <div class="shop"><span class="en">${where}</span> · ${esc(niceHood(p))}</div>
-      ${cp?`<div class="cprow"><span class="cpchip">🎟️ ${cp.t}</span></div>`:""}
       <div class="row"><span class="rate">★ ${p.rate.toFixed(1)}</span><span>(${p.n.toLocaleString()})</span></div>
       <div class="price">${"$".repeat(p.lvl||2)} <span class="p-eta">· ${etaStr(p)}</span></div>
     </div>
