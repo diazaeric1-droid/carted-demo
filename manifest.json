@@ -1,14 +1,17 @@
 {
   "name": "Carted — the no-spend food game",
   "short_name": "Carted",
-  "description": "Fill your cart. Ghost the check. A calm midnight ritual — fictional kitchens, real company.",
+  "description": "A quiet room for night owls — cart your craving, keep your money, sit with the others who are up.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#100C0A",
   "theme_color": "#100C0A",
-  "categories": ["games", "food"],
+  "categories": [
+    "games",
+    "food"
+  ],
   "icons": [
     {
       "src": "icon-192.png",

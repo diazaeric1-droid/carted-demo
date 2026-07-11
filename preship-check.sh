@@ -20,6 +20,13 @@ grep -q "Night Shift" index.html && say "Night Shift copy resurfaced in index.ht
 # 4) room red line: no XP/leaderboard strings in shipped UI copy
 grep -qE '\+[0-9]+ XP' index.html && say "an XP reward string is user-visible again"
 
+# 4b) diet-language ban (lever #3): the payoff is money + company, never body outcomes
+grep -qiE 'calorie|kcal|\bdiet\b|weight[- ]loss|fasting' index.html manifest.json terms.html support.html privacy.html && say "diet/calorie language crept into shipped copy"
+[ -f "$HOME/carted-app/APP_STORE.md" ] && grep -qiE 'calorie|kcal|\bdiet\b|weight[- ]loss|fasting' "$HOME/carted-app/APP_STORE.md" && say "diet/calorie language in APP_STORE.md"
+
+# 4c) image-fidelity red line (lever #12): no external random-stock or AI-slop image sources
+grep -qE 'loremflickr|placekitten|unsplash\.it|picsum' index.html && say "external random-image fallback is back (fidelity red line)"
+
 # 5) SW must be bumped when index.html changes
 if ! git diff --quiet HEAD -- index.html 2>/dev/null; then
   git diff --quiet HEAD -- sw.js 2>/dev/null && say "index.html changed but sw.js CACHE not bumped"

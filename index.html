@@ -10,7 +10,8 @@
 <meta name="theme-color" content="#100C0A" />
 <link rel="manifest" href="manifest.json" />
 <link rel="apple-touch-icon" href="icon-192.png" />
-<title>Carted · fill your cart, ghost the check</title>
+<title>Carted · the 2 am room for night owls</title>
+<meta name="description" content="A quiet room for night owls. Cart your 2am craving, send a ghost instead of your money, and sit three minutes with the others who are up. Everything burns at sunrise." />
 <style>
   /* self-hosted variable fonts (latin subsets) — no render-blocking @import, the serif survives
      offline, and canvas share-cards render Newsreader without the network. opsz axis applies
@@ -775,14 +776,14 @@
         <section class="view" id="view-room">
           <div class="brand">
             <h1 style="font-size:24px">the 2 am room</h1>
-            <div class="room-tag">the break room — come stand outside with us for a while 🌙</div>
+            <div class="room-tag">the hour that&#8217;s yours — come stand outside with us a while 🌙</div>
             <div class="live2"><span class="dot"></span> <b style="color:var(--slate);font-weight:700" id="room-awake">the room's awake</b>&nbsp;🌙 · <span id="room-burn-top">🌅 —</span></div>
             <div class="ghost-note">👻 = resident ghost — friendly fiction keeping the room warm, not people. your posts burn at sunrise. 🌅</div>
           </div>
           <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a quiet 3-minute break — the ghosts steep with you 🍜</span></span><span class="cbr-go">›</span></button>
           <button id="silence-toggle" class="silence-btn" onclick="toggleSilence()">🤫 quiet corner</button>
           <div id="room-podium"></div>
-          <div class="prompts"><span class="plabel">you made it. tap what almost got you</span><button class="pchip" onclick="quickConfess('🍕')">🍕</button><button class="pchip" onclick="quickConfess('🍜')">🍜</button><button class="pchip" onclick="quickConfess('🍣')">🍣</button><button class="pchip" onclick="quickConfess('🌮')">🌮</button><button class="pchip" onclick="quickConfess('🍔')">🍔</button><button class="pchip" onclick="quickConfess('🍰')">🍰</button></div>
+          <div class="prompts"><span class="plabel">you made it. tap what almost got you</span><button class="pchip" onclick="nightSpecial()" title="invent tonight's special" aria-label="invent tonight's special">🍳</button><button class="pchip" onclick="quickConfess('🍕')">🍕</button><button class="pchip" onclick="quickConfess('🍜')">🍜</button><button class="pchip" onclick="quickConfess('🍣')">🍣</button><button class="pchip" onclick="quickConfess('🌮')">🌮</button><button class="pchip" onclick="quickConfess('🍔')">🍔</button><button class="pchip" onclick="quickConfess('🍰')">🍰</button></div>
           <div class="composer"><input id="composer-input" aria-label="say something to the room" placeholder="say it quietly — it burns at sunrise 🌅" maxlength="90" /><button onclick="postFromComposer()">post</button></div>
           <div class="room-rules-line">be kind — the room is a leveler. <a href="terms.html" target="_blank" rel="noopener">community rules</a> · report any post with 🚩</div>
           <div id="room-feed"></div>
@@ -954,7 +955,7 @@ const RV = [
   "my bank account said thank you.",
   "window-shopped it and felt better.",
   "2am craving, held strong 💪",
-  "calorie-free because it's a photo ^^",
+  "costs nothing because it's a photo ^^",
   "payday's friday — this is dinner (visually).",
 ];
 /* cuisine-flavored night-owl reviews, keyed by dish emoji; RV is the generic fallback */
@@ -1116,6 +1117,9 @@ const SEED_LINES = [
   "4am feed done, baby's down. celebrated with the fancy yogurt i'd been saving",
   "midnight inventory. counted 300 boxes of snacks that aren't mine. zen, basically",
   "wanted sushi at 1am. made the rice, imagined the rest. surprisingly close",
+  "🍳 tonight's special: the 3am quesadilla flight — six tiny quesadillas, six tiny decisions",
+  "🍳 tonight's special: cereal omakase. seven courses. chef's choice of milk.",
+  "🍳 tonight's special: break-room ramen royale — extra steam, no bill",
 ];
 /* tonight's letter 💌 — one longer ghost confession pinned during the 2am hours, with a single
    ghost-DJ acknowledgment beneath it (별이 빛나는 밤에's listener-letter mechanic). */
@@ -1299,6 +1303,9 @@ function beOn(){ return !!(CARTED_BE.url); }
    NOTE: while true, the App Store age questionnaire answer is UGC=yes, and every
    copy surface (privacy.html, welcome modal) must describe posts as leaving the device. */
 const ROOM_LIVE = true;
+/* RED LINE (lever 11): the comeback loop — room access, reactions, the burn, notifications —
+   is FREE, forever. monetize identity/cosmetics around the ritual if ever; never the loop,
+   never the fake spend. (every paid US clone inverted the category's one promise and died.) */
 function deviceId(){ let d=localStorage.getItem("carted_device"); if(!d){ d="d"+Math.random().toString(36).slice(2)+Date.now().toString(36); try{ localStorage.setItem("carted_device", d); }catch(e){} } return d; }
 function bePost(fn, body){ return fetch(CARTED_BE.url+"/"+fn, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)}).then(r=>r.json()).catch(()=>null); }
 
@@ -1326,10 +1333,10 @@ window.cartedReport = function(){ const nights=_aGet("carted_nights",[]); const 
 
 /* ===== first-run onboarding: 3 punchy sticker-pop beats (for cold TikTok traffic) ===== */
 const OB = [
-  { e:"🍜", h:"midnight kitchens, everywhere", s:"browse dream restaurants across 50 real cities — real dishes, fictional kitchens, zero consequences." },
-  { e:"🛒", h:"cart it, call the ghost", s:"fill your cart with whatever you're craving and a ghost courier flies it across the globe to you." },
-  { e:"💸", h:"…it never comes", s:"the driver was never real. you keep every dollar you didn't spend. that's the whole point. 👻" },
-  { e:"🌙", h:"and you're not up alone", s:"the 2 am room is a quiet place to stand around with other night owls, and a little ghost who waits up with you. come back tomorrow — we'll be here." },
+  { e:"🌙", h:"for whoever's up at 2am", s:"there's a quiet room where the other night owls are. a cup of noodles that steeps in three minutes. nobody knows your name here." },
+  { e:"🛒", h:"arrive by ordering nothing", s:"fill a cart with whatever's calling you at 1am — real dishes, fictional kitchens — and send a ghost instead of your money." },
+  { e:"💸", h:"the driver was never real", s:"filled the cart. closed the app. you keep every dollar — that's the whole point. 👻" },
+  { e:"🍜", h:"the room keeps your seat", s:"come back tomorrow night. the kettle's on, the ghosts wait up, and everything said here burns at sunrise." },
 ];
 let obIdx=0;
 function showOnboard(){ obIdx=0; let el=$("#onboard"); if(!el){ el=document.createElement("div"); el.className="onboard"; el.id="onboard"; const sc=$(".screen")||document.body; sc.appendChild(el); } el.style.display="flex"; renderOnboard(); track("onboard_start"); }
@@ -1337,9 +1344,10 @@ function renderOnboard(){ const el=$("#onboard"); if(!el) return; const c=OB[obI
 function nextOnboard(){ obIdx=Math.min(OB.length-1,obIdx+1); try{snd("pop");}catch(e){} renderOnboard(); }
 function endOnboard(){ const el=$("#onboard"); if(el) el.style.display="none"; try{ localStorage.setItem("carted_onboard","2"); }catch(e){} try{snd("chime");}catch(e){} track("onboarded"); }
 function urlB64ToU8(s){ const pad="=".repeat((4-s.length%4)%4); const b=(s+pad).replace(/-/g,"+").replace(/_/g,"/"); const raw=atob(b); const out=new Uint8Array(raw.length); for(let i=0;i<raw.length;i++) out[i]=raw.charCodeAt(i); return out; }
-const PHOTO_KW = { "🍕":"pizza","🍔":"burger","🍟":"fries","🌮":"tacos","🌯":"burrito","🍜":"ramen","🍣":"sushi","🍱":"bento-box","🍛":"curry","🥡":"noodles","🍗":"fried-chicken","🥩":"steak","🍖":"barbecue","🥪":"sandwich","🥯":"bagel","🧆":"falafel","🥙":"kebab","🦐":"seafood","🥘":"paella","🍲":"hotpot","🥗":"salad","☕":"coffee","🥐":"croissant","🍩":"donut","🍰":"cake","🍦":"ice-cream","🍨":"gelato","🧋":"bubble-tea","🥟":"dumplings","🐙":"takoyaki","🐟":"grilled-fish","🥨":"pretzel","🍽️":"gourmet-food" };
-function photoUrl(p, big){ if(p.photo) return BASE + p.photo; const kw = PHOTO_KW[p.ic] || "food"; const s = big?400:200; return `https://loremflickr.com/${s}/${s}/${kw}?lock=${hash(p.name)%997}`; }
-function thumbImg(p, big){ return `<img class="ph-img" src="${photoUrl(p,big)}" alt="" loading="lazy" decoding="async" onerror="this.replaceWith('${p.ic}')">`; }
+/* fidelity red line: real baked dish photos or the emoji glyph — never external random stock,
+   never generated food art. (the US clones' only reviews complained about exactly this.) */
+function photoUrl(p, big){ return p.photo ? (BASE + p.photo) : null; }
+function thumbImg(p, big){ const u=photoUrl(p,big); return u ? `<img class="ph-img" src="${u}" alt="" loading="lazy" decoding="async" onerror="this.replaceWith('${p.ic}')">` : `<span class="ph-emo">${p.ic}</span>`; }
 /* reward tiers — keyed off money SAVED (rewards restraint, not time-in-app) */
 const TIERS = [
   {name:"Window Shopper", min:0, ic:"👀"},
@@ -1402,7 +1410,8 @@ function markShownUp(gentle){
   else { if(stats.lastNight) cameBack=true; stats.streak=1; }
   stats.lastNight=tonight; stats.maxStreak=maxStreakEver(); saveStats(); renderHud();
   // absence-return: after missed nights the greeting is a kept seat, never a lost score
-  if(gentle) setTimeout(()=>toast(cameBack ? "the room kept your seat warm 🌙" : `🔥 night ${stats.streak} — you showed up${usedFreeze?' · 🧊 a freeze caught your miss':''}`), 500);
+  if(gentle){ const rt=(typeof residentTier==="function")?residentTier():null;
+    setTimeout(()=>toast(cameBack ? "the room kept your seat warm 🌙" : (rt&&stats.streak>1 ? `evening, ${rt.name} — night ${stats.streak} 🌙` : `🔥 night ${stats.streak} — you showed up${usedFreeze?' · 🧊 a freeze caught your miss':''}`)), 500); }
   return true;
 }
 
@@ -1491,6 +1500,71 @@ function shareWin(mode){ track("share",{k:"win"});
     const f=new File([b],"carted-win.png",{type:"image/png"});
     if(navigator.canShare && navigator.canShare({files:[f]})){ navigator.share({files:[f], text:"the driver was never real — I kept the money 👻 carted."}).catch(()=>{}); }
     else { const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="carted-win.png"; a.click(); toast("win card saved 📸 post it"); setTimeout(()=>URL.revokeObjectURL(a.href), 4000); }
+  }, "image/png");
+}
+
+/* ---- lever 7: the receipt of what you didn't buy — the share-native artifact.
+   9:16 for stories/tiktok; cream thermal paper on the midnight bg; REAL numbers only. ---- */
+function shareReceipt(){ track("share",{k:"receipt"});
+  const tonightMode=!!(lastShare && lastOrderItems && lastOrderItems.length);
+  const items=tonightMode?lastOrderItems.slice(0,6):[];
+  const allTime=Math.round(stats.savedUsd||0);
+  const total=tonightMode?lastShare.usd:allTime;
+  if(!total){ toast("nothing on the receipt yet — dodge something first 👻"); return; }
+  const cv=document.createElement("canvas"); cv.width=1080; cv.height=1920; const x=cv.getContext("2d");
+  x.fillStyle="#100C0A"; x.fillRect(0,0,1080,1920);
+  const glow=x.createRadialGradient(540,760,60,540,760,900); glow.addColorStop(0,"rgba(240,168,74,0.13)"); glow.addColorStop(1,"rgba(240,168,74,0)"); x.fillStyle=glow; x.fillRect(0,0,1080,1920);
+  // thermal paper with perforated edges — height fits the content (all-time receipts are shorter)
+  const L=170,R=910,T=190,W=R-L;
+  const B=Math.min(1560, T + 470 + Math.max(items.length,1)*52 + 470);
+  x.fillStyle="#EFE4D6";
+  x.beginPath(); x.moveTo(L,T+16);
+  for(let i=0;i<=20;i++){ x.lineTo(L+(W/20)*i+(W/40), i%2?T+16:T); } x.lineTo(R,T+16); x.lineTo(R,B-16);
+  for(let i=20;i>=0;i--){ x.lineTo(L+(W/20)*i+(W/40), i%2?B-16:B); } x.lineTo(L,B-16); x.closePath(); x.fill();
+  const ink="#1A130F", faint="#6b5c4e";
+  const mono="'Courier New', Courier, monospace";
+  x.textAlign="center"; x.fillStyle=ink;
+  x.font="700 46px "+mono; x.fillText("C A R T E D", 540, T+95);
+  x.font="400 30px "+mono; x.fillStyle=faint; x.fillText("* GHOST RECEIPT — NOTHING WAS PURCHASED *", 540, T+140);
+  const dash=(y)=>{ x.save(); x.beginPath(); x.rect(L+30,y-30,W-60,40); x.clip(); x.fillStyle=faint; x.font="400 28px "+mono; x.textAlign="center"; x.fillText("- ".repeat(24), 540, y); x.restore(); };
+  dash(T+185);
+  x.textAlign="left"; x.fillStyle=ink; x.font="400 30px "+mono;
+  const dt=new Date(); x.fillText("NIGHT OF "+dt.toLocaleDateString(undefined,{month:"short",day:"numeric"}).toUpperCase(), L+42, T+235);
+  x.textAlign="right"; x.fillText((dt.getHours()%12||12)+":"+String(dt.getMinutes()).padStart(2,"0")+(dt.getHours()>=12?" AM":" AM").replace("AM",dt.getHours()>=12?"PM":"AM"), R-42, T+235);
+  let y=T+300;
+  x.textAlign="left"; x.font="400 32px "+mono;
+  let itemsSum=0;
+  items.forEach(it=>{ const raw=String(it.dish||it.name||"midnight craving").toUpperCase(); const nm=raw.length>19?raw.slice(0,18)+"…":raw; itemsSum+=it.price*(it._pf?1/it._pf:1);
+    x.fillStyle=ink; x.fillText(nm, L+42, y);
+    x.textAlign="right"; x.fillText(money(it.price*( it._pf?1/it._pf:1 ), USD), R-42, y); x.textAlign="left"; y+=52; });
+  if(!items.length){ x.fillStyle=ink; x.fillText("EVERY CART YOU EVER CLOSED", L+42, y); x.textAlign="right"; x.fillText("$"+allTime.toLocaleString(), R-42, y); x.textAlign="left"; y+=52; }
+  y+=6; x.fillStyle=faint; x.font="400 30px "+mono;
+  const feesTheyd=tonightMode?Math.max(0,(total||0)-itemsSum):0;
+  if(feesTheyd>0.5){ x.fillText("FEES THEY'D HAVE ADDED", L+42, y); x.textAlign="right"; x.fillText(money(feesTheyd,USD), R-42, y); x.textAlign="left"; y+=48; }
+  x.fillText("DELIVERY FEE (GHOST)", L+42, y); x.textAlign="right"; x.fillText("$0.00", R-42, y); x.textAlign="left"; y+=48;
+  x.fillText("DRIVER TIP", L+42, y); x.textAlign="right"; x.fillText("— he's not real", R-42, y); x.textAlign="left"; y+=48;
+  x.fillText("DRIVER STATUS", L+42, y); x.textAlign="right"; x.fillText("NEVER ARRIVED", R-42, y); x.textAlign="left"; y+=40;
+  dash(y+10); y+=76;
+  x.fillStyle=ink; x.font="700 44px "+mono; x.fillText(tonightMode?"TOTAL KEPT":"KEPT, ALL-TIME", L+42, y);
+  x.textAlign="right"; x.font="700 54px "+mono; x.fillText(money(total,USD), R-42, y); x.textAlign="left"; y+=64;
+  x.font="400 30px "+mono; x.fillStyle=faint;
+  if(tonightMode){ x.fillText("KEPT ALL-TIME", L+42, y); x.textAlign="right"; x.fillText("$"+allTime.toLocaleString(), R-42, y); }
+  else { const n=(_aGet("carted_nights",[])||[]).length; x.fillText("NIGHTS SHOWED UP", L+42, y); x.textAlign="right"; x.fillText(String(n||1), R-42, y); }
+  x.textAlign="left"; y+=44;
+  dash(y+8); y+=64;
+  // deterministic barcode (stable per night — honest numbers extend to fake barcodes)
+  let h=hash(nightKey()+"rc"); let bx=L+70;
+  while(bx<R-70){ h=(h*1103515245+12345)>>>0; const w=2+(h%5); x.fillStyle=ink; x.fillRect(bx,y,w,90); bx+=w+2+(h>>3)%6; }
+  y+=130; x.textAlign="center"; x.font="400 28px "+mono; x.fillStyle=faint;
+  x.fillText("FILLED THE CART. CLOSED THE APP.", 540, y);
+  // wordmark on the midnight ground below the paper
+  x.font="italic 500 64px 'Newsreader', Georgia, serif"; x.fillStyle="#F0A84A"; x.fillText("Carted", 540, B+120);
+  x.font="600 30px 'Inter', sans-serif"; x.fillStyle="#8A7A6B"; x.fillText("the 2 am room for night owls", 540, B+168);
+  cv.toBlob(b=>{
+    if(!b){ toast("couldn't print the receipt"); return; }
+    const f=new File([b],"carted-receipt.png",{type:"image/png"});
+    if(navigator.canShare && navigator.canShare({files:[f]})){ navigator.share({files:[f], text:"filled the cart at 1am. closed the app. 🧾👻 carted."}).catch(()=>{}); }
+    else { const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="carted-receipt.png"; a.click(); toast("receipt saved 🧾 post it"); setTimeout(()=>URL.revokeObjectURL(a.href), 4000); }
   }, "image/png");
 }
 
@@ -1735,9 +1809,17 @@ function saveStats(){ try{ localStorage.setItem("carted_stats", JSON.stringify(s
 function avatarGlyph(){ return account ? "🌙" : "🙂"; }
 /* no accounts, by design: everything lives on this device. keeps the app private-by-default
    and out of Apple's 4.8 (Sign in with Apple) + 5.1.1(v) (account deletion) obligations. */
+/* lever 8: the resident ladder — damta's identity-inside-anonymity pattern. status is EARNED by
+   nights you came back and shown ONLY here on the profile; the room itself stays a leveler. */
+function residentTier(){ const n=(_aGet("carted_nights",[])||[]).length;
+  if(n>=30) return {ic:"🏮", name:"keeper of the room", sub:"30 nights — the lamp is basically yours"};
+  if(n>=7)  return {ic:"🪑", name:"regular",            sub:"7 nights — your seat knows you"};
+  if(n>=2)  return {ic:"🌙", name:"resident",           sub:"you came back. that's the whole club."};
+  return null; }
 function renderProfile(){
   const favCount = Object.keys(savedPlaces).length;
-  const head = `<div class="profile-card"><div class="pa">🌙</div><div class="ph">your night-owl pass</div><div class="pe">no account, no sign-up — everything lives on this device</div></div>`;
+  const rt = residentTier();
+  const head = `<div class="profile-card"><div class="pa">${rt?rt.ic:"🌙"}</div><div class="ph">${rt?esc(rt.name)+" of the 2 am room":"your night-owl pass"}</div><div class="pe">${rt?esc(rt.sub)+" · ":""}no account, no sign-up — everything lives on this device</div></div>`;
   const grid = `
     <div class="pstats">
       <div class="pstat"><div class="v green">$${Math.round(stats.savedUsd).toLocaleString()}</div><div class="k">kept in your pocket (≈USD)</div></div>
@@ -1749,6 +1831,7 @@ function renderProfile(){
     </div>`;
   const auth = `<button class="signin-btn" onclick="shareWin('streak')">📸 flex your streak card</button>`
     + `<button class="signin-btn" onclick="showWrapped()">📊 your week, wrapped</button>`
+    + `<button class="signin-btn" onclick="shareReceipt()">🧾 the receipt of everything you didn't buy</button>`
     + `<button class="signin-btn" onclick="ghostPush()">${stats.pushOptIn?"🔔 ghost texts: on":"🔔 let the ghost text me"}</button>`
     + `<button class="signin-btn" onclick="toggleAsmr()">${asmrOn?"🍳 kitchen ASMR: on":"🍳 kitchen ASMR: off"}</button>`
     + `<button class="signin-btn" onclick="toggleSnd()">${sndOn?"🔊 sounds: on":"🔇 sounds: off"}</button>`;
@@ -1980,6 +2063,7 @@ function revealTruth(){
     ${milestone?`<div class="milestone">${milestone}</div>`:""}
     <div style="margin-top:22px">
       <button class="cta gold" style="position:static" onclick="shareWin()">📸 share the win</button>
+      <button class="cta secondary" style="position:static" onclick="shareReceipt()">🧾 the receipt</button>
       <button class="cta" style="position:static" onclick="shareToRoom()">${firstEver?"🌙 meet the others in the room":"🌙 come sit in the room"}</button>
     </div>
     <div class="sub" style="margin-top:14px;text-align:center"><span onclick="goodnight()" style="color:var(--muted);cursor:pointer">good night 🌙</span> &nbsp;·&nbsp; <span onclick="resetCartAndBrowse()" style="color:var(--muted);cursor:pointer">keep browsing</span></div>`;
@@ -2221,6 +2305,12 @@ function withRoomTerms(cb){ if(!ROOM_LIVE || agreedRoomTerms()){ cb(); return; }
 function acceptRoomTerms(){ try{ localStorage.setItem("carted_terms","1"); }catch(e){} closeModal(); const cb=window.__pendingPost; window.__pendingPost=null; if(typeof cb==="function") cb(); }
 function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; withRoomTerms(()=>{ makeMine("🌙", v); inp.value=""; snd("chime"); toast("posted — the room's reading 👻 burns at sunrise 🌅"); }); }
 const CONFESS = ["almost got me. it didn't. 💪","called my name at 2am. i let it ring.","was THIS close. wallet's still shut.","tempted me for 20 whole minutes. survived."];
+/* lever 10 (KauKau pattern): invented menu items as UGC — rides the SAME pipeline as every
+   post (terms gate, moderation, reactions, sunrise burn). no new backend, no new rules. */
+function nightSpecial(){ const inp=$("#composer-input"); if(!inp) return;
+  inp.value="🍳 tonight's special: "; inp.focus();
+  try{ inp.setSelectionRange(inp.value.length, inp.value.length); }catch(e){}
+  toast("invent something the kitchen would never dare 🍳"); }
 function quickConfess(e){ withRoomTerms(()=>{ makeMine(e, `${e} ${pick(CONFESS)}`); snd("chime"); toast("confessed to the room 🌙"); }); }
 function shareToRoom(){ withRoomTerms(()=>{
   const po=pendingOrder, c=po?po.city:curCity(); const place=lastOrderItems[0];
@@ -2281,10 +2371,17 @@ function openCup(){
     </div>`;
   sc.appendChild(el);
   cupEnd=Date.now()+180000;
-  const stage=el.querySelector("#cup-stage"), steam=el.querySelector("#cup-steam");
+  const stage=el.querySelector("#cup-stage"), steam=el.querySelector("#cup-steam"), emo=el.querySelector("#cup-emo");
+  /* two hand-verbs (damta's cigarette is pressed, flicked, shaken — tactility is the ritual):
+     HOLD the cup to blow on the steam; a quick TAP rattles the lid. neither earns anything. */
   const blow=on=>{ steam.classList.toggle("blown",on); if(on) snd("pop"); };
-  stage.addEventListener("pointerdown",e=>{ e.preventDefault(); blow(true); });
-  stage.addEventListener("pointerup",()=>blow(false));
+  let _cupDownT=0, _lidT=0;
+  const lidTap=()=>{ const now=Date.now(); if(now-_lidT<500) return; _lidT=now;
+    if(emo){ emo.style.transition="transform .12s"; emo.style.transform="translateY(-7px) rotate(-4deg)"; setTimeout(()=>{ emo.style.transform="none"; },130); }
+    snd("pop"); if(typeof haptic==="function") haptic();
+    const gl=$("#cup-ghostline"); if(gl && Math.random()<.3) gl.textContent="don't peek. it's not ready."; };
+  stage.addEventListener("pointerdown",e=>{ e.preventDefault(); _cupDownT=Date.now(); blow(true); });
+  stage.addEventListener("pointerup",()=>{ blow(false); if(Date.now()-_cupDownT<220) lidTap(); });
   stage.addEventListener("pointerleave",()=>blow(false));
   stage.addEventListener("pointercancel",()=>blow(false));   // iOS: system gestures cancel long holds without a pointerup
   clearInterval(cupTimer); cupTimer=setInterval(cupTick,1000); cupTick();
@@ -2330,12 +2427,19 @@ function cupServe(){
      lid off, steam clears, then the room lets you go on its own (~30s). */
   el.querySelector(".cup-scene").innerHTML=`
     <div class="cup-steam" style="opacity:.45"><span>♨</span></div>
-    <div class="cup-emo">🍜</div>
-    <div class="cup-clock" style="font-size:26px">it's ready.</div>
-    <div class="cup-hint">eat while it's hot 🍜 no points, nothing owed.<br>the room will still be here tomorrow 🌙</div>
+    <div class="cup-emo" id="cup-sip">🍜</div>
+    <div class="cup-clock" style="font-size:26px" id="cup-ready">it's ready.</div>
+    <div class="cup-hint" id="cup-sip-hint">hold the bowl for the first sip 🍜<br>no points, nothing owed — the room will still be here tomorrow 🌙</div>
     <button class="cta secondary" style="position:static;margin-top:22px" onclick="cupTomorrow()">same time tomorrow? 🌙</button>
     <button class="cta secondary" style="position:static;margin-top:10px" onclick="closeCup()">back to the room</button>`;
   clearTimeout(cupEpilogueT); cupEpilogueT=setTimeout(()=>closeCup(), 30000);
+  /* the first sip: one more hand-verb to end the ritual warm instead of on a timer buzz */
+  const sip=el.querySelector("#cup-sip"); let sipT=null;
+  if(sip){ sip.addEventListener("pointerdown",e=>{ e.preventDefault(); sipT=setTimeout(()=>{
+      const r=$("#cup-ready"), h=$("#cup-sip-hint"); if(r) r.textContent="good, right?";
+      if(h) h.innerHTML="eat while it's hot — see you tomorrow night 🌙"; snd("chime"); if(typeof haptic==="function") haptic();
+    }, 900); });
+    ["pointerup","pointerleave","pointercancel"].forEach(ev=>sip.addEventListener(ev,()=>{ clearTimeout(sipT); })); }
 }
 /* the appointment, without the enforcement: one tap books tomorrow's nudge at this hour.
    no streak wager, no timeliness score, no guilt copy if they skip. */
