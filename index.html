@@ -253,6 +253,24 @@
   .post .pmeta b { color: var(--text); font-weight: 700; }
   .post .mine-tag { color: var(--accent); font-weight: 700; }
   .post.ghostp { background: linear-gradient(0deg, rgba(124,147,184,.06), rgba(124,147,184,.06)), var(--card); border-style: dashed; }
+  .doorway { position:absolute; inset:0; z-index:125; background:#0B0806; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:30px; text-align:center; animation: fade .5s ease; }
+  .doorway.out { opacity:0; transition:opacity .6s ease; }
+  .doorway .dw-line { font-family:var(--disp); font-style:italic; font-size:26px; color:var(--filament); }
+  .doorway .dw-sub { font-size:13.5px; color:var(--muted); max-width:300px; line-height:1.5; }
+  .shelf { display:flex; align-items:center; gap:5px; margin:0 0 10px; padding:8px 12px; background:var(--card); border:1px solid rgba(239,228,214,.08); border-radius:12px; }
+  .shelf .sh-lbl { font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-right:4px; }
+  .shelf .sh-cup { font-size:16px; opacity:.22; filter:grayscale(.6); }
+  .shelf .sh-cup.taken { opacity:1; filter:none; }
+  .shelf .sh-cup.tonight { opacity:.55; filter:none; text-shadow:0 0 8px rgba(240,168,74,.5); }
+  .shelf .sh-cup.tonight.taken { opacity:1; }
+  .shelf .sh-sub { font-size:10.5px; color:var(--muted); margin-left:auto; }
+  .notice { font-size:11.5px; color:var(--muted); font-style:italic; margin-top:6px; }
+  .nod-btn { background:none; border:1px solid rgba(239,228,214,.16); color:var(--text); border-radius:999px; font-size:12px; padding:4px 13px; margin-top:8px; }
+  .nod-btn.done { color:var(--muted); border-style:dashed; }
+  .nod-n { font-size:11.5px; color:var(--slate); margin-left:8px; }
+  .pchip.usual { border-color:rgba(240,168,74,.55); box-shadow:0 0 10px rgba(240,168,74,.28); }
+  body.winter { --glow: rgba(232,117,42,.16); }
+  body.winter .screen::before { filter: blur(8px) saturate(1.15); }
   .post.letter { border-style: solid; border-color: rgba(246,201,130,.28); background: linear-gradient(0deg, rgba(240,168,74,.05), rgba(240,168,74,.05)), var(--card); }
   .post.letter .ptext { font-family: var(--disp); font-style: italic; font-size: 15px; line-height: 1.55; }
   .l-ack { margin-top: 8px; font-size: 12px; color: var(--muted); font-style: italic; }
@@ -779,7 +797,10 @@
             <div class="room-tag">the hour that&#8217;s yours — come stand outside with us a while 🌙</div>
             <div class="live2"><span class="dot"></span> <b style="color:var(--slate);font-weight:700" id="room-awake">the room's awake</b>&nbsp;🌙 · <span id="room-burn-top">🌅 —</span></div>
             <div class="ghost-note">👻 = resident ghost — friendly fiction keeping the room warm, not people. your posts burn at sunrise. 🌅</div>
+            <div class="notice" id="room-notice"></div>
+            <div id="room-nod"></div>
           </div>
+          <div class="shelf" id="cup-shelf"></div>
           <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a quiet 3-minute break — the ghosts steep with you 🍜</span></span><span class="cbr-go">›</span></button>
           <button id="silence-toggle" class="silence-btn" onclick="toggleSilence()">🤫 quiet corner</button>
           <div id="room-podium"></div>
@@ -1424,6 +1445,8 @@ function snd(kind){ haptic(kind); if(!sndOn) return; try{
   else if(kind==="ding") tone(1175,0,.12,"sine",.07);
   else if(kind==="chime"){ tone(988,0,.1,"sine",.08); tone(1319,.09,.16,"sine",.08); }
   else if(kind==="fanfare"){ tone(523,0,.12,"triangle",.1); tone(659,.11,.12,"triangle",.1); tone(784,.22,.2,"triangle",.11); tone(1047,.34,.3,"triangle",.11); }
+  else if(kind==="door"){ const o=AC.createOscillator(), g=AC.createGain(); o.type="sine"; o.frequency.setValueAtTime(95,AC.currentTime); o.frequency.exponentialRampToValueAtTime(55,AC.currentTime+.28); g.gain.setValueAtTime(.09,AC.currentTime); g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+.32); o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime+.35); }
+  else if(kind==="kettle"){ /* the lighter click: identical every night — a conditioned session opener */ tone(1660,0,.03,"square",.05); const o=AC.createOscillator(), g=AC.createGain(); o.type="sine"; o.frequency.setValueAtTime(70,AC.currentTime+.06); o.frequency.linearRampToValueAtTime(110,AC.currentTime+.5); g.gain.setValueAtTime(.0001,AC.currentTime+.06); g.gain.linearRampToValueAtTime(.05,AC.currentTime+.2); g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+.6); o.connect(g); g.connect(AC.destination); o.start(AC.currentTime+.06); o.stop(AC.currentTime+.65); }
   else if(kind==="whoosh"){ const o=AC.createOscillator(), g=AC.createGain(); o.type="sawtooth"; o.frequency.setValueAtTime(180,AC.currentTime); o.frequency.exponentialRampToValueAtTime(40,AC.currentTime+.5); g.gain.setValueAtTime(.05,AC.currentTime); g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+.5); o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime+.55); }
 }catch(e){} }
 function toggleSnd(){ sndOn=!sndOn; try{ localStorage.setItem("carted_snd", sndOn?"on":"off"); }catch(e){} renderHud(); if($("#view-profile").classList.contains("active")) renderProfile(); if(sndOn) snd("chime"); toast(sndOn?"🔊 sounds on":"🔇 sounds off"); }
@@ -1568,6 +1591,36 @@ function shareReceipt(){ track("share",{k:"receipt"});
   }, "image/png");
 }
 
+/* the social cover: "going for a smoke" is a legitimate excuse to be gone. this card is the
+   night-owl equivalent — a lock-screen-style note that legitimizes three minutes away. */
+function shareBack3(){ track("share",{k:"back3"});
+  const cv=document.createElement("canvas"); cv.width=1080; cv.height=1920; const x=cv.getContext("2d");
+  x.fillStyle="#0B0806"; x.fillRect(0,0,1080,1920);
+  const glow=x.createRadialGradient(540,640,60,540,640,860); glow.addColorStop(0,"rgba(240,168,74,0.10)"); glow.addColorStop(1,"rgba(240,168,74,0)"); x.fillStyle=glow; x.fillRect(0,0,1080,1920);
+  const dt=new Date(); const hh=(dt.getHours()%12)||12, mm=String(dt.getMinutes()).padStart(2,"0");
+  x.textAlign="center";
+  x.font="200 210px 'Inter', -apple-system, sans-serif"; x.fillStyle="#EFE4D6"; x.fillText(hh+":"+mm, 540, 420);
+  x.font="500 40px 'Inter', sans-serif"; x.fillStyle="#9A8A7A";
+  x.fillText(dt.toLocaleDateString(undefined,{weekday:"long", month:"long", day:"numeric"}).toLowerCase(), 540, 490);
+  // the note card
+  const cy=640, ch=340; x.fillStyle="rgba(239,228,214,0.07)";
+  if(x.roundRect){ x.beginPath(); x.roundRect(110, cy, 860, ch, 38); x.fill(); } else x.fillRect(110, cy, 860, ch);
+  x.strokeStyle="rgba(239,228,214,0.12)"; x.lineWidth=2;
+  if(x.roundRect){ x.beginPath(); x.roundRect(110, cy, 860, ch, 38); x.stroke(); }
+  x.textAlign="left"; x.font="700 34px 'Inter', sans-serif"; x.fillStyle="#F0A84A"; x.fillText("🥡 CARTED", 170, cy+80);
+  x.font="500 30px 'Inter', sans-serif"; x.fillStyle="#9A8A7A"; x.fillText("now", 170, cy+124);
+  x.font="500 52px 'Newsreader', Georgia, serif"; x.fillStyle="#EFE4D6"; x.fillText("gone to the room.", 170, cy+205);
+  x.fillText("back in 3 minutes.", 170, cy+270);
+  x.textAlign="center"; x.font="italic 500 44px 'Newsreader', Georgia, serif"; x.fillStyle="#F6C982"; x.fillText("the hour that's yours", 540, 1180);
+  x.font="600 28px 'Inter', sans-serif"; x.fillStyle="#9A8A7A"; x.fillText("carted — the 2 am room for night owls", 540, 1780);
+  cv.toBlob(b=>{
+    if(!b){ toast("couldn't write the note"); return; }
+    const f=new File([b],"carted-back-in-3.png",{type:"image/png"});
+    if(navigator.canShare && navigator.canShare({files:[f]})){ navigator.share({files:[f], text:"gone to the room. back in 3. 🥡"}).catch(()=>{}); }
+    else { const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="carted-back-in-3.png"; a.click(); toast("note saved 🚪 pin it wherever they'll look"); setTimeout(()=>URL.revokeObjectURL(a.href), 4000); }
+  }, "image/png");
+}
+
 /* ---- synthesize a place from one OSM element ---- */
 function synth(el, city){
   const t = el.tags || {}; const name = t.name; if(!name) return null;
@@ -1641,7 +1694,7 @@ function go(view){ track("view",{v:view});
   document.body.classList.toggle("in-room", view==="room");   // dims the page background for the room's calm palette
   if(view==="room") markShownUp(true);   // coming to the room counts as showing up (once/night)
   if(view==="cart") renderCart();
-  if(view==="room") renderRoom();
+  if(view==="room"){ renderRoom(); maybeThreshold(); }
   if(view==="profile") renderProfile();
   if(view==="feed"){ renderFeatured(); renderSpotlight(); const bn=$("#buddy-nudge"); if(bn) bn.innerHTML=buddyNudge(); refreshDiscovery(); setPresenceGhost(); }
   if(view!=="track") stopCourier();
@@ -2187,6 +2240,20 @@ function confirmOrderReal(){
 /* ---- the 2 AM room: tonight's tally, podium, one-tap confessions, ephemerality ---- */
 function tonightBest(){ try{ const t=JSON.parse(localStorage.getItem("carted_tonight")||"null"); return (t && t.night===nightKey()) ? t.best : 0; }catch(e){ return 0; } }
 function bumpTonight(usd){ const best=Math.max(tonightBest(), usd); try{ localStorage.setItem("carted_tonight", JSON.stringify({night:nightKey(), best})); }catch(e){} }
+/* the doorway: a smoke break begins by stepping OUTSIDE. once per night, arriving at the room
+   crosses a threshold — a dark beat, the sanction ("you're off the clock"), then the room.
+   (break anatomy: threshold + sanction + earned, in one moment.) */
+function maybeThreshold(){
+  try{ if(localStorage.getItem("carted_room_seen")===nightKey()) return; localStorage.setItem("carted_room_seen", nightKey()); }catch(e){ return; }
+  const day=["sunday","monday","tuesday","wednesday","thursday","friday","saturday"][new Date().getDay()];
+  const sc=document.querySelector(".screen"); if(!sc) return;
+  const el=document.createElement("div"); el.className="doorway";
+  el.innerHTML=`<div class="dw-line">you step out back.</div><div class="dw-sub">made it through a ${day} — you're off the clock. the room says so 🌙</div>`;
+  sc.appendChild(el); snd("door");
+  const rm=()=>{ if(!el.parentNode) return; el.classList.add("out"); setTimeout(()=>el.remove(), 650); };
+  setTimeout(rm, matchMedia("(prefers-reduced-motion: reduce)").matches ? 1100 : 2100);
+  el.addEventListener("pointerdown", rm);
+}
 /* podium deleted 2026-07-09 — the room is a leveler; even a fictional ranking fights the co-presence job */
 function renderRoom(){
   if(!localStorage.getItem("carted_room_intro")){ try{ localStorage.setItem("carted_room_intro","1"); }catch(e){}
@@ -2221,7 +2288,62 @@ function renderRoomMeta(){
   const rbt=$("#room-burn-top"); if(rbt){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); rbt.textContent=`🌅 ${h}h ${String(m).padStart(2,"0")}m`; }
   const ra=$("#room-awake"); if(ra) ra.textContent = (_roomHumans!=null && _roomHumans>=2) ? `${_roomHumans} night owls here right now` : "the room's awake";
   const cbs=document.querySelector(".cbr-sub"); if(cbs) cbs.textContent = (_roomCups!=null && _roomCups>=2) ? `${_roomCups} cups steeped tonight — the ghosts steep with you 🍜` : "a quiet 3-minute break — the ghosts steep with you 🍜";
+  renderShelf(); renderNotice(); renderNod(); markUsualChip();
 }
+/* the shelf: a pack is finite — that's where a cigarette's value lives. seven cups a week,
+   one per night, restocks sunday. never loss-framed: an untaken cup just stays on the shelf. */
+function renderShelf(){ const el=$("#cup-shelf"); if(!el) return;
+  let hist=[]; try{ hist=JSON.parse(localStorage.getItem("carted_cup_hist")||"[]"); }catch(e){}
+  const tonight=nightKey(); const dow=(k)=>{ const a=k.split("-").map(Number); return new Date(a[0],a[1]-1,a[2],12).getDay(); };
+  const start=nightShift(tonight, -dow(tonight));   // sunday of this week (night-key space)
+  let cups="";
+  for(let i=0;i<7;i++){ const k=nightShift(start,i); const taken=hist.includes(k); const isT=k===tonight; const future=k>tonight;
+    cups+=`<span class="sh-cup${taken?" taken":""}${isT?" tonight":""}${future?" future":""}">🥡</span>`; }
+  el.innerHTML=`<span class="sh-lbl">the shelf</span>${cups}<span class="sh-sub">one a night · restocks sunday</span>`; }
+
+/* the notice board: a maintained PLACE has weight — nightly one-liner from dispatch, in ops voice */
+const NOTICES=[
+  "kettle descaled. quiet night expected.",
+  "spare chopsticks restocked by the door.",
+  "the lamp flickered around midnight. it's fine now.",
+  "someone left the radio on low. leaving it.",
+  "counter wiped down. help yourself to the stools.",
+  "napkin supply holding. carry on.",
+  "the back door sticks — push twice.",
+  "broth's on its third simmer. smells right.",
+  "swept up. found nothing but crumbs and one good idea.",
+  "steam vent cleaned. breathe easy.",
+  "chairs left how you had them.",
+  "night shift briefed. nothing to report.",
+  "the good mugs are out tonight. no reason.",
+  "closing time is still never.",
+];
+function renderNotice(){ const el=$("#room-notice"); if(!el) return;
+  const winter=document.body.classList.contains("winter");
+  const line=winter&&(hash(nightKey())%3===0) ? "tent's heated tonight. shake the cold off." : NOTICES[hash(nightKey()+"ntc")%NOTICES.length];
+  el.textContent=`📋 notice: ${line} — dispatch`; }
+
+/* the nod: how smokers acknowledge each other — no words. only offered when REAL people are
+   here (humans ≥2), and the count is real (analytics events), or it isn't shown at all. */
+let _nodBase=null;
+function renderNod(){ const el=$("#room-nod"); if(!el) return;
+  if(_roomHumans==null || _roomHumans<2){ el.innerHTML=""; return; }
+  const done=(function(){ try{ return localStorage.getItem("carted_nod")===nightKey(); }catch(e){ return false; } })();
+  const n=(_roomNods!=null&&_roomNods>=2)?`<span class="nod-n">${_roomNods} nods tonight</span>`:"";
+  el.innerHTML=`<button class="nod-btn${done?" done":""}" onclick="doNod()" ${done?"disabled":""}>🤝 ${done?"you nodded":"nod to the room"}</button>${n}`;
+  if(done && _nodBase!=null && _roomNods!=null && _roomNods>_nodBase){ _nodBase=null;
+    try{ if(!localStorage.getItem("carted_nodback_"+nightKey())){ localStorage.setItem("carted_nodback_"+nightKey(),"1"); toast("someone nodded back 🤝"); } }catch(e){} } }
+function doNod(){ try{ if(localStorage.getItem("carted_nod")===nightKey()) return; localStorage.setItem("carted_nod", nightKey()); }catch(e){}
+  _nodBase=_roomNods!=null?_roomNods+1:null; track("nod",{night:nightKey()}); _roomNods=(_roomNods||0)+1;
+  snd("pop"); toast("you nodded. no words needed 🤝"); renderNod(); }
+
+/* your corner: regulars have a spot. the chip for your most-dodged craving gets a quiet ring. */
+function usualChipEmoji(){ const u=stats.usual&&String(stats.usual.en||"").toLowerCase(); if(!u) return null;
+  const M=[["pizza","🍕"],["italian","🍕"],["ramen","🍜"],["noodle","🍜"],["vietnamese","🍜"],["thai","🍜"],["japanese","🍣"],["sushi","🍣"],["mexican","🌮"],["taco","🌮"],["burger","🍔"],["american","🍔"],["dessert","🍰"],["bakery","🍰"],["french","🍰"]];
+  for(const [k,e] of M){ if(u.includes(k)) return e; } return null; }
+function markUsualChip(){ const e=usualChipEmoji(); if(!e) return;
+  document.querySelectorAll(".pchip").forEach(b=>{ if(b.textContent.trim()===e){ b.classList.add("usual"); b.title="the usual?"; } }); }
+
 /* 988 covers the US + Canada only — a dead crisis number is the worst bug this product can ship.
    elsewhere: a warm line with no number (no clinical nouns in the ambient UI, ever). */
 function isNA(){ try{ return /^America\//.test(Intl.DateTimeFormat().resolvedOptions().timeZone||""); }catch(e){ return false; } }
@@ -2265,11 +2387,12 @@ function capRoom(n){ // evict fiction first — real night owls and your own pos
   while(room.length>n){ let i=-1;
     for(let j=room.length-1;j>=0;j--){ if(!room[j].live && !room[j].mine){ i=j; break; } }
     room.splice(i>=0?i:room.length-1,1); } }
-let _roomHumans=null, _roomCups=null;
+let _roomHumans=null, _roomCups=null, _roomNods=null;
 function fetchLiveRoom(){ if(!(ROOM_LIVE && beOn())) return; const now=Date.now(); if(now-_roomFetchT<60000) return; _roomFetchT=now;
   bePost("room",{action:"list", night:nightKey(), device_id:deviceId()}).then(r=>{ if(!(r && r.posts)) return;
     if(typeof r.humans==="number") _roomHumans=r.humans;   // real presence (devices seen in the last 10 min); null until the backend has the table
     if(typeof r.cups==="number") _roomCups=r.cups;         // real cups steeped tonight, from analytics events
+    if(typeof r.nods==="number") _roomNods=r.nods;         // real nods tonight — same honest pattern
     const seen=new Set(room.filter(p=>p.liveId).map(p=>p.liveId));
     let added=false;
     r.posts.forEach(p=>{ if(seen.has(p.id)) return; added=true;
@@ -2361,6 +2484,7 @@ function openCup(){
       <button class="cup-x" onclick="closeCup(true)" aria-label="put the cup down">✕</button>
       <div class="cup-others">🍜 ${(eventNight()&&esc(eventNight().cupLine))||"the ghosts are steeping with you"}</div>
       <button class="cup-snd" id="cup-snd" onclick="toggleCupSound()">${cupSndOn?"🔊 kettle on":"🔇 kettle off"}</button>
+      <button class="cup-snd" onclick="shareBack3()" title="a note for whoever wonders where you went">🚪 tell them you're on a break</button>
       <div class="cup-stage" id="cup-stage">
         <div class="cup-steam" id="cup-steam"><span>♨</span><span>♨</span><span>♨</span></div>
         <div class="cup-emo" id="cup-emo">🥡</div>
@@ -2385,6 +2509,7 @@ function openCup(){
   stage.addEventListener("pointerleave",()=>blow(false));
   stage.addEventListener("pointercancel",()=>blow(false));   // iOS: system gestures cancel long holds without a pointerup
   clearInterval(cupTimer); cupTimer=setInterval(cupTick,1000); cupTick();
+  snd("kettle");   // the lighter click — same two notes every night, nothing else sounds like it
   if(cupSndOn) startCupSound();
 }
 /* opt-in cup sound: one staged synth arc telling the same 3-minute story as the timer —
@@ -2420,7 +2545,9 @@ let cupEpilogueT=null;
 function cupServe(){
   const el=$("#cup-overlay"); if(!el) return;
   snd("chime"); stopCupSound();
-  try{ localStorage.setItem("carted_cup", nightKey()); }catch(e){}   // remembered, but never scored — rest isn't graded
+  try{ localStorage.setItem("carted_cup", nightKey());
+    const h=JSON.parse(localStorage.getItem("carted_cup_hist")||"[]"); if(!h.includes(nightKey())){ h.push(nightKey()); while(h.length>21) h.shift(); localStorage.setItem("carted_cup_hist", JSON.stringify(h)); }
+  }catch(e){}   // remembered, but never scored — rest isn't graded
   markShownUp(false);   // steeping a cup counts as showing up — but SILENTLY, so "no points, nothing owed" stays true on screen
   track("cup_done",{night:nightKey()});
   /* the eat epilogue: don't cut from 3:00 straight back to the feed — the warmth is the payload.
@@ -2898,6 +3025,7 @@ room = room.concat(ROOM_SEED.map(p=>({...p, reacted:{}})));
     r:{hug:hash(nightKey()+"h"+k)%6, me:hash(nightKey()+"m"+k)%8, go:hash(nightKey()+"g"+k)%3}, reacted:{}});
 } })();
 applyNight();   // night is permanent — one apply at boot
+{ const mo=new Date().getMonth()+1; if(mo>=11||mo<=2) document.body.classList.add("winter"); }   // the tent is warmest when the night is coldest
 /* naming moment is triggered by the FIRST reveal (where "he waited up / roasted your cart" is
    finally earned), not a cold timer on the browse feed — see revealTruth's firstEver branch */
 rotateTicker(); setInterval(rotateTicker, 3600); setInterval(streamIncoming, 26000);   // sparse ghost cadence; presence is fetched live, not simulated
