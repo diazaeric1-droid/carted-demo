@@ -10,6 +10,25 @@
 <meta name="theme-color" content="#100C0A" />
 <link rel="manifest" href="manifest.json" />
 <link rel="apple-touch-icon" href="icon-192.png" />
+<!-- ═══════════════════════ REVIEW GATE (SUNRISE-1, 2026-07-12) ═══════════════════════
+  Every new line of copy, emoji, or furniture passes this gate before it ships:
+  1. COPY (V1 test): a line survives only if it passes ≥2 of {fires at a THRESHOLD moment,
+     does TRUTH-WORK the layout can't, is UNPASTEABLE (voice no clone can lift)}. A disclosed
+     fact gets its threshold moments plus exactly ONE ambient home — never two.
+  2. DENSITY, two laws: ORDER surfaces (feed/detail/cart) pass "would DoorDash at 2am show
+     this?" — pastiche fidelity is charm (★ratings, receipts, fee line-items stay). ROOM
+     surfaces pass damta density — the lamp does the talking; first post above the fold.
+  3. EMOJI: an emoji is either a taught system-noun (👻 🥡 🌅 🚩 🤍 🤝, one 🔥) or DATA
+     (dish glyphs, one flag). Never trailing a sentence that already works. NEVER inside a
+     Newsreader/serif line. 🌙 has 3 homes, total.
+  4. TYPE: 8 sizes only (11/12.5/14/16/19.5/24/34/78, canvas exempt). Quiet furniture ≤500
+     weight. One owner per screen: feed=cards, room=posts, reveal=the number, profile=kept-$.
+  5. BUDGETS (rendered, 375px): feed ≤2,600 chars/≤60 emojis/≤90 tappables · room ≤1,300/
+     ≤40/≤30 · profile ≤900/≤30/≤25. preship-check.sh enforces what greps can.
+  PROTECTED (verbatim, do not trim): the NOTICES pool · threshold lines ("the cup keeps.",
+  "no points, nothing owed") · "he remembers: you always cart X" · pstat captions ("a missed
+  night, forgiven") · composer placeholder burn clause · fic-note "…the order never will be" ·
+  cart footer "the button looks real. nothing gets charged." · 988 line · report/terms path. -->
 <title>Carted · the 2 am room for night owls</title>
 <meta name="description" content="A quiet room for night owls. Cart your 2am craving, send a ghost instead of your money, and sit three minutes with the others who are up. Everything burns at sunrise." />
 <style>
@@ -32,12 +51,12 @@
   }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   /* strip the old sticker treatment app-wide: hairline warm seams, tonal depth, no hard offset shadows */
-  .card, .tier-card, .feat-banner, .post, .cup-bar, .composer input, .signin-btn, .seg,
+  .card, .tier-card, .feat-banner, .post, .cup-bar, .composer input, .signin-btn,
   .kclosed, .quests, .passport, .prompts, .drawer .dr-head, .hud .pill, .live-pill, .city-chip, .ebanner,
   .tk-line, .quiet-panel, .morts-pick, .buddy-nudge, .ghost-quip, .silence-btn, .feed-identity, .track-skip {
     box-shadow: none !important; border-color: var(--border) !important;
   }
-  .card, .tier-card, .feat-banner, .post, .cup-bar, .composer input, .seg, .kclosed,
+  .card, .tier-card, .feat-banner, .post, .cup-bar, .composer input, .kclosed,
   .quests, .passport, .prompts, .hud .pill, .live-pill, .city-chip, .tk-line, .feed-identity { border-width: 1px !important; }
   /* film grain — the analog fingerprint (CSS-only SVG fractal noise) */
   .screen::after { content:""; position:absolute; inset:0; z-index:1; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
@@ -72,7 +91,7 @@
   .body { flex: 1; overflow-y: auto; overflow-x: hidden; position: relative; }
   .body::-webkit-scrollbar { display: none; }
   .view { display: none; padding: 4px 18px 92px; animation: fade .25s ease; position: relative; }
-  .view > *:not(.foodfall) { position: relative; z-index: 1; }
+  .view > * { position: relative; z-index: 1; }
   .view.active { display: block; }
   @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
@@ -85,48 +104,49 @@
   .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--slate); box-shadow: 0 0 0 0 rgba(124,147,184,.6); animation: pulse 1.8s infinite; }
   @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(124,147,184,.5);} 70%{box-shadow:0 0 0 10px rgba(124,147,184,0);} 100%{box-shadow:0 0 0 0 rgba(124,147,184,0);} }
   .ghostline { margin-top: 8px; display: flex; gap: 8px; align-items: center; min-height: 24px; overflow: hidden; }
-  .ghost-emo { display: inline-block; font-size: 19px; animation: bob 2.6s ease-in-out infinite; }
+  .ghost-emo { display: inline-block; font-size: 19.5px; animation: bob 2.6s ease-in-out infinite; }
   @keyframes bob { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-5px);} }
   .ghostline .msg { font-size: 12.5px; color: var(--muted); white-space: nowrap; transition: opacity .5s, transform .5s; font-weight: 700; }
 
   .city-bar { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 14px; }
   .city-bar::-webkit-scrollbar { display: none; }
-  .city-chip { white-space: nowrap; background: var(--card); border: 2px solid var(--ink); color: var(--text); border-radius: 16px; padding: 8px 14px; font-size: 13px; font-weight: 600; font-family: var(--disp); cursor: pointer; flex: 0 0 auto; transition: transform .1s; box-shadow: 2px 2px 0 var(--ink); }
+  .city-chip { white-space: nowrap; background: var(--card); border: 2px solid var(--ink); color: var(--text); border-radius: 16px; padding: 8px 14px; font-size: 12.5px; font-weight: 600; font-family: var(--disp); cursor: pointer; flex: 0 0 auto; transition: transform .1s; box-shadow: 2px 2px 0 var(--ink); }
   .city-chip:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
   .city-chip.on { background: var(--ink); color: var(--screen); }
   .city-chip.add { border-style: dashed; color: var(--accent); box-shadow: none; }
+  .show-all { display:block; width:100%; background:none; border:1px dashed rgba(239,228,214,.18); color:var(--muted); border-radius:12px; padding:10px; font-size:12.5px; margin-top:8px; cursor:pointer; }
+  .city-line { background: none; border: none; color: var(--muted); font-size: 12.5px; font-family: var(--disp); padding: 4px 2px 10px; cursor: pointer; text-align: left; }
+  .city-line .cl-change { color: var(--accent); font-size: 12.5px; }
 
   .tally { display: flex; gap: 10px; margin-bottom: 14px; }
   .tally .box { flex: 1; background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 10px 12px; box-shadow: 2px 2px 0 var(--ink); }
   .tally .box .k { font-size: 11px; color: var(--muted); font-weight: 700; }
-  .tally .box .v { font-size: 17px; font-weight: 800; margin-top: 2px; }
+  .tally .box .v { font-size: 16px; font-weight: 800; margin-top: 2px; }
   .tally .v.green { color: var(--go); }
 
   .seg { display: flex; gap: 6px; background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 4px; margin-bottom: 16px; box-shadow: 2px 2px 0 var(--ink); }
-  .seg button { flex: 1; background: none; border: none; color: var(--muted); font-weight: 800; font-size: 13px; padding: 9px; border-radius: 9px; cursor: pointer; }
+  .seg button { flex: 1; background: none; border: none; color: var(--muted); font-weight: 800; font-size: 12.5px; padding: 9px; border-radius: 9px; cursor: pointer; }
   .seg button.on { background: var(--accent2); color: var(--ink); }
 
-  .section-label { font-size: 13px; color: var(--muted); font-weight: 700; margin: 4px 2px 10px; text-transform: uppercase; letter-spacing: .6px; }
+  .section-label { font-size: 12.5px; color: var(--muted); font-weight: 700; margin: 4px 2px 10px; text-transform: uppercase; letter-spacing: .6px; }
 
   .card { position: relative; display: flex; gap: 13px; padding: 11px; margin-bottom: 14px; background: var(--card); border: 2.5px solid var(--ink); border-radius: 20px; cursor: pointer; transition: transform .12s ease, background .15s, box-shadow .12s; box-shadow: 5px 5px 0 var(--ink); }
   .card:active { transform: translate(2px,3px); box-shadow: 1px 2px 0 var(--ink); background: var(--card-hi); }
-  .thumb { width: 118px; height: 118px; flex: 0 0 118px; align-self: center; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 56px; background: var(--card-hi); border: 2.5px solid var(--ink); overflow: hidden; box-shadow: 2px 2px 0 var(--ink); }
+  .thumb { width: 118px; height: 118px; flex: 0 0 118px; align-self: center; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 34px; background: var(--card-hi); border: 2.5px solid var(--ink); overflow: hidden; box-shadow: 2px 2px 0 var(--ink); }
   .thumb .ph-img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .hero .ph-img { width: 100%; height: 100%; object-fit: cover; border-radius: 22px; display: block; }
   .meta { flex: 1; min-width: 0; padding-right: 48px; display: flex; flex-direction: column; overflow: hidden; }
   .meta .name { font-size: 19.5px; font-weight: 500; font-family: var(--disp); line-height: 1.1; color: var(--text); }
-  .meta .name .en { color: var(--muted); font-weight: 500; font-size: 12px; text-transform: capitalize; font-family: var(--bodyf); }
+  .meta .name .en { color: var(--muted); font-weight: 500; font-size: 12.5px; text-transform: capitalize; font-family: var(--bodyf); }
   .meta .shop { font-size: 12.5px; color: var(--muted); margin-top: 3px; font-weight: 600; }
   .meta .cprow { margin-top: 7px; overflow: hidden; }
-  .meta .cpchip { display: inline-flex; align-items: center; gap: 4px; background: var(--hot); color: #fff; font-family: var(--disp); font-weight: 700; font-size: 11.5px; padding: 3px 9px; border: 2px solid var(--ink); border-radius: 10px; box-shadow: 1.5px 1.5px 0 var(--ink); white-space: nowrap; }
-  .meta .row { display: flex; align-items: center; gap: 7px; margin-top: 7px; font-size: 12px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+  .meta .cpchip { display: inline-flex; align-items: center; gap: 4px; background: var(--hot); color: #fff; font-family: var(--disp); font-weight: 700; font-size: 11px; padding: 3px 9px; border: 2px solid var(--ink); border-radius: 10px; box-shadow: 1.5px 1.5px 0 var(--ink); white-space: nowrap; }
+  .meta .row { display: flex; align-items: center; gap: 7px; margin-top: 7px; font-size: 12.5px; color: var(--muted); font-weight: 600; white-space: nowrap; }
   .meta .row .rate { color: #d98324; font-weight: 800; }
   .meta .price { margin-top: auto; padding-top: 7px; font-size: 16px; font-weight: 700; font-family: var(--disp); color: var(--accent); white-space: nowrap; }
-  .meta .price .p-eta { color: var(--muted); font-family: var(--bodyf); font-weight: 500; font-size: 12px; }
-  .qadd { position: absolute; top: 50%; right: 11px; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 13px; border: 2px solid var(--ink); background: var(--grad); color: #1A1109; font-size: 23px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; line-height: 1; transition: transform .1s, box-shadow .1s; }
+  .meta .price .p-eta { color: var(--muted); font-family: var(--bodyf); font-weight: 500; font-size: 12.5px; }
+  .qadd { position: absolute; top: 50%; right: 11px; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 13px; border: 2px solid var(--ink); background: var(--grad); color: #1A1109; font-size: 24px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; line-height: 1; transition: transform .1s, box-shadow .1s; }
   .qadd:active { transform: translateY(-50%) translate(1px,2px) scale(.96); box-shadow: 0 0 0 var(--ink); }
-  .fav { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); color: #c9bfa6; font-size: 17px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform .12s, color .15s; }
-  .fav:active { transform: scale(.85); }
   .fav.on { color: var(--hot); }
 
   .loading { text-align: center; padding: 50px 20px; color: var(--text); font-weight: 700; }
@@ -134,18 +154,18 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .osm-credit { text-align: center; color: var(--muted); font-size: 11px; padding: 14px 0 4px; opacity: .8; }
 
-  .back { background: none; border: none; color: var(--accent); font-size: 15px; font-weight: 800; padding: 6px 0; cursor: pointer; }
-  .hero { height: 244px; border-radius: 20px; margin: 6px 0 12px; position: relative; display: flex; align-items: center; justify-content: center; font-size: 120px; background: var(--card-hi); border: 2.5px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); overflow: hidden; }
+  .back { background: none; border: none; color: var(--accent); font-size: 14px; font-weight: 800; padding: 6px 0; cursor: pointer; }
+  .hero { height: 244px; border-radius: 20px; margin: 6px 0 12px; position: relative; display: flex; align-items: center; justify-content: center; font-size: 78px; background: var(--card-hi); border: 2.5px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); overflow: hidden; }
   .hero::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to top, rgba(34,28,51,.8) 0%, rgba(34,28,51,.12) 34%, rgba(34,28,51,0) 56%); pointer-events: none; }
   .hero .city-tag { position: absolute; top: 12px; left: 12px; z-index: 2; background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 5px 11px; font-size: 12.5px; font-weight: 800; }
-  .hero .d-fav { position: absolute; top: 11px; right: 11px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); color: #c9bfa6; font-size: 20px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0 var(--ink); }
+  .hero .d-fav { position: absolute; top: 11px; right: 11px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); color: #c9bfa6; font-size: 19.5px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0 var(--ink); }
   .hero .d-fav.on { color: var(--hot); background: var(--card-hi); }
   .hero .hero-name { position: absolute; left: 15px; right: 15px; bottom: 13px; z-index: 2; color: #fff; }
-  .hero .hero-name .hn-title { font-family: var(--disp); font-weight: 700; font-size: 27px; line-height: 1.04; text-shadow: 0 2px 9px rgba(0,0,0,.5); }
-  .hero .hero-name .hn-sub { font-size: 13px; font-weight: 700; margin-top: 3px; opacity: .96; text-transform: capitalize; text-shadow: 0 1px 7px rgba(0,0,0,.55); }
-  .d-stats { display: flex; gap: 16px; margin: 4px 2px 10px; font-size: 13px; color: var(--muted); }
+  .hero .hero-name .hn-title { font-family: var(--disp); font-weight: 700; font-size: 24px; line-height: 1.04; text-shadow: 0 2px 9px rgba(0,0,0,.5); }
+  .hero .hero-name .hn-sub { font-size: 12.5px; font-weight: 700; margin-top: 3px; opacity: .96; text-transform: capitalize; text-shadow: 0 1px 7px rgba(0,0,0,.55); }
+  .d-stats { display: flex; gap: 16px; margin: 4px 2px 10px; font-size: 12.5px; color: var(--muted); }
   .d-stats b { color: var(--text); }
-  .d-desc { font-size: 13px; color: var(--muted); font-style: italic; line-height: 1.4; margin: 0 2px 10px; }
+  .d-desc { font-size: 12.5px; color: var(--muted); font-style: italic; line-height: 1.4; margin: 0 2px 10px; }
   .reviews { margin-top: 6px; }
   .review { background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; }
   .review .top { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--muted); margin-bottom: 6px; }
@@ -160,17 +180,17 @@
   .cta.gold:active { transform: translateY(1px) scale(.995); filter: brightness(1.06); }
 
   .cart-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 2px dashed #d9cbab; }
-  .cart-item .ci-thumb { width: 54px; height: 54px; flex: 0 0 54px; border-radius: 11px; border: 2px solid var(--ink); overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--card-hi); font-size: 30px; box-shadow: 2px 2px 0 var(--ink); }
+  .cart-item .ci-thumb { width: 54px; height: 54px; flex: 0 0 54px; border-radius: 11px; border: 2px solid var(--ink); overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--card-hi); font-size: 34px; box-shadow: 2px 2px 0 var(--ink); }
   .cart-item .ci-thumb .ph-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .cart-item .nm { flex: 1; font-size: 14.5px; font-weight: 600; }
+  .cart-item .nm { flex: 1; font-size: 14px; font-weight: 600; }
   .cart-item .pr { font-weight: 700; font-size: 14px; }
-  .cart-item .rm { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; padding: 4px 8px; }
+  .cart-item .rm { background: none; border: none; color: var(--muted); font-size: 19.5px; cursor: pointer; padding: 4px 8px; }
   .summary { margin: 18px 0 8px; }
   .summary .line { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; color: var(--muted); }
-  .summary .line.total { color: var(--text); font-weight: 800; font-size: 18px; border-top: 2px solid var(--ink); margin-top: 6px; padding-top: 12px; }
+  .summary .line.total { color: var(--text); font-weight: 800; font-size: 19.5px; border-top: 2px solid var(--ink); margin-top: 6px; padding-top: 12px; }
   .fee-callout { text-align: center; color: #d98324; font-size: 12.5px; font-weight: 700; margin: 4px 0 2px; }
   .empty { text-align: center; color: var(--muted); padding: 60px 20px; }
-  .empty .big { font-size: 54px; margin-bottom: 12px; }
+  .empty .big { font-size: 34px; margin-bottom: 12px; }
 
   .track-wrap { text-align: center; padding-top: 10px; }
   /* ----- map: ghost-courier route (curved SVG path + gliding Mort) ----- */
@@ -188,37 +208,37 @@
   .route .ants { fill: none; stroke: rgba(239,228,214,.22); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 2 11; animation: ants 1.1s linear infinite; }
   @keyframes ants { to { stroke-dashoffset: -26; } }
   .route .done { fill: none; stroke: var(--accent); stroke-width: 7; stroke-linecap: round; stroke-dasharray: var(--len) var(--len); stroke-dashoffset: var(--len); transition: stroke-dashoffset .8s ease; filter: drop-shadow(0 0 6px var(--glow)); }
-  .pin { position: absolute; font-size: 25px; transform: translate(-50%,-78%); z-index: 3; filter: drop-shadow(2px 2px 0 rgba(34,28,51,.28)); }
+  .pin { position: absolute; font-size: 24px; transform: translate(-50%,-78%); z-index: 3; filter: drop-shadow(2px 2px 0 rgba(34,28,51,.28)); }
   .pin .halo { position: absolute; left: 50%; top: 64%; width: 30px; height: 13px; border-radius: 50%; transform: translate(-50%,-50%); z-index: -1; }
   .pin.shop { left: 14%; top: 80%; } .pin.shop .halo { background: rgba(240,168,74,.55); animation: halo 2.2s ease-in-out infinite; }
   .pin.home { left: 86%; top: 18%; } .pin.home .halo { background: rgba(201,106,74,.5); animation: halo 2.2s ease-in-out .6s infinite; }
   @keyframes halo { 0%,100%{ transform: translate(-50%,-50%) scale(.7); opacity: .4; } 50%{ transform: translate(-50%,-50%) scale(1.25); opacity: .85; } }
-  .rider { position: absolute; left: 14%; top: 80%; font-size: 44px; z-index: 4; transform: translate(-50%,-58%); transition: left .8s ease, top .8s ease, opacity .55s ease; will-change: left, top; filter: drop-shadow(2px 2px 0 rgba(34,28,51,.35)); }
+  .rider { position: absolute; left: 14%; top: 80%; font-size: 34px; z-index: 4; transform: translate(-50%,-58%); transition: left .8s ease, top .8s ease, opacity .55s ease; will-change: left, top; filter: drop-shadow(2px 2px 0 rgba(34,28,51,.35)); }
   .rider .mort { display: inline-block; animation: bob 1.4s ease-in-out infinite; }
-  .rider .veh { position: absolute; left: 62%; bottom: -2px; font-size: 26px; animation: bob 1.4s ease-in-out .2s infinite; }
+  .rider .veh { position: absolute; left: 62%; bottom: -2px; font-size: 24px; animation: bob 1.4s ease-in-out .2s infinite; }
   @keyframes bob { 0%,100%{ transform: translateY(0) rotate(-3deg); } 50%{ transform: translateY(-4px) rotate(3deg); } }
-  .rider .puff { position: absolute; right: 84%; top: 56%; font-size: 15px; opacity: .55; animation: puff 1.1s ease-out infinite; }
+  .rider .puff { position: absolute; right: 84%; top: 56%; font-size: 14px; opacity: .55; animation: puff 1.1s ease-out infinite; }
   @keyframes puff { 0%{ opacity: .5; transform: translateX(0) scale(.7); } 100%{ opacity: 0; transform: translateX(-16px) scale(1.1); } }
   .eta-chip { position: absolute; left: 14%; top: 80%; transform: translate(-50%,-150%); z-index: 5; background: var(--accent); color: #1A1109; font-family: var(--bodyf); font-weight: 700; font-size: 12.5px; padding: 4px 9px; border-radius: 11px; box-shadow: 0 6px 18px -8px var(--glow); white-space: nowrap; transition: left .8s ease, top .8s ease; }
   .eta-chip::after { content: ""; position: absolute; left: 50%; bottom: -5px; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--accent); }
-  .eta { font-size: 40px; font-weight: 800; letter-spacing: -1px; font-family: var(--disp); }
+  .eta { font-size: 34px; font-weight: 800; letter-spacing: -1px; font-family: var(--disp); }
   .eta .u { font-size: 16px; color: var(--muted); font-weight: 600; }
-  .stage { color: var(--muted); font-size: 15px; margin-top: 6px; min-height: 22px; }
+  .stage { color: var(--muted); font-size: 14px; margin-top: 6px; min-height: 22px; }
   .track-presence { margin-top: 16px; font-size: 12.5px; color: var(--muted); }
   .reveal { animation: fade .4s ease; text-align: center; padding: 4px 6px 8px; }
-  .reveal .moon { font-size: 56px; }
-  .reveal .punch { font-size: 19px; font-weight: 700; margin: 12px 0 6px; line-height: 1.4; font-family: var(--disp); }
+  .reveal .moon { font-size: 34px; }
+  .reveal .punch { font-size: 19.5px; font-weight: 700; margin: 12px 0 6px; line-height: 1.4; font-family: var(--disp); }
   /* the $-saved is the hero of the whole app — the TikTok money number. a single amber
      filament numeral glowing in the dark, set in the display serif. no sticker, no green. */
   .reveal .saved { font-family: var(--disp); font-size: 78px; font-weight: 500; line-height: .94; color: var(--filament); margin: 12px 0 4px; letter-spacing: -2px;
     text-shadow: 0 0 34px var(--glow), 0 0 10px rgba(246,201,130,.35); }
   .reveal .saved .cur { font-size: 34px; vertical-align: 24px; color: var(--accent); letter-spacing: 0; margin-right: 1px; }
-  .reveal .saved .lbl { display: block; font-family: var(--bodyf); font-size: 12px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); margin-top: 10px; text-shadow: none; }
-  .reveal .ghost-quip { font-family: var(--disp); font-style: italic; font-size: 15px; color: var(--muted); line-height: 1.5; max-width: 300px; margin: 4px auto 0; }
-  .reveal .sub { color: var(--muted); font-size: 13.5px; line-height: 1.5; max-width: 300px; margin-left: auto; margin-right: auto; }
+  .reveal .saved .lbl { display: block; font-family: var(--bodyf); font-size: 12.5px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); margin-top: 10px; text-shadow: none; }
+  .reveal .ghost-quip { font-family: var(--disp); font-style: italic; font-size: 14px; color: var(--muted); line-height: 1.5; max-width: 300px; margin: 4px auto 0; }
+  .reveal .sub { color: var(--muted); font-size: 14px; line-height: 1.5; max-width: 300px; margin-left: auto; margin-right: auto; }
   .track-skip { margin-top: 14px; background: transparent; border: none; color: var(--muted); font-family: var(--disp); font-weight: 600; font-size: 12.5px; cursor: pointer; opacity: .8; text-decoration: underline; }
-  /* feed identity band — makes the first frame read as THE anti-delivery app, not a food-delivery clone */
-  .feed-identity { display: flex; align-items: center; gap: 7px; justify-content: center; text-align: center; background: linear-gradient(90deg, rgba(240,168,74,.08), rgba(124,147,184,.08)); border: 1px solid var(--border); border-radius: 14px; padding: 9px 12px; margin: 2px 0 14px; font-family: var(--disp); font-style: italic; font-weight: 500; font-size: 13px; color: var(--text); }
+  /* feed identity band — first-night-only premise line (lifecycle-gated) */
+  .feed-identity { display: flex; align-items: center; gap: 7px; justify-content: center; text-align: center; background: linear-gradient(90deg, rgba(240,168,74,.08), rgba(124,147,184,.08)); border: 1px solid var(--border); border-radius: 14px; padding: 9px 12px; margin: 2px 0 14px; font-family: var(--disp); font-style: italic; font-weight: 500; font-size: 12.5px; color: var(--text); }
   /* ----- globe: international flight route ----- */
   .globe-box { height: 234px; margin: 6px 0 14px; position: relative; overflow: hidden; }
   .globe-box .land polygon { fill: #3A3324; stroke: #4A4030; stroke-width: .5; stroke-linejoin: round; }
@@ -239,7 +259,7 @@
     .rider .puff { display: none; }
   }
 
-  .brand .live2 { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); margin-top: 5px; }
+  .brand .live2 { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); margin-top: 5px; }
   .composer { display: flex; gap: 8px; margin-bottom: 16px; }
   .composer input { flex: 1; background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 13px 14px; color: var(--text); font-size: 14px; outline: none; font-family: var(--bodyf); font-weight: 600; }
   .composer input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow); }
@@ -249,35 +269,32 @@
   .post.mine { border-color: rgba(240,168,74,.5); background: var(--card-hi); }
   .post .phead { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
   .post .pic { font-size: 24px; }
-  .post .pmeta { font-size: 11.5px; color: var(--muted); }
+  .post .pmeta { font-size: 11px; color: var(--muted); }
   .post .pmeta b { color: var(--text); font-weight: 700; }
   .post .mine-tag { color: var(--accent); font-weight: 700; }
   .post.ghostp { background: linear-gradient(0deg, rgba(124,147,184,.06), rgba(124,147,184,.06)), var(--card); border-style: dashed; }
   .doorway { position:absolute; inset:0; z-index:125; background:#0B0806; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:30px; text-align:center; animation: fade .5s ease; }
   .doorway.out { opacity:0; transition:opacity .6s ease; }
-  .doorway .dw-line { font-family:var(--disp); font-style:italic; font-size:26px; color:var(--filament); }
-  .doorway .dw-sub { font-size:13.5px; color:var(--muted); max-width:300px; line-height:1.5; }
-  .shelf { display:flex; align-items:center; gap:5px; margin:0 0 10px; padding:8px 12px; background:var(--card); border:1px solid rgba(239,228,214,.08); border-radius:12px; }
-  .shelf .sh-lbl { font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-right:4px; }
-  .shelf .sh-cup { font-size:16px; opacity:.22; filter:grayscale(.6); }
-  .shelf .sh-cup.taken { opacity:1; filter:none; }
-  .shelf .sh-cup.tonight { opacity:.55; filter:none; text-shadow:0 0 8px rgba(240,168,74,.5); }
-  .shelf .sh-cup.tonight.taken { opacity:1; }
-  .shelf .sh-sub { font-size:10.5px; color:var(--muted); margin-left:auto; }
-  .notice { font-size:11.5px; color:var(--muted); font-style:italic; margin-top:6px; }
-  .nod-btn { background:none; border:1px solid rgba(239,228,214,.16); color:var(--text); border-radius:999px; font-size:12px; padding:4px 13px; margin-top:8px; }
+  .doorway .dw-line { font-family:var(--disp); font-style:italic; font-size:24px; color:var(--filament); }
+  .doorway .dw-sub { font-size:14px; color:var(--muted); max-width:300px; line-height:1.5; }
+  .cbr-shelf .sh-cup { font-size:16px; opacity:.22; filter:grayscale(.6); }
+  .cbr-shelf .sh-cup.taken { opacity:1; filter:none; }
+  .cbr-shelf .sh-cup.tonight { opacity:.55; filter:none; text-shadow:0 0 8px rgba(240,168,74,.5); }
+  .cbr-shelf .sh-cup.tonight.taken { opacity:1; }
+  .notice { font-size:11px; color:var(--muted); font-style:italic; margin-top:6px; }
+  .nod-btn { background:none; border:1px solid rgba(239,228,214,.16); color:var(--text); border-radius:999px; font-size:12.5px; padding:4px 13px; margin-top:8px; }
   .nod-btn.done { color:var(--muted); border-style:dashed; }
-  .nod-n { font-size:11.5px; color:var(--slate); margin-left:8px; }
+  .nod-n { font-size:11px; color:var(--slate); margin-left:8px; }
   .pchip.usual { border-color:rgba(240,168,74,.55); box-shadow:0 0 10px rgba(240,168,74,.28); }
   body.winter { --glow: rgba(232,117,42,.16); }
   body.winter .screen::before { filter: blur(8px) saturate(1.15); }
   .post.letter { border-style: solid; border-color: rgba(246,201,130,.28); background: linear-gradient(0deg, rgba(240,168,74,.05), rgba(240,168,74,.05)), var(--card); }
-  .post.letter .ptext { font-family: var(--disp); font-style: italic; font-size: 15px; line-height: 1.55; }
-  .l-ack { margin-top: 8px; font-size: 12px; color: var(--muted); font-style: italic; }
+  .post.letter .ptext { font-family: var(--disp); font-style: italic; font-size: 14px; line-height: 1.55; }
+  .l-ack { margin-top: 8px; font-size: 12.5px; color: var(--muted); font-style: italic; }
   .post .gtag { color: var(--slate); font-weight: 700; }
-  .ghost-note { font-size: 10.5px; color: var(--muted); font-weight: 700; margin-top: 5px; opacity: .85; line-height: 1.35; }
-  .kclosed { background: var(--card); border: 2px dashed var(--ink); border-radius: 16px; padding: 15px 16px; text-align: center; font-weight: 800; font-size: 14.5px; margin-top: 4px; box-shadow: 3px 3px 0 var(--ink); }
-  .kclosed .kc-sub { font-size: 11.5px; color: var(--muted); font-weight: 700; margin-top: 6px; }
+  .ghost-note { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 5px; opacity: .85; line-height: 1.35; }
+  .kclosed { background: var(--card); border: 2px dashed var(--ink); border-radius: 16px; padding: 15px 16px; text-align: center; font-weight: 800; font-size: 14px; margin-top: 4px; box-shadow: 3px 3px 0 var(--ink); }
+  .kclosed .kc-sub { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 6px; }
   .tk-line { background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 10px 12px; font-size: 12.5px; font-weight: 700; color: var(--muted); margin-bottom: 10px; box-shadow: 2px 2px 0 var(--ink); }
   .tk-line b { color: var(--text); }
   .fic-note { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 14px; text-align: center; opacity: .85; }
@@ -287,46 +304,45 @@
      content on the SAME 18px inset as every other view (no bleed, no misalignment). */
   body.in-room .screen, body.night.in-room .screen { background: #0C0907; }
   #view-room .post { animation-duration: .6s; }
-  .room-tag { font-size: 12.5px; color: var(--muted); font-weight: 800; margin-top: 3px; }
-  .reacts .chip .rlbl { font-size: 10px; font-weight: 800; color: var(--muted); margin: 0 4px 0 4px; }
+  .reacts .chip .rlbl { font-size: 11px; font-weight: 800; color: var(--muted); margin: 0 4px 0 4px; }
   .reacts .chip.on .rlbl { color: inherit; }
   /* the noodle cup — entry bar + the break overlay (our version of damta's cigarette) */
   .cup-bar { width: 100%; display: flex; align-items: center; gap: 11px; background: var(--card-hi); border: 1px solid var(--border); border-radius: 16px; padding: 12px 13px; margin: 2px 0 12px; cursor: pointer; text-align: left; color: var(--text); }
   .cup-bar:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
   .cup-bar .cbr-ic { font-size: 24px; }
   .cup-bar .cbr-txt { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-  .cup-bar .cbr-txt b { font-family: var(--disp); font-weight: 600; font-size: 14.5px; }
-  .cup-bar .cbr-sub { font-size: 11.5px; color: var(--muted); font-weight: 500; }
-  .cup-bar .cbr-go { font-size: 22px; font-weight: 800; }
+  .cup-bar .cbr-txt b { font-family: var(--disp); font-weight: 600; font-size: 14px; }
+  .cup-bar .cbr-sub { font-size: 11px; color: var(--muted); font-weight: 500; }
+  .cup-bar .cbr-go { font-size: 24px; font-weight: 800; }
   .silence-btn { width: 100%; background: transparent; border: 2px dashed var(--ink); border-radius: 14px; padding: 9px; margin: 0 0 12px; font-family: var(--disp); font-weight: 600; font-size: 12.5px; color: var(--muted); cursor: pointer; }
-  .room-rules-line { font-size: 10.5px; color: var(--muted); font-weight: 700; margin: -8px 0 14px; text-align: center; }
+  .room-rules-line { font-size: 11px; color: var(--muted); font-weight: 700; margin: -8px 0 14px; text-align: center; }
   .room-rules-line a { color: inherit; text-decoration: underline; }
   #view-room.quiet .prompts, #view-room.quiet .composer, #view-room.quiet .tk-line { display: none; }
   .quiet-panel { text-align: center; padding: 40px 20px; color: var(--muted); }
-  .quiet-panel .qp-emo { font-size: 46px; }
-  .quiet-panel .qp-title { font-family: var(--disp); font-weight: 600; font-size: 18px; color: var(--text); margin: 10px 0 8px; }
-  .quiet-panel .qp-sub { font-size: 13px; font-weight: 700; line-height: 1.5; }
+  .quiet-panel .qp-emo { font-size: 34px; }
+  .quiet-panel .qp-title { font-family: var(--disp); font-weight: 600; font-size: 19.5px; color: var(--text); margin: 10px 0 8px; }
+  .quiet-panel .qp-sub { font-size: 12.5px; font-weight: 700; line-height: 1.5; }
   .cup-ov { position: absolute; inset: 0; z-index: 120; background: #100C0A; background-image: radial-gradient(90% 62% at 50% 42%, #221A12 0%, #16110C 54%, #0A0806 100%); display: flex; align-items: center; justify-content: center; animation: fade .3s ease; }
   .cup-emo, .cup-scene .cup-emo { filter: drop-shadow(0 14px 30px rgba(0,0,0,.5)) drop-shadow(0 0 34px rgba(255,200,140,.14)); }
   .cup-scene { text-align: center; color: var(--text); width: 100%; padding: 24px; position: relative; }
-  .cup-x { position: absolute; top: -6px; right: 12px; background: none; border: none; color: var(--muted); font-size: 20px; font-weight: 600; cursor: pointer; padding: 8px; }
+  .cup-x { position: absolute; top: -6px; right: 12px; background: none; border: none; color: var(--muted); font-size: 19.5px; font-weight: 600; cursor: pointer; padding: 8px; }
   .cup-others { font-size: 12.5px; font-weight: 600; color: var(--slate); margin-bottom: 8px; }
-  .cup-snd { background: none; border: 1px solid rgba(239,228,214,.14); color: var(--muted); border-radius: 999px; font-size: 11.5px; padding: 4px 12px; margin-bottom: 30px; }
+  .cup-snd { background: none; border: 1px solid rgba(239,228,214,.14); color: var(--muted); border-radius: 999px; font-size: 11px; padding: 4px 12px; margin-bottom: 30px; }
   .cup-stage { position: relative; display: inline-block; cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: none; }
-  .cup-emo { font-size: 110px; line-height: 1.1; filter: drop-shadow(0 12px 26px rgba(0,0,0,.5)); }
+  .cup-emo { font-size: 78px; line-height: 1.1; filter: drop-shadow(0 12px 26px rgba(0,0,0,.5)); }
   .cup-steam { position: absolute; left: 50%; top: -30px; transform: translateX(-50%); display: flex; gap: 9px; pointer-events: none; }
-  .cup-steam span { font-size: 21px; color: var(--filament); opacity: .55; animation: steam 2.6s ease-in-out infinite; }
+  .cup-steam span { font-size: 19.5px; color: var(--filament); opacity: .55; animation: steam 2.6s ease-in-out infinite; }
   .cup-steam span:nth-child(2) { animation-delay: .9s; }
   .cup-steam span:nth-child(3) { animation-delay: 1.7s; }
   .cup-steam.blown span { animation-duration: .7s; opacity: .25; }
   @keyframes steam { 0% { transform: translateY(10px) scaleX(1); opacity: 0; } 30% { opacity: .85; } 100% { transform: translateY(-16px) scaleX(1.4); opacity: 0; } }
-  .cup-clock { font-family: var(--disp); font-size: 52px; font-weight: 500; margin-top: 12px; letter-spacing: 1px; color: var(--filament); text-shadow: 0 0 30px var(--glow); }
-  .cup-hint { font-size: 12px; color: var(--muted); font-weight: 400; margin-top: 6px; font-style: italic; font-family: var(--disp); }
-  .cup-ghostline { margin-top: 24px; font-size: 13.5px; font-weight: 700; color: #e8dcc6; opacity: .9; min-height: 20px; }
+  .cup-clock { font-family: var(--disp); font-size: 34px; font-weight: 500; margin-top: 12px; letter-spacing: 1px; color: var(--filament); text-shadow: 0 0 30px var(--glow); }
+  .cup-hint { font-size: 12.5px; color: var(--muted); font-weight: 400; margin-top: 6px; font-style: italic; font-family: var(--disp); }
+  .cup-ghostline { margin-top: 24px; font-size: 14px; font-weight: 700; color: #e8dcc6; opacity: .9; min-height: 20px; }
   @media (prefers-reduced-motion: reduce) { .cup-steam span { animation: none; } }
-  .post .ptext { font-size: 14.5px; line-height: 1.45; margin-bottom: 11px; }
+  .post .ptext { font-size: 14px; line-height: 1.45; margin-bottom: 11px; }
   .reacts { display: flex; gap: 8px; }
-  .chip { flex: 1; background: var(--screen); border: 2px solid var(--ink); border-radius: 11px; padding: 8px 4px; font-size: 13px; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: transform .1s, background .15s, color .15s; box-shadow: 2px 2px 0 var(--ink); font-weight: 700; }
+  .chip { flex: 1; background: var(--screen); border: 2px solid var(--ink); border-radius: 11px; padding: 8px 4px; font-size: 12.5px; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: transform .1s, background .15s, color .15s; box-shadow: 2px 2px 0 var(--ink); font-weight: 700; }
   .chip:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
   .chip.on { background: var(--accent2); color: var(--ink); font-weight: 800; }
   .chip .cnt { font-variant-numeric: tabular-nums; }
@@ -334,49 +350,50 @@
   .nav { position: absolute; bottom: 0; left: 0; right: 0; height: 58px; background: var(--screen); border-top: 2.5px solid var(--ink); display: flex; align-items: center; justify-content: space-around; padding-bottom: 6px; z-index: 30; }
   .nav button { background: none; border: none; color: #a99e85; font-size: 11px; font-weight: 600; font-family: var(--disp); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; position: relative; transition: transform .15s; }
   .nav button.on { color: var(--accent); transform: translateY(-2px); }
-  .nav button .gi { font-size: 21px; transition: transform .15s; }
+  .nav button .gi { font-size: 19.5px; transition: transform .15s; }
   .nav button.on .gi { transform: scale(1.2) rotate(-6deg); }
-  .badge { position: absolute; top: -4px; right: -8px; background: var(--hot); color: #fff; font-size: 10px; font-weight: 800; min-width: 17px; height: 17px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 4px; border: 1.5px solid var(--ink); }
+  .badge { position: absolute; top: -4px; right: -8px; background: var(--hot); color: #fff; font-size: 11px; font-weight: 800; min-width: 17px; height: 17px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 4px; border: 1.5px solid var(--ink); }
 
-  .toast { position: absolute; left: 50%; bottom: 96px; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--screen); font-weight: 700; font-size: 13.5px; padding: 11px 18px; border-radius: 30px; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 60; box-shadow: 3px 3px 0 rgba(34,28,51,.25); max-width: 80%; text-align: center; }
+  .toast { position: absolute; left: 50%; bottom: 96px; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--screen); font-weight: 700; font-size: 14px; padding: 11px 18px; border-radius: 30px; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 60; box-shadow: 3px 3px 0 rgba(34,28,51,.25); max-width: 80%; text-align: center; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   @keyframes fall { to { transform: translateY(900px) rotate(360deg); opacity: 0; } }
 
-  .avatar { position: absolute; top: 4px; right: 0; width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); font-size: 19px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); }
-  .fav-link { position: absolute; top: 4px; right: 46px; width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); font-size: 18px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); transition: transform .12s; }
+  .fav-link { position: absolute; top: 4px; right: 46px; width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); font-size: 19.5px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); transition: transform .12s; }
   .fav-link:active { transform: scale(.88); }
   .order-real { display: block; width: 100%; text-align: center; background: none; border: none; color: var(--muted); font-size: 12.5px; text-decoration: underline; margin-top: 14px; cursor: pointer; }
   .modal-bg { position: absolute; inset: 0; background: rgba(8,6,5,.74); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; z-index: 70; padding: 24px; }
   .modal { background: var(--card-hi); border: 1px solid var(--border); border-radius: 20px; padding: 22px; width: 100%; max-width: 322px; text-align: center; animation: fade .2s ease; box-shadow: 0 24px 60px -20px rgba(0,0,0,.7); }
-  .modal .m-emoji { font-size: 44px; }
-  .modal .m-title { font-family: var(--disp); font-size: 20px; font-weight: 500; margin: 8px 0; color: var(--text); }
-  .modal .m-body { font-size: 13.5px; color: var(--muted); line-height: 1.5; margin-bottom: 16px; }
+  .modal .m-emoji { font-size: 34px; }
+  .modal .m-title { font-family: var(--disp); font-size: 19.5px; font-weight: 500; margin: 8px 0; color: var(--text); }
+  .modal .m-body { font-size: 14px; color: var(--muted); line-height: 1.5; margin-bottom: 16px; }
   .modal .cta { margin-top: 8px; }
   .profile-card { background: var(--card); border: 2.5px solid var(--ink); border-radius: 18px; padding: 18px; margin-bottom: 14px; text-align: center; box-shadow: 4px 4px 0 var(--ink); }
-  .profile-card .pa { font-size: 52px; }
-  .profile-card .ph { font-size: 20px; font-weight: 800; margin-top: 6px; }
+  .profile-card .pa { font-size: 34px; }
+  .profile-card .ph { font-size: 19.5px; font-weight: 800; margin-top: 6px; }
   .profile-card .pe { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+  @media (display-mode: standalone) { .statusbar, .notch { display: none !important; } }
+  .kept-owner { font-family: var(--disp); font-weight: 500; font-size: 34px; color: var(--filament); text-align: center; margin: 6px 0 14px; text-shadow: 0 0 28px rgba(240,168,74,.35); }
+  .wardrobe .wd-empty { color: var(--muted); font-size: 12.5px; align-self: center; }
+  .kept-owner .ko-k { display: block; font-family: var(--bodyf); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); text-shadow: none; margin-top: 2px; }
   .pstats { display: flex; gap: 10px; margin-bottom: 10px; }
   .pstat { flex: 1; background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 14px 10px; text-align: center; box-shadow: 2px 2px 0 var(--ink); }
-  .pstat .v { font-size: 20px; font-weight: 800; }
+  .pstat .v { font-size: 19.5px; font-weight: 800; }
   .pstat .v.green { color: var(--go); } .pstat .v.streak { color: #d98324; }
   .pstat .k { font-size: 11px; color: var(--muted); margin-top: 3px; font-weight: 700; }
-  .signin-btn { width: 100%; padding: 14px; border-radius: 14px; border: 2px solid var(--ink); background: var(--card); color: var(--text); font-weight: 800; font-size: 14.5px; cursor: pointer; margin: 10px 0 0; box-shadow: 2px 2px 0 var(--ink); }
+  .signin-btn { width: 100%; padding: 14px; border-radius: 14px; border: 2px solid var(--ink); background: var(--card); color: var(--text); font-weight: 800; font-size: 14px; cursor: pointer; margin: 10px 0 0; box-shadow: 2px 2px 0 var(--ink); }
   .signin-btn.dark { background: var(--ink); color: var(--screen); }
   .tier-card { background: var(--card-hi); border: 2.5px solid var(--ink); border-radius: 16px; padding: 14px; margin-bottom: 14px; box-shadow: 4px 4px 0 var(--ink); }
   .tier-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
   .tier-ic { font-size: 34px; }
-  .tier-name { font-size: 17px; font-weight: 800; font-family: var(--disp); }
-  .tier-sub { font-size: 12px; color: var(--muted); margin-top: 1px; }
-  .tier-bar { height: 10px; background: var(--card-hi); border: 2px solid var(--ink); border-radius: 6px; overflow: hidden; }
-  .tier-fill { height: 100%; background: var(--grad); transition: width .5s; }
-  .milestone { margin-top: 10px; display: inline-block; background: var(--accent2); color: var(--ink); font-weight: 800; font-size: 13px; padding: 8px 14px; border-radius: 16px; border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); animation: fade .4s ease; }
+  .tier-name { font-size: 16px; font-weight: 800; font-family: var(--disp); }
+  .tier-sub { font-size: 12.5px; color: var(--muted); margin-top: 1px; }
+  .milestone { margin-top: 10px; display: inline-block; background: var(--accent2); color: var(--ink); font-weight: 800; font-size: 12.5px; padding: 8px 14px; border-radius: 16px; border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); animation: fade .4s ease; }
   /* ----- gacha courier reveal card ----- */
-  .courier-card .cc-new { display: inline-block; background: var(--rc); color: #fff; font-family: var(--disp); font-weight: 700; font-size: 12px; letter-spacing: .3px; padding: 4px 12px; border-radius: 12px; border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); margin-bottom: 6px; }
+  .courier-card .cc-new { display: inline-block; background: var(--rc); color: #fff; font-family: var(--disp); font-weight: 700; font-size: 12.5px; letter-spacing: .3px; padding: 4px 12px; border-radius: 12px; border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); margin-bottom: 6px; }
   .courier-card .cc-dup { background: var(--card-hi); color: var(--muted); box-shadow: none; }
-  .courier-card .cc-veh { font-size: 64px; line-height: 1.05; width: 96px; height: 96px; margin: 4px auto 2px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: color-mix(in srgb, var(--rc) 16%, #fff); border: 3px solid var(--rc); box-shadow: inset 0 0 0 3px #fff; }
-  .courier-card .cc-name { font-family: var(--disp); font-weight: 700; font-size: 18px; margin-top: 6px; }
-  .courier-card .cc-quip { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 1px; line-height: 1.25; }
+  .courier-card .cc-veh { font-size: 78px; line-height: 1.05; width: 96px; height: 96px; margin: 4px auto 2px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: color-mix(in srgb, var(--rc) 16%, #fff); border: 3px solid var(--rc); box-shadow: inset 0 0 0 3px #fff; }
+  .courier-card .cc-name { font-family: var(--disp); font-weight: 700; font-size: 19.5px; margin-top: 6px; }
+  .courier-card .cc-quip { font-size: 12.5px; color: var(--muted); font-style: italic; margin-top: 1px; line-height: 1.25; }
   .courier-card .cc-rarity { display: inline-block; margin-top: 8px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: .6px; color: var(--rc); }
   .courier-card.is-new .cc-veh { animation: pop .55s ease both, gwiggle .5s ease .55s 2; }
   .courier-card.rare, .courier-card.legendary { box-shadow: 4px 4px 0 var(--ink), 0 0 22px 2px color-mix(in srgb, var(--rc) 55%, transparent); }
@@ -384,7 +401,7 @@
   @keyframes ccGlow { 0%,100%{ box-shadow: 4px 4px 0 var(--ink), 0 0 18px 1px color-mix(in srgb, var(--rc) 45%, transparent); } 50%{ box-shadow: 4px 4px 0 var(--ink), 0 0 30px 5px color-mix(in srgb, var(--rc) 75%, transparent); } }
   /* ----- game layer: xp bar, combo, surprise, achievements, food backdrop ----- */
   .xp-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-  .xp-lvl { font-size: 12px; font-weight: 800; color: #d98324; white-space: nowrap; }
+  .xp-lvl { font-size: 12.5px; font-weight: 800; color: #d98324; white-space: nowrap; }
   .xp-track { flex: 1; height: 10px; background: var(--card-hi); border: 2px solid var(--ink); border-radius: 6px; overflow: hidden; }
   .xp-fill { height: 100%; background: var(--grad); transition: width .5s ease; }
   .xp-xp { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -399,18 +416,10 @@
   .achv { background: var(--card); border: 2px solid #d9cbab; border-radius: 16px; padding: 10px 4px; text-align: center; filter: grayscale(1); opacity: .55; }
   .achv.on { opacity: 1; filter: none; border-color: var(--ink); background: var(--card-hi); box-shadow: 2px 2px 0 var(--ink); }
   .achv-ic { font-size: 24px; }
-  .achv-name { font-size: 10px; font-weight: 700; margin-top: 4px; }
-  .achv-tip { font-size: 8.5px; color: var(--muted); margin-top: 2px; line-height: 1.2; }
-  .achv.drv .drv-veh { font-size: 22px; width: 40px; height: 40px; margin: 0 auto 2px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--card); border: 2px solid #d9cbab; }
-  .achv.drv.on .drv-veh { font-size: 30px; background: color-mix(in srgb, var(--rc) 16%, #fff); border: 2.5px solid var(--rc); box-shadow: inset 0 0 0 2px #fff; }
-  .foodfall { position: absolute; top: 0; left: 0; right: 0; height: 180px; overflow: hidden; pointer-events: none; z-index: 0; }
-  .foodfall span { position: absolute; bottom: -44px; font-size: 26px; opacity: .16; animation: drift 9s linear infinite; }
-  .foodfall span:nth-child(1){ left: 8%; animation-delay: 0s; }
-  .foodfall span:nth-child(2){ left: 26%; animation-delay: 1.6s; }
-  .foodfall span:nth-child(3){ left: 44%; animation-delay: 3.1s; }
-  .foodfall span:nth-child(4){ left: 62%; animation-delay: 4.6s; }
-  .foodfall span:nth-child(5){ left: 78%; animation-delay: 2.3s; }
-  .foodfall span:nth-child(6){ left: 90%; animation-delay: 5.6s; }
+  .achv-name { font-size: 11px; font-weight: 700; margin-top: 4px; }
+  .achv-tip { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.2; }
+  .achv.drv .drv-veh { font-size: 24px; width: 40px; height: 40px; margin: 0 auto 2px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--card); border: 2px solid #d9cbab; }
+  .achv.drv.on .drv-veh { font-size: 34px; background: color-mix(in srgb, var(--rc) 16%, #fff); border: 2.5px solid var(--rc); box-shadow: inset 0 0 0 2px #fff; }
   @keyframes drift { 0%{ transform: translateY(0) rotate(0deg); } 100%{ transform: translateY(-220px) rotate(45deg); } }
 
   /* ----- game HUD ----- */
@@ -418,20 +427,20 @@
   .hud .pill { display: flex; align-items: center; gap: 5px; background: var(--card); border: 2px solid var(--ink); border-radius: 13px; padding: 7px 10px; font-weight: 600; font-size: 12.5px; font-family: var(--disp); color: var(--text); cursor: pointer; box-shadow: 2px 2px 0 var(--ink); flex: 0 0 auto; transition: transform .08s, box-shadow .08s; }
   .hud .pill:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
   .hud .pill.flame.on { background: var(--accent2); }
-  .hud .pill .hint { font-size: 9px; color: var(--muted); font-family: var(--bodyf); font-weight: 700; }
+  .hud .pill .hint { font-size: 11px; color: var(--muted); font-family: var(--bodyf); font-weight: 700; }
   .hud .pill.lvl { flex: 1 1 auto; min-width: 0; }
   .minibar { flex: 1; height: 8px; background: var(--soft); border-radius: 5px; overflow: hidden; min-width: 24px; border: 1.5px solid var(--ink); }
   .minibar i { display: block; height: 100%; background: var(--grad); transition: width .4s; }
   /* ----- nightly missions ----- */
   .quests { background: var(--card); border: 2.5px solid var(--ink); border-radius: 18px; padding: 14px; margin-bottom: 14px; box-shadow: 4px 4px 0 var(--ink); }
-  .qhead { display: flex; justify-content: space-between; align-items: center; font-family: var(--disp); font-weight: 600; font-size: 15px; margin-bottom: 6px; }
-  .qhead .qday { font-size: 10.5px; color: var(--muted); font-family: var(--bodyf); font-weight: 700; }
-  .quest .qic { font-size: 22px; width: 30px; text-align: center; }
+  .qhead { display: flex; justify-content: space-between; align-items: center; font-family: var(--disp); font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+  .qhead .qday { font-size: 11px; color: var(--muted); font-family: var(--bodyf); font-weight: 700; }
+  .quest .qic { font-size: 24px; width: 30px; text-align: center; }
   .quest .qmid { flex: 1; min-width: 0; }
-  .quest .qname { font-size: 13px; font-weight: 800; }
+  .quest .qname { font-size: 12.5px; font-weight: 800; }
   .quest .qbar { height: 9px; background: var(--soft); border: 1.5px solid var(--ink); border-radius: 5px; margin-top: 5px; overflow: hidden; }
   .quest .qfill { height: 100%; background: var(--go); transition: width .4s; }
-  .qbtn { border: 2px solid transparent; border-radius: 12px; font-family: var(--disp); font-weight: 600; font-size: 12px; padding: 8px 12px; cursor: pointer; background: var(--screen); color: var(--muted); white-space: nowrap; }
+  .qbtn { border: 2px solid transparent; border-radius: 12px; font-family: var(--disp); font-weight: 600; font-size: 12.5px; padding: 8px 12px; cursor: pointer; background: var(--screen); color: var(--muted); white-space: nowrap; }
   .qbtn.ready { background: var(--accent2); color: var(--ink); border-color: var(--ink); box-shadow: 2px 2px 0 var(--ink); animation: pulse2 1.6s infinite; }
   .qbtn.done2 { color: var(--go); background: var(--card-hi); }
   @keyframes pulse2 { 0%,100%{ transform: scale(1);} 50%{ transform: scale(1.06);} }
@@ -443,38 +452,36 @@
   .reel.stop { background: var(--accent2); transform: scale(1.07); transition: all .15s; }
   /* ----- juice: xp floaters + fly-to-cart + ghost reveal + fee boss ----- */
   @keyframes floatUp { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-48px) scale(1.15) rotate(-5deg); } }
-  .flyer { position: absolute; z-index: 80; font-size: 30px; transition: all .65s cubic-bezier(.5,-0.2,.6,1); pointer-events: none; }
-  .reveal .ghostrise { font-size: 64px; display: inline-block; animation: rise 1.5s ease both; }
+  .flyer { position: absolute; z-index: 80; font-size: 34px; transition: all .65s cubic-bezier(.5,-0.2,.6,1); pointer-events: none; }
+  .reveal .ghostrise { font-size: 78px; display: inline-block; animation: rise 1.5s ease both; }
   @keyframes rise { 0%{ transform: translateY(28px) scale(.55); opacity: 0; } 60%{ opacity: 1; } 100%{ transform: translateY(0) scale(1); opacity: 1; } }
-  .boss { display: flex; align-items: center; gap: 10px; background: var(--card-hi); border: 2.5px solid var(--ink); border-radius: 16px; padding: 10px 12px; font-weight: 800; font-size: 13px; margin: 6px 0 10px; box-shadow: 3px 3px 0 var(--ink); }
-  .boss .bossic { font-size: 26px; }
+  .boss { display: flex; align-items: center; gap: 10px; background: var(--card-hi); border: 2.5px solid var(--ink); border-radius: 16px; padding: 10px 12px; font-weight: 800; font-size: 12.5px; margin: 6px 0 10px; box-shadow: 3px 3px 0 var(--ink); }
+  .boss .bossic { font-size: 24px; }
 
   /* ----- 50-city picker modal ----- */
-  .city-search { width: 100%; box-sizing: border-box; background: var(--screen); border: 2px solid var(--ink); border-radius: 12px; padding: 10px 12px; font-family: var(--bodyf); font-weight: 700; font-size: 13.5px; color: var(--text); outline: none; margin-bottom: 10px; }
+  .city-search { width: 100%; box-sizing: border-box; background: var(--screen); border: 2px solid var(--ink); border-radius: 12px; padding: 10px 12px; font-family: var(--bodyf); font-weight: 700; font-size: 14px; color: var(--text); outline: none; margin-bottom: 10px; }
   .city-modal-list { max-height: 46vh; overflow-y: auto; text-align: left; }
   .city-modal-list::-webkit-scrollbar { display: none; }
   .cm-label { font-size: 11px; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: .5px; margin: 10px 2px 7px; }
   .cm-chips { display: flex; flex-wrap: wrap; gap: 7px; }
   .city-chip.cm { font-size: 12.5px; padding: 7px 11px; }
   /* ----- detail: editorial blurb ----- */
-  .d-desc { color: var(--muted); font-size: 13px; line-height: 1.45; margin-top: 6px; font-style: italic; }
+  .d-desc { color: var(--muted); font-size: 12.5px; line-height: 1.45; margin-top: 6px; font-style: italic; }
   /* ----- cart: deliver-to line ----- */
   .deliver-to { text-align: center; color: var(--muted); font-size: 12.5px; font-weight: 700; margin: 2px 0 10px; }
   .dt-change { color: var(--accent); text-decoration: underline; cursor: pointer; }
   /* ----- tracking: ghost driver texts ----- */
   .dchat { margin: 14px auto 0; max-width: 300px; text-align: left; }
-  .dmsg { background: var(--card); border: 2px solid var(--ink); border-radius: 14px; border-bottom-left-radius: 4px; padding: 9px 12px; font-size: 13px; margin-bottom: 8px; box-shadow: 2px 2px 0 var(--ink); animation: fade .3s ease; }
+  .dmsg { background: var(--card); border: 2px solid var(--ink); border-radius: 14px; border-bottom-left-radius: 4px; padding: 9px 12px; font-size: 12.5px; margin-bottom: 8px; box-shadow: 2px 2px 0 var(--ink); animation: fade .3s ease; }
   .dmsg b { color: var(--accent); }
   /* ----- room: podium + confess chips + streak badges ----- */
   .prow.mine { background: var(--card-hi); border: 2px dashed var(--accent); border-radius: 10px; padding: 5px 8px; }
   .prow.mine .pn { color: var(--accent); }
   .prompts { display: flex; align-items: center; gap: 7px; margin: 0 0 5px; padding-bottom: 5px; overflow-x: auto; }
   .prompts::-webkit-scrollbar { display: none; }
-  .plabel { font-size: 11.5px; color: var(--muted); font-weight: 800; white-space: nowrap; }
-  .pchip { background: var(--card); border: 2px solid var(--ink); border-radius: 12px; font-size: 19px; padding: 6px 10px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); transition: transform .1s; flex: 0 0 auto; }
+  .pchip { background: var(--card); border: 2px solid var(--ink); border-radius: 12px; font-size: 19.5px; padding: 6px 10px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); transition: transform .1s; flex: 0 0 auto; }
   .pchip:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
-  .sbadge { background: var(--accent2); border: 1.5px solid var(--ink); border-radius: 8px; padding: 0 5px; font-weight: 800; color: var(--ink); font-size: 10.5px; }
-  .chip.pshare { flex: 0 0 auto; min-width: 46px; }
+  .sbadge { background: var(--accent2); border: 1.5px solid var(--ink); border-radius: 8px; padding: 0 5px; font-weight: 800; color: var(--ink); font-size: 11px; }
 
   /* ----- event banners (golden hours / seasons) ----- */
   .ebanner { border: 2.5px solid var(--ink); border-radius: 14px; padding: 9px 12px; margin: 0 0 10px; font-size: 12.5px; font-weight: 700; box-shadow: 3px 3px 0 var(--ink); }
@@ -483,68 +490,68 @@
   .ebanner.golden { background: var(--neon); color: #fff; }
   /* ----- feed toy hub ----- */
   .hub { display: flex; gap: 8px; margin-bottom: 16px; }
-  .hub-tile { flex: 1; background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 12px 6px; font-family: var(--disp); font-weight: 600; font-size: 11.5px; color: var(--text); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; box-shadow: 3px 3px 0 var(--ink); transition: transform .1s, box-shadow .1s; }
+  .hub-tile { flex: 1; background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 12px 6px; font-family: var(--disp); font-weight: 600; font-size: 11px; color: var(--text); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; box-shadow: 3px 3px 0 var(--ink); transition: transform .1s, box-shadow .1s; }
   .hub-tile:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
-  .hub-tile .ht-ic { font-size: 23px; }
+  .hub-tile .ht-ic { font-size: 24px; }
   /* ----- konbini corner store ----- */
   .kb-head { text-align: center; margin: 4px 0 14px; }
-  .kb-head .kb-title { font-family: var(--disp); font-weight: 700; font-size: 22px; }
+  .kb-head .kb-title { font-family: var(--disp); font-weight: 700; font-size: 24px; }
   .kb-head .kb-tag { color: var(--muted); font-size: 12.5px; font-weight: 700; margin-top: 2px; }
   /* ----- restaurant menu ----- */
   .mcourse { font-family: var(--disp); font-weight: 600; font-size: 14px; margin: 16px 2px 8px; }
   .mrow { display: flex; align-items: flex-start; gap: 12px; background: var(--card); border: 2px solid var(--ink); border-radius: 16px; padding: 10px; margin-bottom: 10px; box-shadow: 2px 2px 0 var(--ink); }
-  .mthumb-wrap { width: 100px; height: 100px; flex: 0 0 100px; border-radius: 13px; border: 2.5px solid var(--ink); overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--card-hi); font-size: 52px; box-shadow: 1.5px 1.5px 0 var(--ink); }
+  .mthumb-wrap { width: 100px; height: 100px; flex: 0 0 100px; border-radius: 13px; border: 2.5px solid var(--ink); overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--card-hi); font-size: 34px; box-shadow: 1.5px 1.5px 0 var(--ink); }
   .mthumb { width: 100%; height: 100%; object-fit: cover; display: block; }
   .mthumb.emo { background: none; border: none; display: flex; align-items: center; justify-content: center; line-height: 1; }
   .mmid { flex: 1; min-width: 0; align-self: stretch; display: flex; flex-direction: column; }
-  .mname { font-size: 14.5px; font-weight: 800; line-height: 1.2; }
+  .mname { font-size: 14px; font-weight: 800; line-height: 1.2; }
   .mblurb { font-size: 11px; font-style: italic; font-weight: 600; color: var(--muted); line-height: 1.3; margin-top: 3px; }
   .mprice { font-family: var(--disp); font-weight: 600; font-size: 14px; color: var(--accent); white-space: nowrap; margin-top: auto; padding-top: 6px; }
-  .madd { width: 36px; height: 36px; flex: 0 0 36px; align-self: center; border-radius: 11px; border: 2px solid var(--ink); background: var(--grad); color: #1A1109; font-size: 20px; line-height: 1; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; }
+  .madd { width: 36px; height: 36px; flex: 0 0 36px; align-self: center; border-radius: 11px; border: 2px solid var(--ink); background: var(--grad); color: #1A1109; font-size: 19.5px; line-height: 1; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; }
   .madd:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
   /* ----- stats modal ----- */
   .stats-list { text-align: left; margin: 4px 0 10px; max-height: 42vh; overflow-y: auto; }
   .stat-row { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 4px; border-bottom: 2px dashed #d9cbab; }
-  .stat-row .sc-cur { font-family: var(--disp); font-weight: 600; font-size: 15px; }
-  .stat-row .sc-usd { color: var(--muted); font-weight: 700; font-size: 13px; }
+  .stat-row .sc-cur { font-family: var(--disp); font-weight: 600; font-size: 14px; }
+  .stat-row .sc-usd { color: var(--muted); font-weight: 700; font-size: 12.5px; }
   .stat-total { display: flex; justify-content: space-between; align-items: center; padding: 10px 4px 0; font-weight: 800; }
-  .stat-total b { color: var(--go); font-size: 20px; font-family: var(--disp); }
+  .stat-total b { color: var(--go); font-size: 19.5px; font-family: var(--disp); }
   /* ----- rate the plate ----- */
   .rtp-card { flex: 1; background: var(--screen); border: 2.5px solid var(--ink); border-radius: 16px; padding: 10px; cursor: pointer; box-shadow: 3px 3px 0 var(--ink); display: flex; flex-direction: column; align-items: center; gap: 8px; transition: transform .1s; min-width: 0; }
   .rtp-card:active { transform: scale(.96); }
-  .rtp-n { font-size: 12px; font-weight: 800; text-align: center; line-height: 1.2; }
+  .rtp-n { font-size: 12.5px; font-weight: 800; text-align: center; line-height: 1.2; }
   .rtp-vs { font-family: var(--disp); font-weight: 700; color: var(--muted); font-size: 14px; flex: 0 0 auto; }
 
   /* ----- itinerary / plan my night ----- */
   /* ----- ghost mascot + wardrobe ----- */
   .ghost-av { position: relative; display: inline-flex; align-items: center; justify-content: center; line-height: 1; vertical-align: middle; }
   .ghost-av .gh-hat { position: absolute; top: -0.52em; left: 50%; transform: translateX(-50%) rotate(-8deg); pointer-events: none; }
-  .reveal .ghost-quip { font-family: var(--disp); font-style: italic; font-weight: 400; font-size: 15px; color: var(--muted); background: none; border: none; box-shadow: none; padding: 0; display: block; margin: 6px auto 2px; max-width: 290px; line-height: 1.5; animation: fade .5s ease both; }
+  .reveal .ghost-quip { font-family: var(--disp); font-style: italic; font-weight: 400; font-size: 14px; color: var(--muted); background: none; border: none; box-shadow: none; padding: 0; display: block; margin: 6px auto 2px; max-width: 290px; line-height: 1.5; animation: fade .5s ease both; }
   .wardrobe { display: flex; gap: 12px; background: var(--card); border: 2.5px solid var(--ink); border-radius: 18px; padding: 14px; box-shadow: 4px 4px 0 var(--ink); margin-bottom: 14px; }
   .wd-ghost { flex: 0 0 84px; display: flex; align-items: center; justify-content: center; background: var(--screen); border: 2.5px solid var(--ink); border-radius: 14px; }
   .wd-grid { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; min-width: 0; }
   .wd-fit { background: var(--screen); border: 2px solid var(--ink); border-radius: 12px; padding: 8px 4px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; box-shadow: 2px 2px 0 var(--ink); }
   .wd-fit.eq { background: var(--accent2); }
   .wd-fit.lock { opacity: .5; filter: grayscale(1); cursor: default; box-shadow: none; }
-  .wd-hat { font-size: 21px; }
-  .wd-name { font-size: 8.5px; font-weight: 800; text-align: center; line-height: 1.1; }
+  .wd-hat { font-size: 19.5px; }
+  .wd-name { font-size: 11px; font-weight: 800; text-align: center; line-height: 1.1; }
   .souv-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
   .souv { background: var(--card); border: 2px solid var(--ink); border-radius: 11px; padding: 7px 2px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: 2px 2px 0 var(--ink); }
   .souv.eq { background: var(--accent2); }
   .souv.lock { opacity: .45; filter: grayscale(1); cursor: default; box-shadow: none; }
-  .souv-hat { font-size: 19px; }
-  .souv-name { font-size: 7.5px; font-weight: 800; text-align: center; line-height: 1; color: var(--muted); }
+  .souv-hat { font-size: 19.5px; }
+  .souv-name { font-size: 11px; font-weight: 800; text-align: center; line-height: 1; color: var(--muted); }
   .reveal .ghostrise.ghost-hype { animation: rise 1.5s ease both, gwiggle .55s ease 1.5s 3; }
   @keyframes gwiggle { 0%,100%{ transform: rotate(0) scale(1.05); } 25%{ transform: rotate(-13deg) scale(1.1); } 75%{ transform: rotate(13deg) scale(1.1); } }
   /* post-delivery Mort scene */
   .mort-scene { position: relative; display: inline-block; padding-top: 16px; }
   .mort-scene .ghostrise { position: relative; z-index: 2; }
-  .mort-scene .ms-bag { position: absolute; left: 50%; top: 6px; transform: translateX(-50%); font-size: 26px; z-index: 3; animation: msBag 2.2s ease both; pointer-events: none; }
+  .mort-scene .ms-bag { position: absolute; left: 50%; top: 6px; transform: translateX(-50%); font-size: 24px; z-index: 3; animation: msBag 2.2s ease both; pointer-events: none; }
   @keyframes msBag { 0%{ opacity:0; transform: translate(-50%,18px) scale(.5) rotate(-12deg);} 35%{ opacity:1; transform: translate(-50%,-4px) scale(1) rotate(6deg);} 60%{ transform: translate(-50%,-4px) scale(1) rotate(-4deg);} 100%{ opacity:.9; transform: translate(-50%,10px) scale(.96) rotate(0);} }
   .mort-scene .ms-puffs { position: absolute; left: 50%; top: 14px; width: 0; height: 0; z-index: 1; pointer-events: none; }
-  .mort-scene .ms-puff { position: absolute; left: 0; top: 0; font-size: 18px; opacity: 0; animation: msPuff ease-out both; will-change: transform, opacity; }
+  .mort-scene .ms-puff { position: absolute; left: 0; top: 0; font-size: 19.5px; opacity: 0; animation: msPuff ease-out both; will-change: transform, opacity; }
   @keyframes msPuff { 0%{ opacity:0; transform: translate(var(--x), 6px) scale(.4);} 18%{ opacity:1;} 100%{ opacity:0; transform: translate(calc(var(--x) * 1.5), -64px) scale(1.15) rotate(8deg);} }
-  .mort-scene.ms-hype .ms-puff { font-size: 22px; }
+  .mort-scene.ms-hype .ms-puff { font-size: 24px; }
   .mort-scene.ms-still .ms-bag { animation: none; opacity: .95; transform: translate(-50%, 8px); }
   .mort-scene.ms-still .ms-puffs { display: none; }
   @media (prefers-reduced-motion: reduce) {
@@ -554,8 +561,8 @@
   }
   /* ----- coupons + new badge + spotlight ----- */
   .thumb { position: relative; }
-  .coupon-rib { position: absolute; bottom: -2px; left: -2px; background: var(--hot); color: #fff; font-family: var(--disp); font-weight: 700; font-size: 9.5px; padding: 2px 6px; border: 2px solid var(--ink); border-radius: 9px 9px 9px 4px; box-shadow: 1px 1px 0 var(--ink); white-space: nowrap; }
-  .new-chip { display: inline-block; background: var(--grad); color: #1A1109; font-weight: 800; font-size: 9.5px; padding: 1px 6px; border-radius: 8px; border: 1.5px solid var(--ink); margin-left: 4px; vertical-align: middle; }
+  .coupon-rib { position: absolute; bottom: -2px; left: -2px; background: var(--hot); color: #fff; font-family: var(--disp); font-weight: 700; font-size: 11px; padding: 2px 6px; border: 2px solid var(--ink); border-radius: 9px 9px 9px 4px; box-shadow: 1px 1px 0 var(--ink); white-space: nowrap; }
+  .new-chip { display: inline-block; background: var(--grad); color: #1A1109; font-weight: 800; font-size: 11px; padding: 1px 6px; border-radius: 8px; border: 1.5px solid var(--ink); margin-left: 4px; vertical-align: middle; }
   .spotlight.done { opacity: .78; box-shadow: 3px 3px 0 var(--ink); }
   /* big photo banner */
   .spotlight .sp-photo .ph-img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -566,14 +573,14 @@
   .feat-banner:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
   .feat-banner .fb-ic { font-size: 24px; }
   .feat-banner .fb-text { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-  .feat-banner .fb-text b { font-family: var(--disp); font-weight: 600; font-size: 14.5px; }
-  .feat-banner .fb-sub { font-size: 11.5px; opacity: .9; font-weight: 700; }
-  .feat-banner .fb-go { font-size: 22px; font-weight: 800; }
+  .feat-banner .fb-text b { font-family: var(--disp); font-weight: 600; font-size: 14px; }
+  .feat-banner .fb-sub { font-size: 11px; opacity: .9; font-weight: 700; }
+  .feat-banner .fb-go { font-size: 24px; font-weight: 800; }
   /* ----- buddy nudge ----- */
   .buddy-nudge { width: 100%; text-align: left; background: var(--card-hi); border: 2.5px dashed var(--accent); border-radius: 14px; padding: 10px 13px; margin-bottom: 10px; font-size: 12.5px; font-weight: 700; color: var(--text); cursor: pointer; box-shadow: 2px 2px 0 var(--accent); }
   /* ----- city leaderboard (room) ----- */
   .cb-title { font-family: var(--disp); font-weight: 600; font-size: 14px; margin-bottom: 8px; }
-  .cb-row { display: flex; align-items: center; gap: 9px; padding: 5px 0; font-size: 13.5px; font-weight: 700; }
+  .cb-row { display: flex; align-items: center; gap: 9px; padding: 5px 0; font-size: 14px; font-weight: 700; }
   .cb-row .cb-name { flex: 1; color: var(--muted); }
   .cb-row b { color: var(--go); font-variant-numeric: tabular-nums; }
   .cb-row.mine { background: var(--card-hi); border: 2px dashed var(--accent); border-radius: 10px; padding: 5px 8px; }
@@ -581,7 +588,7 @@
   /* ----- wrapped ----- */
   .wrap-stats { text-align: left; margin: 4px 0 12px; }
   .ws-row { display: flex; justify-content: space-between; align-items: baseline; padding: 9px 4px; border-bottom: 2px dashed #d9cbab; font-weight: 700; }
-  .ws-row b { font-family: var(--disp); font-size: 19px; }
+  .ws-row b { font-family: var(--disp); font-size: 19.5px; }
   /* ----- corner store banner (prominent on the feed) ----- */
   /* corner-store + random row */
 
@@ -592,40 +599,40 @@
   .morts-pick:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
   .morts-pick .mp-ghost { flex: 0 0 auto; }
   .morts-pick .mp-text { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-  .morts-pick .mp-text b { font-family: var(--disp); font-weight: 700; font-size: 15px; line-height: 1.15; }
-  .morts-pick .mp-quip { font-size: 12px; font-weight: 600; opacity: .92; font-style: italic; margin-top: 1px; }
-  .morts-pick .mp-go { font-size: 22px; font-weight: 800; flex: 0 0 auto; }
+  .morts-pick .mp-text b { font-family: var(--disp); font-weight: 700; font-size: 14px; line-height: 1.15; }
+  .morts-pick .mp-quip { font-size: 12.5px; font-weight: 600; opacity: .92; font-style: italic; margin-top: 1px; }
+  .morts-pick .mp-go { font-size: 24px; font-weight: 800; flex: 0 0 auto; }
   .variety { background: var(--card-hi); border: 2px solid var(--ink); border-radius: 12px; padding: 8px 12px; margin-bottom: 12px; font-size: 12.5px; font-weight: 700; color: var(--text); box-shadow: 2px 2px 0 var(--ink); }
   .variety.done { background: var(--grad); color: #1A1109; }
   .variety b { font-family: var(--disp); }
   .must-card { background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 10px 12px; margin-bottom: 14px; box-shadow: 3px 3px 0 var(--ink); }
   .must-card .mt-head { font-family: var(--disp); font-weight: 700; font-size: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-  .must-card .mt-head span { background: var(--accent2); border: 2px solid var(--ink); border-radius: 8px; padding: 0 7px; font-size: 12px; box-shadow: 1px 1px 0 var(--ink); }
-  .mt-row { width: 100%; display: flex; align-items: center; gap: 8px; background: none; border: none; border-top: 1.5px dashed var(--soft); padding: 7px 2px; cursor: pointer; text-align: left; font-size: 13px; color: var(--text); }
+  .must-card .mt-head span { background: var(--accent2); border: 2px solid var(--ink); border-radius: 8px; padding: 0 7px; font-size: 12.5px; box-shadow: 1px 1px 0 var(--ink); }
+  .mt-row { width: 100%; display: flex; align-items: center; gap: 8px; background: none; border: none; border-top: 1.5px dashed var(--soft); padding: 7px 2px; cursor: pointer; text-align: left; font-size: 12.5px; color: var(--text); }
   .mt-row:first-of-type { border-top: none; }
-  .mt-row .mt-check { font-weight: 800; font-size: 15px; color: var(--muted); flex: 0 0 auto; }
+  .mt-row .mt-check { font-weight: 800; font-size: 14px; color: var(--muted); flex: 0 0 auto; }
   .mt-row.got .mt-check { color: var(--go); }
   .mt-row .mt-name { flex: 1; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .mt-row.got .mt-name { color: var(--muted); }
-  .mt-row .mt-stars { flex: 0 0 auto; font-size: 12px; font-weight: 800; color: var(--accent); }
+  .mt-row .mt-stars { flex: 0 0 auto; font-size: 12.5px; font-weight: 800; color: var(--accent); }
   .feed-filters { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin: -4px 0 6px; scrollbar-width: none; }
   .feed-filters::-webkit-scrollbar { display: none; }
   .feed-filters:empty { display: none; }
-  .ffilt { flex: 0 0 auto; background: var(--card); border: 2px solid var(--ink); border-radius: 11px; padding: 5px 11px; font-weight: 800; font-size: 12px; color: var(--muted); cursor: pointer; box-shadow: 1.5px 1.5px 0 var(--ink); text-transform: capitalize; white-space: nowrap; }
+  .ffilt { flex: 0 0 auto; background: var(--card); border: 2px solid var(--ink); border-radius: 11px; padding: 5px 11px; font-weight: 800; font-size: 12.5px; color: var(--muted); cursor: pointer; box-shadow: 1.5px 1.5px 0 var(--ink); text-transform: capitalize; white-space: nowrap; }
   .ffilt.on { background: var(--accent); color: #1A1109; }
 
   /* ----- feed declutter: brand live pill, collapsible drawers, consolidated controls ----- */
-  .brand .live-pill { display: flex; align-items: center; gap: 6px; margin-top: 7px; font-size: 12px; font-weight: 800; color: var(--muted); min-height: 18px; white-space: nowrap; }
+  .brand .live-pill { display: flex; align-items: center; gap: 6px; margin-top: 7px; font-size: 12.5px; font-weight: 800; color: var(--muted); min-height: 18px; white-space: nowrap; }
   .brand .live-pill .lp-count { flex: 0 0 auto; }
   .brand .live-pill .lp-sep { flex: 0 0 auto; opacity: .55; }
   .brand .live-pill .lp-ticker { flex: 1 1 auto; min-width: 0; color: var(--muted); font-weight: 700; overflow: hidden; text-overflow: ellipsis; transition: opacity .5s, transform .5s; }
   .drawer { border: 2.5px solid var(--ink); border-radius: 16px; background: var(--card); box-shadow: 3px 3px 0 var(--ink); margin-bottom: 12px; overflow: hidden; }
   .drawer .dr-head { width: 100%; display: flex; align-items: center; gap: 9px; background: none; border: none; padding: 11px 13px; cursor: pointer; text-align: left; }
-  .drawer .dr-lead { font-size: 19px; flex: 0 0 auto; line-height: 1; }
-  .drawer .dr-teaser { flex: 1; min-width: 0; font-family: var(--disp); font-weight: 700; font-size: 13.5px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .35s, transform .35s; }
-  .drawer .dr-mult { flex: 0 0 auto; background: var(--hot); color: #fff; border: 2px solid var(--ink); border-radius: 8px; padding: 1px 7px; font-size: 10px; font-weight: 800; box-shadow: 1px 1px 0 var(--ink); white-space: nowrap; }
+  .drawer .dr-lead { font-size: 19.5px; flex: 0 0 auto; line-height: 1; }
+  .drawer .dr-teaser { flex: 1; min-width: 0; font-family: var(--disp); font-weight: 700; font-size: 14px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .35s, transform .35s; }
+  .drawer .dr-mult { flex: 0 0 auto; background: var(--hot); color: #fff; border: 2px solid var(--ink); border-radius: 8px; padding: 1px 7px; font-size: 11px; font-weight: 800; box-shadow: 1px 1px 0 var(--ink); white-space: nowrap; }
   #more .dr-mult { background: var(--accent2); color: var(--ink); }
-  .drawer .dr-caret { flex: 0 0 auto; font-size: 13px; color: var(--muted); transition: transform .2s; }
+  .drawer .dr-caret { flex: 0 0 auto; font-size: 12.5px; color: var(--muted); transition: transform .2s; }
   .drawer.open .dr-caret { transform: rotate(180deg); }
   .drawer .dr-body { max-height: 0; opacity: 0; overflow: hidden; transition: max-height .24s ease, opacity .2s ease; padding: 0 12px; }
   .drawer.open .dr-body { max-height: 2200px; opacity: 1; padding: 2px 12px 10px; }
@@ -641,38 +648,38 @@
   .ex-city { background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 10px 14px; font-family: var(--disp); font-weight: 600; font-size: 16px; color: var(--text); box-shadow: 3px 3px 0 var(--ink); cursor: pointer; margin: 2px 0 4px; }
   .ex-city:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
   .passport { background: var(--card); border: 2.5px solid var(--ink); border-radius: 14px; padding: 10px 13px; margin: 10px 0 12px; box-shadow: 3px 3px 0 var(--ink); }
-  .passport .pp-top { display: flex; align-items: center; gap: 7px; font-weight: 800; font-size: 13px; margin-bottom: 7px; }
+  .passport .pp-top { display: flex; align-items: center; gap: 7px; font-weight: 800; font-size: 12.5px; margin-bottom: 7px; }
   .passport .pp-top b { font-family: var(--disp); color: var(--accent); }
-  .passport .pp-saved { margin-left: auto; color: var(--muted); font-size: 12px; }
+  .passport .pp-saved { margin-left: auto; color: var(--muted); font-size: 12.5px; }
   .passport .pp-bar { height: 12px; background: var(--screen); border: 2px solid var(--ink); border-radius: 8px; overflow: hidden; }
   .passport .pp-fill { height: 100%; background: var(--accent2); border-right: 2px solid var(--ink); transition: width .4s ease; }
   /* flight-log passport stamp strip + explore city scroller */
   .passport .pp-strip { display: flex; gap: 7px; overflow-x: auto; padding: 9px 0 2px; margin-top: 9px; }
   .passport .pp-strip::-webkit-scrollbar { display: none; }
-  .passport .pp-strip.empty { font-size: 11.5px; color: var(--muted); align-items: center; gap: 6px; }
+  .passport .pp-strip.empty { font-size: 11px; color: var(--muted); align-items: center; gap: 6px; }
   .pp-stamp { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 46px; height: 46px; border: 2px solid var(--ink); border-radius: 50%; background: var(--screen); box-shadow: 2px 2px 0 var(--ink); cursor: pointer; line-height: 1; transition: transform .1s; }
   .pp-stamp:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
-  .pp-stamp .pps-hat { font-size: 20px; }
-  .pp-stamp .pps-n { font-size: 9px; font-weight: 800; font-family: var(--disp); color: var(--accent); margin-top: 1px; }
-  .pp-stamp.add { border-style: dashed; color: var(--accent); box-shadow: none; font-size: 20px; font-weight: 800; }
+  .pp-stamp .pps-hat { font-size: 19.5px; }
+  .pp-stamp .pps-n { font-size: 11px; font-weight: 800; font-family: var(--disp); color: var(--accent); margin-top: 1px; }
+  .pp-stamp.add { border-style: dashed; color: var(--accent); box-shadow: none; font-size: 19.5px; font-weight: 800; }
   #explore-city-bar.city-bar { margin: 2px 0 8px; }
   .city-chip .cc-stamp { font-size: 11px; opacity: .9; }
   .efilter.on { background: var(--ink); color: var(--screen); }
   /* activity cards — match the restaurant card layout for a consistent feel */
   .acard.saved { background: var(--card-hi); border-color: var(--go); }
-  .ac-thumb { width: 118px; height: 118px; flex: 0 0 118px; align-self: center; position: relative; border-radius: 15px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--card-hi); border: 2.5px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); font-size: 50px; }
+  .ac-thumb { width: 118px; height: 118px; flex: 0 0 118px; align-self: center; position: relative; border-radius: 15px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--card-hi); border: 2.5px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); font-size: 34px; }
   .ac-thumb .ph-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .ac-cat { position: absolute; top: 7px; left: 7px; background: var(--card); border: 2px solid var(--ink); border-radius: 9px; padding: 2px 7px; font-size: 10px; font-weight: 800; text-transform: capitalize; box-shadow: 1.5px 1.5px 0 var(--ink); max-width: 88%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-  .ac-pet { position: absolute; bottom: 6px; right: 6px; background: var(--go); border: 2px solid var(--ink); border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 13px; box-shadow: 1.5px 1.5px 0 var(--ink); }
+  .ac-cat { position: absolute; top: 7px; left: 7px; background: var(--card); border: 2px solid var(--ink); border-radius: 9px; padding: 2px 7px; font-size: 11px; font-weight: 800; text-transform: capitalize; box-shadow: 1.5px 1.5px 0 var(--ink); max-width: 88%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .ac-pet { position: absolute; bottom: 6px; right: 6px; background: var(--go); border: 2px solid var(--ink); border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 12.5px; box-shadow: 1.5px 1.5px 0 var(--ink); }
   .ac-meta { flex: 1; min-width: 0; padding-right: 40px; display: flex; flex-direction: column; }
-  .ac-name { font-family: var(--disp); font-weight: 500; font-size: 18px; line-height: 1.1; color: var(--text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .ac-name { font-family: var(--disp); font-weight: 500; font-size: 19.5px; line-height: 1.1; color: var(--text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .ac-sub { font-size: 12.5px; color: var(--muted); font-weight: 600; margin-top: 3px; text-transform: capitalize; }
-  .ac-row { display: flex; align-items: center; gap: 7px; margin-top: 7px; font-size: 12px; color: var(--muted); font-weight: 600; }
+  .ac-row { display: flex; align-items: center; gap: 7px; margin-top: 7px; font-size: 12.5px; color: var(--muted); font-weight: 600; }
   .ac-row .ac-rate { color: #d98324; font-weight: 800; }
-  .ac-row .ac-w { font-size: 13px; }
+  .ac-row .ac-w { font-size: 12.5px; }
   .ac-cost { margin-top: auto; padding-top: 7px; font-family: var(--disp); font-weight: 700; font-size: 16px; color: var(--accent); }
   .ac-cost .ac-free { color: var(--go); }
-  .ac-save { position: absolute; top: 50%; right: 11px; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); color: #c9bfa6; font-size: 22px; line-height: 1; display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0 var(--ink); }
+  .ac-save { position: absolute; top: 50%; right: 11px; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); color: #c9bfa6; font-size: 24px; line-height: 1; display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0 var(--ink); }
   .ac-save.on { color: var(--accent2); background: var(--card-hi); }
   .acard.saved .ac-save { color: var(--go); border-color: var(--go); }
 
@@ -690,17 +697,17 @@
   /* first-run onboarding overlay */
   .onboard { position: absolute; inset: 0; z-index: 300; background: var(--screen); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 28px 24px; }
   .onboard .ob-card { max-width: 300px; animation: fade .35s ease; }
-  .onboard .ob-emoji { font-size: 86px; line-height: 1; margin-bottom: 18px; animation: rise 1.4s ease both; }
-  .onboard .ob-h { font-family: var(--disp); font-weight: 500; font-size: 30px; color: var(--accent); text-shadow: 0 0 28px var(--glow); line-height: 1.08; }
-  .onboard .ob-s { font-size: 14.5px; font-weight: 400; color: var(--muted); margin-top: 13px; line-height: 1.5; }
+  .onboard .ob-emoji { font-size: 78px; line-height: 1; margin-bottom: 18px; animation: rise 1.4s ease both; }
+  .onboard .ob-h { font-family: var(--disp); font-weight: 500; font-size: 34px; color: var(--accent); text-shadow: 0 0 28px var(--glow); line-height: 1.08; }
+  .onboard .ob-s { font-size: 14px; font-weight: 400; color: var(--muted); margin-top: 13px; line-height: 1.5; }
   .onboard .ob-foot { position: absolute; left: 24px; right: 24px; bottom: calc(30px + env(safe-area-inset-bottom, 0px)); }
   .onboard .ob-dots { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
   .onboard .ob-dot { width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); transition: background .2s; }
   .onboard .ob-dot.on { background: var(--accent); }
-  .onboard .ob-skip { display: block; margin: 11px auto 0; background: none; border: none; color: var(--muted); font-weight: 700; font-size: 13px; cursor: pointer; }
+  .onboard .ob-skip { display: block; margin: 11px auto 0; background: none; border: none; color: var(--muted); font-weight: 700; font-size: 12.5px; cursor: pointer; }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
-    .foodfall, .lvlup .rays { display: none !important; }
+
   }
 </style>
 </head>
@@ -708,18 +715,16 @@
   <div class="phone">
     <div class="notch"></div>
     <div class="screen">
-      <div class="statusbar"><span>2:14</span><span class="dim">🌙 still up &nbsp; ▟ &nbsp; 🔋 19%</span></div>
+      <div class="statusbar"><span>2:14</span></div>
       <div class="hud" id="hud"></div>
       <div class="body" id="body">
 
         <!-- FEED -->
         <section class="view active" id="view-feed">
-          <div class="foodfall" aria-hidden="true"><span>🍕</span><span>🍜</span><span>🌮</span><span>🍔</span><span>🍩</span><span>🍣</span></div>
           <div class="brand">
-            <button class="avatar" id="avatar-btn" onclick="go('profile')">🙂</button>
             <h1>Carted</h1>
-            <div class="sub">the anti-delivery app for night owls 🌙</div>
-            <div class="live-pill"><span class="dot"></span><span class="lp-count" id="live-count">night owls are up 🌙</span><span class="lp-sep">·</span><span id="ticker-msg" class="lp-ticker"></span></div>
+            <div class="sub">the 2 am room</div>
+            <div class="live-pill"><span class="dot"></span><span class="lp-count" id="live-count">night owls are up</span></div>
           </div>
 
           <!-- #1+2 consolidated: the 5 "tonight" nudges collapse behind one rotating teaser -->
@@ -727,14 +732,11 @@
             <button class="dr-head" onclick="toggleDrawer('tonight')">
               <span class="dr-lead ghost-emo">👻</span>
               <span class="dr-teaser" id="tonight-teaser">tonight's picks</span>
-              <span class="dr-mult" id="tonight-mult" style="display:none"></span>
               <span class="dr-caret">▾</span>
             </button>
             <div class="dr-body">
               <div id="buddy-nudge"></div>
               <div id="featured-banner"></div>
-              <div id="spotlight"></div>
-              <div id="morts-pick"></div>
               <div id="event-banners"></div>
             </div>
           </div>
@@ -743,32 +745,13 @@
 
           <!-- consolidated feed controls (was: seg + filters + feed-head) -->
           <div class="feed-controls" id="feed-controls">
-            <div class="seg">
-              <button id="seg-all" class="on" onclick="setMode('all')">All</button>
-              <button id="seg-saved" onclick="setMode('saved')">♥ Saved <span id="saved-count">0</span></button>
-            </div>
-            <div class="feed-identity">✈️ nobody's delivering tonight. order anyway — see what the ghost does 👻</div>
-            <div class="section-label feed-craving" id="feed-section-label">🔥 craving right now</div>
+            <div class="feed-identity" id="feed-identity">nobody's delivering tonight. order anyway — see what the ghost does.</div>
+            <div class="section-label feed-craving" id="feed-section-label">craving right now</div>
           </div>
 
           <div id="feed-list"></div>
 
-          <!-- #more: discovery extras tucked below the first screen of restaurants -->
-          <div class="drawer" id="more">
-            <button class="dr-head" onclick="toggleDrawer('more')">
-              <span class="dr-lead">✨</span>
-              <span class="dr-teaser">more — your quiet tally</span>
-              <span class="dr-mult" id="more-badge"></span>
-              <span class="dr-caret">▾</span>
-            </button>
-            <div class="dr-body">
-              <div class="tally">
-                <div class="box"><div class="k">saved here tonight</div><div class="v green" id="saved-tally">$0.00</div></div>
-                <div class="box"><div class="k">dodged here</div><div class="v" id="order-count">0</div></div>
-              </div>
-            </div>
-          </div>
-          <div class="osm-credit">🍳 every restaurant here is fictional — the cities are real · dish data &amp; photos from <a href="https://www.themealdb.com" target="_blank" rel="noopener" style="color:inherit">TheMealDB</a></div>
+          <div class="osm-credit">fictional places, real cities · dish data &amp; photos from <a href="https://www.themealdb.com" target="_blank" rel="noopener" style="color:inherit">TheMealDB</a></div>
         </section>
 
         <!-- DETAIL -->
@@ -778,7 +761,7 @@
           <div class="d-stats" id="d-stats"></div>
           <div class="d-desc" id="d-desc" style="display:none"></div>
           <div id="d-coupon"></div>
-          <div class="section-label">🍴 menu · tap ＋ to (not) order</div>
+          <div class="section-label">menu</div>
           <div id="d-menu"></div>
           <div class="reviews" id="d-reviews"></div>
           <button class="cta" id="d-add">🛒 view cart</button>
@@ -794,19 +777,17 @@
         <section class="view" id="view-room">
           <div class="brand">
             <h1 style="font-size:24px">the 2 am room</h1>
-            <div class="room-tag">the hour that&#8217;s yours — come stand outside with us a while 🌙</div>
-            <div class="live2"><span class="dot"></span> <b style="color:var(--slate);font-weight:700" id="room-awake">the room's awake</b>&nbsp;🌙 · <span id="room-burn-top">🌅 —</span></div>
-            <div class="ghost-note">👻 = resident ghost — friendly fiction keeping the room warm, not people. your posts burn at sunrise. 🌅</div>
-            <div class="notice" id="room-notice"></div>
+            <div class="live2"><span class="dot"></span> <b style="color:var(--slate);font-weight:700" id="room-awake">the room's awake</b> · <span id="room-burn-top">🌅 —</span></div>
+            <div class="ghost-note">👻 = resident ghost — friendly fiction, not people.</div>
             <div id="room-nod"></div>
           </div>
-          <div class="shelf" id="cup-shelf"></div>
-          <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a quiet 3-minute break — the ghosts steep with you 🍜</span></span><span class="cbr-go">›</span></button>
-          <button id="silence-toggle" class="silence-btn" onclick="toggleSilence()">🤫 quiet corner</button>
           <div id="room-podium"></div>
-          <div class="prompts"><span class="plabel">you made it. tap what almost got you</span><button class="pchip" onclick="nightSpecial()" title="invent tonight's special" aria-label="invent tonight's special">🍳</button><button class="pchip" onclick="quickConfess('🍕')">🍕</button><button class="pchip" onclick="quickConfess('🍜')">🍜</button><button class="pchip" onclick="quickConfess('🍣')">🍣</button><button class="pchip" onclick="quickConfess('🌮')">🌮</button><button class="pchip" onclick="quickConfess('🍔')">🍔</button><button class="pchip" onclick="quickConfess('🍰')">🍰</button></div>
-          <div class="composer"><input id="composer-input" aria-label="say something to the room" placeholder="say it quietly — it burns at sunrise 🌅" maxlength="90" /><button onclick="postFromComposer()">post</button></div>
-          <div class="room-rules-line">be kind — the room is a leveler. <a href="terms.html" target="_blank" rel="noopener">community rules</a> · report any post with 🚩</div>
+          <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a 3-minute break</span><span class="cbr-shelf" id="cup-shelf"></span></span><span class="cbr-go">›</span></button>
+          <button id="silence-toggle" class="silence-btn" onclick="toggleSilence()">🤫 quiet corner</button>
+          <div class="composer"><input id="composer-input" aria-label="say something to the room" placeholder="say it quietly — it burns at sunrise" maxlength="90" /><button onclick="postFromComposer()">post</button></div>
+          <div class="prompts"><button class="pchip" onclick="quickConfess('🍕')">🍕</button><button class="pchip" onclick="quickConfess('🍜')">🍜</button><button class="pchip" onclick="quickConfess('🍣')">🍣</button><button class="pchip" onclick="quickConfess('🌮')">🌮</button><button class="pchip" onclick="quickConfess('🍔')">🍔</button><button class="pchip" onclick="quickConfess('🍰')">🍰</button></div>
+          <div class="room-rules-line">be kind · <a href="terms.html" target="_blank" rel="noopener">rules</a> · 🚩 report</div>
+          <div class="notice" id="room-notice"></div>
           <div id="room-feed"></div>
           <div class="osm-credit" id="room-burn">🌅 posts burn at sunrise</div>
         </section>
@@ -852,8 +833,8 @@
       </div>
 
       <div class="nav">
-        <button class="on" id="nav-feed" onclick="go('feed')"><span class="gi">🍜</span>browse</button>
         <button id="nav-room" onclick="go('room')"><span class="gi">💬</span>room</button>
+        <button class="on" id="nav-feed" onclick="go('feed')"><span class="gi">🍜</span>browse</button>
         <button id="nav-cart" onclick="go('cart')"><span class="gi">🛒</span>cart<span class="badge" id="cart-badge" style="display:none">0</span></button>
       </div>
       <div class="modal-bg" id="modal" style="display:none" onclick="if(event.target===this) closeModal()"><div class="modal" id="modal-content"></div></div>
@@ -1048,16 +1029,6 @@ const CCY = {
 };
 
 /* calm, communal, no comparison/achievement pressure — "we're in this together", not a scoreboard */
-const TICKER = [
-  "a ghost in Brooklyn window-shopped pastrami and went to bed 🌙",
-  "someone in Tokyo is tracking a 🚗 that will never arrive",
-  "you're not the only one up 😌",
-  "a ghost in London looked at a naan roll and felt a little better",
-  "girl dinner is just looking at the menu, together",
-  "👻 tonight's drivers: imaginary, as always",
-  "the kitchens are warm. no one's ordering. that's the point.",
-  "whatever you're not buying tonight — same 🤍",
-];
 /* resident ghosts: the room's DISCLOSED fictional regulars. every non-"you" post is a
    named ghost, never presented as a human — the honesty line the whole brand stands on. */
 const ROOM_SEED = [
@@ -1169,8 +1140,10 @@ function eventNight(){ const k=nightKey(); return EVENT_NIGHTS.find(e=>e.when(k)
    room had zero ghosts awake for the whole 22:00 hour.) */
 function schedMin(s){ const m=String(s||"").replace("~","").split(":"); let h=parseInt(m[0])||0; if(h===12) h=0; else if(h>=6) h+=12; return h*60 + (parseInt(m[1])||0); }
 function ghostAwakeNow(g){ const now=new Date(); const nm=now.getHours()*60+now.getMinutes(); const gm=schedMin(g.sched); let d=Math.abs(nm-gm); d=Math.min(d,1440-d); return d<=90; }   // within 90 min of its hour
-const REACT_META = { hug:"🫂", me:"😋", go:"🔥" };
-const REACT_LBL  = { hug:"hang in", me:"me too", go:"send it" };   // 😋 is our 저도요
+const REACT_META = { hug:"🫂", me:"😋" };   // 'send it' retired — hype is the one register a leveler can't own
+const REACT_LBL  = { hug:"hang in", me:"me too" };   // 😋 is our 저도요; labels teach once, then retire to a11y
+function reactLbl(t){ let taught=false; try{ taught=!!localStorage.getItem("carted_reacted"); }catch(e){}
+  return taught ? "" : `<span class="rlbl">${REACT_LBL[t]}</span>`; }
 const OVERPASS = ["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter","https://maps.mail.ru/osm/tools/overpass/api/interpreter"];
 
 /* night shift: 10pm–6am the whole app dims and hushes (see body.night CSS).
@@ -1180,11 +1153,10 @@ function applyNight(){ document.body.classList.toggle("night", isNight()); }
 
 /* ---- state ---- */
 let cart = [], liveBase = 1247, courierTimers = [], room = [], lastOrderItems = [], pendingOrder = null;
-let curIdx = 0, feedMode = "all", currentDetailKey = null, GEO_SEQ = 0;
-let savedPlaces = {};
+let curIdx = 0, currentDetailKey = null, GEO_SEQ = 0;
 let account = null, stats = { savedUsd:0, orders:0, streak:0, conversions:0, xp:0, cuisines:[], cities:[], maxCombo:0, earned:[], freezes:1, lastNight:null, quests:null }, handoffTarget = null, combo = 0;
 let sndOn = (localStorage.getItem("carted_snd")!=null) ? localStorage.getItem("carted_snd")!=="off" : false, lastTap = {x:195, y:420}, lastShare = null;   // sounds default OFF at night
-const statsByCity = {}, placeByKey = {}, CITY_INDEX = {};
+const placeByKey = {}, CITY_INDEX = {};
 
 /* ---- helpers ---- */
 const $ = (s) => document.querySelector(s);
@@ -1271,7 +1243,7 @@ function flightInfo(city){
 function cityOf(p){ const i = CITY_INDEX[p._cityId]; return i!=null ? CITIES[i] : curCity(); }
 /* per-restaurant flight time = city base ± a deterministic jitter, so each place reads a bit different */
 function placeFlight(p){ const fl=flightInfo(cityOf(p)); if(!fl) return null; const mins=Math.max(35, fl.mins + ((hash(p.name)%61)-20)); return { mins, label: fmtFlight(mins) }; }
-function etaStr(p){ if(p._cityId==="konbini") return "⚡ instant"; const fl = placeFlight(p); return fl ? `✈️ ${fl.label}` : `⏱ ${etaFor(p)} min`; }
+function etaStr(p){ const fl = placeFlight(p); return fl ? fl.label : `${etaFor(p)} min`; }
 /* photo layer: baked Google photo when available, keyworded stock fallback, emoji last resort */
 const BASE = location.pathname.includes("/carted-demo") ? "/carted-demo/" : "/";
 const DATA_V = "fic2";   // bump when baked data changes — busts HTTP caches on places/activities/menus JSON
@@ -1370,14 +1342,6 @@ function urlB64ToU8(s){ const pad="=".repeat((4-s.length%4)%4); const b=(s+pad).
 function photoUrl(p, big){ return p.photo ? (BASE + p.photo) : null; }
 function thumbImg(p, big){ const u=photoUrl(p,big); return u ? `<img class="ph-img" src="${u}" alt="" loading="lazy" decoding="async" onerror="this.replaceWith('${p.ic}')">` : `<span class="ph-emo">${p.ic}</span>`; }
 /* reward tiers — keyed off money SAVED (rewards restraint, not time-in-app) */
-const TIERS = [
-  {name:"Window Shopper", min:0, ic:"👀"},
-  {name:"Cart Ghost", min:50, ic:"👻"},
-  {name:"Budget Monk", min:200, ic:"🧘"},
-  {name:"Zen Saver", min:500, ic:"🌙"},
-  {name:"Dopamine Sensei", min:1200, ic:"🐉"},
-];
-function tierFor(usd){ let t=TIERS[0], next=null; for(let i=0;i<TIERS.length;i++){ if(usd>=TIERS[i].min){ t=TIERS[i]; next=TIERS[i+1]||null; } } return {t, next}; }
 
 /* ---- game layer: xp/levels, variable reveal, combo, achievements ---- */
 const DRIVERS = ["Marcus","Tyler","Mateo","Jin","Priya","Sofia","Liam","Omar","Chloé","Diego","Aisha","Noah"];
@@ -1397,25 +1361,10 @@ const FLIGHT_PUNCH = [
 ];
 function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
 function levelInfo(xp){ let lvl=1, need=60, acc=0; while(xp>=acc+need){ acc+=need; lvl++; need=Math.round(need*1.35); } return {lvl, pct:Math.round((xp-acc)/need*100)}; }
-/* XP/levels retired in the Calm Pass — this app is a companion, not a game. addXp is a
-   harmless no-op so the ~20 legacy call sites don't break; nothing accrues or surfaces. */
-function addXp(n){}
-const ACHV = [
-  {id:"first", ic:"👻", name:"First Ghost", tip:"window-order once", has:s=>s.orders>=1},
-  {id:"fav5", ic:"❤️", name:"Collector", tip:"save 5 places", has:()=>Object.keys(savedPlaces).length>=5},
-  {id:"streak7", ic:"🔥", name:"Week of Will", tip:"7-night streak", has:s=>s.streak>=7},
-  {id:"cities5", ic:"🌍", name:"Globetrotter", tip:"5 cities", has:s=>(s.cities||[]).length>=5},
-  {id:"cuis10", ic:"🍱", name:"Omnivore", tip:"10 cuisines", has:s=>(s.cuisines||[]).length>=10},
-  {id:"combo3", ic:"⚡", name:"Combo King", tip:"3× combo", has:s=>(s.maxCombo||0)>=3},
-  {id:"save100", ic:"💰", name:"Budget Boss", tip:"save $100", has:s=>s.savedUsd>=100},
-  {id:"sensei", ic:"🐉", name:"Sensei", tip:"top rank", has:s=>s.savedUsd>=1200},
-];
-function checkAchv(){}   // achievement badges + unlock toasts retired with the profile trophy case
 function uniqPush(arr, v){ if(v && !arr.includes(v)) arr.push(v); }
 function animateMoney(el, target, cur){ if(!el) return; cur=cur||curCity().cur; const sym=cur.sym;
   function paint(v){ const s=money(v,cur); const num=s.indexOf(sym)===0 ? s.slice(sym.length) : s; el.innerHTML='<span class="cur">'+esc(sym)+'</span>'+esc(num)+'<span class="lbl">saved</span>'; }
   const start=performance.now(), dur=750; (function step(t){ const k=Math.min(1,(t-start)/dur); const v=target*(1-Math.pow(1-k,3)); paint(v); if(k<1) requestAnimationFrame(step); else paint(target); })(performance.now()); }
-function isFav(key){ return !!savedPlaces[key]; }
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1600); }
 
 /* ---- night clock: a "night" runs 4am→4am so 2am counts as the same night ---- */
@@ -1457,27 +1406,10 @@ function renderHud(){
   const done=stats.lastNight===nightKey();
   /* HUD = the identity spine only: streak + lifetime dodged. levels/XP live on the profile. */
   el.innerHTML = `
-    <button class="pill flame${done?' on':''}" onclick="go('profile')">🔥 <b>${stats.streak||0}</b>${done?'<span class="hint">tonight ✓</span>':''}</button>
-    <button class="pill lvl" onclick="openStats()" style="justify-content:center">💰 <b>$${Math.round(stats.savedUsd).toLocaleString()}</b> <span class="hint">never spent</span></button>
+    <button class="pill flame${done?' on':''}" onclick="go('profile')">🔥 <b>${stats.streak||0}</b> · <b>$${Math.round(stats.savedUsd).toLocaleString()}</b> <span class="hint">never spent</span></button>
     <button class="pill" onclick="toggleSnd()">${sndOn?"🔊":"🔇"}</button>`;
 }
 /* ---- stats: money dodged broken out by currency, total in USD ---- */
-function openStats(){
-  const byCur={}; // symbol -> {sym, dec, amount(local), usd}
-  CITIES.forEach(c=>{ const s=statsByCity[c.id]; if(!s||!s.saved) return; const k=c.cur.sym;
-    if(!byCur[k]) byCur[k]={sym:c.cur.sym, dec:c.cur.dec, amount:0, usd:0};
-    byCur[k].amount += s.saved; byCur[k].usd += s.saved/(c.pf||1); });
-  const rows=Object.values(byCur).sort((a,b)=>b.usd-a.usd);
-  const totalUsd=Math.round(stats.savedUsd);
-  const body = rows.length
-    ? rows.map(r=>`<div class="stat-row"><span class="sc-cur">${esc(money(r.amount,{sym:r.sym,dec:r.dec}))}</span><span class="sc-usd">≈ $${Math.round(r.usd).toLocaleString()}</span></div>`).join("")
-    : `<div class="m-body" style="margin:0">no dodges yet — go ghost a check 👻</div>`;
-  showModal(`<div class="m-emoji">💰</div><div class="m-title">money you didn't spend</div>
-    <div class="stats-list">${body}</div>
-    <div class="stat-total"><span>total dodged</span><b>$${totalUsd.toLocaleString()}</b></div>
-    <div class="m-body" style="font-size:11.5px;margin:10px 0 0">each line is what you dodged in that currency · total is the USD equivalent</div>
-    <button class="cta" style="position:static" onclick="closeModal()">nice 🙂</button>`);
-}
 
 /* ---- xp floaters + level-up takeover ---- */
 /* level-up takeover, XP floaters, and nightly missions deleted in the 2026-07-09 dead-code pass —
@@ -1498,7 +1430,7 @@ function quickAdd(key, ev){ ev.stopPropagation(); addToCart(key, ev); }
 /* ---- shareable win card (canvas → native share / download) ---- */
 function shareWin(mode){ track("share",{k:"win"});
   let s = lastShare;
-  if(mode==="streak"){ const {t}=tierFor(stats.savedUsd); s={ label:"$"+Math.round(stats.savedUsd).toLocaleString(), streak:stats.streak||0, tier:t, city:"", streakMode:true }; }
+  if(mode==="streak"){ s={ label:"$"+Math.round(stats.savedUsd).toLocaleString(), streak:stats.streak||0, city:"", streakMode:true }; }
   if(!s){ toast("nothing to share yet"); return; }
   const cv=document.createElement("canvas"); cv.width=1080; cv.height=1080; const x=cv.getContext("2d");
   // warm-analog midnight: deep bg + a soft amber lamp glow behind the number
@@ -1515,7 +1447,6 @@ function shareWin(mode){ track("share",{k:"win"});
   x.shadowBlur=0; x.shadowColor="transparent";
   x.font="600 38px 'Inter', sans-serif"; x.fillStyle="#8A7A6B"; x.fillText(s.streakMode?"SAVED — ALL-TIME":("SAVED"+(s.city?("  ·  "+String(s.city).toUpperCase()):"")), 540, 583);
   x.font="500 52px 'Newsreader', Georgia, serif"; x.fillStyle="#F0A84A"; x.fillText("🔥 "+s.streak+"-night no-spend streak", 540, 722);
-  x.font="600 36px 'Inter', sans-serif"; x.fillStyle="#8A7A6B"; x.fillText(s.tier.ic+"  "+s.tier.name, 540, 792);
   x.font="500 66px 'Newsreader', Georgia, serif"; x.fillStyle="#F0A84A"; x.fillText("Carted", 540, 948);
   x.font="600 30px 'Inter', sans-serif"; x.fillStyle="#8A7A6B"; x.fillText("fill the cart. ghost the check.", 540, 996);
   cv.toBlob(b=>{
@@ -1696,25 +1627,23 @@ function go(view){ track("view",{v:view});
   if(view==="cart") renderCart();
   if(view==="room"){ renderRoom(); maybeThreshold(); }
   if(view==="profile") renderProfile();
-  if(view==="feed"){ renderFeatured(); renderSpotlight(); const bn=$("#buddy-nudge"); if(bn) bn.innerHTML=buddyNudge(); refreshDiscovery(); setPresenceGhost(); }
+  if(view==="feed"){ renderFeatured(); const bn=$("#buddy-nudge"); if(bn) bn.innerHTML=buddyNudge(); refreshDiscovery(); setPresenceGhost(); }
   if(view!=="track") stopCourier();
 }
 /* back to the feed but keep the user where they were scrolled to */
 function backToFeed(){ go("feed"); $("#body").scrollTop = feedScroll; }
 /* heart in the header -> jump to your saved/favorite restaurants */
-function goFav(){ if(!$("#view-feed").classList.contains("active")) go("feed"); setMode("saved"); $("#body").scrollTop = 0; }
 
 /* ---- city + mode: featured chips + searchable 50-city modal ---- */
+/* city browser demoted (SUNRISE-1): one quiet line; the 50-city grid + near-me live in the modal */
 function renderCityBar(){
   const cur=curCity();
-  const extra = (!FEATURED.includes(cur.id)) ? `<button class="city-chip on">${cur.flag} ${esc(cur.name)}</button>` : "";
-  $("#city-bar").innerHTML = `<button class="city-chip add" onclick="nearMe()">📍 Near me</button>` + extra
-    + FEATURED.map(id=>{ const i=CITY_INDEX[id], c=CITIES[i]; return `<button class="city-chip${i===curIdx?' on':''}" onclick="setCity(${i})">${c.flag} ${esc(c.name)}</button>`; }).join("")
-    + `<button class="city-chip add" onclick="cityModal(false)">🌍 all 50</button>`;
+  $("#city-bar").innerHTML = `<button class="city-line" onclick="cityModal(false)">tonight: ${cur.flag} ${esc(cur.name)} <span class="cl-change">· change</span></button>`;
 }
 function cityModal(homeMode){
   showModal(`<div class="m-title" style="margin-top:0">${homeMode?'📍 where should the ghost deliver?':'🌍 the 50 food capitals'}</div>
     <input id="city-search" class="city-search" placeholder="search cities…" oninput="filterCityModal()" autocomplete="off">
+    <button class="cta secondary" style="position:static;margin:6px 0" onclick="closeModal();nearMe()">📍 near me</button>
     <div class="city-modal-list" id="city-modal-list">
       ${Object.entries(REGIONS).map(([k,label])=>`<div class="cm-group"><div class="cm-label">${label}</div><div class="cm-chips">${
         CITIES.filter(c=>c.region===k).map(c=>`<button class="city-chip cm" data-n="${c.name.toLowerCase()}" onclick="modalPick('${c.id}',${!!homeMode})">${c.flag} ${esc(c.name)}</button>`).join("")
@@ -1735,13 +1664,10 @@ function modalPick(id, homeMode){
 }
 function setCity(i){
   if(i===curIdx && curCity()._places) return;
-  curIdx=i; updateBadge(); feedMode="all"; setSegUI();
-  renderCityBar(); renderTally(); renderFeed();
+  curIdx=i; updateBadge();
+  renderCityBar(); renderFeed();
   loadCity(curCity());
 }
-function setMode(m){ feedMode=m; setSegUI(); renderFeed(); $("#body").scrollTop=0; }
-function setSegUI(){ $("#seg-all").classList.toggle("on", feedMode==="all"); $("#seg-saved").classList.toggle("on", feedMode==="saved"); }
-function renderTally(){ const c=curCity(), s=statsByCity[c.id]||{saved:0,orders:0}; $("#saved-tally").textContent=money(s.saved,c.cur); $("#order-count").textContent=s.orders; }
 
 /* ---- any city via OSM Nominatim geocoder ---- */
 function addCity(){
@@ -1757,9 +1683,9 @@ function addCity(){
         cur:{sym:m.sym,dec:m.dec}, pf:m.pf, tax:0.10,
         delivery: m.dec===0?Math.round(5*m.pf):round2(5*m.pf), late: m.dec===0?Math.round(2.5*m.pf):round2(2.5*m.pf),
         lat:parseFloat(g.lat), lng:parseFloat(g.lon), radius:2600 };
-      CITIES.push(city); CITY_INDEX[city.id]=CITIES.length-1; statsByCity[city.id]={saved:0,orders:0};
-      curIdx=CITIES.length-1; updateBadge(); feedMode="all"; setSegUI();
-      renderCityBar(); renderTally(); renderFeed(); loadCity(city);
+      CITIES.push(city); CITY_INDEX[city.id]=CITIES.length-1;
+      curIdx=CITIES.length-1; updateBadge();
+      renderCityBar(); renderFeed(); loadCity(city);
     }).catch(()=> toast("geocoder unavailable, try again"));
 }
 
@@ -1787,155 +1713,130 @@ function upsertNearCity(lat,lng,m,place){
     lat, lng, radius:1500 };
   if(CITY_INDEX["near"]!=null){ CITIES[CITY_INDEX["near"]]=city; }
   else { CITIES.push(city); CITY_INDEX["near"]=CITIES.length-1; }
-  statsByCity["near"]=statsByCity["near"]||{saved:0,orders:0};
-  curIdx=CITY_INDEX["near"]; updateBadge(); feedMode="all"; setSegUI();
-  renderCityBar(); renderTally(); renderFeed(); loadCity(city, true);
+  curIdx=CITY_INDEX["near"]; updateBadge();
+  renderCityBar(); renderFeed(); loadCity(city, true);
 }
 
 /* ---- feed ---- */
 /* guard against an address that got over-trimmed to an orphan ordinal ("th Ave") -> show the city instead */
 function niceHood(p){ const h=(p.hood||"").trim(); if(!h || /^(st|nd|rd|th)\b/i.test(h)) return p._cityName||""; return h; }
 function cardHTML(p, saved){
-  const fav=isFav(p._key), isNew=isNewPlace(p)&&!saved;
+  const isNew=isNewPlace(p)&&!saved;
   const where = saved ? `${p._flag} ${esc(p._cityName)}` : esc(p.en);
   return `<div class="card" onclick="openDetail('${p._key}')">
     <div class="thumb">${thumbImg(p)}</div>
     <div class="meta">
-      <div class="name">${esc(p.name)}${isNew?'<span class="new-chip">✨ new</span>':''}</div>
+      <div class="name">${esc(p.name)}${isNew?'<span class="new-chip">new</span>':''}</div>
       <div class="shop"><span class="en">${where}</span> · ${esc(niceHood(p))}</div>
-      <div class="row"><span class="rate">★ ${p.rate.toFixed(1)}</span><span>(${p.n.toLocaleString()})</span></div>
-      <div class="price">${"$".repeat(p.lvl||2)} <span class="p-eta">· ${etaStr(p)}</span></div>
+      <div class="row"><span class="rate">★ ${p.rate.toFixed(1)}</span><span>(${p.n.toLocaleString()})</span><span> · ${"$".repeat(p.lvl||2)} · ${etaStr(p)}</span></div>
     </div>
-    <button class="fav${fav?' on':''}" data-fk="${p._key}" onclick="toggleFav('${p._key}',event)">${fav?'♥':'♡'}</button>
     <button class="qadd" onclick="quickAdd('${p._key}',event)">＋</button>
   </div>`;
 }
 function renderFeed(){
-  renderBanners(); renderFeatured(); renderSpotlight(); const bn=$("#buddy-nudge"); if(bn) bn.innerHTML=buddyNudge();
-  const c=curCity(), saved=feedMode==="saved";
-  $("#saved-count").textContent = Object.keys(savedPlaces).length;
+  renderBanners(); renderFeatured(); const bn=$("#buddy-nudge"); if(bn) bn.innerHTML=buddyNudge();
+  const c=curCity();
   refreshDiscovery();
-  if(saved){
-    $("#feed-section-label").textContent = "♥ your saved places";
-    const list = Object.values(savedPlaces);
-    $("#feed-list").innerHTML = list.length ? list.map(p=>cardHTML(p,true)).join("")
-      : `<div class="empty"><div class="big">♡</div>no saved places yet.<br>tap the heart on anything you crave.</div>`;
-    return;
-  }
-  $("#feed-section-label").textContent = `🔥 craving in ${esc(c.name)} right now`;
-  if(!c._state || c._state==="loading"){ $("#feed-list").innerHTML = `<div class="loading"><div class="ghost-emo" style="font-size:42px">👻</div><div style="margin-top:10px">summoning the kitchens of ${esc(c.name)}…</div><span style="color:var(--muted);font-size:12px;font-weight:600">ghost-run establishments only</span></div>`; return; }
-  if(c._state==="error"){ $("#feed-list").innerHTML = `<div class="empty"><div class="big">📡</div>couldn't reach OpenStreetMap.<br><span style="font-size:12px">${esc(c._err)}</span><br><br><button class="cta secondary" style="position:static" onclick="loadCity(curCity(),true)">retry</button></div>`; return; }
+  $("#feed-section-label").textContent = `craving in ${esc(c.name)} right now`;
+  { const fi=$("#feed-identity"); if(fi) fi.style.display=(stats.orders||0)>0?"none":""; }
+  if(!c._state || c._state==="loading"){ $("#feed-list").innerHTML = `<div class="loading"><div class="ghost-emo" style="font-size:34px">👻</div><div style="margin-top:10px">summoning the kitchens of ${esc(c.name)}…</div><span style="color:var(--muted);font-size:12.5px;font-weight:600">ghost-run establishments only</span></div>`; return; }
+  if(c._state==="error"){ $("#feed-list").innerHTML = `<div class="empty"><div class="big">📡</div>couldn't reach OpenStreetMap.<br><span style="font-size:12.5px">${esc(c._err)}</span><br><br><button class="cta secondary" style="position:static" onclick="loadCity(curCity(),true)">retry</button></div>`; return; }
   if(c._state==="empty"){ $("#feed-list").innerHTML = `<div class="empty"><div class="big">🗺️</div>no places found here.<br>try another city.</div>`; return; }
-  const list = applyFilters(c._places);
+  let list = applyFilters(c._places);
+  const _capN=30, _total=list.length;
+  if(!window._showAllCards && _total>_capN) list=list.slice(0,_capN);
   if(!list.length){
-    $("#feed-list").innerHTML = (feedMode==="deals")
-      ? `<div class="empty"><div class="big">🎟️</div>no live deals in ${esc(c.name)} right now.<br>a fresh batch drops after sunrise 🌅</div>`
-      : `<div class="empty"><div class="big">🔍</div>nothing matches those filters.<br><button class="cta secondary" style="position:static;margin-top:12px" onclick="clearFilters()">clear filters</button></div>`;
+    $("#feed-list").innerHTML = `<div class="empty"><div class="big">🔍</div>nothing matches those filters.<br><button class="cta secondary" style="position:static;margin-top:12px" onclick="clearFilters()">clear filters</button></div>`;
     return;
   }
-  $("#feed-list").innerHTML = list.map(p=>cardHTML(p,false)).join("");
+  $("#feed-list").innerHTML = list.map(p=>cardHTML(p,false)).join("")
+    + ((!window._showAllCards && _total>_capN) ? `<button class="show-all" onclick="window._showAllCards=true;renderFeed()">${_total-_capN} more kitchens · show all</button>` : "");
 }
 
 /* ---- favorites (snapshot map -> survives reloads & unloaded cities) ---- */
-function loadSaved(){ try { savedPlaces = JSON.parse(localStorage.getItem("carted_saved")||"{}")||{}; } catch(e){ savedPlaces={}; }
-  Object.values(savedPlaces).forEach(p=>{ if(p && p._key) placeByKey[p._key]=placeByKey[p._key]||p; }); }
-function saveSaved(){ try { localStorage.setItem("carted_saved", JSON.stringify(savedPlaces)); } catch(e){} }
-function toggleFav(key, ev){
-  if(ev) ev.stopPropagation();
-  if(savedPlaces[key]){ delete savedPlaces[key]; }
-  else { const p = placeByKey[key]; if(!p) return; savedPlaces[key]=p; toast("saved ♥"); snd("pop"); addXp(5); checkAchv(); }
-  saveSaved();
-  const on=!!savedPlaces[key];
-  // targeted update: flip just this card's heart(s) + the Saved-tab count, instead of a full feed re-render on every tap
-  document.querySelectorAll('#feed-list .fav').forEach(b=>{ if(b.dataset.fk===key){ b.classList.toggle("on",on); b.textContent= on?'♥':'♡'; } });
-  const sc=$("#saved-count"); if(sc) sc.textContent=Object.keys(savedPlaces).length;
-  // Saved mode: the card itself must appear/disappear, so a full render is still required there
-  if(feedMode==="saved" && $("#view-feed").classList.contains("active")) renderFeed();
-}
-function toggleDetailFav(){ if(!currentDetailKey) return; toggleFav(currentDetailKey, null); updateDetailFav(); }
-function updateDetailFav(){ const on=isFav(currentDetailKey); const b=$("#d-fav"); if(!b) return; b.classList.toggle("on",on); b.textContent= on?"♥":"♡"; }
 
 /* ---- account + profile (mock auth; real cross-device sync = backend) ---- */
 function loadAccount(){ try{ account=JSON.parse(localStorage.getItem("carted_account")||"null"); }catch(e){} try{ Object.assign(stats, JSON.parse(localStorage.getItem("carted_stats")||"{}")); }catch(e){} }
 function saveAccount(){ try{ localStorage.setItem("carted_account", JSON.stringify(account)); }catch(e){} }
 function saveStats(){ try{ localStorage.setItem("carted_stats", JSON.stringify(stats)); }catch(e){} mirrorStats(); }
-function avatarGlyph(){ return account ? "🌙" : "🙂"; }
 /* no accounts, by design: everything lives on this device. keeps the app private-by-default
    and out of Apple's 4.8 (Sign in with Apple) + 5.1.1(v) (account deletion) obligations. */
 /* lever 8: the resident ladder — damta's identity-inside-anonymity pattern. status is EARNED by
    nights you came back and shown ONLY here on the profile; the room itself stays a leveler. */
+/* saved-places retired (SUNRISE-1, Eric's call): one-order-per-night made "save for later"
+   meaningless. one-time migration: old hearts seed the ghost's taste memory (stats.cuisineCount
+   → "the usual"), then carted_saved stays on disk unread — reversible, never deleted. */
+function migrateSaved(){ try{
+  if(localStorage.getItem("carted_saved_migrated")) return;
+  const old=JSON.parse(localStorage.getItem("carted_saved")||"{}")||{}; const list=Object.values(old);
+  localStorage.setItem("carted_saved_migrated","1");
+  if(!list.length) return;
+  stats.cuisineCount=stats.cuisineCount||{};
+  list.forEach(p=>{ const en=(p&&p.en)||null; if(en) stats.cuisineCount[en]=(stats.cuisineCount[en]||0)+1; });
+  const top=Object.entries(stats.cuisineCount).sort((a,b)=>b[1]-a[1])[0];
+  if(top && top[1]>=3) stats.usual={en:top[0], n:top[1]};
+  saveStats();
+  setTimeout(()=>{ showModal(`<div class="m-emoji">🤍</div><div class="m-title">the hearts retired</div><div class="m-body">saving places didn't fit a place with one order a night — so your ${list.length} hearts became the ghost's memory of what you like instead.</div><button class="cta" style="position:static" onclick="closeModal()">ok 🌙</button>`); }, 1200);
+}catch(e){} }
 function residentTier(){ const n=(_aGet("carted_nights",[])||[]).length;
   if(n>=30) return {ic:"🏮", name:"keeper of the room", sub:"30 nights — the lamp is basically yours"};
   if(n>=7)  return {ic:"🪑", name:"regular",            sub:"7 nights — your seat knows you"};
   if(n>=2)  return {ic:"🌙", name:"resident",           sub:"you came back. that's the whole club."};
   return null; }
 function renderProfile(){
-  const favCount = Object.keys(savedPlaces).length;
   const rt = residentTier();
   const head = `<div class="profile-card"><div class="pa">${rt?rt.ic:"🌙"}</div><div class="ph">${rt?esc(rt.name)+" of the 2 am room":"your night-owl pass"}</div><div class="pe">${rt?esc(rt.sub)+" · ":""}no account, no sign-up — everything lives on this device</div></div>`;
+  const kept = `<div class="kept-owner">$${Math.round(stats.savedUsd).toLocaleString()}<span class="ko-k">kept, all-time</span></div>`;
   const grid = `
     <div class="pstats">
-      <div class="pstat"><div class="v green">$${Math.round(stats.savedUsd).toLocaleString()}</div><div class="k">kept in your pocket (≈USD)</div></div>
       <div class="pstat"><div class="v streak">🔥 ${stats.streak}</div><div class="k">nights showing up</div></div>
-    </div>
-    <div class="pstats">
       <div class="pstat"><div class="v">🧊 ${stats.freezes||0}</div><div class="k">a missed night, forgiven</div></div>
-      <div class="pstat"><div class="v">${favCount}</div><div class="k">saved places</div></div>
     </div>`;
-  const auth = `<button class="signin-btn" onclick="shareWin('streak')">📸 flex your streak card</button>`
-    + `<button class="signin-btn" onclick="showWrapped()">📊 your week, wrapped</button>`
-    + `<button class="signin-btn" onclick="shareReceipt()">🧾 the receipt of everything you didn't buy</button>`
-    + `<button class="signin-btn" onclick="ghostPush()">${stats.pushOptIn?"🔔 ghost texts: on":"🔔 let the ghost text me"}</button>`
-    + `<button class="signin-btn" onclick="toggleAsmr()">${asmrOn?"🍳 kitchen ASMR: on":"🍳 kitchen ASMR: off"}</button>`
-    + `<button class="signin-btn" onclick="toggleSnd()">${sndOn?"🔊 sounds: on":"🔇 sounds: off"}</button>`;
-  const owned=stats.drivers||[];
-  const driversCard = "";   // gacha courier collection retired
-  const bShared = stats.buddy && stats.buddy.sharedStreak!=null ? stats.buddy.sharedStreak : (stats.streak||0);
+  const auth = `<button class="signin-btn" onclick="shareReceipt()">the receipt of everything you didn't buy</button>`
+    + `<button class="signin-btn" onclick="shareWin('streak')">share your streak card</button>`
+    + `<button class="signin-btn" onclick="showWrapped()">your week, wrapped</button>`
+    + `<button class="signin-btn" onclick="ghostPush()">${stats.pushOptIn?"ghost texts: on":"let the ghost text me"}</button>`
+    + `<button class="signin-btn" onclick="toggleAsmr()">${asmrOn?"kitchen sounds: on":"kitchen sounds: off"}</button>`
+    + `<button class="signin-btn" onclick="toggleSnd()">${sndOn?"sounds: on":"sounds: off"}</button>`;
+  const bShared = stats.buddy && stats.buddy.sharedStreak!=null ? stats.buddy.sharedStreak : null;   // never present YOUR streak as the shared one
   const bNote = beOn() ? (stats.buddy && stats.buddy.pending ? "waiting for them to tap your link…" : "synced live") : "prototype — goes live once the backend is configured";
   const buddyCard = stats.buddy
-    ? `<div class="tier-card"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">${esc(stats.buddy.name||"your buddy")}</div><div class="tier-sub">you two show up on the same nights — ${bShared} together so far 🤍</div></div></div><button class="signin-btn" onclick="inviteBuddy()" style="margin-top:8px">↗ invite another</button><div style="text-align:center;color:var(--muted);font-size:10.5px;margin-top:6px">${bNote}</div></div>`
+    ? `<div class="tier-card"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">${esc(stats.buddy.name||"your buddy")}</div><div class="tier-sub">${bShared!=null?`you two show up on the same nights — ${bShared} together so far 🤍`:"nights together start counting when they tap your link 🤍"}</div></div></div><button class="signin-btn" onclick="inviteBuddy()" style="margin-top:8px">↗ invite another</button><div style="text-align:center;color:var(--muted);font-size:11px;margin-top:6px">${bNote}</div></div>`
     : `<div class="tier-card" style="border-color:var(--accent);box-shadow:4px 4px 0 var(--accent)"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">do this with someone</div><div class="tier-sub">bring one person — you'll both know the other is up, some nights. no pressure, no reset, just company 🤍</div></div></div><button class="signin-btn dark" onclick="inviteBuddy()" style="margin-top:8px">↗ invite a friend</button></div>`;
-  const {t,next}=tierFor(stats.savedUsd);
-  const prog = next ? Math.max(5, Math.min(100, Math.round((stats.savedUsd-t.min)/(next.min-t.min)*100))) : 100;
-  const tierCard = `<div class="tier-card"><div class="tier-row"><span class="tier-ic">${t.ic}</span><div><div class="tier-name">${t.name}</div><div class="tier-sub">${next?`$${Math.max(0,Math.round(next.min-stats.savedUsd))} more saved → <b>${next.name}</b> ${next.ic}`:"max rank — legend 🏆"}</div></div></div><div class="tier-bar"><div class="tier-fill" style="width:${prog}%"></div></div></div>`;
-  const lvlCard = "";   // XP/levels retired
-  const achv = "";   // achievement badges retired — this is a companion, not a trophy case
-  const tt=travelTotals(), flown=citiesFlown();
-  const passportCard = `<div class="section-label" style="margin:8px 2px 8px">🛂 flight log <span style="color:var(--muted)">${flown.size}/50 cities</span></div>`
-    + `<div class="passport" style="margin-bottom:10px"><div class="pp-top"><span>🛂</span> <b>${flown.size}/50</b> cities flown<span class="pp-saved">✈️ ${(tt.miles||0).toLocaleString()} mi never flown</span></div><div class="pp-bar"><div class="pp-fill" style="width:${Math.round(flown.size/50*100)}%"></div></div>${passportStrip()}</div>`;
+  /* the closet: wardrobe + souvenirs + flight log fold behind one door — earned memory,
+     owned-only, no locks, no quotas, no progress bars. status lives here, never in the room. */
+  const closet = `<div class="drawer" id="closet"><button class="dr-head" onclick="toggleDrawer('closet')"><span class="dr-teaser">the closet — what the nights left behind</span><span class="dr-caret">▾</span></button><div class="dr-body">${renderWardrobe()}${passportStrip()}</div></div>`;
   const gs=ghostStage(), u=stats.usual;
   const ghostCard = `<div class="tier-card"><div class="tier-row"><span class="tier-ic">${ghostAvatar(34)}</span><div><div class="tier-name">${esc(ghostName())} · ${gs.name}</div><div class="tier-sub">raised over ${gs.nights} night${gs.nights===1?"":"s"} of showing up${gs.next?` · ${gs.next.min-gs.nights} more → <b>${gs.next.name}</b>`:" · fully grown, still hungry"}${u?`<br>he remembers: you always cart <b>${esc(u.en)}</b>`:""}</div></div></div>`;
-  $("#profile-body").innerHTML = `<div class="brand"><h1 style="font-size:24px">profile</h1></div>` + head + ghostCard + buddyCard + lvlCard + tierCard + grid + achv + renderWardrobe() + driversCard + passportCard + auth
-    + `<div style="text-align:center;color:var(--muted);font-size:11.5px;margin-top:14px">no accounts — everything lives on this device 🌙</div>`;
+  $("#profile-body").innerHTML = `<div class="brand"><h1 style="font-size:24px">profile</h1></div>` + head + kept + ghostCard + buddyCard + grid + closet + auth;
 }
 
 /* ---- detail ---- */
 function openDetail(key){
-  const p = placeByKey[key] || savedPlaces[key]; if(!p) return;
+  const p = placeByKey[key]; if(!p) return;
   if($("#view-feed").classList.contains("active")) feedScroll = $("#body").scrollTop;  // remember scroll for the back button
   if(p._cityId!==curCity().id && CITY_INDEX[p._cityId]!=null){
-    curIdx=CITY_INDEX[p._cityId]; updateBadge(); renderCityBar(); renderTally(); loadCity(curCity());
+    curIdx=CITY_INDEX[p._cityId]; updateBadge(); renderCityBar(); loadCity(curCity());
   }
   currentDetailKey=key;
   $("#d-hero").innerHTML = thumbImg(p, true)
     + `<div class="city-tag">${p._flag} ${esc(p._cityName)}</div>`
-    + `<button class="d-fav${isFav(p._key)?' on':''}" id="d-fav" onclick="toggleDetailFav()" aria-label="Save place">${isFav(p._key)?'♥':'♡'}</button>`
     + `<div class="hero-name"><div class="hn-title">${esc(p.name)}</div><div class="hn-sub">${esc(p.en)} · ${esc(niceHood(p))}</div></div>`;
   const dd=$("#d-desc"); const isUsual = stats.usual && cuisineKeyOf(p)===String(stats.usual.en).replace(/[\s-]+/g,"_");
   if(p.desc || isUsual){ dd.textContent=(p.desc||"") + (isUsual?`${p.desc?" — ":""}👻 ${ghostName()}: “the usual, then?”`:""); dd.style.display="block"; } else dd.style.display="none";
-  $("#d-stats").innerHTML = `<span>★ <b>${p.rate.toFixed(1)}</b> (${p.n.toLocaleString()})</span>${p.lvl?`<span><b>${"$".repeat(p.lvl)}</b></span>`:""}<span><b>${etaStr(p)}</b></span>`;
+  $("#d-stats").innerHTML = `${p.lvl?`<span><b>${"$".repeat(p.lvl)}</b></span>`:""}<span><b>${etaStr(p)}</b></span>`;
   { const dc=$("#d-coupon"); if(dc) dc.innerHTML=""; }
   $("#d-menu").innerHTML = renderMenu(p);
-  const mocks = mockFor(p).map(r=>`<div class="review"><div class="top"><span class="stars">${r[1]}</span><span>ghost 👻 · ${(hash(p.name)%23)+1}m ago</span></div><div class="text">${esc(r[0])}</div></div>`).join("");
+  const mocks = mockFor(p).slice(0,2).map(r=>`<div class="review"><div class="top"><span class="stars">${r[1]}</span><span>ghost 👻 · ${(hash(p.name)%23)+1}m ago</span></div><div class="text">${esc(r[0])}</div></div>`).join("");
   $("#d-reviews").innerHTML =
-    `<div class="section-label" style="margin-top:18px">👻 ghosts say (nobody ate)</div>` + mocks
+    `<div class="section-label" style="margin-top:18px">ghosts say</div>` + mocks
     + `<div class="fic-note">👻 this restaurant is fictional — the city's real, the craving's real, the order never will be.</div>`;
   $("#d-add").onclick = ()=>go("cart");
-  updateDetailFav(); go("detail");
+  go("detail");
 }
 
 /* ---- cart ---- */
-function addToCart(key, ev){ const p=placeByKey[key]||savedPlaces[key]; if(!p) return; const c=cityOf(p); const item={...p, _pf:(c&&c.pf)||1, _tax:(c&&c.tax!=null)?c.tax:curCity().tax}; cart.push(item); track("add_cart"); updateBadge(); if(ev) flyToCart(ev, p.ic); snd("pop"); toast(`added — that's ${money(p.price,p._cur)} you didn't spend 😌`); addXp(6); }
+function addToCart(key, ev){ const p=placeByKey[key]; if(!p) return; const c=cityOf(p); const item={...p, _pf:(c&&c.pf)||1, _tax:(c&&c.tax!=null)?c.tax:curCity().tax}; cart.push(item); track("add_cart"); updateBadge(); if(ev) flyToCart(ev, p.ic); snd("pop"); toast(`added — that's ${money(p.price,p._cur)} you didn't spend 😌`); }
 function removeFromCart(i){ cart.splice(i,1); updateBadge(); renderCart(); }
 function updateBadge(){ const b=$("#cart-badge"); if(cart.length){ b.style.display="flex"; b.textContent=cart.length; } else b.style.display="none"; }
 /* ---- all cart math is now in USD; each item converts via its own city's pf ---- */
@@ -1954,7 +1855,7 @@ function renderCart(){
   if(!cart.length){ body.innerHTML = (orderedTonight()?`<div class="kclosed" style="margin-bottom:14px">🌙 that's your dodge for tonight — nicely done<div class="kc-sub">one order a night is the whole ritual. your cart keeps till you're back 🛒</div></div>`:"") + `<div class="empty"><div class="big">👻</div>your cart is a ghost town.<br>go fill it up.<br><br><button class="cta secondary" style="position:static" onclick="go('feed')">browse places</button></div>`; return; }
   const sub=cartSubtotal(), fl=flightInfo(c), quirks=cartQuirkFees();
   body.innerHTML = `
-    ${cart.map((p,i)=>`<div class="cart-item"><div class="ci-thumb">${(p._menuItem&&p.photo)?`<img class="ph-img" src="${p.photo}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${p.ic}'))">`:p.ic}</div><div class="nm">${esc(p.dish)}<div style="font-size:11.5px;color:var(--muted);font-weight:400">${p._flag||""} ${esc(p._cityName||p.name)}</div></div><div class="pr">${money(p.price,p._cur)}${cityPfOf(p)!==1?`<div style="font-size:10.5px;color:var(--muted);font-weight:600">≈ ${money(usdOf(p),USD)}</div>`:""}</div><button class="rm" onclick="removeFromCart(${i})">✕</button></div>`).join("")}
+    ${cart.map((p,i)=>`<div class="cart-item"><div class="ci-thumb">${(p._menuItem&&p.photo)?`<img class="ph-img" src="${p.photo}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${p.ic}'))">`:p.ic}</div><div class="nm">${esc(p.dish)}<div style="font-size:11px;color:var(--muted);font-weight:400">${p._flag||""} ${esc(p._cityName||p.name)}</div></div><div class="pr">${money(p.price,p._cur)}${cityPfOf(p)!==1?`<div style="font-size:11px;color:var(--muted);font-weight:600">≈ ${money(usdOf(p),USD)}</div>`:""}</div><button class="rm" onclick="removeFromCart(${i})">✕</button></div>`).join("")}
     <div class="summary">
       <div class="line"><span>Subtotal${multi?" (USD)":""}</span><span>${money(sub,USD)}</span></div>
       <div class="line"><span>Delivery fee</span><span>${money(cartDelivery(),USD)}</span></div>
@@ -1965,13 +1866,13 @@ function renderCart(){
       <div class="line"><span>Estimated tax</span><span>${money(cartTax(),USD)}</span></div>
       <div class="line total"><span>Total</span><span>${money(cartAllIn(),USD)}</span></div>
     </div>
-    <div class="boss"><span class="bossic">👹</span><span>the FEE BOSS wants <b style="color:var(--hot)">${money(cartFees(),USD)}</b> in junk fees${quirks.length?` (incl. ${quirks.map(q=>q.label).join(" + ")})`:""}.<br>place the order. dodge him.</span></div>
+    <div class="boss"><span class="bossic">👹</span><span><b style="color:var(--hot)">${money(cartFees(),USD)}</b> in junk fees — dodge him.</span></div>
     <div class="deliver-to">${multi?`✈️ a ghost plane will hit all ${cityIds.length} cities, then you`:(fl?`✈️ flying <b>${esc(c.name)} → ${esc(HOME.label)}</b> · real flight time ${fl.label}`:`🛵 delivering nearby in ${esc(HOME.label)}`)} · <span class="dt-change" onclick="cityModal(true)">change</span></div>
     ${orderedTonight()
       ? `<div class="kclosed">🌙 you've dodged tonight — that's enough<div class="kc-sub">one order a night is the whole ritual. your cart's saved for tomorrow.</div></div>`
       : `<button class="cta" onclick="placeOrder()">place order ${fl?"✈️":"🚗"}</button>`}
     <button class="cta secondary" onclick="go('feed')">keep browsing</button>
-    <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:12px">${orderedTonight()?"tonight's dodge is banked 🔥 see you at the next open.":"the button looks real. nothing gets charged."}</div>`;
+    <div style="text-align:center;color:var(--muted);font-size:12.5px;margin-top:12px">${orderedTonight()?"tonight's dodge is banked 🔥 see you at the next open.":"the button looks real. nothing gets charged."}</div>`;
     /* DEMO/PRE-AFFILIATE: real-money handoff removed until partner programs are live.
        Re-enable: <button class="order-real" onclick="orderForReal('cart')">…or just order it for real on a delivery app →</button> */
 }
@@ -2063,8 +1964,7 @@ function placeOrder(){
 function revealTruth(){
   const po=pendingOrder; if(!po) return;
   track("reveal",{usd:Math.round(po.total||0)});
-  lastOrderItems=po.items; const st=statsByCity[po.city.id]; st.orders++; st.saved+=po.total*po.city.pf;  // st.saved is per-city LOCAL; po.total is USD
-  const beforeTier=tierFor(stats.savedUsd).t.name;
+  lastOrderItems=po.items;
   /* streak = real calendar nights (4am cutoff), with a freeze to forgive one missed night */
   const tonight=nightKey(); let streakGrew=false, usedFreeze=false;
   if(stats.lastNight!==tonight){
@@ -2094,12 +1994,10 @@ function revealTruth(){
   stats.nudgeHour=new Date().getHours();                 // habitual-hour anchor for the gentle nudge
   saveStats(); checkFitUnlocks();
   if(NATIVE && stats.pushOptIn) nativeNudge();           // re-arm for tomorrow (never re-fires tonight)
-  const newTier=tierFor(stats.savedUsd).t;
   let milestone="";
-  if(newTier.name!==beforeTier){ milestone=`${newTier.ic} you've saved your way to ${esc(newTier.name)}`; stats.freezes=Math.min(3,(stats.freezes||0)+1); saveStats(); }
-  else if(streakGrew && [3,7,14,30,50,100,200].includes(stats.streak)){ milestone=`🔥 ${stats.streak} nights, together`; if(stats.streak>=7){ stats.freezes=Math.min(3,(stats.freezes||0)+1); saveStats(); } }
-  if(po.city.id===curCity().id) renderTally();
-  lastShare = { usd: po.total, label: money(po.total, USD), streak: stats.streak, tier: newTier, city: (po.cities&&po.cities.length>1)?`${po.cities.length} cities`:po.city.name };
+  if(streakGrew && [3,7,14,30,50,100,200].includes(stats.streak)){ milestone=`🔥 ${stats.streak} nights, together`; if(stats.streak>=7){ stats.freezes=Math.min(3,(stats.freezes||0)+1); saveStats(); } }
+  if(po.city.id===curCity().id)
+  lastShare = { usd: po.total, label: money(po.total, USD), streak: stats.streak, city: (po.cities&&po.cities.length>1)?`${po.cities.length} cities`:po.city.name };
   if(po.flight){ globeProgress(100); $("#track-live").style.display="none"; }
   else { const rd=$("#rider"); const mort=rd.querySelector(".mort"); if(mort) mort.textContent="👻"; const veh=rd.querySelector(".veh"); if(veh) veh.textContent="💨"; rd.style.left="120%"; rd.style.top="-12%"; rd.style.opacity="0"; routeProgress(100); const mp=$("#track-map"); if(mp) mp.classList.add("arrive"); $("#track-live").style.display="none"; }
   /* QUIET RECEIPT — a moment of relief, not a jackpot. no XP, no confetti, no cascade of toasts. */
@@ -2115,22 +2013,18 @@ function revealTruth(){
     <div class="sub" style="color:#d98324;font-weight:800;margin-top:6px">🔥 night ${stats.streak}${usedFreeze?' · 🧊 a freeze caught your miss':''}</div>
     ${milestone?`<div class="milestone">${milestone}</div>`:""}
     <div style="margin-top:22px">
-      <button class="cta gold" style="position:static" onclick="shareWin()">📸 share the win</button>
+      <button class="cta gold" style="position:static" onclick="shareToRoom()">${firstEver?"🌙 meet the others in the room":"🌙 come sit in the room"}</button>
       <button class="cta secondary" style="position:static" onclick="shareReceipt()">🧾 the receipt</button>
-      <button class="cta" style="position:static" onclick="shareToRoom()">${firstEver?"🌙 meet the others in the room":"🌙 come sit in the room"}</button>
     </div>
-    <div class="sub" style="margin-top:14px;text-align:center"><span onclick="goodnight()" style="color:var(--muted);cursor:pointer">good night 🌙</span> &nbsp;·&nbsp; <span onclick="resetCartAndBrowse()" style="color:var(--muted);cursor:pointer">keep browsing</span></div>`;
+    <div class="sub" style="margin-top:14px;text-align:center"><span onclick="goodnight()" style="color:var(--muted);cursor:pointer">good night 🌙</span></div>`;
   animateMoney($("#reveal-saved"), po.total, USD);
   setTimeout(()=>snd("chime"), 850);
   renderHud();
-  checkAchv();
   cart=[]; updateBadge();
 }
-function resetCartAndBrowse(){ go("feed"); toast("ok. let's get hungry again 🌙"); }
-/* the goodnight off-ramp — permission to stop. damta's cigarette burns out; so should the night. */
 function goodnight(){ track("goodnight"); const sc=$(".screen"); if(!sc || $("#gn-overlay")) return;
   const el=document.createElement("div"); el.id="gn-overlay"; el.className="cup-ov";
-  el.innerHTML=`<div class="cup-scene"><div class="cup-emo">🌙</div><div class="cup-clock" style="font-size:26px">that's the night.</div><div class="cup-hint">you kept your money and you showed up. that's enough for one night.<br>${esc(ghostName())}'ll keep the light on. sleep well 🤍</div><button class="cta secondary" style="position:static;margin-top:22px" onclick="this.closest('#gn-overlay').remove()">actually, i'm still up</button></div>`;
+  el.innerHTML=`<div class="cup-scene"><div class="cup-emo">🌙</div><div class="cup-clock" style="font-size:24px">that's the night.</div><div class="cup-hint">you kept your money and you showed up. that's enough for one night.<br>${esc(ghostName())}'ll keep the light on. sleep well 🤍</div><button class="cta secondary" style="position:static;margin-top:22px" onclick="this.closest('#gn-overlay').remove()">actually, i'm still up</button></div>`;
   sc.appendChild(el); snd("chime"); }
 function stopCourier(){ courierTimers.forEach(clearTimeout); courierTimers=[]; if(typeof cancelGlobePlane==='function') cancelGlobePlane(); }
 /* tap-to-skip: impatient users (and cold TikTok arrivals) jump straight to the payoff */
@@ -2257,7 +2151,7 @@ function maybeThreshold(){
 /* podium deleted 2026-07-09 — the room is a leveler; even a fictional ranking fights the co-presence job */
 function renderRoom(){
   if(!localStorage.getItem("carted_room_intro")){ try{ localStorage.setItem("carted_room_intro","1"); }catch(e){}
-    showModal(`<div class="m-emoji">🌙</div><div class="m-title">welcome to the break room</div><div class="m-body" style="text-align:left">a few house rules:<br><br>👻 posts marked <b>resident ghost</b> are friendly fiction — they keep the room warm, they're not people<br><br>✍️ what <b>you</b> post is anonymous — no name, no account, just a random id. the room can see it tonight<br><br>🌅 everything burns at 4am — posts are deleted, not archived. nobody's keeping score</div><button class="cta" style="position:static" onclick="closeModal()">got it 👻</button>`); }
+    showModal(`<div class="m-emoji">🌙</div><div class="m-title">welcome to the break room</div><div class="m-body" style="text-align:left">ghosts marked 👻 are friendly fiction. you post anonymously — no name, no account. everything burns at 4am — deleted, not archived.</div><button class="cta" style="position:static" onclick="closeModal()">got it</button>`); }
   if(localStorage.getItem("carted_first_dodge")==="1"){ try{ localStorage.removeItem("carted_first_dodge"); }catch(e){}
     room.unshift({ic:"🫂", ghost:"Bea", sched:"~2:40", text:"first dodge. we saw. welcome in 🫂", city:"the stoop", ago:"now", r:{hug:3,me:1,go:0}, reacted:{}});
   }
@@ -2266,17 +2160,17 @@ function renderRoom(){
   /* the room is a leveler — no leaderboard, no "biggest dodge" competition. just the shared
      kitchen (we're all here for the same one) and the murmur. */
   const _ev=eventNight();
-  $("#room-podium").innerHTML = (_ev?`<div class="tk-line">🌙 ${esc(_ev.banner)}</div>`:"") + (tk?`<div class="tk-line">🍳 tonight's kitchen: <b>${esc(tk.name)}</b> · ${tf.flag} ${esc(tf.name)} — we're all dodging the same menu tonight</div>`:"");
+  { const rp=$("#room-podium"); if(rp) rp.innerHTML = _ev?`<div class="tk-line">🌙 ${esc(_ev.banner)}</div>`:""; }
   const vr=$("#view-room"); if(vr) vr.classList.toggle("quiet", roomSilent);
   if(roomSilent){
     $("#room-feed").innerHTML = `<div class="quiet-panel"><div class="qp-emo">🌙</div><div class="qp-title">quiet corner</div><div class="qp-sub">no one's talking here. the ghosts are around, and so are you.<br>nothing to do, nothing owed. just breathe — the room will hold.</div></div>`;
   } else {
-    const _hr=new Date().getHours(); const _lt=(_hr>=2&&_hr<4)?LETTERS[hash(nightKey()+"letter")%LETTERS.length]:null;
-    $("#room-feed").innerHTML = (_lt?`<div class="post ghostp letter"><div class="phead"><span class="pic">💌</span><div class="pmeta">tonight's letter · <span class="gtag">👻 ${esc(_lt.ghost)}</span> resident ghost</div></div><div class="ptext">${esc(_lt.text)}</div><div class="l-ack">— ${esc(_lt.ack)}</div></div>`:"") + room.map((p,i)=>`
+    const _hr=new Date().getHours(); const _lt=(_hr>=2&&_hr<4)?LETTERS[hash(nightKey()+"letter")%LETTERS.length]:null; _letterShown=!!_lt;
+    $("#room-feed").innerHTML = (_lt?`<div class="post ghostp letter"><div class="phead"><span class="pic">💌</span><div class="pmeta">tonight's letter · <span class="gtag">👻 ${esc(_lt.ghost)}</span></div></div><div class="ptext">${esc(_lt.text)}</div><div class="l-ack">— ${esc(_lt.ack)}</div></div>`:"") + room.map((p,i)=>`
     <div class="post${p.mine?' mine':''}${p.ghost?' ghostp':''}">
-      <div class="phead"><span class="pic">${p.ic}</span><div class="pmeta">${p.mine?'<span class="mine-tag">you</span>':(p.ghost?`<span class="gtag">👻 ${esc(p.ghost)}</span> resident ghost${p.sched?` · round here ${p.sched}`:""}${p.job?` · ${esc(p.job)}`:""} · ${esc(p.city)}`:'<b>anon</b> · '+esc(p.city))} · ${p.ago}</div></div>
+      <div class="phead"><span class="pic">${p.ic}</span><div class="pmeta">${p.mine?'<span class="mine-tag">you</span>':(p.ghost?`<span class="gtag">👻 ${esc(p.ghost)}</span>${p.sched?` · round here ${p.sched}`:""} · ${esc(p.city)}`:'<b>anon</b> · '+esc(p.city))} · ${p.ago}</div></div>
       <div class="ptext">${esc(p.text)}</div>
-      <div class="reacts">${["hug","me","go"].map(t=>`<button class="chip${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')">${REACT_META[t]}<span class="rlbl">${REACT_LBL[t]}</span><span class="cnt">${p.r[t]}</span></button>`).join("")}<button class="chip pshare" onclick="sharePost(${i})">📤</button>${p.live?`<button class="chip" onclick="reportPost(${i})" aria-label="report">🚩</button>`:""}</div>
+      <div class="reacts">${["hug","me"].map(t=>`<button class="chip${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')" aria-label="${REACT_LBL[t]}" title="${REACT_LBL[t]}">${REACT_META[t]}${reactLbl(t)}${p.r[t]>0?`<span class="cnt">${p.r[t]}</span>`:""}</button>`).join("")}${p.live?`<button class="chip" onclick="reportPost(${i})" aria-label="report">🚩</button>`:""}</div>
     </div>`).join("");
   }
   renderRoomMeta();
@@ -2287,7 +2181,7 @@ function renderRoomMeta(){
   const rb=$("#room-burn"); if(rb) rb.innerHTML=`${burnLabel()}${crisisLine()}`;
   const rbt=$("#room-burn-top"); if(rbt){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); rbt.textContent=`🌅 ${h}h ${String(m).padStart(2,"0")}m`; }
   const ra=$("#room-awake"); if(ra) ra.textContent = (_roomHumans!=null && _roomHumans>=2) ? `${_roomHumans} night owls here right now` : "the room's awake";
-  const cbs=document.querySelector(".cbr-sub"); if(cbs) cbs.textContent = (_roomCups!=null && _roomCups>=2) ? `${_roomCups} cups steeped tonight — the ghosts steep with you 🍜` : "a quiet 3-minute break — the ghosts steep with you 🍜";
+  const cbs=document.querySelector(".cbr-sub"); if(cbs) cbs.textContent = (_roomCups!=null && _roomCups>=2) ? `${_roomCups} cups steeped tonight` : "a 3-minute break";
   renderShelf(); renderNotice(); renderNod(); markUsualChip();
 }
 /* the shelf: a pack is finite — that's where a cigarette's value lives. seven cups a week,
@@ -2299,7 +2193,7 @@ function renderShelf(){ const el=$("#cup-shelf"); if(!el) return;
   let cups="";
   for(let i=0;i<7;i++){ const k=nightShift(start,i); const taken=hist.includes(k); const isT=k===tonight; const future=k>tonight;
     cups+=`<span class="sh-cup${taken?" taken":""}${isT?" tonight":""}${future?" future":""}">🥡</span>`; }
-  el.innerHTML=`<span class="sh-lbl">the shelf</span>${cups}<span class="sh-sub">one a night · restocks sunday</span>`; }
+  el.innerHTML=cups; }
 
 /* the notice board: a maintained PLACE has weight — nightly one-liner from dispatch, in ops voice */
 const NOTICES=[
@@ -2318,10 +2212,14 @@ const NOTICES=[
   "the good mugs are out tonight. no reason.",
   "closing time is still never.",
 ];
+/* ONE ambient slot below the composer: the kitchen line and the dispatch notice alternate
+   nightly — a maintained place murmurs, it doesn't stack memos. */
 function renderNotice(){ const el=$("#room-notice"); if(!el) return;
+  const tk=tonightsKitchen(), tf=featuredCity();
+  if(tk && hash(nightKey()+"slot")%2===0){ el.textContent=`tonight's kitchen: ${tk.name} · ${tf.name} — we're all dodging the same menu`; return; }
   const winter=document.body.classList.contains("winter");
   const line=winter&&(hash(nightKey())%3===0) ? "tent's heated tonight. shake the cold off." : NOTICES[hash(nightKey()+"ntc")%NOTICES.length];
-  el.textContent=`📋 notice: ${line} — dispatch`; }
+  el.textContent=`${line} — dispatch`; }
 
 /* the nod: how smokers acknowledge each other — no words. only offered when REAL people are
    here (humans ≥2), and the count is real (analytics events), or it isn't shown at all. */
@@ -2348,19 +2246,16 @@ function markUsualChip(){ const e=usualChipEmoji(); if(!e) return;
    elsewhere: a warm line with no number (no clinical nouns in the ambient UI, ever). */
 function isNA(){ try{ return /^America\//.test(Intl.DateTimeFormat().resolvedOptions().timeZone||""); }catch(e){ return false; } }
 function crisisLine(){ return isNA() ? ` · rough night? <a href="tel:988" style="color:inherit;font-weight:800">988</a> is awake too 🤍` : ` · rough night? you don't have to carry it alone 🤍`; }
+let _letterShown=false;
 function react(i,t){ const p=room[i]; if(!p) return; if(!p.reacted) p.reacted={}; if(p.reacted[t]) return; p.reacted[t]=true; p.r[t]++;
-  // targeted: bump just this chip's count + on-state in place (keeps scroll position, no full room rebuild)
-  const post=$("#room-feed").children[i];
-  if(post){ const chip=post.querySelectorAll(".reacts .chip")[{hug:0,me:1,go:2}[t]]; if(chip){ chip.classList.add("on"); const cnt=chip.querySelector(".cnt"); if(cnt) cnt.textContent=p.r[t]; } }
-  else renderRoom();
-  snd("pop"); toast(t==="hug"?"hang in there 🫂":t==="me"?"same 😋":"just send it 🔥"); addXp(3);
-  if(p.liveId && ROOM_LIVE && beOn()) bePost("room",{action:"react", post_id:p.liveId, kind:(t==="me"?"metoo":t==="go"?"sendit":"hug")}); }
-function sharePost(i){
-  const p=room[i]; if(!p) return;
-  const txt=`"${p.text}" — overheard in the 2AM room 🌙 carted.`;
-  if(navigator.share){ navigator.share({text:txt}).catch(()=>{}); }
-  else if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>toast("copied — go post it 📤")).catch(()=>{}); }
-}
+  const first=(function(){ try{ if(!localStorage.getItem("carted_reacted")){ localStorage.setItem("carted_reacted","1"); return true; } }catch(e){} return false; })();
+  // full re-render on the first-ever reaction (labels retire); targeted chip bump otherwise —
+  // children index offset by 1 when tonight's letter is pinned
+  const post=$("#room-feed").children[i+(_letterShown?1:0)];
+  if(first || !post){ renderRoom(); }
+  else { const chip=post.querySelectorAll(".reacts .chip")[{hug:0,me:1}[t]]; if(chip){ chip.classList.add("on"); let cnt=chip.querySelector(".cnt"); if(!cnt){ cnt=document.createElement("span"); cnt.className="cnt"; chip.appendChild(cnt); } cnt.textContent=p.r[t]; } }
+  snd("pop");
+  if(p.liveId && ROOM_LIVE && beOn()) bePost("room",{action:"react", post_id:p.liveId, kind:(t==="me"?"metoo":"hug")}); }
 function saveMinePost(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); all.unshift({ic:post.ic,text:post.text,streak:post.streak||0,night:nightKey(),r:{...(post.rBase||post.r)},seen:!!post.seenDone,liveId:post.liveId||null}); localStorage.setItem("carted_room_mine", JSON.stringify(all.slice(0,12))); }catch(e){} }
 function updateMineStored(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); const m=all.find(p=>p.night===nightKey()&&p.text===post.text); if(m){ m.r={...(post.rBase||post.r)}; m.seen=!!post.seenDone; m.liveId=post.liveId||m.liveId||null; localStorage.setItem("carted_room_mine", JSON.stringify(all)); } }catch(e){} }
 /* counts come back exactly as stored — a number that changed by itself between two opens is the
@@ -2422,19 +2317,13 @@ function reportPost(i){ const p=room[i]; if(!p || !p.liveId) return; bePost("roo
    only gates when ROOM_LIVE (posts are visible to others). device-local posting needs no agreement. */
 function agreedRoomTerms(){ try{ return localStorage.getItem("carted_terms")==="1"; }catch(e){ return false; } }
 function withRoomTerms(cb){ if(!ROOM_LIVE || agreedRoomTerms()){ cb(); return; }
-  showModal(`<div class="m-emoji">🤍</div><div class="m-title">before you post</div><div class="m-body" style="text-align:left">the 2 am room is a kind place. by posting you agree:<br><br>• <b>zero tolerance</b> for hateful, harassing, sexual, or objectionable content<br>• be gentle with the people here — <b>abusive users are removed</b><br>• posts can be reported, hidden, and deleted; repeat offenders are blocked<br>• everything burns at sunrise 🌅<br><br><span style="font-size:11.5px;color:var(--muted)">the full <a href="terms.html" target="_blank" rel="noopener" style="color:inherit">community terms</a> &amp; <a href="privacy.html" target="_blank" rel="noopener" style="color:inherit">privacy policy</a>. questions: localcardhouse@gmail.com</span></div><button class="cta" style="position:static" onclick="acceptRoomTerms()">i agree — post 🌙</button><button class="cta secondary" style="position:static" onclick="closeModal()">not yet</button>`);
+  showModal(`<div class="m-emoji">🤍</div><div class="m-title">before you post</div><div class="m-body" style="text-align:left">the 2 am room is a kind place. by posting you agree:<br><br>• <b>zero tolerance</b> for hateful, harassing, sexual, or objectionable content<br>• be gentle with the people here — <b>abusive users are removed</b><br>• posts can be reported, hidden, and deleted; repeat offenders are blocked<br>• everything burns at sunrise 🌅<br><br><span style="font-size:11px;color:var(--muted)">the full <a href="terms.html" target="_blank" rel="noopener" style="color:inherit">community terms</a> &amp; <a href="privacy.html" target="_blank" rel="noopener" style="color:inherit">privacy policy</a>. questions: localcardhouse@gmail.com</span></div><button class="cta" style="position:static" onclick="acceptRoomTerms()">i agree — post 🌙</button><button class="cta secondary" style="position:static" onclick="closeModal()">not yet</button>`);
   window.__pendingPost = cb;
 }
 function acceptRoomTerms(){ try{ localStorage.setItem("carted_terms","1"); }catch(e){} closeModal(); const cb=window.__pendingPost; window.__pendingPost=null; if(typeof cb==="function") cb(); }
-function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; withRoomTerms(()=>{ makeMine("🌙", v); inp.value=""; snd("chime"); toast("posted — the room's reading 👻 burns at sunrise 🌅"); }); }
+function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; withRoomTerms(()=>{ makeMine("🌙", v); inp.value=""; snd("chime"); }); }
 const CONFESS = ["almost got me. it didn't. 💪","called my name at 2am. i let it ring.","was THIS close. wallet's still shut.","tempted me for 20 whole minutes. survived."];
-/* lever 10 (KauKau pattern): invented menu items as UGC — rides the SAME pipeline as every
-   post (terms gate, moderation, reactions, sunrise burn). no new backend, no new rules. */
-function nightSpecial(){ const inp=$("#composer-input"); if(!inp) return;
-  inp.value="🍳 tonight's special: "; inp.focus();
-  try{ inp.setSelectionRange(inp.value.length, inp.value.length); }catch(e){}
-  toast("invent something the kitchen would never dare 🍳"); }
-function quickConfess(e){ withRoomTerms(()=>{ makeMine(e, `${e} ${pick(CONFESS)}`); snd("chime"); toast("confessed to the room 🌙"); }); }
+function quickConfess(e){ withRoomTerms(()=>{ makeMine(e, `${e} ${pick(CONFESS)}`); snd("chime"); }); }
 function shareToRoom(){ withRoomTerms(()=>{
   const po=pendingOrder, c=po?po.city:curCity(); const place=lastOrderItems[0];
   const sum = lastOrderItems.length>1 ? `${place.name} +${lastOrderItems.length-1} more` : (place?place.name:"late-night food");
@@ -2468,11 +2357,13 @@ const CUP_LINES=[
   "quiet night. good.",
   "don't peek. it's not ready.",
   "you're allowed to just stand here.",
-  "someone in Tokyo just put the kettle on 🫖",
+  "Anko says the first kettle of the night is already on",
   "Bea says the wings weren't worth it anyway",
   "three minutes is three minutes.",
   "nobody's keeping score tonight 🌙",
   "저도요 — me too, whatever it is",
+  "Bea remembers what you always almost order",
+  "the ghosts are waiting by the window",
 ];
 function openCup(){
   if($("#cup-overlay")) return;
@@ -2555,7 +2446,7 @@ function cupServe(){
   el.querySelector(".cup-scene").innerHTML=`
     <div class="cup-steam" style="opacity:.45"><span>♨</span></div>
     <div class="cup-emo" id="cup-sip">🍜</div>
-    <div class="cup-clock" style="font-size:26px" id="cup-ready">it's ready.</div>
+    <div class="cup-clock" style="font-size:24px" id="cup-ready">it's ready.</div>
     <div class="cup-hint" id="cup-sip-hint">hold the bowl for the first sip 🍜<br>no points, nothing owed — the room will still be here tomorrow 🌙</div>
     <button class="cta secondary" style="position:static;margin-top:22px" onclick="cupTomorrow()">same time tomorrow? 🌙</button>
     <button class="cta secondary" style="position:static;margin-top:10px" onclick="closeCup()">back to the room</button>`;
@@ -2581,13 +2472,6 @@ let roomSilent=false;
 function toggleSilence(){ roomSilent=!roomSilent; snd("pop"); renderRoom();
   const b=$("#silence-toggle"); if(b) b.textContent = roomSilent ? "🔊 rejoin the murmur" : "🤫 quiet corner"; }
 
-/* ---- live count + ticker ---- */
-let tIdx=0;
-function tickerPool(){ const t=TICKER.slice();
-  if(stats.usual) t.unshift(`👻 ${ghostName()} remembers: you always cart ${stats.usual.en}`);
-  if(isNight() && !orderedTonight()) t.unshift(`👻 ${ghostName()} is waiting by the window`);
-  return t; }
-function rotateTicker(){ const el=$("#ticker-msg"); el.style.opacity="0"; el.style.transform="translateY(-8px)"; setTimeout(()=>{ const pool=tickerPool(); el.textContent=pool[tIdx%pool.length]; tIdx++; el.style.opacity="1"; el.style.transform="translateY(0)"; },420); }
 /* presence numbers are the DISCLOSED resident-ghost fiction (the house-rules card says so).
    presence is now a NON-FALSIFIABLE phrase, not a precise fake headcount — a specific number next
    to a live dot is the one dishonesty a user can catch (open twice, it doesn't move). when the live
@@ -2602,7 +2486,6 @@ function rotateTicker(){ const el=$("#ticker-msg"); el.style.opacity="0"; el.sty
 
 /* --- 3 golden hours + 8 seasonal events: the XP multiplier engine --- */
 function isGoldenHour(){ const h=new Date().getHours(); return h>=22 || h<4; }
-function xpMult(){ return 1; }   // seasonal/golden-hour XP multipliers retired
 function renderBanners(){ const el=$("#event-banners"); if(!el) return;
   el.innerHTML = isNight() ? `<div class="ebanner night-line">🌙 the kitchens are warm. you're up — so are the others.</div>` : ""; }
 
@@ -2689,7 +2572,7 @@ function inviteBuddy(){
   if(!stats.buddy){ stats.buddy={ code, since:nightKey(), name:"your buddy", role:"creator", pending:true }; saveStats(); }
   awardBuddyXp();
   const txt=`be my 2am person on Carted 🌙 we'll both know the other's up on the rough nights. no pressure. ${link}`;
-  if(navigator.share){ navigator.share({text:txt}).catch(()=>{}); } else if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>toast("invite copied 👯 send it to one person")); } else toast(link);
+  if(navigator.share){ navigator.share({text:txt}).catch(()=>{}); } else if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>toast("invite copied 👯 pass it to one person")); } else toast(link);
   if($("#view-profile").classList.contains("active")) renderProfile();
 }
 function acceptBuddyFromUrl(){
@@ -2738,12 +2621,12 @@ function buildMenu(place){
   let mainsPool=realMains.slice(), sigItem;
   if(mainsPool.length){ const m=mainsPool.splice(hash(place.name+"sig")%mainsPool.length,1)[0]; sigItem=mkItem(place, m.name, place.ic, "sig", place.price, m.photo?BASE+m.photo:null); }
   else { sigItem=mkItem(place, place.dish, place.ic, "sig", place.price, null); }
-  courses.push({label:"🍽️ signature", items:[ sigItem ]});
-  const st=pickList(STARTERS,key,3,place.name+"s"); if(st.length) courses.push({label:"🥢 starters", items: st.map(n=>mkItem(place,n,"🥢","starter",menuPrice(base,0.5,place,n+place.name))) });
+  courses.push({label:"signature", items:[ sigItem ]});
+  const st=pickList(STARTERS,key,3,place.name+"s"); if(st.length) courses.push({label:"starters", items: st.map(n=>mkItem(place,n,"🥢","starter",menuPrice(base,0.5,place,n+place.name))) });
   if(mainsPool.length){ const mm=mainsPool.slice(0,6); courses.push({label:"🍲 mains", items: mm.map(d=>mkItem(place,d.name, place.ic, "main"+d.id, menuPrice(base,1,place,d.name), d.photo?BASE+d.photo:null)) }); }
-  const sd=pickList(SIDES,key,2,place.name+"sd"); if(sd.length) courses.push({label:"🍟 sides", items: sd.map(n=>mkItem(place,n,"🍟","side",menuPrice(base,0.38,place,n+place.name))) });
-  const dr=pickList(DRINKS,key,3,place.name+"dr"); if(dr.length) courses.push({label:"🥤 drinks", items: dr.map(n=>mkItem(place,n,"🥤","drink",menuPrice(base,0.3,place,n+place.name))) });
-  const de=pickList(DESSERTS,key,2,place.name+"de"); if(de.length) courses.push({label:"🍰 dessert", items: de.map(n=>mkItem(place,n,"🍰","dessert",menuPrice(base,0.5,place,n+place.name))) });
+  const sd=pickList(SIDES,key,2,place.name+"sd"); if(sd.length) courses.push({label:"sides", items: sd.map(n=>mkItem(place,n,"🍟","side",menuPrice(base,0.38,place,n+place.name))) });
+  const dr=pickList(DRINKS,key,3,place.name+"dr"); if(dr.length) courses.push({label:"drinks", items: dr.map(n=>mkItem(place,n,"🥤","drink",menuPrice(base,0.3,place,n+place.name))) });
+  const de=pickList(DESSERTS,key,2,place.name+"de"); if(de.length) courses.push({label:"dessert", items: de.map(n=>mkItem(place,n,"🍰","dessert",menuPrice(base,0.5,place,n+place.name))) });
   return courses;
 }
 /* dishBlurb(it) — deterministic, hash-seeded appetizing line under each dish */
@@ -2805,7 +2688,7 @@ function ghostStage(){ const n=_aGet("carted_nights",[]).length; let s=GHOST_STA
 function maybeNameGhost(){
   try{ if(localStorage.getItem("carted_named")) return; }catch(e){ return; }
   if(localStorage.getItem("carted_onboard")!=="2" || $("#modal").style.display==="flex"){ setTimeout(maybeNameGhost, 8000); return; }
-  showModal(`<div class="m-emoji">👻</div><div class="m-title">he needs a name</div><div class="m-body">this little ghost runs your deliveries, roasts your cart, and waits up with you.<br>he's yours now — what do you call him?</div><input id="ghost-name-inp" maxlength="14" placeholder="Mort" style="width:100%;background:var(--card);border:2px solid var(--ink);border-radius:12px;padding:12px;font-size:15px;font-weight:700;font-family:var(--bodyf);text-align:center;margin:6px 0 12px;outline:none"><button class="cta" style="position:static" onclick="nameGhost()">that's his name</button><button class="cta secondary" style="position:static" onclick="nameGhost(true)">Mort is fine</button>`);
+  showModal(`<div class="m-emoji">👻</div><div class="m-title">he needs a name</div><div class="m-body">this little ghost runs your deliveries, roasts your cart, and waits up with you.<br>he's yours now — what do you call him?</div><input id="ghost-name-inp" maxlength="14" placeholder="Mort" style="width:100%;background:var(--card);border:2px solid var(--ink);border-radius:12px;padding:12px;font-size:14px;font-weight:700;font-family:var(--bodyf);text-align:center;margin:6px 0 12px;outline:none"><button class="cta" style="position:static" onclick="nameGhost()">that's his name</button><button class="cta secondary" style="position:static" onclick="nameGhost(true)">Mort is fine</button>`);
 }
 function nameGhost(keepDefault){
   const inp=$("#ghost-name-inp"); const v=keepDefault?"":(((inp&&inp.value)||"").trim());
@@ -2821,14 +2704,14 @@ const GHOST_FITS = [
   {id:"party",  hat:"🥳", name:"party ghost",      req:"3-night streak",   has:()=>maxStreakEver()>=3},
   {id:"chef",   hat:"🍳", name:"chef ghost",       req:"8 cuisines tried", has:()=>(stats.cuisines||[]).length>=8},
   {id:"tophat", hat:"🎩", name:"fancy top hat",    req:"$200 dodged",      has:()=>(stats.savedUsd||0)>=200},
-  {id:"cowboy", hat:"🤠", name:"howdy ghost",      req:"map Houston",      has:()=>citiesExplored().has("hou")},
-  {id:"jet",    hat:"🧳", name:"jet-setter",       req:"map 5 cities",     has:()=>citiesExplored().size>=5},
+  {id:"cowboy", hat:"🤠", name:"howdy ghost",      req:"order from Houston", has:()=>citiesExplored().has("hou")},
+  {id:"jet",    hat:"🧳", name:"jet-setter",       req:"order from 5 cities", has:()=>citiesExplored().size>=5},
   {id:"halo",   hat:"😇", name:"saint of savings", req:"14-night streak",  has:()=>maxStreakEver()>=14},
   {id:"crown",  hat:"👑", name:"dopamine crown",   req:"top rank ($1.2k)", has:()=>(stats.savedUsd||0)>=1200},
 ];
 /* souvenir hats — one per city, earned by mapping (saving an activity) or window-ordering there. ties cosmetics to Explore. */
 const CITY_HAT = { nyc:"🗽", la:"🌴", ldn:"🎩", tyo:"🍣", sel:"🧧", mex:"🌵", par:"🥐", ber:"🥨", bkk:"🛺", syd:"🦘", tor:"🍁", chi:"🌭", sin:"🦁", hou:"🚀", sfo:"🌉", nol:"🎷", oax:"🌶️", lim:"🦙", bue:"⚽", sao:"🥥", rom:"🏛️", nap:"🍕", bol:"🍝", bcn:"🦎", mad:"🐂", sse:"🍢", lis:"🚋", cph:"🧜", ams:"🌷", vie:"🎻", ath:"🏺", ist:"🧿", tlv:"🕎", bey:"🌳", dxb:"🐪", cai:"🔺", rak:"🐫", cpt:"🏔️", osa:"🐙", kyo:"⛩️", pus:"🦀", hkg:"🥟", tpe:"🧋", sgn:"🛵", han:"🍜", pen:"🦐", kul:"🏙️", bom:"🛕", del:"🛺", mel:"☕" };
-function cityVisited(id){ return citiesExplored().has(id) || ((statsByCity[id]||{}).orders>0) || (stats.cities||[]).includes(id); }
+function cityVisited(id){ return citiesExplored().has(id) || (stats.cities||[]).includes(id); }
 /* seasonal fits — only available in their date window */
 const SEASON_FITS = [ {id:"pumpkin",hat:"🎃",name:"spooky szn"}, {id:"santa",hat:"🎅",name:"santa ghost"}, {id:"nye",hat:"🎉",name:"new year ghost"}, {id:"love",hat:"💘",name:"valenghost"} ];
 const SEASON_WIN = { pumpkin:[[10,24],[10,31]], santa:[[12,1],[12,26]], nye:[[12,30],[1,2]], love:[[2,12],[2,15]] };
@@ -2874,17 +2757,19 @@ const QUIP_CTX = {
 function ghostQuip(ctx){ ctx=ctx||{}; const hr=new Date().getHours(); let pool;
   if(ctx.milestone) pool=QUIP_CTX.milestone; else if(ctx.usd>=60) pool=QUIP_CTX.jackpot; else if(ctx.flight) pool=QUIP_CTX.flight; else if(ctx.combo>=3) pool=QUIP_CTX.combo; else if(ctx.featured) pool=QUIP_CTX.featured; else if(hr>=1&&hr<5) pool=QUIP_CTX.late; else if(ctx.usd>0&&ctx.usd<6) pool=QUIP_CTX.tiny; else pool=GHOST_QUIPS;
   return pick(pool).replace("{s}",ctx.streak||0).replace("{c}",ctx.combo||0).replace("{h}",ctx.flightH||"a few").replace("{hr}",hr); }
+/* the closet renders what you HAVE — no locked slots, no counters, no quotas. absence isn't a
+   to-do list at 2am; the ghost just wears what the nights earned. */
 function renderWardrobe(){
-  const list=baseFits(), owned=list.filter(f=>f.has());
-  return `<div class="section-label" style="margin:8px 2px 8px">👻 ${esc(ghostName())}'s wardrobe <span style="color:var(--muted)">${owned.length}/${list.length}</span></div>`
-    + `<div class="wardrobe"><div class="wd-ghost">${ghostAvatar(70)}</div>`
-    + `<div class="wd-grid">` + list.map(f=>{ const on=f.has(), eq=(stats.fit||"none")===f.id; return `<button class="wd-fit${eq?' eq':''}${on?'':' lock'}" ${on?`onclick="equipFit('${f.id}')"`:""}><span class="wd-hat">${on?(f.hat||"👻"):"🔒"}</span><span class="wd-name">${on?esc(f.name):esc(f.req)}</span></button>`; }).join("") + `</div></div>`
+  const owned=baseFits().filter(f=>f.has());
+  if(!owned.length) return `<div class="wardrobe"><div class="wd-ghost">${ghostAvatar(70)}</div><div class="wd-empty">nothing in the closet yet — it fills on its own</div></div>` + renderSouvenirs();
+  return `<div class="wardrobe"><div class="wd-ghost">${ghostAvatar(70)}</div>`
+    + `<div class="wd-grid">` + owned.map(f=>{ const eq=(stats.fit||"none")===f.id; return `<button class="wd-fit${eq?' eq':''}" onclick="equipFit('${f.id}')"><span class="wd-hat">${f.hat||"👻"}</span><span class="wd-name">${esc(f.name)}</span></button>`; }).join("") + `</div></div>`
     + renderSouvenirs();
 }
 function renderSouvenirs(){
   const owned=CITIES.filter(c=>cityVisited(c.id));
-  return `<div class="section-label" style="margin:10px 2px 8px">🧳 souvenir hats <span style="color:var(--muted)">${owned.length}/${CITIES.length}</span> · map a city to earn its hat</div>`
-    + `<div class="souv-grid">` + CITIES.map(c=>{ const on=cityVisited(c.id), eq=(stats.fit||"")==="city:"+c.id; return `<button class="souv${eq?' eq':''}${on?'':' lock'}" ${on?`onclick="equipFit('city:${c.id}')"`:""}><span class="souv-hat">${on?CITY_HAT[c.id]:"🔒"}</span><span class="souv-name">${esc(c.name)}</span></button>`; }).join("") + `</div>`;
+  if(!owned.length) return "";
+  return `<div class="souv-grid" style="margin-top:10px">` + owned.map(c=>{ const eq=(stats.fit||"")==="city:"+c.id; return `<button class="souv${eq?' eq':''}" onclick="equipFit('city:${c.id}')"><span class="souv-hat">${CITY_HAT[c.id]}</span><span class="souv-name">${esc(c.name)}</span></button>`; }).join("") + `</div>`;
 }
 
 /* ============================================================
@@ -2899,7 +2784,7 @@ function bumpWeek(usd, cityId, ic){ const wk=weekKey(); if(!stats.week || stats.
 function topCrav(crav){ let top=null,m=0; for(const k in (crav||{})){ if(crav[k]>m){m=crav[k]; top=k;} } return top; }
 function showWrapped(){ const w=stats.week||{usd:0,cities:[],crav:{}}; const crav=topCrav(w.crav)||"🍜";
   showModal(`<div class="m-emoji">📊</div><div class="m-title">your week, wrapped</div>
-   <div class="wrap-stats"><div class="ws-row"><span>dodged this week</span><b style="color:var(--go)">$${Math.round(w.usd).toLocaleString()}</b></div><div class="ws-row"><span>cities visited</span><b>${(w.cities||[]).length}</b></div><div class="ws-row"><span>top craving</span><b>${crav}</b></div><div class="ws-row"><span>🔥 current streak</span><b>${stats.streak||0} nights</b></div></div>
+   <div class="wrap-stats"><div class="ws-row"><span>dodged this week</span><b style="color:var(--go)">$${Math.round(w.usd).toLocaleString()}</b></div><div class="ws-row"><span>top craving</span><b>${crav}</b></div><div class="ws-row"><span>🔥 current streak</span><b>${stats.streak||0} nights</b></div></div>
    <button class="cta gold" style="position:static" onclick="shareWrapped()">📸 share my week</button><button class="cta secondary" style="position:static" onclick="closeModal()">close</button>`);
   stats.wrappedSeen=weekKey(); saveStats(); }
 function shareWrapped(){ const w=stats.week||{usd:0,cities:[],crav:{}}, crav=topCrav(w.crav)||"🍜";
@@ -2913,7 +2798,7 @@ function shareWrapped(){ const w=stats.week||{usd:0,cities:[],crav:{}}, crav=top
   x.fillStyle="#F6C982"; x.font="500 156px 'Newsreader',Georgia,serif"; x.fillText("$"+Math.round(w.usd).toLocaleString(), 540, 500);
   x.shadowBlur=0; x.shadowColor="transparent";
   x.fillStyle="#8A7A6B"; x.font="600 38px 'Inter',sans-serif"; x.fillText("DODGED THIS WEEK", 540, 566);
-  x.fillStyle="#F0A84A"; x.font="500 50px 'Newsreader',Georgia,serif"; x.fillText(`${(w.cities||[]).length} cities · craving ${crav}`, 540, 680);
+  x.fillStyle="#F0A84A"; x.font="500 50px 'Newsreader',Georgia,serif"; x.fillText(`craving of the week: ${crav}`, 540, 680);
   x.fillStyle="#EFE4D6"; x.font="500 46px 'Newsreader',Georgia,serif"; x.fillText(`🔥 ${stats.streak||0}-night streak`, 540, 752);
   x.fillStyle="#F0A84A"; x.font="500 62px 'Newsreader',Georgia,serif"; x.fillText("Carted", 540, 936); x.fillStyle="#8A7A6B"; x.font="600 30px 'Inter',sans-serif"; x.fillText("fill the cart. ghost the check.", 540, 986);
   cv.toBlob(b=>{ if(!b){toast("couldn't build it");return;} const f=new File([b],"carted-week.png",{type:"image/png"}); if(navigator.canShare&&navigator.canShare({files:[f]})){ navigator.share({files:[f],text:"my week on Carted 👻 — dodged $"+Math.round(w.usd).toLocaleString()}).catch(()=>{}); } else { const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="carted-week.png"; a.click(); toast("week card saved 📸"); setTimeout(()=>URL.revokeObjectURL(a.href),4000); } },"image/png"); }
@@ -2937,23 +2822,22 @@ function renderFeatured(){ const el=$("#featured-banner"); if(!el) return; const
 
 /* --- 5 city leaderboard (simulated; real version needs the backend aggregate) --- */
 function buddyNudge(){ if(!stats.buddy) return ""; if(stats.lastNight===nightKey()) return "";   // you already dodged
-  const buddyIn = (stats.buddy.bothIn) || (hash(nightKey()+(stats.buddy.code||""))%3!==0);       // backend signal, else simulated ~2/3 nights
-  if(!buddyIn) return "";
+  // truth-gate: this line names a REAL person — it renders only on a real backend signal, never simulated
+  if(stats.buddy.bothIn!==true) return "";
   return `<button class="buddy-nudge" onclick="go('feed')">👯 <b>${esc(stats.buddy.name||"your buddy")}</b> is up tonight too — you're not the only one 🤍</button>`; }
 
 function spotlightFor(city){ const ps=city&&city._places; if(!ps||!ps.length) return null; return ps[hash(nightKey()+"|"+city.id)%ps.length]; }
 function spotKey(cityId){ return cityId+"@"+nightKey(); }
-function renderSpotlight(){ const el=$("#spotlight"); if(el) el.innerHTML=""; }   // per-city spotlight retired — tonight's kitchen IS the one nightly target
 
 function isNewPlace(p){ const k=p&&p._key; return !!k && !((stats.visited||[]).includes(k)); }
 function markVisited(keys){ stats.visited=stats.visited||[]; keys.forEach(k=>{ if(!stats.visited.includes(k)) stats.visited.push(k); }); if(stats.visited.length>600) stats.visited=stats.visited.slice(-600); saveStats(); }
 
 let feedFilters = { price:null, cuisine:null };
-function refreshDiscovery(){ renderMortsPick(); renderFeedFilters(); renderTally(); refreshTonightHead(); refreshMoreHead(); }   // variety/must-try/crawls/deals/quests retired
+function refreshDiscovery(){ renderFeedFilters(); refreshTonightHead(); }   // variety/must-try/crawls/deals/quests/morts-pick retired
 
 /* ---- collapsible feed drawers (#tonight above the list, #more below) ---- */
 function toggleDrawer(id){ const d=$("#"+id); if(!d) return; const open=d.classList.toggle("open"); try{ localStorage.setItem("carted_dr_"+id, open?"1":"0"); }catch(e){} snd("pop"); }
-function initDrawers(){ ["tonight","more"].forEach(id=>{ const d=$("#"+id); if(!d) return; let v=null; try{ v=localStorage.getItem("carted_dr_"+id); }catch(e){} d.classList.toggle("open", v==="1"); }); }
+function initDrawers(){ ["tonight","closet"].forEach(id=>{ const d=$("#"+id); if(!d) return; let v=null; try{ v=localStorage.getItem("carted_dr_"+id); }catch(e){} d.classList.toggle("open", v==="1"); }); }
 
 /* rotating "tonight" teaser — one line that replaces the 5 stacked nudge banners */
 let tonightTeasers=[], tnIdx=0;
@@ -2964,22 +2848,16 @@ function buildTonightTeasers(){
   if(kitchenDone) out.push(`✓ tonight's kitchen dodged — you're done tonight 👻`);
   else out.push(tk?`🍳 tonight's kitchen: ${tk.name} · ${f.flag} ${f.name}`:`🍳 tonight's kitchen is warming up · ${f.flag} ${f.name}`);
   if(buddyNudge()) out.push(`👯 ${(stats.buddy&&stats.buddy.name)||"your buddy"} dodged — keep the 🔥 streak`);
-  const mp=mortsPick(c); if(mp) out.push(`👻 ${ghostName()}'s pick: ${mp.name}`);
   return out;
 }
 function refreshTonightHead(){ tonightTeasers=buildTonightTeasers(); const el=$("#tonight-teaser"); if(el && tonightTeasers.length) el.textContent=tonightTeasers[tnIdx%tonightTeasers.length];
-  const pill=$("#tonight-mult"); if(pill){ const m=xpMult(); if(m>1){ pill.textContent=m+"× XP"; pill.style.display="inline-block"; } else pill.style.display="none"; } }
+  }
 function rotateTonight(){ const d=$("#tonight"); if(!d || d.classList.contains("open")) return; const el=$("#tonight-teaser"); if(!el) return;
   tonightTeasers=buildTonightTeasers(); if(tonightTeasers.length<=1){ refreshTonightHead(); return; }
   el.style.opacity="0"; el.style.transform="translateY(-6px)"; setTimeout(()=>{ tnIdx++; el.textContent=tonightTeasers[tnIdx%tonightTeasers.length]; el.style.opacity="1"; el.style.transform="translateY(0)"; },360); }
-function refreshMoreHead(){ const b=$("#more-badge"); if(b) b.textContent=""; }   // missions retired
 
 
 /* 3 — Mort's pick: one spot a night with a one-liner */
-const MORT_LINES = ["trust me, the {d} here is unreal","i'd haunt this place nightly if i could eat","this one's a vibe. don't @ me 👻","peak 2am energy — you'll thank me","quietly the best {d} in town","i've 'delivered' here 1,000 times. zero regrets","if i had a stomach it'd live here"];
-function mortsPick(city){ const ps=city&&city._places; if(!ps||!ps.length) return null; let i=hash(nightKey()+"mort|"+city.id)%ps.length; const sp=spotlightFor(city); if(sp && ps.length>1 && ps[i]._key===sp._key) i=(i+1)%ps.length; return ps[i]; }
-function renderMortsPick(){ const el=$("#morts-pick"); if(!el) return; const p=mortsPick(curCity()); if(!p){ el.innerHTML=""; return; } const line=pick(MORT_LINES).replace("{d}",(p.dish||"food").toLowerCase());
-  el.innerHTML=`<button class="morts-pick" onclick="openDetail('${p._key}')"><span class="mp-ghost">${ghostAvatar(36)}</span><span class="mp-text"><b>${esc(ghostName())}'s pick: ${esc(p.name)}</b><span class="mp-quip">“${esc(line)}”</span></span><span class="mp-go">›</span></button>`; }
 
 /* 4 — teleport: random place in a random city */
 let teleportPending=false;
@@ -2993,7 +2871,7 @@ function cityCuisines(){ const s=new Set(); (curCity()._places||[]).forEach(p=>s
 function setPrice(l){ feedFilters.price=feedFilters.price===l?null:l; renderFeed(); }
 function setCuisine(k){ feedFilters.cuisine=feedFilters.cuisine===k?null:k; renderFeed(); }
 function clearFilters(){ feedFilters={price:null,cuisine:null}; renderFeed(); }
-function renderFeedFilters(){ const el=$("#feed-filters"); if(!el) return; if(feedMode==="saved"){ el.innerHTML=""; return; }
+function renderFeedFilters(){ const el=$("#feed-filters"); if(!el) return;
   const price=[1,2,3,4].map(l=>`<button class="ffilt${feedFilters.price===l?' on':''}" onclick="setPrice(${l})">${"$".repeat(l)}</button>`).join("");
   const cui=cityCuisines().map(k=>`<button class="ffilt${feedFilters.cuisine===k?' on':''}" onclick="setCuisine('${k}')">${esc(k.replace(/_/g," "))}</button>`).join("");
   const any=feedFilters.price||feedFilters.cuisine;
@@ -3008,14 +2886,18 @@ function renderMustTry(){ const el=$("#must-try"); if(!el) return; const c=curCi
   el.innerHTML=`<div class="must-card"><div class="mt-head">🏅 must-try in ${esc(c.name)} <span>${tried}/${list.length}</span></div>`+list.map(p=>`<button class="mt-row${isNewPlace(p)?'':' got'}" onclick="openDetail('${p._key}')"><span class="mt-check">${isNewPlace(p)?"○":"✓"}</span><span class="mt-name">${esc(p.name)}</span><span class="mt-stars">★ ${p.rate.toFixed(1)}</span></button>`).join("")+`</div>`; }
 
 /* ---- boot ---- */
-CITIES.forEach((c,i)=>{ CITY_INDEX[c.id]=i; statsByCity[c.id]={saved:0,orders:0}; });
-loadSaved(); loadAccount(); loadHome(); loadActsSaved();
+CITIES.forEach((c,i)=>{ CITY_INDEX[c.id]=i; });
+migrateSaved(); loadAccount(); loadHome(); loadActsSaved();
 fetch(BASE+"menus.json?v="+DATA_V).then(r=>r.ok?r.json():null).then(j=>{ menusData=j; if($("#view-detail").classList.contains("active")&&currentDetailKey) openDetail(currentDetailKey); }).catch(()=>{});
 room = loadMinePosts();
-renderCityBar(); renderTally(); renderFeed();
-(function(){ const av=$("#avatar-btn"); if(av) av.textContent=avatarGlyph(); renderHud(); setPresenceGhost(); })();
+renderCityBar(); renderFeed();
+(function(){ renderHud(); setPresenceGhost(); })();
 loadCity(CITIES[0]);
-room = room.concat(ROOM_SEED.map(p=>({...p, reacted:{}})));
+/* initial fiction capped at 4 (nightly-rotated) — the stream refills at its own sparse cadence;
+   the room should read as a quiet place with a few people, not a wall of backlog */
+{ const off=hash(nightKey()+"seedoff")%ROOM_SEED.length;
+  const picks=[0,1,2,3].map(k=>ROOM_SEED[(off+k*2)%ROOM_SEED.length]);
+  room = room.concat(picks.map(p=>({...p, reacted:{}}))); }
 /* two nightly openers from the relatable-line bank, voiced by whoever's awake — rotates every
    night so night 3 doesn't read like night 1. counts are night-seeded (stable, never re-rolled). */
 (function(){ const cast=INCOMING.filter(ghostAwakeNow); for(let k=0;k<2;k++){
@@ -3028,12 +2910,13 @@ applyNight();   // night is permanent — one apply at boot
 { const mo=new Date().getMonth()+1; if(mo>=11||mo<=2) document.body.classList.add("winter"); }   // the tent is warmest when the night is coldest
 /* naming moment is triggered by the FIRST reveal (where "he waited up / roasted your cart" is
    finally earned), not a cold timer on the browse feed — see revealTruth's firstEver branch */
-rotateTicker(); setInterval(rotateTicker, 3600); setInterval(streamIncoming, 26000);   // sparse ghost cadence; presence is fetched live, not simulated
-initDrawers(); refreshTonightHead(); refreshMoreHead(); setInterval(rotateTonight, 4200);
+setInterval(streamIncoming, 26000);   // sparse ghost cadence; presence is fetched live, not simulated
+initDrawers(); refreshTonightHead(); setInterval(rotateTonight, 4200);
+/* room-first, structurally: the gag is the on-ramp for cold users; regulars come home to the room */
+if((stats.orders||0)>0) go('room');
 renderBanners(); setInterval(renderBanners, 60000);
 acceptBuddyFromUrl();
 renderFeatured();
-if(new Date().getDay()===0 && stats.wrappedSeen!==weekKey() && (stats.orders||0)>0){ setTimeout(showWrapped, 1400); }  // Sunday-night Wrapped prompt
 if(stats.pushOptIn && "Notification" in window && Notification.permission==="granted") scheduleGhostNudge();
 document.addEventListener("pointerdown", e=>{ const sc=document.querySelector(".screen"); if(!sc) return; const r=sc.getBoundingClientRect(); lastTap={x:e.clientX-r.left, y:e.clientY-r.top}; if(asmrOn && !asmrNode) startAsmr(); }, true);
 trackOpen();
