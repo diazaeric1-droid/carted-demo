@@ -7,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="Carted" />
-<meta name="theme-color" content="#100C0A" />
+<meta name="theme-color" content="#0A0E1A" />
 <link rel="manifest" href="manifest.json" />
 <link rel="apple-touch-icon" href="icon-192.png" />
 <!-- ═══════════════════════ REVIEW GATE (SUNRISE-1, 2026-07-12) ═══════════════════════
@@ -15,7 +15,7 @@
   1. COPY (V1 test): a line survives only if it passes ≥2 of {fires at a THRESHOLD moment,
      does TRUTH-WORK the layout can't, is UNPASTEABLE (voice no clone can lift)}. A disclosed
      fact gets its threshold moments plus exactly ONE ambient home — never two.
-  2. DENSITY, two laws: ORDER surfaces (feed/detail/cart) pass "would DoorDash at 2am show
+  2. DENSITY, two laws: ORDER surfaces (feed/detail/cart/konbini) pass "would DoorDash at 2am show
      this?" — pastiche fidelity is charm (★ratings, receipts, fee line-items stay). ROOM
      surfaces pass damta density — the lamp does the talking; first post above the fold.
   3. EMOJI: an emoji is either a taught system-noun (👻 🥡 🌅 🚩 🤍 🤝, one 🔥) or DATA
@@ -23,8 +23,9 @@
      Newsreader/serif line. 🌙 has 3 homes, total.
   4. TYPE: 8 sizes only (11/12.5/14/16/19.5/24/34/78, canvas exempt). Quiet furniture ≤500
      weight. One owner per screen: feed=cards, room=posts, reveal=the number, profile=kept-$.
-  5. BUDGETS (rendered, 375px): feed ≤2,600 chars/≤60 emojis/≤90 tappables · room ≤1,300/
-     ≤40/≤30 · profile ≤900/≤30/≤25. preship-check.sh enforces what greps can.
+  5. BUDGETS (rendered, 375px): feed ≤2,650 chars/≤60 emojis/≤90 tappables · room ≤1,500/
+     ≤55/≤40 · profile ≤900/≤30/≤25. (room+feed re-based 2026-07-13: konbini banner, departures
+     strip, hold verb + nightly table were founder-ordered; next panel may re-litigate.) preship-check.sh enforces what greps can.
   PROTECTED (verbatim, do not trim): the NOTICES pool · threshold lines ("the cup keeps.",
   "no points, nothing owed") · "he remembers: you always cart X" · pstat captions ("a missed
   night, forgiven") · composer placeholder burn clause · fic-note "…the order never will be" ·
@@ -38,31 +39,36 @@
   @font-face { font-family: 'Newsreader'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('fonts/newsreader-normal.woff2') format('woff2'); }
   @font-face { font-family: 'Newsreader'; font-style: italic; font-weight: 400 600; font-display: swap; src: url('fonts/newsreader-italic.woff2') format('woff2'); }
   @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('fonts/inter-normal.woff2') format('woff2'); }
-  /* ===== Warm Analog Midnight — the design system. night-permanent, lamp-lit, film-grain,
-     one amber accent, serif for emotion / Inter for chrome. no cream, no coral, no sticker outlines. ===== */
+  /* ===== Neon Konbini — the design system (direction A, 2026-07-13). night-permanent, navy grounds
+     (never #000), cyan signage + pink accents + filament yellow, film grain, serif for emotion /
+     Inter 800 for signage. glow only on display type + interactive states; text-size color = 200-tints. ===== */
   :root {
-    --bg: #100C0A; --screen: #100C0A; --card: #1E1812; --card-hi: #241B13; --line: #2A211B; --ink: #2A211B; --soft: #241B13;
-    --border: #2A211B;
-    --text: #EFE4D6; --muted: #9A8A7A; --accent: #F0A84A; --accent2: #D9963A; --hot: #C96A4A; --go: #A8B07A; --neon: #7C93B8;
-    --slate: #7C93B8; --filament: #F6C982; --glow: rgba(240,168,74,0.22);
-    --grad: linear-gradient(135deg, #F0A84A, #D9963A);
+    --bg: #0A0E1A; --screen: #0A0E1A; --card: #0F1526; --card-hi: #141B30; --line: #1C2440; --ink: #1C2440; --soft: #141B30;
+    --border: #1C2440;
+    --text: #DFE9FF; --muted: #7B87A8; --accent: #4DE3FF; --accent2: #2FC6E8; --hot: #FF4D9E; --go: #EFD9A0; --neon: #1C3E5E;
+    --slate: #9BD2E8; --filament: #FFD24D; --glow: rgba(77,227,255,0.16);
+    --grad: linear-gradient(135deg, #FF4D9E, #FF7A4D);
+    --cyan: #4DE3FF; --pink: #FF4D9E; --yell: #FFD24D;
+    --cyan-txt: #9BD2E8; --pink-txt: #F2A9C4; --yell-txt: #EFD9A0; --head: #EAF4FF;
+    /* TRAP: never write background:var(--ink);color:var(--screen) — both are dark navy now.
+       light-foil surfaces (toast, .on chips) use #EAF4FF/#0A0E1A literals instead. */
     --disp: "Newsreader", Georgia, "Times New Roman", serif;
     --bodyf: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   /* strip the old sticker treatment app-wide: hairline warm seams, tonal depth, no hard offset shadows */
   .card, .tier-card, .feat-banner, .post, .cup-bar, .composer input, .signin-btn,
-  .kclosed, .quests, .passport, .prompts, .drawer .dr-head, .hud .pill, .live-pill, .city-chip, .ebanner,
+  .kclosed, .quests, .passport, .prompts, .drawer .dr-head, .hud .pill, .live-pill, .ebanner,
   .tk-line, .quiet-panel, .morts-pick, .buddy-nudge, .ghost-quip, .silence-btn, .feed-identity, .track-skip {
     box-shadow: none !important; border-color: var(--border) !important;
   }
   .card, .tier-card, .feat-banner, .post, .cup-bar, .composer input, .kclosed,
-  .quests, .passport, .prompts, .hud .pill, .live-pill, .city-chip, .tk-line, .feed-identity { border-width: 1px !important; }
+  .quests, .passport, .prompts, .hud .pill, .live-pill, .tk-line, .feed-identity { border-width: 1px !important; }
   /* film grain — the analog fingerprint (CSS-only SVG fractal noise) */
   .screen::after { content:""; position:absolute; inset:0; z-index:1; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
   .body { position: relative; z-index: 2; }
-  /* one warm amber lamp glow from the top of the frame */
+  /* one cool store-light glow from the top of the frame */
   .screen::before { content:""; position:absolute; top:-60px; right:-40px; width:340px; height:300px; z-index:0; pointer-events:none;
     background: radial-gradient(circle at 70% 30%, var(--glow), transparent 62%); filter: blur(8px); }
   /* NIGHT SHIFT (10pm–6am): the app gets quieter as the night gets deeper. dusk paper,
@@ -72,17 +78,16 @@
      body.night is always present; these rules just tune ambience, never the palette. */
   body.night .ebanner { filter: saturate(.85); }
   body.night .ebanner.night-line { background: transparent; border-style: dashed; color: var(--muted); box-shadow: none; }
-  body.night .brand h1 { text-shadow: 0 0 30px var(--glow); }
   body.hud-off .hud { display: none; }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
     margin: 0; height: 100%;
-    background: radial-gradient(rgba(240,168,74,.055) 1.5px, transparent 1.5px) 0 0/22px 22px, var(--bg);
+    background: radial-gradient(rgba(77,227,255,.05) 1.5px, transparent 1.5px) 0 0/22px 22px, var(--bg);
     font-family: var(--bodyf);
     color: var(--text); display: flex; align-items: center; justify-content: center; overflow: hidden;
   }
   .phone { position: relative; width: 390px; height: 844px; background: var(--ink); border-radius: 52px; padding: 12px;
-    box-shadow: 16px 16px 0 rgba(34,28,51,.16), 0 0 0 2px #18131f; }
+    box-shadow: 16px 16px 0 rgba(5,9,18,.16), 0 0 0 2px #0B1120; }
   .notch { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); width: 124px; height: 30px; background: var(--ink); border-radius: 0 0 18px 18px; z-index: 50; }
   .screen { position: relative; width: 100%; height: 100%; border-radius: 42px; overflow: hidden; display: flex; flex-direction: column;
     background: var(--screen); }
@@ -96,13 +101,13 @@
   @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
   .brand { padding: 6px 2px 12px; position: relative; }
-  .brand h1 { margin: 0; font-size: 34px; font-weight: 700; letter-spacing: -.5px; font-family: var(--disp); color: var(--accent); text-shadow: 2.5px 2.5px 0 var(--ink); }
+  .brand h1 { margin: 0; font-size: 34px; font-weight: 800; letter-spacing: -.5px; font-family: var(--bodyf); color: var(--cyan); text-shadow: 0 0 18px rgba(77,227,255,.45), 0 0 42px rgba(77,227,255,.20); }
   .brand .sub { color: var(--muted); font-size: 12.5px; margin-top: 3px; font-weight: 700; }
 
   .presence { margin: 2px 0 14px; padding: 12px 14px; background: var(--card); border: 2px solid var(--ink); border-radius: 18px; box-shadow: 3px 3px 0 var(--ink); }
   .presence .live { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 800; }
-  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--slate); box-shadow: 0 0 0 0 rgba(124,147,184,.6); animation: pulse 1.8s infinite; }
-  @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(124,147,184,.5);} 70%{box-shadow:0 0 0 10px rgba(124,147,184,0);} 100%{box-shadow:0 0 0 0 rgba(124,147,184,0);} }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--slate); box-shadow: 0 0 0 0 rgba(77,227,255,.6); animation: pulse 1.8s infinite; }
+  @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(77,227,255,.5);} 70%{box-shadow:0 0 0 10px rgba(77,227,255,0);} 100%{box-shadow:0 0 0 0 rgba(77,227,255,0);} }
   .ghostline { margin-top: 8px; display: flex; gap: 8px; align-items: center; min-height: 24px; overflow: hidden; }
   .ghost-emo { display: inline-block; font-size: 19.5px; animation: bob 2.6s ease-in-out infinite; }
   @keyframes bob { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-5px);} }
@@ -110,13 +115,12 @@
 
   .city-bar { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 14px; }
   .city-bar::-webkit-scrollbar { display: none; }
-  .city-chip { white-space: nowrap; background: var(--card); border: 2px solid var(--ink); color: var(--text); border-radius: 16px; padding: 8px 14px; font-size: 12.5px; font-weight: 600; font-family: var(--disp); cursor: pointer; flex: 0 0 auto; transition: transform .1s; box-shadow: 2px 2px 0 var(--ink); }
-  .city-chip:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
-  .city-chip.on { background: var(--ink); color: var(--screen); }
-  .city-chip.add { border-style: dashed; color: var(--accent); box-shadow: none; }
-  .show-all { display:block; width:100%; background:none; border:1px dashed rgba(239,228,214,.18); color:var(--muted); border-radius:12px; padding:10px; font-size:12.5px; margin-top:8px; cursor:pointer; }
-  .city-line { background: none; border: none; color: var(--muted); font-size: 12.5px; font-family: var(--disp); padding: 4px 2px 10px; cursor: pointer; text-align: left; }
-  .city-line .cl-change { color: var(--accent); font-size: 12.5px; }
+  .show-all { display:block; width:100%; background:none; border:1px dashed rgba(223,233,255,.18); color:var(--muted); border-radius:12px; padding:10px; font-size:12.5px; margin-top:8px; cursor:pointer; }
+  /* DEPARTURES strip — the city-line as a split-flap board tease (text-size ⇒ tints, no glow) */
+  .dep-bar { display: flex; align-items: center; gap: 6px; width: 100%; min-width: 0; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; margin: 2px 0 10px; cursor: pointer; text-align: left; font-family: var(--bodyf); font-weight: 800; font-size: 12.5px; letter-spacing: 1.1px; color: var(--yell-txt); white-space: nowrap; overflow: hidden; }
+  .dep-bar .db-plane { color: var(--cyan-txt); letter-spacing: 0; }
+  .dep-bar .db-city { color: var(--head); letter-spacing: .3px; overflow: hidden; text-overflow: ellipsis; }
+  .dep-bar .db-change { margin-left: auto; flex: 0 0 auto; color: var(--pink-txt); font-size: 11px; letter-spacing: 1.1px; text-transform: uppercase; }
 
   .tally { display: flex; gap: 10px; margin-bottom: 14px; }
   .tally .box { flex: 1; background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 10px 12px; box-shadow: 2px 2px 0 var(--ink); }
@@ -128,7 +132,7 @@
   .seg button { flex: 1; background: none; border: none; color: var(--muted); font-weight: 800; font-size: 12.5px; padding: 9px; border-radius: 9px; cursor: pointer; }
   .seg button.on { background: var(--accent2); color: var(--ink); }
 
-  .section-label { font-size: 12.5px; color: var(--muted); font-weight: 700; margin: 4px 2px 10px; text-transform: uppercase; letter-spacing: .6px; }
+  .section-label { font-size: 12.5px; color: var(--cyan-txt); font-weight: 800; margin: 4px 2px 10px; text-transform: uppercase; letter-spacing: 1.1px; }
 
   .card { position: relative; display: flex; gap: 13px; padding: 11px; margin-bottom: 14px; background: var(--card); border: 2.5px solid var(--ink); border-radius: 20px; cursor: pointer; transition: transform .12s ease, background .15s, box-shadow .12s; box-shadow: 5px 5px 0 var(--ink); }
   .card:active { transform: translate(2px,3px); box-shadow: 1px 2px 0 var(--ink); background: var(--card-hi); }
@@ -140,25 +144,25 @@
   .meta .name .en { color: var(--muted); font-weight: 500; font-size: 12.5px; text-transform: capitalize; font-family: var(--bodyf); }
   .meta .shop { font-size: 12.5px; color: var(--muted); margin-top: 3px; font-weight: 600; }
   .meta .cprow { margin-top: 7px; overflow: hidden; }
-  .meta .cpchip { display: inline-flex; align-items: center; gap: 4px; background: var(--hot); color: #fff; font-family: var(--disp); font-weight: 700; font-size: 11px; padding: 3px 9px; border: 2px solid var(--ink); border-radius: 10px; box-shadow: 1.5px 1.5px 0 var(--ink); white-space: nowrap; }
+  .meta .cpchip { display: inline-flex; align-items: center; gap: 4px; background: var(--hot); color: #14060F; font-family: var(--disp); font-weight: 700; font-size: 11px; padding: 3px 9px; border: 2px solid var(--ink); border-radius: 10px; box-shadow: 1.5px 1.5px 0 var(--ink); white-space: nowrap; }
   .meta .row { display: flex; align-items: center; gap: 7px; margin-top: 7px; font-size: 12.5px; color: var(--muted); font-weight: 600; white-space: nowrap; }
-  .meta .row .rate { color: #d98324; font-weight: 800; }
-  .meta .price { margin-top: auto; padding-top: 7px; font-size: 16px; font-weight: 700; font-family: var(--disp); color: var(--accent); white-space: nowrap; }
+  .meta .row .rate { color: #EFD9A0; font-weight: 800; }
+  .meta .price { margin-top: auto; padding-top: 7px; font-size: 16px; font-weight: 700; font-family: var(--disp); color: var(--pink-txt); white-space: nowrap; }
   .meta .price .p-eta { color: var(--muted); font-family: var(--bodyf); font-weight: 500; font-size: 12.5px; }
-  .qadd { position: absolute; top: 50%; right: 11px; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 13px; border: 2px solid var(--ink); background: var(--grad); color: #1A1109; font-size: 24px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; line-height: 1; transition: transform .1s, box-shadow .1s; }
+  .qadd { position: absolute; top: 50%; right: 11px; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 13px; border: 2px solid var(--ink); background: var(--grad); color: #0A0E1A; font-size: 24px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; line-height: 1; transition: transform .1s, box-shadow .1s; }
   .qadd:active { transform: translateY(-50%) translate(1px,2px) scale(.96); box-shadow: 0 0 0 var(--ink); }
   .fav.on { color: var(--hot); }
 
   .loading { text-align: center; padding: 50px 20px; color: var(--text); font-weight: 700; }
   .spinner { width: 34px; height: 34px; border: 3px solid var(--soft); border-top-color: var(--accent); border-radius: 50%; margin: 0 auto 16px; animation: spin 1s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .osm-credit { text-align: center; color: var(--muted); font-size: 11px; padding: 14px 0 4px; opacity: .8; }
+  .osm-credit { text-align: center; color: var(--muted); font-size: 11px; padding: 14px 0 4px; }
 
-  .back { background: none; border: none; color: var(--accent); font-size: 14px; font-weight: 800; padding: 6px 0; cursor: pointer; }
+  .back { background: none; border: none; color: var(--cyan-txt); font-size: 14px; font-weight: 800; padding: 6px 0; cursor: pointer; }
   .hero { height: 244px; border-radius: 20px; margin: 6px 0 12px; position: relative; display: flex; align-items: center; justify-content: center; font-size: 78px; background: var(--card-hi); border: 2.5px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); overflow: hidden; }
-  .hero::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to top, rgba(34,28,51,.8) 0%, rgba(34,28,51,.12) 34%, rgba(34,28,51,0) 56%); pointer-events: none; }
+  .hero::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to top, rgba(5,9,18,.8) 0%, rgba(5,9,18,.12) 34%, rgba(5,9,18,0) 56%); pointer-events: none; }
   .hero .city-tag { position: absolute; top: 12px; left: 12px; z-index: 2; background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 5px 11px; font-size: 12.5px; font-weight: 800; }
-  .hero .d-fav { position: absolute; top: 11px; right: 11px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); color: #c9bfa6; font-size: 19.5px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0 var(--ink); }
+  .hero .d-fav { position: absolute; top: 11px; right: 11px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); color: #A9B4CE; font-size: 19.5px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0 var(--ink); }
   .hero .d-fav.on { color: var(--hot); background: var(--card-hi); }
   .hero .hero-name { position: absolute; left: 15px; right: 15px; bottom: 13px; z-index: 2; color: #fff; }
   .hero .hero-name .hn-title { font-family: var(--disp); font-weight: 700; font-size: 24px; line-height: 1.04; text-shadow: 0 2px 9px rgba(0,0,0,.5); }
@@ -169,17 +173,17 @@
   .reviews { margin-top: 6px; }
   .review { background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; }
   .review .top { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--muted); margin-bottom: 6px; }
-  .review .stars { color: #d98324; }
+  .review .stars { color: #EFD9A0; }
   .review .text { font-size: 14px; line-height: 1.45; }
 
-  .cta { position: sticky; bottom: 0; width: 100%; cursor: pointer; background: var(--grad); color: #1A1109; font-size: 16px; font-weight: 700; font-family: var(--bodyf); letter-spacing: .1px; padding: 15px; border-radius: 15px; margin-top: 8px; border: none; box-shadow: 0 1px 0 rgba(246,201,130,.35) inset, 0 10px 26px -12px var(--glow); transition: transform .12s ease, filter .12s ease; }
+  .cta { position: sticky; bottom: 0; width: 100%; cursor: pointer; background: var(--grad); color: #0A0E1A; font-size: 16px; font-weight: 700; font-family: var(--bodyf); letter-spacing: .1px; padding: 15px; border-radius: 15px; margin-top: 8px; border: none; box-shadow: 0 1px 0 rgba(255,255,255,.28) inset, 0 10px 26px -12px rgba(255,77,158,.45); transition: transform .12s ease, filter .12s ease; }
   .cta:active { transform: translateY(1px) scale(.995); filter: brightness(1.06); }
   .cta.secondary { background: transparent; color: var(--text); border: 1px solid var(--border); box-shadow: none; font-weight: 600; }
   .cta.secondary:active { transform: translateY(1px); background: var(--card-hi); }
-  .cta.gold { background: linear-gradient(135deg, var(--filament), var(--accent)); color: #1A1109; box-shadow: 0 1px 0 rgba(255,255,255,.25) inset, 0 12px 30px -12px var(--glow); }
+  .cta.gold { background: linear-gradient(135deg, #FFD24D, #FF7A4D); color: #0A0E1A; box-shadow: 0 1px 0 rgba(255,255,255,.25) inset, 0 12px 30px -12px rgba(255,210,77,.4); }
   .cta.gold:active { transform: translateY(1px) scale(.995); filter: brightness(1.06); }
 
-  .cart-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 2px dashed #d9cbab; }
+  .cart-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 2px dashed #3A4666; }
   .cart-item .ci-thumb { width: 54px; height: 54px; flex: 0 0 54px; border-radius: 11px; border: 2px solid var(--ink); overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--card-hi); font-size: 34px; box-shadow: 2px 2px 0 var(--ink); }
   .cart-item .ci-thumb .ph-img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .cart-item .nm { flex: 1; font-size: 14px; font-weight: 600; }
@@ -188,38 +192,38 @@
   .summary { margin: 18px 0 8px; }
   .summary .line { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; color: var(--muted); }
   .summary .line.total { color: var(--text); font-weight: 800; font-size: 19.5px; border-top: 2px solid var(--ink); margin-top: 6px; padding-top: 12px; }
-  .fee-callout { text-align: center; color: #d98324; font-size: 12.5px; font-weight: 700; margin: 4px 0 2px; }
+  .fee-callout { text-align: center; color: #EFD9A0; font-size: 12.5px; font-weight: 700; margin: 4px 0 2px; }
   .empty { text-align: center; color: var(--muted); padding: 60px 20px; }
   .empty .big { font-size: 34px; margin-bottom: 12px; }
 
   .track-wrap { text-align: center; padding-top: 10px; }
   /* ----- map: ghost-courier route (curved SVG path + gliding Mort) ----- */
   .map { height: 210px; border-radius: 18px; margin: 6px 0 18px; position: relative; overflow: hidden;
-    background: radial-gradient(120% 80% at 18% 86%, rgba(240,168,74,.12) 0 16%, transparent 60%), radial-gradient(120% 80% at 84% 16%, rgba(201,106,74,.12) 0 14%, transparent 58%), repeating-linear-gradient(0deg, #17110C 0 24px, #1B140E 24px 26px), repeating-linear-gradient(90deg, rgba(42,33,27,.55) 0 24px, rgba(27,21,15,.55) 24px 26px), #14100B; border: 1px solid var(--border); box-shadow: inset 0 0 60px rgba(0,0,0,.5); }
+    background: radial-gradient(120% 80% at 18% 86%, rgba(77,227,255,.10) 0 16%, transparent 60%), radial-gradient(120% 80% at 84% 16%, rgba(255,77,158,.10) 0 14%, transparent 58%), repeating-linear-gradient(0deg, #0C1220 0 24px, #101830 24px 26px), repeating-linear-gradient(90deg, rgba(30,40,70,.55) 0 24px, rgba(14,20,38,.55) 24px 26px), #0B101E; border: 1px solid var(--border); box-shadow: inset 0 0 60px rgba(0,0,0,.5); }
   .map.arrive { animation: mapflash .5s ease; }
-  @keyframes mapflash { 0%{ box-shadow: inset 0 0 60px rgba(0,0,0,.5); } 30%{ box-shadow: inset 0 0 60px rgba(0,0,0,.5), 0 0 0 3px rgba(240,168,74,.4); } 100%{ box-shadow: inset 0 0 60px rgba(0,0,0,.5); } }
-  .map .block { position: absolute; border: 1px solid rgba(240,168,74,.12); border-radius: 5px; }
+  @keyframes mapflash { 0%{ box-shadow: inset 0 0 60px rgba(0,0,0,.5); } 30%{ box-shadow: inset 0 0 60px rgba(0,0,0,.5), 0 0 0 3px rgba(77,227,255,.4); } 100%{ box-shadow: inset 0 0 60px rgba(0,0,0,.5); } }
+  .map .block { position: absolute; border: 1px solid rgba(77,227,255,.10); border-radius: 5px; }
   .map .b1 { width: 38px; height: 30px; left: 22%; top: 18%; }
   .map .b2 { width: 30px; height: 40px; left: 60%; top: 56%; }
   .map .b3 { width: 26px; height: 24px; left: 40%; top: 70%; }
   .route { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-  .route .casing { fill: none; stroke: #0C0907; stroke-width: 11; stroke-linecap: round; }
-  .route .bed { fill: none; stroke: rgba(239,228,214,.13); stroke-width: 7; stroke-linecap: round; }
-  .route .ants { fill: none; stroke: rgba(239,228,214,.22); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 2 11; animation: ants 1.1s linear infinite; }
+  .route .casing { fill: none; stroke: #060912; stroke-width: 11; stroke-linecap: round; }
+  .route .bed { fill: none; stroke: rgba(223,233,255,.13); stroke-width: 7; stroke-linecap: round; }
+  .route .ants { fill: none; stroke: rgba(223,233,255,.22); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 2 11; animation: ants 1.1s linear infinite; }
   @keyframes ants { to { stroke-dashoffset: -26; } }
   .route .done { fill: none; stroke: var(--accent); stroke-width: 7; stroke-linecap: round; stroke-dasharray: var(--len) var(--len); stroke-dashoffset: var(--len); transition: stroke-dashoffset .8s ease; filter: drop-shadow(0 0 6px var(--glow)); }
-  .pin { position: absolute; font-size: 24px; transform: translate(-50%,-78%); z-index: 3; filter: drop-shadow(2px 2px 0 rgba(34,28,51,.28)); }
+  .pin { position: absolute; font-size: 24px; transform: translate(-50%,-78%); z-index: 3; filter: drop-shadow(2px 2px 0 rgba(5,9,18,.28)); }
   .pin .halo { position: absolute; left: 50%; top: 64%; width: 30px; height: 13px; border-radius: 50%; transform: translate(-50%,-50%); z-index: -1; }
-  .pin.shop { left: 14%; top: 80%; } .pin.shop .halo { background: rgba(240,168,74,.55); animation: halo 2.2s ease-in-out infinite; }
-  .pin.home { left: 86%; top: 18%; } .pin.home .halo { background: rgba(201,106,74,.5); animation: halo 2.2s ease-in-out .6s infinite; }
+  .pin.shop { left: 14%; top: 80%; } .pin.shop .halo { background: rgba(77,227,255,.5); animation: halo 2.2s ease-in-out infinite; }
+  .pin.home { left: 86%; top: 18%; } .pin.home .halo { background: rgba(255,77,158,.5); animation: halo 2.2s ease-in-out .6s infinite; }
   @keyframes halo { 0%,100%{ transform: translate(-50%,-50%) scale(.7); opacity: .4; } 50%{ transform: translate(-50%,-50%) scale(1.25); opacity: .85; } }
-  .rider { position: absolute; left: 14%; top: 80%; font-size: 34px; z-index: 4; transform: translate(-50%,-58%); transition: left .8s ease, top .8s ease, opacity .55s ease; will-change: left, top; filter: drop-shadow(2px 2px 0 rgba(34,28,51,.35)); }
+  .rider { position: absolute; left: 14%; top: 80%; font-size: 34px; z-index: 4; transform: translate(-50%,-58%); transition: left .8s ease, top .8s ease, opacity .55s ease; will-change: left, top; filter: drop-shadow(2px 2px 0 rgba(5,9,18,.35)); }
   .rider .mort { display: inline-block; animation: bob 1.4s ease-in-out infinite; }
   .rider .veh { position: absolute; left: 62%; bottom: -2px; font-size: 24px; animation: bob 1.4s ease-in-out .2s infinite; }
   @keyframes bob { 0%,100%{ transform: translateY(0) rotate(-3deg); } 50%{ transform: translateY(-4px) rotate(3deg); } }
   .rider .puff { position: absolute; right: 84%; top: 56%; font-size: 14px; opacity: .55; animation: puff 1.1s ease-out infinite; }
   @keyframes puff { 0%{ opacity: .5; transform: translateX(0) scale(.7); } 100%{ opacity: 0; transform: translateX(-16px) scale(1.1); } }
-  .eta-chip { position: absolute; left: 14%; top: 80%; transform: translate(-50%,-150%); z-index: 5; background: var(--accent); color: #1A1109; font-family: var(--bodyf); font-weight: 700; font-size: 12.5px; padding: 4px 9px; border-radius: 11px; box-shadow: 0 6px 18px -8px var(--glow); white-space: nowrap; transition: left .8s ease, top .8s ease; }
+  .eta-chip { position: absolute; left: 14%; top: 80%; transform: translate(-50%,-150%); z-index: 5; background: var(--accent); color: #0A0E1A; font-family: var(--bodyf); font-weight: 700; font-size: 12.5px; padding: 4px 9px; border-radius: 11px; box-shadow: 0 6px 18px -8px var(--glow); white-space: nowrap; transition: left .8s ease, top .8s ease; }
   .eta-chip::after { content: ""; position: absolute; left: 50%; bottom: -5px; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--accent); }
   .eta { font-size: 34px; font-weight: 800; letter-spacing: -1px; font-family: var(--disp); }
   .eta .u { font-size: 16px; color: var(--muted); font-weight: 600; }
@@ -231,26 +235,26 @@
   /* the $-saved is the hero of the whole app — the TikTok money number. a single amber
      filament numeral glowing in the dark, set in the display serif. no sticker, no green. */
   .reveal .saved { font-family: var(--disp); font-size: 78px; font-weight: 500; line-height: .94; color: var(--filament); margin: 12px 0 4px; letter-spacing: -2px;
-    text-shadow: 0 0 34px var(--glow), 0 0 10px rgba(246,201,130,.35); }
-  .reveal .saved .cur { font-size: 34px; vertical-align: 24px; color: var(--accent); letter-spacing: 0; margin-right: 1px; }
+    text-shadow: 0 0 34px rgba(255,210,77,.26), 0 0 10px rgba(255,210,77,.32); }
+  .reveal .saved .cur { font-size: 34px; vertical-align: 24px; color: var(--yell); letter-spacing: 0; margin-right: 1px; }
   .reveal .saved .lbl { display: block; font-family: var(--bodyf); font-size: 12.5px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); margin-top: 10px; text-shadow: none; }
   .reveal .ghost-quip { font-family: var(--disp); font-style: italic; font-size: 14px; color: var(--muted); line-height: 1.5; max-width: 300px; margin: 4px auto 0; }
   .reveal .sub { color: var(--muted); font-size: 14px; line-height: 1.5; max-width: 300px; margin-left: auto; margin-right: auto; }
-  .track-skip { margin-top: 14px; background: transparent; border: none; color: var(--muted); font-family: var(--disp); font-weight: 600; font-size: 12.5px; cursor: pointer; opacity: .8; text-decoration: underline; }
+  .track-skip { margin-top: 14px; background: transparent; border: none; color: var(--muted); font-family: var(--disp); font-weight: 600; font-size: 12.5px; cursor: pointer; text-decoration: underline; }
   /* feed identity band — first-night-only premise line (lifecycle-gated) */
-  .feed-identity { display: flex; align-items: center; gap: 7px; justify-content: center; text-align: center; background: linear-gradient(90deg, rgba(240,168,74,.08), rgba(124,147,184,.08)); border: 1px solid var(--border); border-radius: 14px; padding: 9px 12px; margin: 2px 0 14px; font-family: var(--disp); font-style: italic; font-weight: 500; font-size: 12.5px; color: var(--text); }
+  .feed-identity { display: flex; align-items: center; gap: 7px; justify-content: center; text-align: center; background: linear-gradient(90deg, rgba(77,227,255,.07), rgba(255,77,158,.07)); border: 1px solid var(--border); border-radius: 14px; padding: 9px 12px; margin: 2px 0 14px; font-family: var(--disp); font-style: italic; font-weight: 500; font-size: 12.5px; color: var(--text); }
   /* ----- globe: international flight route ----- */
   .globe-box { height: 234px; margin: 6px 0 14px; position: relative; overflow: hidden; }
-  .globe-box .land polygon { fill: #3A3324; stroke: #4A4030; stroke-width: .5; stroke-linejoin: round; }
+  .globe-box .land polygon { fill: #22304E; stroke: #35476B; stroke-width: .5; stroke-linejoin: round; }
   .globe-box svg { display: block; width: 100%; height: 100%; overflow: visible; }
-  .globe-box .grat polyline { fill: none; stroke: rgba(124,147,184,.16); stroke-width: 1; }
-  .globe-box .arc-bed { fill: none; stroke: rgba(239,228,214,.18); stroke-width: 2; stroke-dasharray: 1.5 5; stroke-linecap: round; }
+  .globe-box .grat polyline { fill: none; stroke: rgba(77,227,255,.16); stroke-width: 1; }
+  .globe-box .arc-bed { fill: none; stroke: rgba(223,233,255,.18); stroke-width: 2; stroke-dasharray: 1.5 5; stroke-linecap: round; }
   .globe-box .arc { fill: none; stroke: var(--accent); stroke-width: 3.2; stroke-linecap: round; filter: drop-shadow(0 0 6px var(--glow)); }
-  .globe-box .gpin-dot { stroke: #0C0907; stroke-width: 2.5; }
+  .globe-box .gpin-dot { stroke: #060912; stroke-width: 2.5; }
   .globe-box .gpin-o { fill: var(--filament); } .globe-box .gpin-d { fill: var(--hot); }
   .globe-box .gplane { transition: transform 2.4s linear; }
   .globe-box .gplane .gplane-body { fill: var(--accent2); stroke: var(--ink); stroke-width: 2.2; stroke-linejoin: round; stroke-linecap: round; filter: drop-shadow(1.5px 1.5px 0 var(--ink)); }
-  .globe-box .gplane .gplane-halo { fill: rgba(246,201,130,.6); stroke: none; animation: gplaneHalo 1.3s ease-in-out infinite; }
+  .globe-box .gplane .gplane-halo { fill: rgba(77,227,255,.55); stroke: none; animation: gplaneHalo 1.3s ease-in-out infinite; }
   @keyframes gplaneHalo { 0%,100%{ transform: scale(.85); opacity: .35; } 50%{ transform: scale(1.15); opacity: .8; } }
   .globe-box .glabel { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); display: inline-block; max-width: 92%; white-space: nowrap; padding: 4px 12px; border-radius: 999px; background: var(--card-hi); border: 1px solid var(--border); box-shadow: 0 6px 16px -8px rgba(0,0,0,.6); text-align: center; font-family: var(--disp); font-weight: 500; font-size: 12.5px; line-height: 1.25; letter-spacing: .2px; color: var(--text); }
   @media (prefers-reduced-motion: reduce) {
@@ -263,46 +267,51 @@
   .composer { display: flex; gap: 8px; margin-bottom: 16px; }
   .composer input { flex: 1; background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 13px 14px; color: var(--text); font-size: 14px; outline: none; font-family: var(--bodyf); font-weight: 600; }
   .composer input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow); }
-  .composer input::placeholder { color: var(--muted); opacity: .7; }
-  .composer button { border: none; background: var(--grad); color: #1A1109; font-weight: 700; font-size: 14px; padding: 0 20px; border-radius: 14px; cursor: pointer; }
+  .composer input::placeholder { color: var(--muted); }
+  .composer button { border: none; background: var(--grad); color: #0A0E1A; font-weight: 700; font-size: 14px; padding: 0 20px; border-radius: 14px; cursor: pointer; }
+  .table-line { display:block; width:100%; text-align:left; background:transparent; border:none; cursor:pointer; font-family:var(--disp); font-style:italic; font-size:14px; line-height:1.4; color:var(--muted); padding:2px 2px 8px; }
+  .table-line b { color:var(--text); font-weight:600; font-style:italic; }
+  .composer.lamp input { border-color:var(--yell); box-shadow:0 0 12px rgba(255,210,77,.28); }
+  .composer.lamp input:focus { border-color:var(--yell); box-shadow:0 0 0 3px rgba(255,210,77,.22), 0 0 14px rgba(255,210,77,.3); }
+  .reacts .chip.r-hold.on { box-shadow: 0 0 10px rgba(255,210,77,.35), 2px 2px 0 var(--ink); }
   .post { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 13px 14px; margin-bottom: 12px; animation: fade .3s ease; }
-  .post.mine { border-color: rgba(240,168,74,.5); background: var(--card-hi); }
+  .post.mine { border-color: rgba(77,227,255,.45); background: var(--card-hi); }
   .post .phead { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
   .post .pic { font-size: 24px; }
   .post .pmeta { font-size: 11px; color: var(--muted); }
   .post .pmeta b { color: var(--text); font-weight: 700; }
-  .post .mine-tag { color: var(--accent); font-weight: 700; }
-  .post.ghostp { background: linear-gradient(0deg, rgba(124,147,184,.06), rgba(124,147,184,.06)), var(--card); border-style: dashed; }
-  .doorway { position:absolute; inset:0; z-index:125; background:#0B0806; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:30px; text-align:center; animation: fade .5s ease; }
+  .post .mine-tag { color: var(--cyan-txt); font-weight: 700; }
+  .post.ghostp { background: linear-gradient(0deg, rgba(77,227,255,.06), rgba(77,227,255,.06)), var(--card); border-style: dashed; }
+  .doorway { position:absolute; inset:0; z-index:125; background:#070B14; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:30px; text-align:center; animation: fade .5s ease; }
   .doorway.out { opacity:0; transition:opacity .6s ease; }
   .doorway .dw-line { font-family:var(--disp); font-style:italic; font-size:24px; color:var(--filament); }
   .doorway .dw-sub { font-size:14px; color:var(--muted); max-width:300px; line-height:1.5; }
   .cbr-shelf .sh-cup { font-size:16px; opacity:.22; filter:grayscale(.6); }
   .cbr-shelf .sh-cup.taken { opacity:1; filter:none; }
-  .cbr-shelf .sh-cup.tonight { opacity:.55; filter:none; text-shadow:0 0 8px rgba(240,168,74,.5); }
+  .cbr-shelf .sh-cup.tonight { opacity:.75; filter:none; }
   .cbr-shelf .sh-cup.tonight.taken { opacity:1; }
   .notice { font-size:11px; color:var(--muted); font-style:italic; margin-top:6px; }
-  .nod-btn { background:none; border:1px solid rgba(239,228,214,.16); color:var(--text); border-radius:999px; font-size:12.5px; padding:4px 13px; margin-top:8px; }
+  .nod-btn { background:none; border:1px solid rgba(223,233,255,.16); color:var(--text); border-radius:999px; font-size:12.5px; padding:4px 13px; margin-top:8px; }
   .nod-btn.done { color:var(--muted); border-style:dashed; }
   .nod-n { font-size:11px; color:var(--slate); margin-left:8px; }
-  .pchip.usual { border-color:rgba(240,168,74,.55); box-shadow:0 0 10px rgba(240,168,74,.28); }
-  body.winter { --glow: rgba(232,117,42,.16); }
+  .pchip.usual { border-color:rgba(77,227,255,.55); box-shadow:0 0 10px rgba(77,227,255,.25); }
+  body.winter { --glow: rgba(90,160,255,.14); }
   body.winter .screen::before { filter: blur(8px) saturate(1.15); }
-  .post.letter { border-style: solid; border-color: rgba(246,201,130,.28); background: linear-gradient(0deg, rgba(240,168,74,.05), rgba(240,168,74,.05)), var(--card); }
+  .post.letter { border-style: solid; border-color: rgba(255,210,77,.28); background: linear-gradient(0deg, rgba(255,210,77,.05), rgba(255,210,77,.05)), var(--card); }
   .post.letter .ptext { font-family: var(--disp); font-style: italic; font-size: 14px; line-height: 1.55; }
   .l-ack { margin-top: 8px; font-size: 12.5px; color: var(--muted); font-style: italic; }
   .post .gtag { color: var(--slate); font-weight: 700; }
-  .ghost-note { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 5px; opacity: .85; line-height: 1.35; }
+  .ghost-note { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 5px; line-height: 1.35; }
   .kclosed { background: var(--card); border: 2px dashed var(--ink); border-radius: 16px; padding: 15px 16px; text-align: center; font-weight: 800; font-size: 14px; margin-top: 4px; box-shadow: 3px 3px 0 var(--ink); }
   .kclosed .kc-sub { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 6px; }
   .tk-line { background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 10px 12px; font-size: 12.5px; font-weight: 700; color: var(--muted); margin-bottom: 10px; box-shadow: 2px 2px 0 var(--ink); }
   .tk-line b { color: var(--text); }
-  .fic-note { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 14px; text-align: center; opacity: .85; }
+  .fic-note { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 14px; text-align: center; }
   /* the 2am room runs dimmer + warmer than the daylight feed — low-arousal by design */
   /* the room runs a touch dimmer + warmer than the daylight feed (low-arousal by design) —
      tint the page background (.screen) so it adapts to the permanent night palette, and keep the room's
      content on the SAME 18px inset as every other view (no bleed, no misalignment). */
-  body.in-room .screen, body.night.in-room .screen { background: #0C0907; }
+  body.in-room .screen, body.night.in-room .screen { background: #070B14; }
   #view-room .post { animation-duration: .6s; }
   .reacts .chip .rlbl { font-size: 11px; font-weight: 800; color: var(--muted); margin: 0 4px 0 4px; }
   .reacts .chip.on .rlbl { color: inherit; }
@@ -317,17 +326,17 @@
   .silence-btn { width: 100%; background: transparent; border: 2px dashed var(--ink); border-radius: 14px; padding: 9px; margin: 0 0 12px; font-family: var(--disp); font-weight: 600; font-size: 12.5px; color: var(--muted); cursor: pointer; }
   .room-rules-line { font-size: 11px; color: var(--muted); font-weight: 700; margin: -8px 0 14px; text-align: center; }
   .room-rules-line a { color: inherit; text-decoration: underline; }
-  #view-room.quiet .prompts, #view-room.quiet .composer, #view-room.quiet .tk-line { display: none; }
+  #view-room.quiet .prompts, #view-room.quiet .composer, #view-room.quiet .tk-line, #view-room.quiet .table-line { display: none; }
   .quiet-panel { text-align: center; padding: 40px 20px; color: var(--muted); }
   .quiet-panel .qp-emo { font-size: 34px; }
   .quiet-panel .qp-title { font-family: var(--disp); font-weight: 600; font-size: 19.5px; color: var(--text); margin: 10px 0 8px; }
   .quiet-panel .qp-sub { font-size: 12.5px; font-weight: 700; line-height: 1.5; }
-  .cup-ov { position: absolute; inset: 0; z-index: 120; background: #100C0A; background-image: radial-gradient(90% 62% at 50% 42%, #221A12 0%, #16110C 54%, #0A0806 100%); display: flex; align-items: center; justify-content: center; animation: fade .3s ease; }
-  .cup-emo, .cup-scene .cup-emo { filter: drop-shadow(0 14px 30px rgba(0,0,0,.5)) drop-shadow(0 0 34px rgba(255,200,140,.14)); }
+  .cup-ov { position: absolute; inset: 0; z-index: 120; background: #0A0E1A; background-image: radial-gradient(90% 62% at 50% 42%, #16203A 0%, #0D1426 54%, #060912 100%); display: flex; align-items: center; justify-content: center; animation: fade .3s ease; }
+  .cup-emo, .cup-scene .cup-emo { filter: drop-shadow(0 14px 30px rgba(0,0,0,.5)) drop-shadow(0 0 34px rgba(77,227,255,.12)); }
   .cup-scene { text-align: center; color: var(--text); width: 100%; padding: 24px; position: relative; }
   .cup-x { position: absolute; top: -6px; right: 12px; background: none; border: none; color: var(--muted); font-size: 19.5px; font-weight: 600; cursor: pointer; padding: 8px; }
   .cup-others { font-size: 12.5px; font-weight: 600; color: var(--slate); margin-bottom: 8px; }
-  .cup-snd { background: none; border: 1px solid rgba(239,228,214,.14); color: var(--muted); border-radius: 999px; font-size: 11px; padding: 4px 12px; margin-bottom: 30px; }
+  .cup-snd { background: none; border: 1px solid rgba(223,233,255,.14); color: var(--muted); border-radius: 999px; font-size: 11px; padding: 4px 12px; margin-bottom: 30px; }
   .cup-stage { position: relative; display: inline-block; cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: none; }
   .cup-emo { font-size: 78px; line-height: 1.1; filter: drop-shadow(0 12px 26px rgba(0,0,0,.5)); }
   .cup-steam { position: absolute; left: 50%; top: -30px; transform: translateX(-50%); display: flex; gap: 9px; pointer-events: none; }
@@ -336,10 +345,63 @@
   .cup-steam span:nth-child(3) { animation-delay: 1.7s; }
   .cup-steam.blown span { animation-duration: .7s; opacity: .25; }
   @keyframes steam { 0% { transform: translateY(10px) scaleX(1); opacity: 0; } 30% { opacity: .85; } 100% { transform: translateY(-16px) scaleX(1.4); opacity: 0; } }
-  .cup-clock { font-family: var(--disp); font-size: 34px; font-weight: 500; margin-top: 12px; letter-spacing: 1px; color: var(--filament); text-shadow: 0 0 30px var(--glow); }
+  .cup-clock { font-family: var(--disp); font-size: 34px; font-weight: 500; margin-top: 12px; letter-spacing: 1px; color: var(--filament); text-shadow: 0 0 26px rgba(255,210,77,.25); }
   .cup-hint { font-size: 12.5px; color: var(--muted); font-weight: 400; margin-top: 6px; font-style: italic; font-family: var(--disp); }
-  .cup-ghostline { margin-top: 24px; font-size: 14px; font-weight: 700; color: #e8dcc6; opacity: .9; min-height: 20px; }
+  .cup-ghostline { margin-top: 24px; font-size: 14px; font-weight: 700; color: #D6E4F5; opacity: .9; min-height: 20px; }
   @media (prefers-reduced-motion: reduce) { .cup-steam span { animation: none; } }
+  /* ===== mort's capsule machine + the collection ===== */
+  :root { --cap-c: #7B87A8; --cap-u: #4DE3FF; --cap-r: #FF4D9E; --cap-s: #FFD24D; }
+  .coll-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 12.5px; color: var(--muted); margin: 8px 2px; font-weight: 700; }
+  .coll-head b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .gm-open { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--card-hi); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-weight: 800; font-size: 14px; padding: 11px; cursor: pointer; margin: 0 0 10px; font-family: var(--bodyf); }
+  .wd-fit.tier-u { border-color: rgba(77,227,255,.45) !important; }
+  .wd-fit.tier-r { border-color: rgba(255,77,158,.5) !important; }
+  .wd-fit.tier-s { border-color: rgba(255,210,77,.55) !important; }
+  .wd-fit.lock { border-style: dashed; }
+  .gacha-scene .gm-mort { margin-bottom: 4px; }
+  .gm-machine { width: 158px; margin: 0 auto; user-select: none; -webkit-user-select: none; }
+  .gm-dome { height: 92px; border-radius: 79px 79px 10px 10px; background: rgba(223,233,255,.05); border: 1px solid var(--border); position: relative; overflow: hidden; }
+  .gm-cap { position: absolute; width: 30px; height: 30px; border-radius: 50%; bottom: 6px; border: 1px solid rgba(0,0,0,.4); }
+  .gm-cap::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 50%; background: rgba(255,255,255,.78); border-radius: 0 0 15px 15px; }
+  .gm-cap.c1 { left: 12px; background: var(--cap-u); }
+  .gm-cap.c2 { left: 46px; bottom: 11px; background: var(--cap-r); }
+  .gm-cap.c3 { left: 80px; background: var(--cap-s); }
+  .gm-cap.c4 { left: 112px; bottom: 13px; background: var(--cap-c); }
+  .gm-body { background: var(--card); border: 1px solid var(--border); border-radius: 0 0 16px 16px; padding: 12px; display: flex; align-items: center; justify-content: space-between; }
+  .gm-crank { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--muted); background: none; color: var(--text); font-size: 19.5px; cursor: pointer; line-height: 1; }
+  .gm-machine.cranking .gm-crank { animation: gm-crank 1.5s ease-in-out; }
+  @keyframes gm-crank { to { transform: rotate(720deg); } }
+  .gm-machine.cranking .gm-cap { animation: gm-rattle .55s ease-in-out 3; }
+  @keyframes gm-rattle { 50% { transform: translateY(-7px) rotate(18deg); } }
+  .gm-slot { width: 58px; height: 44px; border-radius: 10px; background: rgba(0,0,0,.35); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; position: relative; }
+  .gm-ball { width: 34px; height: 34px; border-radius: 50%; position: relative; border: 1px solid rgba(0,0,0,.4); }
+  .gm-ball::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 50%; background: rgba(255,255,255,.85); border-radius: 0 0 17px 17px; }
+  .gm-ball.t-c { background: var(--cap-c); } .gm-ball.t-u { background: var(--cap-u); } .gm-ball.t-r { background: var(--cap-r); } .gm-ball.t-s { background: var(--cap-s); }
+  .gm-ball.drop { animation: gm-drop .9s cubic-bezier(.3,1.6,.5,1); }
+  @keyframes gm-drop { from { transform: translateY(-72px); } }
+  .gm-ball.wobble { animation: gm-wob 2.3s ease-in-out; }
+  @keyframes gm-wob { 0%,100% { transform: rotate(0); } 20% { transform: rotate(-14deg); } 40% { transform: rotate(11deg); } 60% { transform: rotate(-7deg); } 80% { transform: rotate(4deg); } }
+  .gm-ball.crack { animation: gm-crack .55s ease-in forwards; }
+  @keyframes gm-crack { 55% { transform: scale(1.28); } 100% { transform: scale(0); opacity: 0; } }
+  .gm-tokens { margin-top: 14px; font-weight: 800; font-size: 16px; color: var(--text); font-variant-numeric: tabular-nums; }
+  .gm-odds { margin-top: 10px; font-size: 12.5px; color: var(--muted); font-weight: 700; line-height: 1.8; }
+  .gm-odds b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .gm-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 4px; }
+  .gm-dot.t-c { background: var(--cap-c); } .gm-dot.t-u { background: var(--cap-u); } .gm-dot.t-r { background: var(--cap-r); } .gm-dot.t-s { background: var(--cap-s); }
+  .gm-pity { margin-top: 4px; font-size: 11px; color: var(--muted); font-weight: 700; }
+  .gm-fine { margin-top: 16px; font-size: 11px; color: var(--muted); font-style: italic; font-family: var(--disp); line-height: 1.6; }
+  .gr-ring { width: 92px; height: 92px; border-radius: 50%; margin: 10px auto; display: flex; align-items: center; justify-content: center; border: 3px solid var(--cap-c); }
+  .gr-ring.t-u { border-color: var(--cap-u); box-shadow: 0 0 24px rgba(77,227,255,.22); }
+  .gr-ring.t-r { border-color: var(--cap-r); box-shadow: 0 0 24px rgba(255,77,158,.26); }
+  .gr-ring.t-s { border-color: var(--cap-s); box-shadow: 0 0 30px rgba(255,210,77,.32); }
+  .gr-hat { font-size: 34px; line-height: 1; }
+  .gr-name { font-family: var(--disp); font-size: 19.5px; color: var(--text); }
+  .gr-tier { font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-top: 3px; }
+  .gr-tier.t-c { color: var(--cap-c); } .gr-tier.t-u { color: #9BD2E8; } .gr-tier.t-r { color: #F2A9C4; } .gr-tier.t-s { color: #EFD9A0; }
+  .gr-line { font-size: 12.5px; color: var(--muted); margin-top: 8px; font-style: italic; font-family: var(--disp); }
+  .gm-confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .gm-confetti span { position: absolute; top: -20px; font-size: 12.5px; color: var(--cap-s); animation: fall 1.7s ease-in forwards; }
+  @media (prefers-reduced-motion: reduce) { .gm-machine.cranking .gm-crank, .gm-machine.cranking .gm-cap, .gm-ball.drop, .gm-ball.wobble, .gm-ball.crack { animation: none; } .gm-confetti { display: none; } }
   .post .ptext { font-size: 14px; line-height: 1.45; margin-bottom: 11px; }
   .reacts { display: flex; gap: 8px; }
   .chip { flex: 1; background: var(--screen); border: 2px solid var(--ink); border-radius: 11px; padding: 8px 4px; font-size: 12.5px; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: transform .1s, background .15s, color .15s; box-shadow: 2px 2px 0 var(--ink); font-weight: 700; }
@@ -348,20 +410,20 @@
   .chip .cnt { font-variant-numeric: tabular-nums; }
 
   .nav { position: absolute; bottom: 0; left: 0; right: 0; height: 58px; background: var(--screen); border-top: 2.5px solid var(--ink); display: flex; align-items: center; justify-content: space-around; padding-bottom: 6px; z-index: 30; }
-  .nav button { background: none; border: none; color: #a99e85; font-size: 11px; font-weight: 600; font-family: var(--disp); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; position: relative; transition: transform .15s; }
-  .nav button.on { color: var(--accent); transform: translateY(-2px); }
+  .nav button { background: none; border: none; color: #8A96B5; font-size: 11px; font-weight: 600; font-family: var(--disp); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; position: relative; transition: transform .15s; }
+  .nav button.on { color: var(--cyan-txt); transform: translateY(-2px); }
   .nav button .gi { font-size: 19.5px; transition: transform .15s; }
-  .nav button.on .gi { transform: scale(1.2) rotate(-6deg); }
-  .badge { position: absolute; top: -4px; right: -8px; background: var(--hot); color: #fff; font-size: 11px; font-weight: 800; min-width: 17px; height: 17px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 4px; border: 1.5px solid var(--ink); }
+  .nav button.on .gi { transform: scale(1.2) rotate(-6deg); filter: drop-shadow(0 0 8px rgba(77,227,255,.5)); }
+  .badge { position: absolute; top: -4px; right: -8px; background: var(--hot); color: #14060F; font-size: 11px; font-weight: 800; min-width: 17px; height: 17px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 4px; border: 1.5px solid var(--ink); }
 
-  .toast { position: absolute; left: 50%; bottom: 96px; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--screen); font-weight: 700; font-size: 14px; padding: 11px 18px; border-radius: 30px; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 60; box-shadow: 3px 3px 0 rgba(34,28,51,.25); max-width: 80%; text-align: center; }
+  .toast { position: absolute; left: 50%; bottom: 96px; transform: translateX(-50%) translateY(20px); background: #EAF4FF; color: #0A0E1A; font-weight: 700; font-size: 14px; padding: 11px 18px; border-radius: 30px; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 60; box-shadow: 0 10px 30px -12px rgba(0,0,0,.7); max-width: 80%; text-align: center; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   @keyframes fall { to { transform: translateY(900px) rotate(360deg); opacity: 0; } }
 
   .fav-link { position: absolute; top: 4px; right: 46px; width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); font-size: 19.5px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); transition: transform .12s; }
   .fav-link:active { transform: scale(.88); }
   .order-real { display: block; width: 100%; text-align: center; background: none; border: none; color: var(--muted); font-size: 12.5px; text-decoration: underline; margin-top: 14px; cursor: pointer; }
-  .modal-bg { position: absolute; inset: 0; background: rgba(8,6,5,.74); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; z-index: 70; padding: 24px; }
+  .modal-bg { position: absolute; inset: 0; background: rgba(4,7,14,.74); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; z-index: 70; padding: 24px; }
   .modal { background: var(--card-hi); border: 1px solid var(--border); border-radius: 20px; padding: 22px; width: 100%; max-width: 322px; text-align: center; animation: fade .2s ease; box-shadow: 0 24px 60px -20px rgba(0,0,0,.7); }
   .modal .m-emoji { font-size: 34px; }
   .modal .m-title { font-family: var(--disp); font-size: 19.5px; font-weight: 500; margin: 8px 0; color: var(--text); }
@@ -372,16 +434,16 @@
   .profile-card .ph { font-size: 19.5px; font-weight: 800; margin-top: 6px; }
   .profile-card .pe { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
   @media (display-mode: standalone) { .statusbar, .notch { display: none !important; } }
-  .kept-owner { font-family: var(--disp); font-weight: 500; font-size: 34px; color: var(--filament); text-align: center; margin: 6px 0 14px; text-shadow: 0 0 28px rgba(240,168,74,.35); }
+  .kept-owner { font-family: var(--disp); font-weight: 500; font-size: 34px; color: var(--filament); text-align: center; margin: 6px 0 14px; text-shadow: 0 0 28px rgba(255,210,77,.30); }
   .wardrobe .wd-empty { color: var(--muted); font-size: 12.5px; align-self: center; }
   .kept-owner .ko-k { display: block; font-family: var(--bodyf); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); text-shadow: none; margin-top: 2px; }
   .pstats { display: flex; gap: 10px; margin-bottom: 10px; }
   .pstat { flex: 1; background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 14px 10px; text-align: center; box-shadow: 2px 2px 0 var(--ink); }
   .pstat .v { font-size: 19.5px; font-weight: 800; }
-  .pstat .v.green { color: var(--go); } .pstat .v.streak { color: #d98324; }
+  .pstat .v.green { color: var(--go); } .pstat .v.streak { color: #EFD9A0; }
   .pstat .k { font-size: 11px; color: var(--muted); margin-top: 3px; font-weight: 700; }
   .signin-btn { width: 100%; padding: 14px; border-radius: 14px; border: 2px solid var(--ink); background: var(--card); color: var(--text); font-weight: 800; font-size: 14px; cursor: pointer; margin: 10px 0 0; box-shadow: 2px 2px 0 var(--ink); }
-  .signin-btn.dark { background: var(--ink); color: var(--screen); }
+  .signin-btn.dark { background: #EAF4FF; color: #0A0E1A; }
   .tier-card { background: var(--card-hi); border: 2.5px solid var(--ink); border-radius: 16px; padding: 14px; margin-bottom: 14px; box-shadow: 4px 4px 0 var(--ink); }
   .tier-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
   .tier-ic { font-size: 34px; }
@@ -401,24 +463,24 @@
   @keyframes ccGlow { 0%,100%{ box-shadow: 4px 4px 0 var(--ink), 0 0 18px 1px color-mix(in srgb, var(--rc) 45%, transparent); } 50%{ box-shadow: 4px 4px 0 var(--ink), 0 0 30px 5px color-mix(in srgb, var(--rc) 75%, transparent); } }
   /* ----- game layer: xp bar, combo, surprise, achievements, food backdrop ----- */
   .xp-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-  .xp-lvl { font-size: 12.5px; font-weight: 800; color: #d98324; white-space: nowrap; }
+  .xp-lvl { font-size: 12.5px; font-weight: 800; color: #EFD9A0; white-space: nowrap; }
   .xp-track { flex: 1; height: 10px; background: var(--card-hi); border: 2px solid var(--ink); border-radius: 6px; overflow: hidden; }
   .xp-fill { height: 100%; background: var(--grad); transition: width .5s ease; }
   .xp-xp { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .feed-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 4px 2px 10px; }
-  .surprise { background: var(--card); border: 2px solid var(--ink); color: var(--accent); font-weight: 800; font-size: 12.5px; padding: 7px 12px; border-radius: 16px; cursor: pointer; transition: transform .1s; box-shadow: 2px 2px 0 var(--ink); white-space: nowrap; flex: 0 0 auto; }
+  .surprise { background: var(--card); border: 2px solid var(--ink); color: var(--cyan-txt); font-weight: 800; font-size: 12.5px; padding: 7px 12px; border-radius: 16px; cursor: pointer; transition: transform .1s; box-shadow: 2px 2px 0 var(--ink); white-space: nowrap; flex: 0 0 auto; }
   .surprise:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
   .combo { margin-top: 10px; display: inline-block; background: var(--accent2); color: var(--ink); font-weight: 800; font-size: 14px; padding: 8px 16px; border-radius: 16px; border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); animation: pop .45s ease; }
   @keyframes pop { 0%{transform:scale(.5);opacity:0;} 60%{transform:scale(1.15);} 100%{transform:scale(1);opacity:1;} }
   .lvl-card { background: var(--card); border: 2px solid var(--ink); border-radius: 16px; padding: 14px; margin-bottom: 14px; box-shadow: 2px 2px 0 var(--ink); }
   .lvl-top { display: flex; justify-content: space-between; font-weight: 800; font-size: 14px; margin-bottom: 10px; }
   .achv-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
-  .achv { background: var(--card); border: 2px solid #d9cbab; border-radius: 16px; padding: 10px 4px; text-align: center; filter: grayscale(1); opacity: .55; }
+  .achv { background: var(--card); border: 2px solid #3A4666; border-radius: 16px; padding: 10px 4px; text-align: center; filter: grayscale(1); opacity: .55; }
   .achv.on { opacity: 1; filter: none; border-color: var(--ink); background: var(--card-hi); box-shadow: 2px 2px 0 var(--ink); }
   .achv-ic { font-size: 24px; }
   .achv-name { font-size: 11px; font-weight: 700; margin-top: 4px; }
   .achv-tip { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.2; }
-  .achv.drv .drv-veh { font-size: 24px; width: 40px; height: 40px; margin: 0 auto 2px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--card); border: 2px solid #d9cbab; }
+  .achv.drv .drv-veh { font-size: 24px; width: 40px; height: 40px; margin: 0 auto 2px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--card); border: 2px solid #3A4666; }
   .achv.drv.on .drv-veh { font-size: 34px; background: color-mix(in srgb, var(--rc) 16%, #fff); border: 2.5px solid var(--rc); box-shadow: inset 0 0 0 2px #fff; }
   @keyframes drift { 0%{ transform: translateY(0) rotate(0deg); } 100%{ transform: translateY(-220px) rotate(45deg); } }
 
@@ -462,21 +524,34 @@
   .city-search { width: 100%; box-sizing: border-box; background: var(--screen); border: 2px solid var(--ink); border-radius: 12px; padding: 10px 12px; font-family: var(--bodyf); font-weight: 700; font-size: 14px; color: var(--text); outline: none; margin-bottom: 10px; }
   .city-modal-list { max-height: 46vh; overflow-y: auto; text-align: left; }
   .city-modal-list::-webkit-scrollbar { display: none; }
-  .cm-label { font-size: 11px; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: .5px; margin: 10px 2px 7px; }
-  .cm-chips { display: flex; flex-wrap: wrap; gap: 7px; }
-  .city-chip.cm { font-size: 12.5px; padding: 7px 11px; }
+  /* ===== DEPARTURES board — the city modal as a night-flight split-flap board ===== */
+  .board-hd { font-family: var(--bodyf); font-weight: 800; font-size: 19.5px; letter-spacing: 2.5px; color: var(--cyan); text-shadow: 0 0 16px rgba(77,227,255,.45); margin: 4px 0 0; text-align: left; }
+  .board-sub { font-size: 11px; color: var(--muted); letter-spacing: .4px; margin: 3px 0 10px; text-align: left; }
+  .flap-gap { display: flex; align-items: center; gap: 8px; font-family: var(--bodyf); font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin: 12px 2px 2px; }
+  .flap-gap::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+  .board-row { display: flex; align-items: baseline; gap: 8px; width: 100%; background: var(--card); border: none; border-bottom: 1px solid var(--border); border-radius: 0; padding: 9px 4px; cursor: pointer; text-align: left; font-family: var(--bodyf); font-size: 14px; font-weight: 800; letter-spacing: .6px; color: var(--head); transform-origin: top center; animation: flapIn .32s ease both; animation-delay: var(--d,0ms); }
+  .board-row .br-flag { flex: 0 0 auto; }
+  .board-row .br-name { flex: 0 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .board-row .br-dots { flex: 1; min-width: 14px; border-bottom: 2px dotted #26324F; transform: translateY(-3px); }
+  .board-row .br-st { flex: 0 0 auto; font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--yell-txt); }
+  .board-row .br-st.cyan { color: var(--cyan-txt); }
+  .board-row .br-st.pink { color: var(--pink-txt); }
+  .board-row.here, .board-row:active { background: var(--card-hi); }
+  .board-row.here .br-st { color: var(--cyan-txt); }
+  @keyframes flapIn { from { opacity: 0; transform: translateY(-6px) rotateX(65deg); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .board-row { animation: none; } }
   /* ----- detail: editorial blurb ----- */
   .d-desc { color: var(--muted); font-size: 12.5px; line-height: 1.45; margin-top: 6px; font-style: italic; }
   /* ----- cart: deliver-to line ----- */
   .deliver-to { text-align: center; color: var(--muted); font-size: 12.5px; font-weight: 700; margin: 2px 0 10px; }
-  .dt-change { color: var(--accent); text-decoration: underline; cursor: pointer; }
+  .dt-change { color: var(--cyan-txt); text-decoration: underline; cursor: pointer; }
   /* ----- tracking: ghost driver texts ----- */
   .dchat { margin: 14px auto 0; max-width: 300px; text-align: left; }
   .dmsg { background: var(--card); border: 2px solid var(--ink); border-radius: 14px; border-bottom-left-radius: 4px; padding: 9px 12px; font-size: 12.5px; margin-bottom: 8px; box-shadow: 2px 2px 0 var(--ink); animation: fade .3s ease; }
-  .dmsg b { color: var(--accent); }
+  .dmsg b { color: var(--cyan-txt); }
   /* ----- room: podium + confess chips + streak badges ----- */
   .prow.mine { background: var(--card-hi); border: 2px dashed var(--accent); border-radius: 10px; padding: 5px 8px; }
-  .prow.mine .pn { color: var(--accent); }
+  .prow.mine .pn { color: var(--cyan-txt); }
   .prompts { display: flex; align-items: center; gap: 7px; margin: 0 0 5px; padding-bottom: 5px; overflow-x: auto; }
   .prompts::-webkit-scrollbar { display: none; }
   .pchip { background: var(--card); border: 2px solid var(--ink); border-radius: 12px; font-size: 19.5px; padding: 6px 10px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); transition: transform .1s; flex: 0 0 auto; }
@@ -493,10 +568,50 @@
   .hub-tile { flex: 1; background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 12px 6px; font-family: var(--disp); font-weight: 600; font-size: 11px; color: var(--text); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; box-shadow: 3px 3px 0 var(--ink); transition: transform .1s, box-shadow .1s; }
   .hub-tile:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
   .hub-tile .ht-ic { font-size: 24px; }
-  /* ----- konbini corner store ----- */
-  .kb-head { text-align: center; margin: 4px 0 14px; }
-  .kb-head .kb-title { font-family: var(--disp); font-weight: 700; font-size: 24px; }
-  .kb-head .kb-tag { color: var(--muted); font-size: 12.5px; font-weight: 700; margin-top: 2px; }
+  /* ----- KONBINI v2: the 24h corner store (Neon Konbini, scoped) -----
+     glow only on display-size type (>=19.5px); text-size color uses desaturated tints;
+     the sign flicker is the app's ONE flicker moment and respects reduced-motion. */
+  #view-konbini, .kb-banner, #kb-overlay { --kb-ground:#0A0E1A; --kb-panel:#0F1526; --kb-hi:#141B30; --kb-line:#1C2742; --kb-cyan:#4DE3FF; --kb-pink:#FF4D9E; --kb-cyan-t:#9BD2E8; --kb-pink-t:#F2A9C4; --kb-yellow-t:#EFD9A0; --kb-mut:#7B87A8; --kb-head:#EAF4FF; --kb-body:#DFE9FF; }
+  .kb-sign { text-align: center; margin: 6px 0 14px; padding: 18px 12px 14px; background: var(--kb-ground); border: 1px solid var(--kb-line); border-radius: 18px; }
+  .kb-neon { font-family: var(--bodyf); font-weight: 800; font-size: 34px; letter-spacing: 3px; color: var(--kb-cyan); text-shadow: 0 0 6px rgba(77,227,255,.7), 0 0 22px rgba(77,227,255,.4), 0 0 46px rgba(77,227,255,.22); animation: kbFlick 9s linear infinite; }
+  .kb-neon .kb-24 { color: var(--kb-pink); text-shadow: 0 0 6px rgba(255,77,158,.7), 0 0 22px rgba(255,77,158,.4); }
+  @keyframes kbFlick { 0%,93%,95.5%,100%{ opacity:1; } 94%,95%{ opacity:.55; } }
+  @media (prefers-reduced-motion: reduce){ .kb-neon { animation: none; } }
+  .kb-tag { font-family: var(--disp); font-style: italic; font-size: 14px; color: var(--kb-mut); margin-top: 4px; }
+  .kb-open { display: inline-block; margin-top: 9px; font-size: 11px; font-weight: 800; letter-spacing: .14em; color: var(--kb-yellow-t); border: 1px solid rgba(255,210,77,.45); border-radius: 999px; padding: 3px 10px; }
+  .kb-aisle { font-family: var(--bodyf); font-weight: 800; font-size: 19.5px; letter-spacing: 2px; color: var(--kb-cyan); text-shadow: 0 0 14px rgba(77,227,255,.35); margin: 18px 2px 8px; }
+  .kb-aisle .ka-ic { font-size: 16px; margin-right: 6px; }
+  .kb-item { display: flex; align-items: center; gap: 12px; background: var(--kb-panel); border: 1px solid var(--kb-line); border-radius: 14px; padding: 10px 12px; margin-bottom: 8px; }
+  .kb-ic { font-size: 24px; width: 34px; text-align: center; }
+  .kb-mid { flex: 1; min-width: 0; }
+  .kb-n { font-weight: 700; font-size: 14px; color: var(--kb-head); }
+  .kb-sub { color: var(--kb-mut); font-size: 11px; font-weight: 600; }
+  .kb-p { font-family: var(--bodyf); font-weight: 800; font-size: 14px; color: var(--kb-pink-t); }
+  .kb-add { width: 36px; height: 36px; border-radius: 11px; border: 1px solid rgba(77,227,255,.4); background: var(--kb-hi); color: var(--kb-cyan-t); font-size: 19.5px; cursor: pointer; flex: 0 0 auto; }
+  .kb-add:active { transform: scale(.92); }
+  .kb-fic { text-align: center; color: var(--kb-mut); font-size: 12.5px; margin: 14px 0 8px; }
+  .kb-basket { position: sticky; bottom: 64px; z-index: 5; background: var(--kb-ground); border: 1px solid var(--kb-line); border-radius: 16px; padding: 10px; margin-top: 10px; box-shadow: 0 -10px 30px rgba(4,7,15,.6); }
+  .kb-b-items { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; }
+  .kb-b-items::-webkit-scrollbar { display: none; }
+  .kb-b-it { flex: 0 0 auto; background: var(--kb-panel); border: 1px solid var(--kb-line); border-radius: 10px; font-size: 19.5px; padding: 5px 8px; cursor: pointer; }
+  .kb-b-go { width: 100%; border: none; border-radius: 13px; padding: 13px; font-family: var(--bodyf); font-weight: 800; font-size: 16px; color: #2A0714; background: linear-gradient(135deg, #FF4D9E, #FF7A4D); cursor: pointer; box-shadow: 0 10px 26px -12px rgba(255,77,158,.5); }
+  .kb-b-go:active { transform: translateY(1px); }
+  .kb-banner { width: 100%; display: flex; align-items: center; gap: 11px; text-align: left; background: var(--kb-ground); border: 1px solid var(--kb-line); border-radius: 16px; padding: 11px 13px; margin: 0 0 12px; cursor: pointer; color: var(--kb-body); }
+  .kb-banner .kb-bn-ic { font-size: 24px; }
+  .kb-banner .kb-bn-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .kb-banner .kb-bn-text b { font-family: var(--bodyf); font-weight: 800; font-size: 14px; letter-spacing: 1.5px; color: var(--kb-cyan-t); }
+  .kb-banner .kb-bn-sub { font-size: 11px; color: var(--kb-mut); font-weight: 600; }
+  .kb-banner .kb-bn-go { font-size: 24px; color: var(--kb-mut); }
+  .kb-link { color: var(--cyan-txt); font-weight: 800; cursor: pointer; text-decoration: underline; }
+  .kb-snack-line { text-align: center; color: var(--muted); font-size: 12.5px; font-weight: 700; margin: -8px 0 14px; }
+  /* snack-run overlay (navy override of the cup ground) */
+  #kb-overlay.cup-ov { background: #0A0E1A; background-image: radial-gradient(90% 62% at 50% 42%, #141B30 0%, #0F1526 54%, #070A12 100%); }
+  .kb-run-mort { font-size: 78px; line-height: 1.1; animation: kbDash 1.4s ease-in-out infinite alternate; }
+  @keyframes kbDash { from{ transform: translateX(-26px); } to{ transform: translateX(26px); } }
+  @media (prefers-reduced-motion: reduce){ .kb-run-mort { animation: none; } }
+  .kb-run-line { margin-top: 18px; font-size: 14px; font-weight: 600; color: var(--kb-mut); min-height: 20px; }
+  .kb-reveal-line { font-family: var(--disp); font-size: 24px; font-weight: 500; color: var(--kb-head); margin-top: 14px; line-height: 1.35; }
+  .kb-tab-line { margin-top: 10px; font-size: 12.5px; font-weight: 700; color: var(--kb-pink-t); }
   /* ----- restaurant menu ----- */
   .mcourse { font-family: var(--disp); font-weight: 600; font-size: 14px; margin: 16px 2px 8px; }
   .mrow { display: flex; align-items: flex-start; gap: 12px; background: var(--card); border: 2px solid var(--ink); border-radius: 16px; padding: 10px; margin-bottom: 10px; box-shadow: 2px 2px 0 var(--ink); }
@@ -506,12 +621,12 @@
   .mmid { flex: 1; min-width: 0; align-self: stretch; display: flex; flex-direction: column; }
   .mname { font-size: 14px; font-weight: 800; line-height: 1.2; }
   .mblurb { font-size: 11px; font-style: italic; font-weight: 600; color: var(--muted); line-height: 1.3; margin-top: 3px; }
-  .mprice { font-family: var(--disp); font-weight: 600; font-size: 14px; color: var(--accent); white-space: nowrap; margin-top: auto; padding-top: 6px; }
-  .madd { width: 36px; height: 36px; flex: 0 0 36px; align-self: center; border-radius: 11px; border: 2px solid var(--ink); background: var(--grad); color: #1A1109; font-size: 19.5px; line-height: 1; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; }
+  .mprice { font-family: var(--disp); font-weight: 600; font-size: 14px; color: var(--pink-txt); white-space: nowrap; margin-top: auto; padding-top: 6px; }
+  .madd { width: 36px; height: 36px; flex: 0 0 36px; align-self: center; border-radius: 11px; border: 2px solid var(--ink); background: var(--grad); color: #0A0E1A; font-size: 19.5px; line-height: 1; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; }
   .madd:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
   /* ----- stats modal ----- */
   .stats-list { text-align: left; margin: 4px 0 10px; max-height: 42vh; overflow-y: auto; }
-  .stat-row { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 4px; border-bottom: 2px dashed #d9cbab; }
+  .stat-row { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 4px; border-bottom: 2px dashed #3A4666; }
   .stat-row .sc-cur { font-family: var(--disp); font-weight: 600; font-size: 14px; }
   .stat-row .sc-usd { color: var(--muted); font-weight: 700; font-size: 12.5px; }
   .stat-total { display: flex; justify-content: space-between; align-items: center; padding: 10px 4px 0; font-weight: 800; }
@@ -561,8 +676,8 @@
   }
   /* ----- coupons + new badge + spotlight ----- */
   .thumb { position: relative; }
-  .coupon-rib { position: absolute; bottom: -2px; left: -2px; background: var(--hot); color: #fff; font-family: var(--disp); font-weight: 700; font-size: 11px; padding: 2px 6px; border: 2px solid var(--ink); border-radius: 9px 9px 9px 4px; box-shadow: 1px 1px 0 var(--ink); white-space: nowrap; }
-  .new-chip { display: inline-block; background: var(--grad); color: #1A1109; font-weight: 800; font-size: 11px; padding: 1px 6px; border-radius: 8px; border: 1.5px solid var(--ink); margin-left: 4px; vertical-align: middle; }
+  .coupon-rib { position: absolute; bottom: -2px; left: -2px; background: var(--hot); color: #14060F; font-family: var(--disp); font-weight: 700; font-size: 11px; padding: 2px 6px; border: 2px solid var(--ink); border-radius: 9px 9px 9px 4px; box-shadow: 1px 1px 0 var(--ink); white-space: nowrap; }
+  .new-chip { display: inline-block; background: var(--grad); color: #0A0E1A; font-weight: 800; font-size: 11px; padding: 1px 6px; border-radius: 8px; border: 1.5px solid var(--ink); margin-left: 4px; vertical-align: middle; }
   .spotlight.done { opacity: .78; box-shadow: 3px 3px 0 var(--ink); }
   /* big photo banner */
   .spotlight .sp-photo .ph-img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -584,16 +699,16 @@
   .cb-row .cb-name { flex: 1; color: var(--muted); }
   .cb-row b { color: var(--go); font-variant-numeric: tabular-nums; }
   .cb-row.mine { background: var(--card-hi); border: 2px dashed var(--accent); border-radius: 10px; padding: 5px 8px; }
-  .cb-row.mine .cb-name { color: var(--accent); }
+  .cb-row.mine .cb-name { color: var(--cyan-txt); }
   /* ----- wrapped ----- */
   .wrap-stats { text-align: left; margin: 4px 0 12px; }
-  .ws-row { display: flex; justify-content: space-between; align-items: baseline; padding: 9px 4px; border-bottom: 2px dashed #d9cbab; font-weight: 700; }
+  .ws-row { display: flex; justify-content: space-between; align-items: baseline; padding: 9px 4px; border-bottom: 2px dashed #3A4666; font-weight: 700; }
   .ws-row b { font-family: var(--disp); font-size: 19.5px; }
   /* ----- corner store banner (prominent on the feed) ----- */
   /* corner-store + random row */
 
   /* ----- discovery #1-8: deals, Mort's pick, variety, must-try, crawls, filters ----- */
-  .seg button span { opacity: .65; font-size: 11px; }
+  .seg button span { font-size: 11px; }
   .fh-btns { display: flex; gap: 6px; flex: 0 0 auto; }
   .morts-pick { width: 100%; display: flex; align-items: center; gap: 11px; text-align: left; background: var(--neon); border: 2.5px solid var(--ink); border-radius: 16px; padding: 11px 13px; margin-bottom: 12px; box-shadow: 0 5px 0 var(--ink); cursor: pointer; color: #fff; transition: transform .08s, box-shadow .08s; }
   .morts-pick:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
@@ -603,7 +718,7 @@
   .morts-pick .mp-quip { font-size: 12.5px; font-weight: 600; opacity: .92; font-style: italic; margin-top: 1px; }
   .morts-pick .mp-go { font-size: 24px; font-weight: 800; flex: 0 0 auto; }
   .variety { background: var(--card-hi); border: 2px solid var(--ink); border-radius: 12px; padding: 8px 12px; margin-bottom: 12px; font-size: 12.5px; font-weight: 700; color: var(--text); box-shadow: 2px 2px 0 var(--ink); }
-  .variety.done { background: var(--grad); color: #1A1109; }
+  .variety.done { background: var(--grad); color: #0A0E1A; }
   .variety b { font-family: var(--disp); }
   .must-card { background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 10px 12px; margin-bottom: 14px; box-shadow: 3px 3px 0 var(--ink); }
   .must-card .mt-head { font-family: var(--disp); font-weight: 700; font-size: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
@@ -614,12 +729,12 @@
   .mt-row.got .mt-check { color: var(--go); }
   .mt-row .mt-name { flex: 1; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .mt-row.got .mt-name { color: var(--muted); }
-  .mt-row .mt-stars { flex: 0 0 auto; font-size: 12.5px; font-weight: 800; color: var(--accent); }
+  .mt-row .mt-stars { flex: 0 0 auto; font-size: 12.5px; font-weight: 800; color: var(--yell-txt); }
   .feed-filters { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin: -4px 0 6px; scrollbar-width: none; }
   .feed-filters::-webkit-scrollbar { display: none; }
   .feed-filters:empty { display: none; }
   .ffilt { flex: 0 0 auto; background: var(--card); border: 2px solid var(--ink); border-radius: 11px; padding: 5px 11px; font-weight: 800; font-size: 12.5px; color: var(--muted); cursor: pointer; box-shadow: 1.5px 1.5px 0 var(--ink); text-transform: capitalize; white-space: nowrap; }
-  .ffilt.on { background: var(--accent); color: #1A1109; }
+  .ffilt.on { background: var(--accent); color: #0A0E1A; }
 
   /* ----- feed declutter: brand live pill, collapsible drawers, consolidated controls ----- */
   .brand .live-pill { display: flex; align-items: center; gap: 6px; margin-top: 7px; font-size: 12.5px; font-weight: 800; color: var(--muted); min-height: 18px; white-space: nowrap; }
@@ -630,7 +745,7 @@
   .drawer .dr-head { width: 100%; display: flex; align-items: center; gap: 9px; background: none; border: none; padding: 11px 13px; cursor: pointer; text-align: left; }
   .drawer .dr-lead { font-size: 19.5px; flex: 0 0 auto; line-height: 1; }
   .drawer .dr-teaser { flex: 1; min-width: 0; font-family: var(--disp); font-weight: 700; font-size: 14px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .35s, transform .35s; }
-  .drawer .dr-mult { flex: 0 0 auto; background: var(--hot); color: #fff; border: 2px solid var(--ink); border-radius: 8px; padding: 1px 7px; font-size: 11px; font-weight: 800; box-shadow: 1px 1px 0 var(--ink); white-space: nowrap; }
+  .drawer .dr-mult { flex: 0 0 auto; background: var(--hot); color: #14060F; border: 2px solid var(--ink); border-radius: 8px; padding: 1px 7px; font-size: 11px; font-weight: 800; box-shadow: 1px 1px 0 var(--ink); white-space: nowrap; }
   #more .dr-mult { background: var(--accent2); color: var(--ink); }
   .drawer .dr-caret { flex: 0 0 auto; font-size: 12.5px; color: var(--muted); transition: transform .2s; }
   .drawer.open .dr-caret { transform: rotate(180deg); }
@@ -649,7 +764,7 @@
   .ex-city:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
   .passport { background: var(--card); border: 2.5px solid var(--ink); border-radius: 14px; padding: 10px 13px; margin: 10px 0 12px; box-shadow: 3px 3px 0 var(--ink); }
   .passport .pp-top { display: flex; align-items: center; gap: 7px; font-weight: 800; font-size: 12.5px; margin-bottom: 7px; }
-  .passport .pp-top b { font-family: var(--disp); color: var(--accent); }
+  .passport .pp-top b { font-family: var(--disp); color: var(--cyan-txt); }
   .passport .pp-saved { margin-left: auto; color: var(--muted); font-size: 12.5px; }
   .passport .pp-bar { height: 12px; background: var(--screen); border: 2px solid var(--ink); border-radius: 8px; overflow: hidden; }
   .passport .pp-fill { height: 100%; background: var(--accent2); border-right: 2px solid var(--ink); transition: width .4s ease; }
@@ -660,11 +775,10 @@
   .pp-stamp { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 46px; height: 46px; border: 2px solid var(--ink); border-radius: 50%; background: var(--screen); box-shadow: 2px 2px 0 var(--ink); cursor: pointer; line-height: 1; transition: transform .1s; }
   .pp-stamp:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
   .pp-stamp .pps-hat { font-size: 19.5px; }
-  .pp-stamp .pps-n { font-size: 11px; font-weight: 800; font-family: var(--disp); color: var(--accent); margin-top: 1px; }
+  .pp-stamp .pps-n { font-size: 11px; font-weight: 800; font-family: var(--disp); color: var(--cyan-txt); margin-top: 1px; }
   .pp-stamp.add { border-style: dashed; color: var(--accent); box-shadow: none; font-size: 19.5px; font-weight: 800; }
   #explore-city-bar.city-bar { margin: 2px 0 8px; }
-  .city-chip .cc-stamp { font-size: 11px; opacity: .9; }
-  .efilter.on { background: var(--ink); color: var(--screen); }
+  .efilter.on { background: #EAF4FF; color: #0A0E1A; }
   /* activity cards — match the restaurant card layout for a consistent feel */
   .acard.saved { background: var(--card-hi); border-color: var(--go); }
   .ac-thumb { width: 118px; height: 118px; flex: 0 0 118px; align-self: center; position: relative; border-radius: 15px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--card-hi); border: 2.5px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); font-size: 34px; }
@@ -675,11 +789,11 @@
   .ac-name { font-family: var(--disp); font-weight: 500; font-size: 19.5px; line-height: 1.1; color: var(--text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .ac-sub { font-size: 12.5px; color: var(--muted); font-weight: 600; margin-top: 3px; text-transform: capitalize; }
   .ac-row { display: flex; align-items: center; gap: 7px; margin-top: 7px; font-size: 12.5px; color: var(--muted); font-weight: 600; }
-  .ac-row .ac-rate { color: #d98324; font-weight: 800; }
+  .ac-row .ac-rate { color: #EFD9A0; font-weight: 800; }
   .ac-row .ac-w { font-size: 12.5px; }
-  .ac-cost { margin-top: auto; padding-top: 7px; font-family: var(--disp); font-weight: 700; font-size: 16px; color: var(--accent); }
+  .ac-cost { margin-top: auto; padding-top: 7px; font-family: var(--disp); font-weight: 700; font-size: 16px; color: var(--pink-txt); }
   .ac-cost .ac-free { color: var(--go); }
-  .ac-save { position: absolute; top: 50%; right: 11px; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); color: #c9bfa6; font-size: 24px; line-height: 1; display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0 var(--ink); }
+  .ac-save { position: absolute; top: 50%; right: 11px; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--ink); background: var(--card); color: #A9B4CE; font-size: 24px; line-height: 1; display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0 var(--ink); }
   .ac-save.on { color: var(--accent2); background: var(--card-hi); }
   .acard.saved .ac-save { color: var(--go); border-color: var(--go); }
 
@@ -749,6 +863,8 @@
             <div class="section-label feed-craving" id="feed-section-label">craving right now</div>
           </div>
 
+          <button class="kb-banner" onclick="openKonbini()"><span class="kb-bn-ic">🏪</span><span class="kb-bn-text"><b>CARTED 24H</b><span class="kb-bn-sub">snack runs · open all night</span></span><span class="kb-bn-go">›</span></button>
+
           <div id="feed-list"></div>
 
           <div class="osm-credit">fictional places, real cities · dish data &amp; photos from <a href="https://www.themealdb.com" target="_blank" rel="noopener" style="color:inherit">TheMealDB</a></div>
@@ -778,12 +894,13 @@
           <div class="brand">
             <h1 style="font-size:24px">the 2 am room</h1>
             <div class="live2"><span class="dot"></span> <b style="color:var(--slate);font-weight:700" id="room-awake">the room's awake</b> · <span id="room-burn-top">🌅 —</span></div>
-            <div class="ghost-note">👻 = resident ghost — friendly fiction, not people.</div>
+            <div class="ghost-note">👻 = friendly fiction, not people.</div>
             <div id="room-nod"></div>
           </div>
           <div id="room-podium"></div>
           <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a 3-minute break</span><span class="cbr-shelf" id="cup-shelf"></span></span><span class="cbr-go">›</span></button>
           <button id="silence-toggle" class="silence-btn" onclick="toggleSilence()">🤫 quiet corner</button>
+          <button class="table-line" id="table-line" onclick="tableToComposer()"></button>
           <div class="composer"><input id="composer-input" aria-label="say something to the room" placeholder="say it quietly — it burns at sunrise" maxlength="90" /><button onclick="postFromComposer()">post</button></div>
           <div class="prompts"><button class="pchip" onclick="quickConfess('🍕')">🍕</button><button class="pchip" onclick="quickConfess('🍜')">🍜</button><button class="pchip" onclick="quickConfess('🍣')">🍣</button><button class="pchip" onclick="quickConfess('🌮')">🌮</button><button class="pchip" onclick="quickConfess('🍔')">🍔</button><button class="pchip" onclick="quickConfess('🍰')">🍰</button></div>
           <div class="room-rules-line">be kind · <a href="terms.html" target="_blank" rel="noopener">rules</a> · 🚩 report</div>
@@ -827,7 +944,19 @@
         </section>
 
         <!-- KONBINI (24h corner store) -->
-
+        <section class="view" id="view-konbini">
+          <button class="back" onclick="go('feed')">‹ back</button>
+          <div class="kb-sign">
+            <div class="kb-neon">CARTED <span class="kb-24">24H</span></div>
+            <div class="kb-tag">the corner store never closes</div>
+            <div class="kb-open">OPEN 24H</div>
+          </div>
+          <div id="konbini-aisles"></div>
+          <div class="kb-fic">👻 every shelf is fiction — that's why it's free</div>
+          <div class="kb-basket" id="kb-basket" style="display:none">
+            <div class="kb-b-items" id="kb-b-items"></div>
+            <button class="kb-b-go" onclick="snackRun()">snack run 🛵 <b id="kb-b-total"></b></button>
+          </div>
         </section>
 
       </div>
@@ -1140,8 +1269,8 @@ function eventNight(){ const k=nightKey(); return EVENT_NIGHTS.find(e=>e.when(k)
    room had zero ghosts awake for the whole 22:00 hour.) */
 function schedMin(s){ const m=String(s||"").replace("~","").split(":"); let h=parseInt(m[0])||0; if(h===12) h=0; else if(h>=6) h+=12; return h*60 + (parseInt(m[1])||0); }
 function ghostAwakeNow(g){ const now=new Date(); const nm=now.getHours()*60+now.getMinutes(); const gm=schedMin(g.sched); let d=Math.abs(nm-gm); d=Math.min(d,1440-d); return d<=90; }   // within 90 min of its hour
-const REACT_META = { hug:"🫂", me:"😋" };   // 'send it' retired — hype is the one register a leveler can't own
-const REACT_LBL  = { hug:"hang in", me:"me too" };   // 😋 is our 저도요; labels teach once, then retire to a11y
+const REACT_META = { hug:"🫂", me:"😋", hold:"🕯️" };   // 'send it' retired — hype is the one register a leveler can't own
+const REACT_LBL  = { hug:"hang in", me:"me too", hold:"hold til sunrise" };   // 😋 is our 저도요; labels teach once, then retire to a11y
 function reactLbl(t){ let taught=false; try{ taught=!!localStorage.getItem("carted_reacted"); }catch(e){}
   return taught ? "" : `<span class="rlbl">${REACT_LBL[t]}</span>`; }
 const OVERPASS = ["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter","https://maps.mail.ru/osm/tools/overpass/api/interpreter"];
@@ -1154,7 +1283,7 @@ function applyNight(){ document.body.classList.toggle("night", isNight()); }
 /* ---- state ---- */
 let cart = [], liveBase = 1247, courierTimers = [], room = [], lastOrderItems = [], pendingOrder = null;
 let curIdx = 0, currentDetailKey = null, GEO_SEQ = 0;
-let account = null, stats = { savedUsd:0, orders:0, streak:0, conversions:0, xp:0, cuisines:[], cities:[], maxCombo:0, earned:[], freezes:1, lastNight:null, quests:null }, handoffTarget = null, combo = 0;
+let account = null, stats = { savedUsd:0, snackUsd:0, orders:0, streak:0, conversions:0, xp:0, cuisines:[], cities:[], maxCombo:0, earned:[], freezes:1, lastNight:null, quests:null, capsuleTokens:0, capsuleOwned:[], capsuleMilestone:0, capsuleLastNight:null, pitySince:0, capsuleMigrated:0 }, handoffTarget = null, combo = 0;
 let sndOn = (localStorage.getItem("carted_snd")!=null) ? localStorage.getItem("carted_snd")!=="off" : false, lastTap = {x:195, y:420}, lastShare = null;   // sounds default OFF at night
 const placeByKey = {}, CITY_INDEX = {};
 
@@ -1434,21 +1563,21 @@ function shareWin(mode){ track("share",{k:"win"});
   if(!s){ toast("nothing to share yet"); return; }
   const cv=document.createElement("canvas"); cv.width=1080; cv.height=1080; const x=cv.getContext("2d");
   // warm-analog midnight: deep bg + a soft amber lamp glow behind the number
-  x.fillStyle="#100C0A"; x.fillRect(0,0,1080,1080);
-  const glow=x.createRadialGradient(540,430,50,540,430,640); glow.addColorStop(0,"rgba(240,168,74,0.17)"); glow.addColorStop(1,"rgba(240,168,74,0)"); x.fillStyle=glow; x.fillRect(0,0,1080,1080);
-  x.strokeStyle="#2A211B"; x.lineWidth=3; x.strokeRect(46,46,988,988);
-  x.fillStyle="rgba(240,168,74,.5)"; x.beginPath(); x.arc(170,160,10,0,7); x.fill();
-  x.fillStyle="rgba(201,106,74,.5)"; x.beginPath(); x.arc(925,895,9,0,7); x.fill();
-  x.fillStyle="rgba(246,201,130,.55)"; x.beginPath(); x.arc(905,175,7,0,7); x.fill();
+  x.fillStyle="#0A0E1A"; x.fillRect(0,0,1080,1080);
+  const glow=x.createRadialGradient(540,430,50,540,430,640); glow.addColorStop(0,"rgba(77,227,255,0.14)"); glow.addColorStop(1,"rgba(77,227,255,0)"); x.fillStyle=glow; x.fillRect(0,0,1080,1080);
+  x.strokeStyle="#1C2440"; x.lineWidth=3; x.strokeRect(46,46,988,988);
+  x.fillStyle="rgba(77,227,255,.5)"; x.beginPath(); x.arc(170,160,10,0,7); x.fill();
+  x.fillStyle="rgba(255,77,158,.5)"; x.beginPath(); x.arc(925,895,9,0,7); x.fill();
+  x.fillStyle="rgba(255,210,77,.55)"; x.beginPath(); x.arc(905,175,7,0,7); x.fill();
   x.textAlign="center";
-  x.font="italic 500 52px 'Newsreader', Georgia, serif"; x.fillStyle="#8A7A6B"; x.fillText(s.streakMode?"i don't order. i dodge.":"the driver was never real.", 540, 250);
-  x.shadowColor="rgba(240,168,74,0.45)"; x.shadowBlur=48;
-  x.font="500 192px 'Newsreader', Georgia, serif"; x.fillStyle="#F6C982"; x.fillText(s.label, 540, 500);
+  x.font="italic 500 52px 'Newsreader', Georgia, serif"; x.fillStyle="#8A96B5"; x.fillText(s.streakMode?"i don't order. i dodge.":"the driver was never real.", 540, 250);
+  x.shadowColor="rgba(255,210,77,0.45)"; x.shadowBlur=48;
+  x.font="500 192px 'Newsreader', Georgia, serif"; x.fillStyle="#FFD24D"; x.fillText(s.label, 540, 500);
   x.shadowBlur=0; x.shadowColor="transparent";
-  x.font="600 38px 'Inter', sans-serif"; x.fillStyle="#8A7A6B"; x.fillText(s.streakMode?"SAVED — ALL-TIME":("SAVED"+(s.city?("  ·  "+String(s.city).toUpperCase()):"")), 540, 583);
-  x.font="500 52px 'Newsreader', Georgia, serif"; x.fillStyle="#F0A84A"; x.fillText("🔥 "+s.streak+"-night no-spend streak", 540, 722);
-  x.font="500 66px 'Newsreader', Georgia, serif"; x.fillStyle="#F0A84A"; x.fillText("Carted", 540, 948);
-  x.font="600 30px 'Inter', sans-serif"; x.fillStyle="#8A7A6B"; x.fillText("fill the cart. ghost the check.", 540, 996);
+  x.font="600 38px 'Inter', sans-serif"; x.fillStyle="#8A96B5"; x.fillText(s.streakMode?"SAVED — ALL-TIME":("SAVED"+(s.city?("  ·  "+String(s.city).toUpperCase()):"")), 540, 583);
+  x.font="500 52px 'Newsreader', Georgia, serif"; x.fillStyle="#4DE3FF"; x.fillText("🔥 "+s.streak+"-night no-spend streak", 540, 722);
+  x.font="500 66px 'Newsreader', Georgia, serif"; x.fillStyle="#4DE3FF"; x.fillText("Carted", 540, 948);
+  x.font="600 30px 'Inter', sans-serif"; x.fillStyle="#8A96B5"; x.fillText("fill the cart. ghost the check.", 540, 996);
   cv.toBlob(b=>{
     if(!b){ toast("couldn't build the card"); return; }
     const f=new File([b],"carted-win.png",{type:"image/png"});
@@ -1466,11 +1595,11 @@ function shareReceipt(){ track("share",{k:"receipt"});
   const total=tonightMode?lastShare.usd:allTime;
   if(!total){ toast("nothing on the receipt yet — dodge something first 👻"); return; }
   const cv=document.createElement("canvas"); cv.width=1080; cv.height=1920; const x=cv.getContext("2d");
-  x.fillStyle="#100C0A"; x.fillRect(0,0,1080,1920);
-  const glow=x.createRadialGradient(540,760,60,540,760,900); glow.addColorStop(0,"rgba(240,168,74,0.13)"); glow.addColorStop(1,"rgba(240,168,74,0)"); x.fillStyle=glow; x.fillRect(0,0,1080,1920);
+  x.fillStyle="#0A0E1A"; x.fillRect(0,0,1080,1920);
+  const glow=x.createRadialGradient(540,760,60,540,760,900); glow.addColorStop(0,"rgba(77,227,255,0.11)"); glow.addColorStop(1,"rgba(77,227,255,0)"); x.fillStyle=glow; x.fillRect(0,0,1080,1920);
   // thermal paper with perforated edges — height fits the content (all-time receipts are shorter)
   const L=170,R=910,T=190,W=R-L;
-  const B=Math.min(1560, T + 470 + Math.max(items.length,1)*52 + 470);
+  const B=Math.min(1560, T + 470 + (Math.max(items.length,1) + ((!tonightMode && Math.round(stats.snackUsd||0)>0)?1:0))*52 + 470);
   x.fillStyle="#EFE4D6";
   x.beginPath(); x.moveTo(L,T+16);
   for(let i=0;i<=20;i++){ x.lineTo(L+(W/20)*i+(W/40), i%2?T+16:T); } x.lineTo(R,T+16); x.lineTo(R,B-16);
@@ -1505,6 +1634,7 @@ function shareReceipt(){ track("share",{k:"receipt"});
   if(tonightMode){ x.fillText("KEPT ALL-TIME", L+42, y); x.textAlign="right"; x.fillText("$"+allTime.toLocaleString(), R-42, y); }
   else { const n=(_aGet("carted_nights",[])||[]).length; x.fillText("NIGHTS SHOWED UP", L+42, y); x.textAlign="right"; x.fillText(String(n||1), R-42, y); }
   x.textAlign="left"; y+=44;
+  if(!tonightMode && Math.round(stats.snackUsd||0)>0){ x.fillText("SNACK RUNS · KEPT SEPARATELY", L+42, y); x.textAlign="right"; x.fillText("$"+Math.round(stats.snackUsd).toLocaleString(), R-42, y); x.textAlign="left"; y+=44; }
   dash(y+8); y+=64;
   // deterministic barcode (stable per night — honest numbers extend to fake barcodes)
   let h=hash(nightKey()+"rc"); let bx=L+70;
@@ -1512,8 +1642,8 @@ function shareReceipt(){ track("share",{k:"receipt"});
   y+=130; x.textAlign="center"; x.font="400 28px "+mono; x.fillStyle=faint;
   x.fillText("FILLED THE CART. CLOSED THE APP.", 540, y);
   // wordmark on the midnight ground below the paper
-  x.font="italic 500 64px 'Newsreader', Georgia, serif"; x.fillStyle="#F0A84A"; x.fillText("Carted", 540, B+120);
-  x.font="600 30px 'Inter', sans-serif"; x.fillStyle="#8A7A6B"; x.fillText("the 2 am room for night owls", 540, B+168);
+  x.font="italic 500 64px 'Newsreader', Georgia, serif"; x.fillStyle="#4DE3FF"; x.fillText("Carted", 540, B+120);
+  x.font="600 30px 'Inter', sans-serif"; x.fillStyle="#8A96B5"; x.fillText("the 2 am room for night owls", 540, B+168);
   cv.toBlob(b=>{
     if(!b){ toast("couldn't print the receipt"); return; }
     const f=new File([b],"carted-receipt.png",{type:"image/png"});
@@ -1526,24 +1656,24 @@ function shareReceipt(){ track("share",{k:"receipt"});
    night-owl equivalent — a lock-screen-style note that legitimizes three minutes away. */
 function shareBack3(){ track("share",{k:"back3"});
   const cv=document.createElement("canvas"); cv.width=1080; cv.height=1920; const x=cv.getContext("2d");
-  x.fillStyle="#0B0806"; x.fillRect(0,0,1080,1920);
-  const glow=x.createRadialGradient(540,640,60,540,640,860); glow.addColorStop(0,"rgba(240,168,74,0.10)"); glow.addColorStop(1,"rgba(240,168,74,0)"); x.fillStyle=glow; x.fillRect(0,0,1080,1920);
+  x.fillStyle="#070B14"; x.fillRect(0,0,1080,1920);
+  const glow=x.createRadialGradient(540,640,60,540,640,860); glow.addColorStop(0,"rgba(77,227,255,0.09)"); glow.addColorStop(1,"rgba(77,227,255,0)"); x.fillStyle=glow; x.fillRect(0,0,1080,1920);
   const dt=new Date(); const hh=(dt.getHours()%12)||12, mm=String(dt.getMinutes()).padStart(2,"0");
   x.textAlign="center";
-  x.font="200 210px 'Inter', -apple-system, sans-serif"; x.fillStyle="#EFE4D6"; x.fillText(hh+":"+mm, 540, 420);
-  x.font="500 40px 'Inter', sans-serif"; x.fillStyle="#9A8A7A";
+  x.font="200 210px 'Inter', -apple-system, sans-serif"; x.fillStyle="#EAF4FF"; x.fillText(hh+":"+mm, 540, 420);
+  x.font="500 40px 'Inter', sans-serif"; x.fillStyle="#7B87A8";
   x.fillText(dt.toLocaleDateString(undefined,{weekday:"long", month:"long", day:"numeric"}).toLowerCase(), 540, 490);
   // the note card
-  const cy=640, ch=340; x.fillStyle="rgba(239,228,214,0.07)";
+  const cy=640, ch=340; x.fillStyle="rgba(223,233,255,0.07)";
   if(x.roundRect){ x.beginPath(); x.roundRect(110, cy, 860, ch, 38); x.fill(); } else x.fillRect(110, cy, 860, ch);
-  x.strokeStyle="rgba(239,228,214,0.12)"; x.lineWidth=2;
+  x.strokeStyle="rgba(223,233,255,0.12)"; x.lineWidth=2;
   if(x.roundRect){ x.beginPath(); x.roundRect(110, cy, 860, ch, 38); x.stroke(); }
-  x.textAlign="left"; x.font="700 34px 'Inter', sans-serif"; x.fillStyle="#F0A84A"; x.fillText("🥡 CARTED", 170, cy+80);
-  x.font="500 30px 'Inter', sans-serif"; x.fillStyle="#9A8A7A"; x.fillText("now", 170, cy+124);
-  x.font="500 52px 'Newsreader', Georgia, serif"; x.fillStyle="#EFE4D6"; x.fillText("gone to the room.", 170, cy+205);
+  x.textAlign="left"; x.font="700 34px 'Inter', sans-serif"; x.fillStyle="#4DE3FF"; x.fillText("🥡 CARTED", 170, cy+80);
+  x.font="500 30px 'Inter', sans-serif"; x.fillStyle="#7B87A8"; x.fillText("now", 170, cy+124);
+  x.font="500 52px 'Newsreader', Georgia, serif"; x.fillStyle="#EAF4FF"; x.fillText("gone to the room.", 170, cy+205);
   x.fillText("back in 3 minutes.", 170, cy+270);
-  x.textAlign="center"; x.font="italic 500 44px 'Newsreader', Georgia, serif"; x.fillStyle="#F6C982"; x.fillText("the hour that's yours", 540, 1180);
-  x.font="600 28px 'Inter', sans-serif"; x.fillStyle="#9A8A7A"; x.fillText("carted — the 2 am room for night owls", 540, 1780);
+  x.textAlign="center"; x.font="italic 500 44px 'Newsreader', Georgia, serif"; x.fillStyle="#FFD24D"; x.fillText("the hour that's yours", 540, 1180);
+  x.font="600 28px 'Inter', sans-serif"; x.fillStyle="#7B87A8"; x.fillText("carted — the 2 am room for night owls", 540, 1780);
   cv.toBlob(b=>{
     if(!b){ toast("couldn't write the note"); return; }
     const f=new File([b],"carted-back-in-3.png",{type:"image/png"});
@@ -1617,7 +1747,7 @@ function go(view){ track("view",{v:view});
   document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
   $("#view-"+view).classList.add("active");
   $("#body").scrollTop = 0;
-  $("#nav-feed").classList.toggle("on", view==="feed");
+  $("#nav-feed").classList.toggle("on", view==="feed" || view==="konbini");   // the store lives under browse
   { const ne=$("#nav-explore"); if(ne) ne.classList.toggle("on", view==="explore"); }   // explore tab retired 2026-07-04
   $("#nav-room").classList.toggle("on", view==="room");
   $("#nav-cart").classList.toggle("on", view==="cart");
@@ -1628,6 +1758,7 @@ function go(view){ track("view",{v:view});
   if(view==="room"){ renderRoom(); maybeThreshold(); }
   if(view==="profile") renderProfile();
   if(view==="feed"){ renderFeatured(); const bn=$("#buddy-nudge"); if(bn) bn.innerHTML=buddyNudge(); refreshDiscovery(); setPresenceGhost(); }
+  if(view==="konbini") renderKonbini();
   if(view!=="track") stopCourier();
 }
 /* back to the feed but keep the user where they were scrolled to */
@@ -1636,18 +1767,30 @@ function backToFeed(){ go("feed"); $("#body").scrollTop = feedScroll; }
 
 /* ---- city + mode: featured chips + searchable 50-city modal ---- */
 /* city browser demoted (SUNRISE-1): one quiet line; the 50-city grid + near-me live in the modal */
+/* DEPARTURES strip (konbini board tease): one slim split-flap line, taps open the board */
 function renderCityBar(){
   const cur=curCity();
-  $("#city-bar").innerHTML = `<button class="city-line" onclick="cityModal(false)">tonight: ${cur.flag} ${esc(cur.name)} <span class="cl-change">· change</span></button>`;
+  $("#city-bar").innerHTML = `<button class="dep-bar" onclick="cityModal(false)"><span class="db-plane">✈</span>DEPARTURES · <span class="db-city">${cur.flag} ${esc(cur.name)}</span><span class="db-change">change</span></button>`;
 }
 function cityModal(homeMode){
-  showModal(`<div class="m-title" style="margin-top:0">${homeMode?'📍 where should the ghost deliver?':'🌍 the 50 food capitals'}</div>
+  /* the board: split-flap departures. statuses are seeded fiction (disclosed in the sub line),
+     never counts of people. rows keep .cm/data-n so filterCityModal() works unchanged. */
+  const DEP_POOL=["on time","boarding","on time","kitchen busy","delayed — rain","on time","red-eye","boarding"];
+  const stCls=st=> st==="boarding"?" cyan":(st.indexOf("delayed")===0?" pink":"");
+  let ri=0;
+  const row=c=>{
+    const here=!homeMode && c===curCity();
+    const st=here?"you are here":DEP_POOL[hash(nightKey()+"|dep|"+c.id)%DEP_POOL.length];
+    return `<button class="board-row cm${here?' here':''}" data-n="${c.name.toLowerCase()}" style="--d:${Math.min(ri++,14)*28}ms" onclick="modalPick('${c.id}',${!!homeMode})"><span class="br-flag">${c.flag}</span><span class="br-name">${esc(c.name)}</span>${homeMode?"":`<span class="br-dots"></span><span class="br-st${here?'':stCls(st)}">${st}</span>`}</button>`;
+  };
+  showModal(`<div class="board-hd">${homeMode?'✈ ARRIVALS':'✈ DEPARTURES'}</div>
+    <div class="board-sub">${homeMode?'where should the ghost land? this becomes home.':'every kitchen is open somewhere · statuses are set dressing 👻'}</div>
     <input id="city-search" class="city-search" placeholder="search cities…" oninput="filterCityModal()" autocomplete="off">
     <button class="cta secondary" style="position:static;margin:6px 0" onclick="closeModal();nearMe()">📍 near me</button>
     <div class="city-modal-list" id="city-modal-list">
-      ${Object.entries(REGIONS).map(([k,label])=>`<div class="cm-group"><div class="cm-label">${label}</div><div class="cm-chips">${
-        CITIES.filter(c=>c.region===k).map(c=>`<button class="city-chip cm" data-n="${c.name.toLowerCase()}" onclick="modalPick('${c.id}',${!!homeMode})">${c.flag} ${esc(c.name)}</button>`).join("")
-      }</div></div>`).join("")}
+      ${Object.entries(REGIONS).map(([k,label])=>`<div class="cm-group"><div class="flap-gap">${label}</div>${
+        CITIES.filter(c=>c.region===k).map(row).join("")
+      }</div>`).join("")}
     </div>
     ${homeMode?"":`<button class="cta secondary" style="position:static;margin-top:12px" onclick="closeModal();addCity()">＋ any other city (live OSM)</button>`}`);
 }
@@ -1786,7 +1929,8 @@ function residentTier(){ const n=(_aGet("carted_nights",[])||[]).length;
 function renderProfile(){
   const rt = residentTier();
   const head = `<div class="profile-card"><div class="pa">${rt?rt.ic:"🌙"}</div><div class="ph">${rt?esc(rt.name)+" of the 2 am room":"your night-owl pass"}</div><div class="pe">${rt?esc(rt.sub)+" · ":""}no account, no sign-up — everything lives on this device</div></div>`;
-  const kept = `<div class="kept-owner">$${Math.round(stats.savedUsd).toLocaleString()}<span class="ko-k">kept, all-time</span></div>`;
+  const kept = `<div class="kept-owner">$${Math.round(stats.savedUsd).toLocaleString()}<span class="ko-k">kept, all-time</span></div>`
+    + (Math.round(stats.snackUsd||0)>0?`<div class="kb-snack-line">snack runs: $${Math.round(stats.snackUsd).toLocaleString()} dodged 🏪</div>`:"");
   const grid = `
     <div class="pstats">
       <div class="pstat"><div class="v streak">🔥 ${stats.streak}</div><div class="k">nights showing up</div></div>
@@ -1805,7 +1949,7 @@ function renderProfile(){
     : `<div class="tier-card" style="border-color:var(--accent);box-shadow:4px 4px 0 var(--accent)"><div class="tier-row"><span class="tier-ic">👯</span><div><div class="tier-name">do this with someone</div><div class="tier-sub">bring one person — you'll both know the other is up, some nights. no pressure, no reset, just company 🤍</div></div></div><button class="signin-btn dark" onclick="inviteBuddy()" style="margin-top:8px">↗ invite a friend</button></div>`;
   /* the closet: wardrobe + souvenirs + flight log fold behind one door — earned memory,
      owned-only, no locks, no quotas, no progress bars. status lives here, never in the room. */
-  const closet = `<div class="drawer" id="closet"><button class="dr-head" onclick="toggleDrawer('closet')"><span class="dr-teaser">the closet — what the nights left behind</span><span class="dr-caret">▾</span></button><div class="dr-body">${renderWardrobe()}${passportStrip()}</div></div>`;
+  const closet = `<div class="drawer" id="closet"><button class="dr-head" onclick="toggleDrawer('closet')"><span class="dr-teaser">the collection — what the nights left behind</span><span class="dr-caret">▾</span></button><div class="dr-body">${renderCollection()}${passportStrip()}</div></div>`;
   const gs=ghostStage(), u=stats.usual;
   const ghostCard = `<div class="tier-card"><div class="tier-row"><span class="tier-ic">${ghostAvatar(34)}</span><div><div class="tier-name">${esc(ghostName())} · ${gs.name}</div><div class="tier-sub">raised over ${gs.nights} night${gs.nights===1?"":"s"} of showing up${gs.next?` · ${gs.next.min-gs.nights} more → <b>${gs.next.name}</b>`:" · fully grown, still hungry"}${u?`<br>he remembers: you always cart <b>${esc(u.en)}</b>`:""}</div></div></div>`;
   $("#profile-body").innerHTML = `<div class="brand"><h1 style="font-size:24px">profile</h1></div>` + head + kept + ghostCard + buddyCard + grid + closet + auth;
@@ -1852,7 +1996,7 @@ function renderCart(){
   const body=$("#cart-body"), c=curCity();
   const cityIds=[...new Set(cart.map(p=>p._cityId))], multi=cityIds.length>1;
   $("#cart-sub").textContent = cart.length ? (multi ? `🌍 ${cityIds.length} cities in your cart · don't check out.` : `from ${cart[0]._cityName||c.name} · don't check out.`) : "fill it up. don't check out.";
-  if(!cart.length){ body.innerHTML = (orderedTonight()?`<div class="kclosed" style="margin-bottom:14px">🌙 that's your dodge for tonight — nicely done<div class="kc-sub">one order a night is the whole ritual. your cart keeps till you're back 🛒</div></div>`:"") + `<div class="empty"><div class="big">👻</div>your cart is a ghost town.<br>go fill it up.<br><br><button class="cta secondary" style="position:static" onclick="go('feed')">browse places</button></div>`; return; }
+  if(!cart.length){ body.innerHTML = (orderedTonight()?`<div class="kclosed" style="margin-bottom:14px">🌙 kitchen's closed till tomorrow — nicely done<div class="kc-sub">your cart keeps till you're back · the corner store never closes — <span class="kb-link" onclick="openKonbini()">snack run 🏪</span></div></div>`:"") + `<div class="empty"><div class="big">👻</div>your cart is a ghost town.<br>go fill it up.<br><br><button class="cta secondary" style="position:static" onclick="go('feed')">browse places</button></div>`; return; }
   const sub=cartSubtotal(), fl=flightInfo(c), quirks=cartQuirkFees();
   body.innerHTML = `
     ${cart.map((p,i)=>`<div class="cart-item"><div class="ci-thumb">${(p._menuItem&&p.photo)?`<img class="ph-img" src="${p.photo}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${p.ic}'))">`:p.ic}</div><div class="nm">${esc(p.dish)}<div style="font-size:11px;color:var(--muted);font-weight:400">${p._flag||""} ${esc(p._cityName||p.name)}</div></div><div class="pr">${money(p.price,p._cur)}${cityPfOf(p)!==1?`<div style="font-size:11px;color:var(--muted);font-weight:600">≈ ${money(usdOf(p),USD)}</div>`:""}</div><button class="rm" onclick="removeFromCart(${i})">✕</button></div>`).join("")}
@@ -1869,7 +2013,7 @@ function renderCart(){
     <div class="boss"><span class="bossic">👹</span><span><b style="color:var(--hot)">${money(cartFees(),USD)}</b> in junk fees — dodge him.</span></div>
     <div class="deliver-to">${multi?`✈️ a ghost plane will hit all ${cityIds.length} cities, then you`:(fl?`✈️ flying <b>${esc(c.name)} → ${esc(HOME.label)}</b> · real flight time ${fl.label}`:`🛵 delivering nearby in ${esc(HOME.label)}`)} · <span class="dt-change" onclick="cityModal(true)">change</span></div>
     ${orderedTonight()
-      ? `<div class="kclosed">🌙 you've dodged tonight — that's enough<div class="kc-sub">one order a night is the whole ritual. your cart's saved for tomorrow.</div></div>`
+      ? `<div class="kclosed">🌙 kitchen's closed till tomorrow — tonight's feast is banked<div class="kc-sub">the corner store never closes — <span class="kb-link" onclick="openKonbini()">snack run 🏪</span></div></div>`
       : `<button class="cta" onclick="placeOrder()">place order ${fl?"✈️":"🚗"}</button>`}
     <button class="cta secondary" onclick="go('feed')">keep browsing</button>
     <div style="text-align:center;color:var(--muted);font-size:12.5px;margin-top:12px">${orderedTonight()?"tonight's dodge is banked 🔥 see you at the next open.":"the button looks real. nothing gets charged."}</div>`;
@@ -1920,7 +2064,7 @@ function buildFlightStages(route){
   return stages;
 }
 function placeOrder(){
-  if(orderedTonight()){ snd("pop"); toast(`🌙 that's enough for tonight — see you tomorrow`); return; }
+  if(orderedTonight()){ snd("pop"); toast(`🌙 kitchen's closed till tomorrow — the corner store's still open 🏪`); return; }
   const c=curCity(), gd=rollDriver();
   const cities=[...new Set(cart.map(p=>p._cityId))];
   const route=buildRoute(cart, HOME);
@@ -1992,7 +2136,9 @@ function revealTruth(){
   const sp=spotlightFor(po.city);
   if(po.city.id===featuredCity().id && sp && parentKeys.includes(sp._key) && !(stats.spotDone||[]).includes(spotKey(po.city.id))){ stats.spotDone=stats.spotDone||[]; stats.spotDone.push(spotKey(po.city.id)); stats.freezes=Math.min(3,(stats.freezes||0)+1); }
   stats.nudgeHour=new Date().getHours();                 // habitual-hour anchor for the gentle nudge
-  saveStats(); checkFitUnlocks();
+  saveStats();
+  const cgNight = capsuleEarnNight("feast", true), cgMile = capsuleEarnMilestones();
+  const capsuleGain = cgNight + cgMile;
   if(NATIVE && stats.pushOptIn) nativeNudge();           // re-arm for tomorrow (never re-fires tonight)
   let milestone="";
   if(streakGrew && [3,7,14,30,50,100,200].includes(stats.streak)){ milestone=`🔥 ${stats.streak} nights, together`; if(stats.streak>=7){ stats.freezes=Math.min(3,(stats.freezes||0)+1); saveStats(); } }
@@ -2010,8 +2156,9 @@ function revealTruth(){
     <div class="ghost-quip">the driver was never real. neither was the bill.</div>
     <div class="saved" id="reveal-saved">${money(0,USD)} saved</div>
     <div class="sub">${(po.cities&&po.cities.length>1)?`dinner across ${po.cities.length} cities, all dodged`:(po.flight?`dinner in ${esc(po.city.name)}, a ${po.flight.label} flight that never took off`:`what tonight in ${esc(po.city.name)} would've cost`)} — it stayed in your pocket.</div>
-    <div class="sub" style="color:#d98324;font-weight:800;margin-top:6px">🔥 night ${stats.streak}${usedFreeze?' · 🧊 a freeze caught your miss':''}</div>
+    <div class="sub" style="color:#EFD9A0;font-weight:800;margin-top:6px">🔥 night ${stats.streak}${usedFreeze?' · 🧊 a freeze caught your miss':''}</div>
     ${milestone?`<div class="milestone">${milestone}</div>`:""}
+    ${capsuleGain?`<div class="milestone" style="cursor:pointer" onclick="openGacha()">🪙 ${capsuleGain===1?"a capsule token":capsuleGain+" capsule tokens"} — ${cgNight&&cgMile?"for showing up + $100 kept":(cgMile?"every $100 kept mints one":"for showing up tonight")}. ${esc(ghostName())}'s machine is by the door</div>`:""}
     <div style="margin-top:22px">
       <button class="cta gold" style="position:static" onclick="shareToRoom()">${firstEver?"🌙 meet the others in the room":"🌙 come sit in the room"}</button>
       <button class="cta secondary" style="position:static" onclick="shareReceipt()">🧾 the receipt</button>
@@ -2024,7 +2171,7 @@ function revealTruth(){
 }
 function goodnight(){ track("goodnight"); const sc=$(".screen"); if(!sc || $("#gn-overlay")) return;
   const el=document.createElement("div"); el.id="gn-overlay"; el.className="cup-ov";
-  el.innerHTML=`<div class="cup-scene"><div class="cup-emo">🌙</div><div class="cup-clock" style="font-size:24px">that's the night.</div><div class="cup-hint">you kept your money and you showed up. that's enough for one night.<br>${esc(ghostName())}'ll keep the light on. sleep well 🤍</div><button class="cta secondary" style="position:static;margin-top:22px" onclick="this.closest('#gn-overlay').remove()">actually, i'm still up</button></div>`;
+  el.innerHTML=`<div class="cup-scene"><div class="cup-emo">🌙</div><div class="cup-clock" style="font-size:24px">that's the night.</div><div class="cup-hint">you kept your money and you showed up. that's enough for one night.<br>${esc(ghostName())}'ll keep the light on. sleep well 🤍${kitchenLight()?"":"<br>the kitchen light flicks on at 2 🏮"}</div><button class="cta secondary" style="position:static;margin-top:22px" onclick="this.closest('#gn-overlay').remove()">actually, i'm still up</button></div>`;
   sc.appendChild(el); snd("chime"); }
 function stopCourier(){ courierTimers.forEach(clearTimeout); courierTimers=[]; if(typeof cancelGlobePlane==='function') cancelGlobePlane(); }
 /* tap-to-skip: impatient users (and cold TikTok arrivals) jump straight to the payoff */
@@ -2079,10 +2226,10 @@ function renderGlobe(route, home, durSec){
   el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" style="transform-origin:${(ozx/W*100).toFixed(1)}% ${(ozy/H*100).toFixed(1)}%; transform:scale(1); transition:transform 2.4s linear;">
     <defs>
       <radialGradient id="g-ocean" cx="36%" cy="30%" r="80%"><stop offset="0%" stop-color="#2A3547"/><stop offset="45%" stop-color="#1A2230"/><stop offset="100%" stop-color="#0C0F17"/></radialGradient>
-      <radialGradient id="g-shine" cx="33%" cy="27%" r="42%"><stop offset="0%" stop-color="rgba(240,168,74,.28)"/><stop offset="100%" stop-color="rgba(240,168,74,0)"/></radialGradient>
+      <radialGradient id="g-shine" cx="33%" cy="27%" r="42%"><stop offset="0%" stop-color="rgba(77,227,255,.22)"/><stop offset="100%" stop-color="rgba(77,227,255,0)"/></radialGradient>
       <clipPath id="g-clip"><circle cx="${cx}" cy="${cy}" r="${R}"/></clipPath>
     </defs>
-    <circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#g-ocean)" stroke="#0C0907" stroke-width="3.5"/>
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#g-ocean)" stroke="#060912" stroke-width="3.5"/>
     <g clip-path="url(#g-clip)" class="land">${land}</g>
     <g clip-path="url(#g-clip)" class="grat">${grat}</g>
     <circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#g-shine)" pointer-events="none"/>
@@ -2170,7 +2317,7 @@ function renderRoom(){
     <div class="post${p.mine?' mine':''}${p.ghost?' ghostp':''}">
       <div class="phead"><span class="pic">${p.ic}</span><div class="pmeta">${p.mine?'<span class="mine-tag">you</span>':(p.ghost?`<span class="gtag">👻 ${esc(p.ghost)}</span>${p.sched?` · round here ${p.sched}`:""} · ${esc(p.city)}`:'<b>anon</b> · '+esc(p.city))} · ${p.ago}</div></div>
       <div class="ptext">${esc(p.text)}</div>
-      <div class="reacts">${["hug","me"].map(t=>`<button class="chip${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')" aria-label="${REACT_LBL[t]}" title="${REACT_LBL[t]}">${REACT_META[t]}${reactLbl(t)}${p.r[t]>0?`<span class="cnt">${p.r[t]}</span>`:""}</button>`).join("")}${p.live?`<button class="chip" onclick="reportPost(${i})" aria-label="report">🚩</button>`:""}</div>
+      <div class="reacts">${["hug","me","hold"].map(t=>`<button class="chip r-${t}${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')" aria-label="${REACT_LBL[t]}" title="${REACT_LBL[t]}">${REACT_META[t]}${i===0?reactLbl(t):""}${p.r[t]>0?`<span class="cnt">${p.r[t]}</span>`:""}</button>`).join("")}${p.live?`<button class="chip" onclick="reportPost(${i})" aria-label="report">🚩</button>`:""}</div>
     </div>`).join("");
   }
   renderRoomMeta();
@@ -2180,7 +2327,10 @@ function renderRoom(){
 function renderRoomMeta(){
   const rb=$("#room-burn"); if(rb) rb.innerHTML=`${burnLabel()}${crisisLine()}`;
   const rbt=$("#room-burn-top"); if(rbt){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); rbt.textContent=`🌅 ${h}h ${String(m).padStart(2,"0")}m`; }
-  const ra=$("#room-awake"); if(ra) ra.textContent = (_roomHumans!=null && _roomHumans>=2) ? `${_roomHumans} night owls here right now` : "the room's awake";
+  const ra=$("#room-awake"); if(ra) ra.textContent = kitchenLight() ? "🏮 the kitchen light is on — 2:00 to 2:15" : ((_roomHumans!=null && _roomHumans>=2) ? `${_roomHumans} night owls here right now` : "the room's awake");
+  const tl=$("#table-line"); if(tl){ const t=tonightsTable(); if(tl.dataset.t!==t){ tl.dataset.t=t; tl.innerHTML=`tonight's table: <b>${esc(t)}</b>`; } }
+  const cw=document.querySelector("#view-room .composer"); if(cw) cw.classList.toggle("lamp", kitchenLight());
+  const ci=$("#composer-input"); if(ci) ci.maxLength = kitchenLight()?87:90;   // the 🏮 prefix costs 3 units — the author trims, not the room
   const cbs=document.querySelector(".cbr-sub"); if(cbs) cbs.textContent = (_roomCups!=null && _roomCups>=2) ? `${_roomCups} cups steeped tonight` : "a 3-minute break";
   renderShelf(); renderNotice(); renderNod(); markUsualChip();
 }
@@ -2195,6 +2345,44 @@ function renderShelf(){ const el=$("#cup-shelf"); if(!el) return;
     cups+=`<span class="sh-cup${taken?" taken":""}${isT?" tonight":""}${future?" future":""}">🥡</span>`; }
   el.innerHTML=cups; }
 
+/* ===== the nightly table: one question the whole room shares tonight =====
+   date-seeded — same topic for every user on earth this night (seed = nightKey hash).
+   ONE serif line above the composer; tapping drops it in as a starter. */
+const TABLE_TOPICS=[
+  "what's still open in your head",
+  "the text you didn't send",
+  "tonight's small win nobody saw",
+  "the thing you'd order if money was fake",
+  "what you're putting off til morning",
+  "who you'd call if it wasn't 2am",
+  "the last thing that made you laugh today",
+  "what the fridge light saw tonight",
+  "one thing you did right this week",
+  "the tab you can't close",
+  "what tomorrow actually needs from you",
+  "the craving that almost won tonight",
+  "something you're not ready to say out loud",
+  "the song stuck in your 2am brain",
+  "what you'd tell yourself at 9pm",
+  "the chore you ghosted today",
+  "one honest sentence, no edits",
+  "what's humming in the background right now",
+  "the plan you keep re-planning",
+  "who you miss at this hour",
+  "the smell that means home",
+  "what you kept your money for tonight",
+  "the small thing that got you through today",
+  "what you're pretending isn't due",
+  "the last kind thing a stranger did",
+  "what your 3am self needs to hear",
+  "the leftovers you're thinking about",
+  "one thing you'll forgive yourself for tonight",
+];
+function tonightsTable(){ return TABLE_TOPICS[hash(nightKey()+"table")%TABLE_TOPICS.length]; }
+function tableToComposer(){ const inp=$("#composer-input"); if(!inp) return; if(!inp.value.trim()) inp.value=tonightsTable()+" — "; inp.focus(); snd("pop"); }
+/* the kitchen light: 2:00–2:15am LOCAL. a window you can be in, never a countdown — the room doesn't nag.
+   outside it, the only mention is one line in the goodnight overlay. never claims people are there. */
+function kitchenLight(){ const d=new Date(); return d.getHours()===2 && d.getMinutes()<15; }
 /* the notice board: a maintained PLACE has weight — nightly one-liner from dispatch, in ops voice */
 const NOTICES=[
   "kettle descaled. quiet night expected.",
@@ -2247,21 +2435,23 @@ function markUsualChip(){ const e=usualChipEmoji(); if(!e) return;
 function isNA(){ try{ return /^America\//.test(Intl.DateTimeFormat().resolvedOptions().timeZone||""); }catch(e){ return false; } }
 function crisisLine(){ return isNA() ? ` · rough night? <a href="tel:988" style="color:inherit;font-weight:800">988</a> is awake too 🤍` : ` · rough night? you don't have to carry it alone 🤍`; }
 let _letterShown=false;
-function react(i,t){ const p=room[i]; if(!p) return; if(!p.reacted) p.reacted={}; if(p.reacted[t]) return; p.reacted[t]=true; p.r[t]++;
+function react(i,t){ const p=room[i]; if(!p) return; if(!p.reacted) p.reacted={}; if(p.reacted[t]) return; p.reacted[t]=true; p.r[t]=(p.r[t]||0)+1;
   const first=(function(){ try{ if(!localStorage.getItem("carted_reacted")){ localStorage.setItem("carted_reacted","1"); return true; } }catch(e){} return false; })();
   // full re-render on the first-ever reaction (labels retire); targeted chip bump otherwise —
   // children index offset by 1 when tonight's letter is pinned
   const post=$("#room-feed").children[i+(_letterShown?1:0)];
   if(first || !post){ renderRoom(); }
-  else { const chip=post.querySelectorAll(".reacts .chip")[{hug:0,me:1}[t]]; if(chip){ chip.classList.add("on"); let cnt=chip.querySelector(".cnt"); if(!cnt){ cnt=document.createElement("span"); cnt.className="cnt"; chip.appendChild(cnt); } cnt.textContent=p.r[t]; } }
+  else { const chip=post.querySelectorAll(".reacts .chip")[{hug:0,me:1,hold:2}[t]]; if(chip){ chip.classList.add("on"); let cnt=chip.querySelector(".cnt"); if(!cnt){ cnt=document.createElement("span"); cnt.className="cnt"; chip.appendChild(cnt); } cnt.textContent=p.r[t]; } }
   snd("pop");
-  if(p.liveId && ROOM_LIVE && beOn()) bePost("room",{action:"react", post_id:p.liveId, kind:(t==="me"?"metoo":"hug")}); }
+  if(p.liveId && ROOM_LIVE && beOn()) bePost("room",{action:"react", post_id:p.liveId, kind:(t==="me"?"metoo":t==="hold"?"hold":"hug")}); }
 function saveMinePost(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); all.unshift({ic:post.ic,text:post.text,streak:post.streak||0,night:nightKey(),r:{...(post.rBase||post.r)},seen:!!post.seenDone,liveId:post.liveId||null}); localStorage.setItem("carted_room_mine", JSON.stringify(all.slice(0,12))); }catch(e){} }
 function updateMineStored(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); const m=all.find(p=>p.night===nightKey()&&p.text===post.text); if(m){ m.r={...(post.rBase||post.r)}; m.seen=!!post.seenDone; m.liveId=post.liveId||m.liveId||null; localStorage.setItem("carted_room_mine", JSON.stringify(all)); } }catch(e){} }
 /* counts come back exactly as stored — a number that changed by itself between two opens is the
    one dishonesty a user can catch. real reactions arrive via action:"mine" and stack on top. */
-function loadMinePosts(){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); const live=all.filter(p=>p.night===nightKey()); if(live.length!==all.length){ try{ localStorage.setItem("carted_room_mine", JSON.stringify(live)); }catch(e){} } return live.map(p=>({ic:p.ic,text:p.text,streak:p.streak,city:"you",ago:"tonight",mine:true,liveId:p.liveId||null,seenDone:!!p.seen,rBase:{hug:0,me:0,go:0,...(p.r||{})},r:{hug:0,me:0,go:0,...(p.r||{})},reacted:{}})); }catch(e){ return []; } }
-function makeMine(ic, text){ const post={ic, text, city:"you", ago:"now", mine:true, streak:stats.streak||0, r:{hug:0,me:0,go:0}, rBase:{hug:0,me:0,go:0}, reacted:{}}; room.unshift(post); saveMinePost(post); renderRoom(); beSeen(post); track("room_post");
+function loadMinePosts(){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); const live=all.filter(p=>p.night===nightKey()); if(live.length!==all.length){ try{ localStorage.setItem("carted_room_mine", JSON.stringify(live)); }catch(e){} } return live.map(p=>({ic:p.ic,text:p.text,streak:p.streak,city:"you",ago:"tonight",mine:true,liveId:p.liveId||null,seenDone:!!p.seen,rBase:{hug:0,me:0,go:0,hold:0,...(p.r||{})},r:{hug:0,me:0,go:0,hold:0,...(p.r||{})},reacted:{}})); }catch(e){ return []; } }
+function makeMine(ic, text){
+  if(kitchenLight() && !/^🏮/.test(text)) text="🏮 "+String(text).slice(0,87).replace(/[\uD800-\uDBFF]$/,"");   // born under the kitchen light — the lamp travels in the text and burns with the post; composer maxlength drops to 87 in the window so nothing is cut silently
+  const post={ic, text, city:"you", ago:"now", mine:true, streak:stats.streak||0, r:{hug:0,me:0,go:0,hold:0}, rBase:{hug:0,me:0,go:0,hold:0}, reacted:{}}; room.unshift(post); saveMinePost(post); renderRoom(); beSeen(post); track("room_post"); capsuleEarnNight("room");
   if(ROOM_LIVE && beOn()){ bePost("room",{action:"post", device_id:deviceId(), night:nightKey(), ic:post.ic, text:post.text, streak:post.streak||0, hour:new Date().getHours()}).then(r=>{
     if(!r) return;   // offline: the post lives on this device; nothing to correct
     if(r.crisis) show988();
@@ -2291,9 +2481,9 @@ function fetchLiveRoom(){ if(!(ROOM_LIVE && beOn())) return; const now=Date.now(
     const seen=new Set(room.filter(p=>p.liveId).map(p=>p.liveId));
     let added=false;
     r.posts.forEach(p=>{ if(seen.has(p.id)) return; added=true;
-      if(p.ghost){ room.unshift({liveId:p.id, ic:p.ic||"🤍", ghost:p.ghost, text:p.text, city:"the room", ago:"just now", r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0}, reacted:{}}); }   // disclosed resident-ghost reply, near the top (it's a reply)
+      if(p.ghost){ room.unshift({liveId:p.id, ic:p.ic||"🤍", ghost:p.ghost, text:p.text, city:"the room", ago:"just now", r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0, hold:p.holds||0}, reacted:{}}); }   // disclosed resident-ghost reply, near the top (it's a reply)
       else { let at=0; while(at<room.length && room[at].liveId && room[at].ghost) at++;   // real humans slot in right under the freshest ghost replies — never buried under fiction, never evicted first
-             room.splice(at,0,{liveId:p.id, ic:p.ic||"🌙", text:p.text, city:"night owl", ago:"tonight", streak:p.streak||0, live:true, r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0}, reacted:{}}); }
+             room.splice(at,0,{liveId:p.id, ic:p.ic||"🌙", text:p.text, city:"night owl", ago:"tonight", streak:p.streak||0, live:true, r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0, hold:p.holds||0}, reacted:{}}); }
     });
     capRoom(60);
     fetchMineCounts();
@@ -2307,8 +2497,8 @@ function fetchMineCounts(){ if(!(ROOM_LIVE && beOn())) return; const now=Date.no
     let changed=false;
     r.posts.forEach(sp=>{ const p=room.find(q=>q.mine && q.liveId===sp.id); if(!p) return;
       const base=p.rBase||p.r;
-      const merged={hug:(base.hug||0)+(sp.hugs||0), me:(base.me||0)+(sp.metoo||0), go:(base.go||0)+(sp.sendit||0)};
-      if(merged.hug!==p.r.hug || merged.me!==p.r.me || merged.go!==p.r.go){ p.r=merged; changed=true; }
+      const merged={hug:(base.hug||0)+(sp.hugs||0), me:(base.me||0)+(sp.metoo||0), go:(base.go||0)+(sp.sendit||0), hold:(base.hold||0)+(sp.holds||0)};
+      if(merged.hug!==p.r.hug || merged.me!==p.r.me || merged.go!==p.r.go || merged.hold!==p.r.hold){ p.r=merged; changed=true; }
     });
     if(changed && $("#view-room").classList.contains("active")) renderRoom();
   }); }
@@ -2345,7 +2535,7 @@ function beSeen(post){ if(post.seenDone) return;
 let lastIncoming=-1;
 function streamIncoming(){ if(roomSilent || !$("#view-room").classList.contains("active")) return;
   const awake=INCOMING.filter(ghostAwakeNow); if(!awake.length) return;   // only ghosts near their hour show up — schedules are honest
-  const s=pick(awake); room.unshift({ic:s.ic,ghost:s.ghost,sched:s.sched,text:s.text,city:s.city,ago:"now",streak:Math.random()<.4?2+Math.floor(Math.random()*19):0,r:{hug:Math.floor(Math.random()*6),me:Math.floor(Math.random()*9),go:Math.floor(Math.random()*3)},reacted:{}}); capRoom(40); renderRoom(); }
+  const s=pick(awake); room.unshift({ic:s.ic,ghost:s.ghost,sched:s.sched,text:s.text,city:s.city,ago:"now",streak:Math.random()<.4?2+Math.floor(Math.random()*19):0,r:{hug:Math.floor(Math.random()*6),me:Math.floor(Math.random()*9),go:Math.floor(Math.random()*3),hold:Math.random()<.25?1:0},reacted:{}}); capRoom(40); renderRoom(); }
 
 /* ===== the 3-minute noodle cup — damta's cigarette, translated =====
    a sanctioned, self-ending break: steep cup ramen with the ghosts. the cup IS the
@@ -2712,22 +2902,63 @@ const GHOST_FITS = [
 /* souvenir hats — one per city, earned by mapping (saving an activity) or window-ordering there. ties cosmetics to Explore. */
 const CITY_HAT = { nyc:"🗽", la:"🌴", ldn:"🎩", tyo:"🍣", sel:"🧧", mex:"🌵", par:"🥐", ber:"🥨", bkk:"🛺", syd:"🦘", tor:"🍁", chi:"🌭", sin:"🦁", hou:"🚀", sfo:"🌉", nol:"🎷", oax:"🌶️", lim:"🦙", bue:"⚽", sao:"🥥", rom:"🏛️", nap:"🍕", bol:"🍝", bcn:"🦎", mad:"🐂", sse:"🍢", lis:"🚋", cph:"🧜", ams:"🌷", vie:"🎻", ath:"🏺", ist:"🧿", tlv:"🕎", bey:"🌳", dxb:"🐪", cai:"🔺", rak:"🐫", cpt:"🏔️", osa:"🐙", kyo:"⛩️", pus:"🦀", hkg:"🥟", tpe:"🧋", sgn:"🛵", han:"🍜", pen:"🦐", kul:"🏙️", bom:"🛕", del:"🛺", mel:"☕" };
 function cityVisited(id){ return citiesExplored().has(id) || (stats.cities||[]).includes(id); }
-/* seasonal fits — only available in their date window */
-const SEASON_FITS = [ {id:"pumpkin",hat:"🎃",name:"spooky szn"}, {id:"santa",hat:"🎅",name:"santa ghost"}, {id:"nye",hat:"🎉",name:"new year ghost"}, {id:"love",hat:"💘",name:"valenghost"} ];
-const SEASON_WIN = { pumpkin:[[10,24],[10,31]], santa:[[12,1],[12,26]], nye:[[12,30],[1,2]], love:[[2,12],[2,15]] };
-function inWindow(id){ const w=SEASON_WIN[id]; if(!w) return false; const d=new Date(),mo=d.getMonth()+1,dy=d.getDate(); const aft=mo>w[0][0]||(mo===w[0][0]&&dy>=w[0][1]); const bef=mo<w[1][0]||(mo===w[1][0]&&dy<=w[1][1]); return w[0][0]<=w[1][0]?(aft&&bef):(aft||bef); }
-function activeSeasonFits(){ return SEASON_FITS.filter(f=>inWindow(f.id)).map(f=>({id:f.id,hat:f.hat,name:f.name,req:"seasonal",has:()=>true})); }
-function baseFits(){ return GHOST_FITS.concat(activeSeasonFits()); }
-function ghostFit(){ const id=stats.fit||"none"; if(id.startsWith("city:")){ const cid=id.slice(5); return {id, hat:CITY_HAT[cid]||"", name:((CITIES[CITY_INDEX[cid]]||{}).name||"city")+" souvenir"}; } return baseFits().find(f=>f.id===id) || GHOST_FITS[0]; }
+/* ===== MORT'S CAPSULE MACHINE — the honest gacha =====
+   paid in nights, never money. published odds, hard pity, zero duplicates.
+   legacy GHOST_FITS criteria are RETIRED as an acquisition path (capsuleMigrate
+   grandfathers anything already earned); city souvenirs stay earned-by-city. */
+const CAPSULE_CATALOG = [
+  // common — 60% · counter stuff
+  {id:"cap",       hat:"🧢", name:"backwards cap",          tier:"c"},
+  {id:"shades",    hat:"🕶️", name:"2am shades",             tier:"c"},
+  {id:"nametag",   hat:"📛", name:"night-shift name tag",   tier:"c"},
+  {id:"apron",     hat:"🦺", name:"store apron",            tier:"c"},
+  {id:"bagcape",   hat:"🛍️", name:"plastic-bag cape",       tier:"c"},
+  {id:"slippers",  hat:"🩴", name:"break-room slipper",     tier:"c"},
+  {id:"brolly",    hat:"☂️", name:"borrowed umbrella",      tier:"c"},
+  {id:"towel",     hat:"🧣", name:"counter towel",          tier:"c"},
+  {id:"juicebox",  hat:"🧃", name:"juice-box hat",          tier:"c"},
+  {id:"onigiri",   hat:"🍙", name:"onigiri pin",            tier:"c"},
+  {id:"socks",     hat:"🧦", name:"lucky socks",            tier:"c"},
+  {id:"broom",     hat:"🧹", name:"closing-shift broom",    tier:"c"},
+  {id:"banana",    hat:"🍌", name:"banana for scale",       tier:"c"},
+  {id:"receiptsc", hat:"🧾", name:"receipt-roll scarf",     tier:"c"},
+  // uncommon — 30% · back-of-store finds
+  {id:"party",     hat:"🥳", name:"party ghost",            tier:"u"},
+  {id:"chef",      hat:"🍳", name:"chef ghost",             tier:"u"},
+  {id:"cowboy",    hat:"🤠", name:"howdy ghost",            tier:"u"},
+  {id:"jet",       hat:"🧳", name:"jet-setter",             tier:"u"},
+  {id:"beanie",    hat:"🧶", name:"hand-knit beanie",       tier:"u"},
+  {id:"phones",    hat:"🎧", name:"stockroom headphones",   tier:"u"},
+  {id:"cone",      hat:"⚠️", name:"wet-floor crown",        tier:"u"},
+  {id:"barcode",   hat:"🏷️", name:"barcode tattoo",         tier:"u"},
+  {id:"kettle",    hat:"🫖", name:"keeper of the kettle",   tier:"u"},
+  {id:"lantern",   hat:"🏮", name:"aisle lantern",          tier:"u"},
+  {id:"storecat",  hat:"🐈‍⬛", name:"the store cat",          tier:"u"},
+  {id:"naruto",    hat:"🍥", name:"narutomaki pin",         tier:"u"},
+  // rare — 9% · the good shelf
+  {id:"tophat",    hat:"🎩", name:"fancy top hat",          tier:"r"},
+  {id:"halo",      hat:"😇", name:"saint of savings",       tier:"r"},
+  {id:"pumpkin",   hat:"🎃", name:"spooky szn",             tier:"r"},
+  {id:"santa",     hat:"🎅", name:"santa ghost",            tier:"r"},
+  {id:"nye",       hat:"🎉", name:"new year ghost",         tier:"r"},
+  {id:"love",      hat:"💘", name:"valenghost",             tier:"r"},
+  {id:"cupcrown",  hat:"🍜", name:"cup-noodle crown",       tier:"r"},
+  {id:"disco",     hat:"🪩", name:"midnight disco",         tier:"r"},
+  // secret — 1% · he's been saving these
+  {id:"crown",     hat:"👑", name:"dopamine crown",         tier:"s"},
+  {id:"storekey",  hat:"🗝️", name:"key to the store",       tier:"s"},
+  {id:"moon",      hat:"🌕", name:"the moon, on loan",      tier:"s"},
+  {id:"ghostjr",   hat:"👻", name:"a little ghost of his own", tier:"s"},
+];
+const CAPSULE_BY_ID = {}; CAPSULE_CATALOG.forEach(i=>CAPSULE_BY_ID[i.id]=i);
+const CAPSULE_TIER_NAME = { c:"common", u:"uncommon", r:"rare", s:"secret" };
+function ghostFit(){ const id=stats.fit||"none"; if(id.startsWith("city:")){ const cid=id.slice(5); return {id, hat:CITY_HAT[cid]||"", name:((CITIES[CITY_INDEX[cid]]||{}).name||"city")+" souvenir"}; } const c=CAPSULE_BY_ID[id]; return c ? {id, hat:c.hat, name:c.name} : {id:"none", hat:"", name:"just vibes"}; }
 function ghostAvatar(size){ size=size||40; const f=ghostFit(); return `<span class="ghost-av" style="font-size:${size}px;width:${size}px;height:${size}px">👻${f.hat?`<span class="gh-hat" style="font-size:${Math.round(size*0.6)}px">${f.hat}</span>`:""}</span>`; }
 /* Post-delivery Mort scene: floats up with the (empty) bag, wiggles, emits a $-scaled puff. */
 function mortReveal(usd, hype){ usd=+usd||0; var puff=["✨","✨","🌙"]; if(usd>=6) puff=["✨","🤍","✨","🌙"]; if(usd>=25) puff=["✨","🕯️","💸","✨","🌙"]; if(usd>=60) puff=["🌟","🕯️","💸","✨","🤍","🌙"]; var reduce=false; try{ reduce=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){} var floaters=reduce?"":puff.map(function(e,i){ var x=(i/(puff.length-1)*2-1)*46; var d=(i*0.12).toFixed(2), dur=(1.5+Math.random()*0.6).toFixed(2); return '<span class="ms-puff" style="--x:'+x.toFixed(0)+'px;animation-delay:'+d+'s;animation-duration:'+dur+'s">'+e+'</span>'; }).join(""); return '<div class="mort-scene'+(hype?' ms-hype':'')+(reduce?' ms-still':'')+'"><div class="ms-puffs">'+floaters+'</div><div class="ms-bag">🛍️</div><div class="ghostrise'+(hype?' ghost-hype':'')+'">'+ghostAvatar(66)+'</div></div>'; }
 function setPresenceGhost(){ const ge=$(".ghost-emo"); if(ge) ge.innerHTML=ghostAvatar(19); }
-function equipFit(id){ let ok=false; if(id.startsWith("city:")) ok=cityVisited(id.slice(5)); else { const f=baseFits().find(x=>x.id===id); ok=f && f.has(); } if(!ok) return; stats.fit=id; saveStats(); snd("pop"); const f=ghostFit(); toast(`👻 ${esc(ghostName())}'s fit: ${f.hat||"naked"} ${f.name}`); if($("#view-profile").classList.contains("active")) renderProfile(); setPresenceGhost(); }
-function checkFitUnlocks(){ if(!stats.fitsSeen) stats.fitsSeen=["none"]; let newly=null;
-  baseFits().forEach(f=>{ if(f.has && f.has() && !stats.fitsSeen.includes(f.id)){ stats.fitsSeen.push(f.id); newly={hat:f.hat,name:f.name}; } });
-  CITIES.forEach(c=>{ const id="city:"+c.id; if(cityVisited(c.id) && !stats.fitsSeen.includes(id)){ stats.fitsSeen.push(id); newly={hat:CITY_HAT[c.id],name:c.name+" souvenir"}; } });
-  if(newly){ saveStats(); setTimeout(()=>toast(`🧳 ${esc(ghostName())} unlocked: ${newly.hat} ${newly.name} — equip it on your profile`), 1700); } }
+function equipFit(id){ let ok=false; if(id==="none") ok=true; else if(id.startsWith("city:")) ok=cityVisited(id.slice(5)); else ok=capsuleOwnedId(id); if(!ok) return; stats.fit=id; saveStats(); snd("pop"); const f=ghostFit(); toast(`👻 ${esc(ghostName())}'s fit: ${f.hat||"naked"} ${f.name}`); if($("#view-profile").classList.contains("active")) renderProfile(); setPresenceGhost(); }
+/* checkFitUnlocks retired 2026-07-13 — acquisition moved to Mort's capsule machine; capsuleMigrate() grandfathers everything already earned */
 const GHOST_QUIPS = [
   "I ate your order. you're welcome 👻",
   "tipped myself 20% on a meal that never existed",
@@ -2757,13 +2988,139 @@ const QUIP_CTX = {
 function ghostQuip(ctx){ ctx=ctx||{}; const hr=new Date().getHours(); let pool;
   if(ctx.milestone) pool=QUIP_CTX.milestone; else if(ctx.usd>=60) pool=QUIP_CTX.jackpot; else if(ctx.flight) pool=QUIP_CTX.flight; else if(ctx.combo>=3) pool=QUIP_CTX.combo; else if(ctx.featured) pool=QUIP_CTX.featured; else if(hr>=1&&hr<5) pool=QUIP_CTX.late; else if(ctx.usd>0&&ctx.usd<6) pool=QUIP_CTX.tiny; else pool=GHOST_QUIPS;
   return pick(pool).replace("{s}",ctx.streak||0).replace("{c}",ctx.combo||0).replace("{h}",ctx.flightH||"a few").replace("{hr}",hr); }
-/* the closet renders what you HAVE — no locked slots, no counters, no quotas. absence isn't a
-   to-do list at 2am; the ghost just wears what the nights earned. */
-function renderWardrobe(){
-  const owned=baseFits().filter(f=>f.has());
-  if(!owned.length) return `<div class="wardrobe"><div class="wd-ghost">${ghostAvatar(70)}</div><div class="wd-empty">nothing in the closet yet — it fills on its own</div></div>` + renderSouvenirs();
-  return `<div class="wardrobe"><div class="wd-ghost">${ghostAvatar(70)}</div>`
-    + `<div class="wd-grid">` + owned.map(f=>{ const eq=(stats.fit||"none")===f.id; return `<button class="wd-fit${eq?' eq':''}" onclick="equipFit('${f.id}')"><span class="wd-hat">${f.hat||"👻"}</span><span class="wd-name">${esc(f.name)}</span></button>`; }).join("") + `</div></div>`
+/* ===== capsule module: migrate → earn → draw → machine ===== */
+function capsuleMigrate(){
+  if(stats.capsuleMigrated) return;
+  stats.capsuleOwned = Array.isArray(stats.capsuleOwned) ? stats.capsuleOwned : [];
+  /* grandfather: anything the old criteria already granted, plus anything ever seen unlocked */
+  try{ GHOST_FITS.forEach(f=>{ if(f.id!=="none" && f.has && f.has()) uniqPush(stats.capsuleOwned, f.id); }); }catch(e){}
+  (stats.fitsSeen||[]).forEach(id=>{ if(id!=="none" && CAPSULE_BY_ID[id]) uniqPush(stats.capsuleOwned, id); });
+  const th=Math.floor((stats.savedUsd||0)/100);
+  stats.capsuleTokens=(stats.capsuleTokens||0)+Math.min(th,5);   // back-pay for the nights before the machine arrived, capped
+  stats.capsuleMilestone=th;
+  stats.pitySince=stats.pitySince||0;
+  stats.capsuleMigrated=1; saveStats();
+}
+function capsuleOwnedId(id){ capsuleMigrate(); return (stats.capsuleOwned||[]).includes(id); }
+/* +1 the FIRST ritual each night — showing up, never time-in-app.
+   sources: "feast" (revealTruth) · "room" (makeMine) · "snack" (snack-run reveal).
+   NOT the cup — its screen promises "no points, nothing owed" and the ledger keeps that promise. */
+function capsuleEarnNight(src, quiet){
+  capsuleMigrate();
+  const n=nightKey(); if(stats.capsuleLastNight===n) return 0;
+  stats.capsuleLastNight=n; stats.capsuleTokens=(stats.capsuleTokens||0)+1; saveStats();
+  track("capsule_token",{src});
+  if(!quiet) setTimeout(()=>toast("🪙 a capsule token — for showing up tonight"), 900);
+  return 1;
+}
+/* every $100 of lifetime kept-$ mints one token — money kept, never spent */
+function capsuleEarnMilestones(){
+  capsuleMigrate();
+  const cur=Math.floor((stats.savedUsd||0)/100), paid=stats.capsuleMilestone||0;
+  if(cur<=paid) return 0;
+  const gain=cur-paid; stats.capsuleMilestone=cur; stats.capsuleTokens=(stats.capsuleTokens||0)+gain; saveStats();
+  track("capsule_milestone",{gain}); return gain;
+}
+function capsuleUnownedIn(t){ return CAPSULE_CATALOG.filter(i=>i.tier===t && !capsuleOwnedId(i.id)); }
+/* published odds 60/30/9/1 · pity: rare+ guaranteed within 10 pulls · never a duplicate
+   (unowned-only pools; an exhausted tier escalates UP, a spent top shelf hands down) */
+function capsuleDraw(){
+  capsuleMigrate();
+  if(!CAPSULE_CATALOG.some(i=>!capsuleOwnedId(i.id))) return null;   // collection complete
+  const order=["c","u","r","s"]; let tier;
+  if((stats.pitySince||0)>=9 && (capsuleUnownedIn("r").length || capsuleUnownedIn("s").length)) tier=capsuleUnownedIn("r").length?"r":"s";
+  else { const x=Math.random(); tier = x<0.60?"c" : x<0.90?"u" : x<0.99?"r" : "s"; }
+  let ti=order.indexOf(tier), pool=capsuleUnownedIn(order[ti]);
+  while(!pool.length && ti<order.length-1){ ti++; pool=capsuleUnownedIn(order[ti]); }
+  while(!pool.length && ti>0){ ti--; pool=capsuleUnownedIn(order[ti]); }
+  if(!pool.length) return null;
+  const item=pool[Math.floor(Math.random()*pool.length)];
+  stats.pitySince=(item.tier==="r"||item.tier==="s") ? 0 : (stats.pitySince||0)+1;
+  stats.capsuleTokens=Math.max(0,(stats.capsuleTokens||0)-1);
+  stats.capsuleOwned.push(item.id);
+  saveStats();
+  return item;
+}
+/* --- the machine overlay (cup-ov pattern) --- */
+let __gachaBusy=false, __gachaT=[];
+function openGacha(){
+  capsuleMigrate();
+  if($("#gacha-overlay")) return;
+  const sc=document.querySelector(".screen"); if(!sc) return;
+  track("gacha_open");
+  const done=!CAPSULE_CATALOG.some(i=>!capsuleOwnedId(i.id));
+  const el=document.createElement("div"); el.id="gacha-overlay"; el.className="cup-ov";
+  el.innerHTML=`<div class="cup-scene gacha-scene">
+    <button class="cup-x" onclick="closeGacha()" aria-label="step away from the machine">✕</button>
+    <div class="cup-others">${esc(ghostName())}'s capsule machine</div>
+    <div class="gm-mort">${ghostAvatar(40)}</div>
+    ${done ? `<div class="gr-name" style="margin-top:18px">collection complete — the machine bows 🙇</div><div class="gr-line">every capsule found a home. ${esc(ghostName())} has nothing left to hand you but the seat he kept.</div><button class="cta secondary" style="position:static;margin-top:22px" onclick="closeGacha()">back to the collection</button>` : `
+    <div class="gm-machine" id="gm-machine">
+      <div class="gm-dome"><span class="gm-cap c1"></span><span class="gm-cap c2"></span><span class="gm-cap c3"></span><span class="gm-cap c4"></span></div>
+      <div class="gm-body"><button class="gm-crank" id="gm-crank" onclick="gachaPull()" aria-label="turn the crank">◉</button><div class="gm-slot" id="gm-slot"></div></div>
+    </div>
+    <div class="gm-tokens" id="gm-tokens"></div>
+    <div class="gm-odds"><span class="gm-dot t-c"></span>common <b>60%</b> · <span class="gm-dot t-u"></span>uncommon <b>30%</b><br><span class="gm-dot t-r"></span>rare <b>9%</b> · <span class="gm-dot t-s"></span>secret <b>1%</b>
+      <div class="gm-pity" id="gm-pity"></div></div>
+    <div class="gm-fine">odds are real. no money goes in — tokens come from nights showed up and money kept.<br>${esc(ghostName())} never hands you the same thing twice.</div>`}
+  </div>`;
+  sc.appendChild(el); snd("door");
+  gachaHud();
+}
+function gachaHud(){ const t=$("#gm-tokens"), p=$("#gm-pity"); const n=stats.capsuleTokens||0;
+  if(t) t.textContent=`🪙 ${n} token${n===1?"":"s"}`;
+  const topLeft=capsuleUnownedIn("r").length+capsuleUnownedIn("s").length;
+  if(p) p.textContent = topLeft ? `a rare or better is guaranteed within 10 pulls · pulls since last rare: ${stats.pitySince||0}`
+                                : "top shelf cleared — only counter stock left"; }
+function gachaPull(){
+  capsuleMigrate();
+  if(__gachaBusy) return;
+  if((stats.capsuleTokens||0)<1){ snd("pop"); toast("no tokens — showing up tonight mints one 🌙"); return; }
+  const item=capsuleDraw();
+  if(!item){ closeGacha(); openGacha(); return; }   // re-render into the bowed state
+  track("gacha_pull",{tier:item.tier});
+  gachaHud();
+  let reduce=false; try{ reduce=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
+  if(reduce){ gachaReveal(item); return; }          // straight to the reveal — no arc
+  __gachaBusy=true;
+  const m=$("#gm-machine"), slot=$("#gm-slot");
+  if(m) m.classList.add("cranking");
+  snd("pop"); __gachaT.push(setTimeout(()=>snd("pop"),480), setTimeout(()=>snd("pop"),960));
+  __gachaT.push(setTimeout(()=>{ if(!slot) return; const b=document.createElement("div"); b.className="gm-ball drop t-"+item.tier; b.id="gm-ball"; slot.appendChild(b); snd("ding"); }, 1700));
+  __gachaT.push(setTimeout(()=>{ const b=$("#gm-ball"); if(b){ b.classList.remove("drop"); b.classList.add("wobble"); } }, 2800));
+  __gachaT.push(setTimeout(()=>{ const b=$("#gm-ball"); if(b){ b.classList.remove("wobble"); b.classList.add("crack"); snd("pop"); } }, 5400));
+  __gachaT.push(setTimeout(()=>{ if(m) m.classList.remove("cranking"); __gachaBusy=false; gachaReveal(item); }, 6200));
+}
+function gachaReveal(item){
+  const el=$("#gacha-overlay"); if(!el) return;
+  const left=stats.capsuleTokens||0;
+  const confetti = item.tier==="s" ? `<div class="gm-confetti">${Array.from({length:14},(_,i)=>`<span style="left:${i*7+2}%;animation-delay:${(i%5)*0.12}s">${["✦","✧","·"][i%3]}</span>`).join("")}</div>` : "";
+  el.querySelector(".cup-scene").innerHTML=`${confetti}
+    <button class="cup-x" onclick="closeGacha()" aria-label="step away from the machine">✕</button>
+    <div class="gr-ring t-${item.tier}"><span class="gr-hat">${item.hat}</span></div>
+    <div class="gr-name">${esc(item.name)}</div>
+    <div class="gr-tier t-${item.tier}">${CAPSULE_TIER_NAME[item.tier]}</div>
+    <div class="gr-line">${item.tier==="s" ? "…he'd been saving this one." : `${esc(ghostName())} never hands you the same thing twice.`}</div>
+    <button class="cta" style="position:static;margin-top:16px" onclick="equipFit('${item.id}');closeGacha()">wear it now</button>
+    ${left>0?`<button class="cta secondary" style="position:static;margin-top:8px" onclick="reopenGacha()">turn again — 🪙 ${left} left</button>`:""}
+    <button class="cta secondary" style="position:static;margin-top:8px" onclick="closeGacha()">into the collection</button>`;
+  snd(item.tier==="s" ? "fanfare" : "chime");
+}
+function reopenGacha(){ closeGacha(); openGacha(); }
+function closeGacha(){ __gachaT.forEach(clearTimeout); __gachaT=[]; __gachaBusy=false; const el=$("#gacha-overlay"); if(el) el.remove(); if($("#view-profile").classList.contains("active")) renderProfile(); }
+/* --- the collection book: the whole catalog, owned bright / unowned a dimmed ? --- */
+function renderCollection(){
+  capsuleMigrate();
+  const total=CAPSULE_CATALOG.length, got=CAPSULE_CATALOG.filter(i=>capsuleOwnedId(i.id)).length;
+  const n=stats.capsuleTokens||0, vibes=(stats.fit||"none")==="none";
+  const tiles = `<button class="wd-fit${vibes?' eq':''}" onclick="equipFit('none')"><span class="wd-hat">👻</span><span class="wd-name">just vibes</span></button>`
+    + CAPSULE_CATALOG.map(i=>{ const own=capsuleOwnedId(i.id), eq=(stats.fit||"none")===i.id;
+      return own
+        ? `<button class="wd-fit tier-${i.tier}${eq?' eq':''}" onclick="equipFit('${i.id}')"><span class="wd-hat">${i.hat}</span><span class="wd-name">${esc(i.name)}</span></button>`
+        : `<div class="wd-fit lock" aria-label="not collected yet"><span class="wd-hat">?</span></div>`; }).join("");
+  return `<div class="coll-head"><span>${esc(ghostName())}'s collection</span><b>${got}/${total} collected</b></div>`
+    + `<button class="gm-open" onclick="openGacha()">🪙 the capsule machine${n?` — ${n} token${n===1?"":"s"} to turn`:""}</button>`
+    + `<div class="wardrobe"><div class="wd-ghost">${ghostAvatar(70)}</div><div class="wd-grid">${tiles}</div></div>`
     + renderSouvenirs();
 }
 function renderSouvenirs(){
@@ -2789,18 +3146,18 @@ function showWrapped(){ const w=stats.week||{usd:0,cities:[],crav:{}}; const cra
   stats.wrappedSeen=weekKey(); saveStats(); }
 function shareWrapped(){ const w=stats.week||{usd:0,cities:[],crav:{}}, crav=topCrav(w.crav)||"🍜";
   const cv=document.createElement("canvas"); cv.width=1080; cv.height=1080; const x=cv.getContext("2d");
-  x.fillStyle="#100C0A"; x.fillRect(0,0,1080,1080);
-  const gw=x.createRadialGradient(540,440,50,540,440,640); gw.addColorStop(0,"rgba(240,168,74,0.16)"); gw.addColorStop(1,"rgba(240,168,74,0)"); x.fillStyle=gw; x.fillRect(0,0,1080,1080);
-  x.strokeStyle="#2A211B"; x.lineWidth=3; x.strokeRect(46,46,988,988); x.textAlign="center";
-  x.fillStyle="#EFE4D6"; x.font="500 62px 'Newsreader',Georgia,serif"; x.fillText("my week on Carted", 540, 158);
+  x.fillStyle="#0A0E1A"; x.fillRect(0,0,1080,1080);
+  const gw=x.createRadialGradient(540,440,50,540,440,640); gw.addColorStop(0,"rgba(77,227,255,0.13)"); gw.addColorStop(1,"rgba(77,227,255,0)"); x.fillStyle=gw; x.fillRect(0,0,1080,1080);
+  x.strokeStyle="#1C2440"; x.lineWidth=3; x.strokeRect(46,46,988,988); x.textAlign="center";
+  x.fillStyle="#EAF4FF"; x.font="500 62px 'Newsreader',Georgia,serif"; x.fillText("my week on Carted", 540, 158);
   x.font="120px serif"; x.fillText("👻", 540, 322);
-  x.shadowColor="rgba(240,168,74,0.45)"; x.shadowBlur=46;
-  x.fillStyle="#F6C982"; x.font="500 156px 'Newsreader',Georgia,serif"; x.fillText("$"+Math.round(w.usd).toLocaleString(), 540, 500);
+  x.shadowColor="rgba(255,210,77,0.45)"; x.shadowBlur=46;
+  x.fillStyle="#FFD24D"; x.font="500 156px 'Newsreader',Georgia,serif"; x.fillText("$"+Math.round(w.usd).toLocaleString(), 540, 500);
   x.shadowBlur=0; x.shadowColor="transparent";
-  x.fillStyle="#8A7A6B"; x.font="600 38px 'Inter',sans-serif"; x.fillText("DODGED THIS WEEK", 540, 566);
-  x.fillStyle="#F0A84A"; x.font="500 50px 'Newsreader',Georgia,serif"; x.fillText(`craving of the week: ${crav}`, 540, 680);
-  x.fillStyle="#EFE4D6"; x.font="500 46px 'Newsreader',Georgia,serif"; x.fillText(`🔥 ${stats.streak||0}-night streak`, 540, 752);
-  x.fillStyle="#F0A84A"; x.font="500 62px 'Newsreader',Georgia,serif"; x.fillText("Carted", 540, 936); x.fillStyle="#8A7A6B"; x.font="600 30px 'Inter',sans-serif"; x.fillText("fill the cart. ghost the check.", 540, 986);
+  x.fillStyle="#8A96B5"; x.font="600 38px 'Inter',sans-serif"; x.fillText("DODGED THIS WEEK", 540, 566);
+  x.fillStyle="#4DE3FF"; x.font="500 50px 'Newsreader',Georgia,serif"; x.fillText(`craving of the week: ${crav}`, 540, 680);
+  x.fillStyle="#EAF4FF"; x.font="500 46px 'Newsreader',Georgia,serif"; x.fillText(`🔥 ${stats.streak||0}-night streak`, 540, 752);
+  x.fillStyle="#4DE3FF"; x.font="500 62px 'Newsreader',Georgia,serif"; x.fillText("Carted", 540, 936); x.fillStyle="#8A96B5"; x.font="600 30px 'Inter',sans-serif"; x.fillText("fill the cart. ghost the check.", 540, 986);
   cv.toBlob(b=>{ if(!b){toast("couldn't build it");return;} const f=new File([b],"carted-week.png",{type:"image/png"}); if(navigator.canShare&&navigator.canShare({files:[f]})){ navigator.share({files:[f],text:"my week on Carted 👻 — dodged $"+Math.round(w.usd).toLocaleString()}).catch(()=>{}); } else { const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="carted-week.png"; a.click(); toast("week card saved 📸"); setTimeout(()=>URL.revokeObjectURL(a.href),4000); } },"image/png"); }
 
 /* --- 6 nightly featured city + craving forecast --- */
@@ -2885,6 +3242,87 @@ function mustTryFor(city){ return [...((city&&city._places)||[])].sort((a,b)=>b.
 function renderMustTry(){ const el=$("#must-try"); if(!el) return; const c=curCity(), list=mustTryFor(c); if(!list.length){ el.innerHTML=""; return; } const tried=list.filter(p=>!isNewPlace(p)).length;
   el.innerHTML=`<div class="must-card"><div class="mt-head">🏅 must-try in ${esc(c.name)} <span>${tried}/${list.length}</span></div>`+list.map(p=>`<button class="mt-row${isNewPlace(p)?'':' got'}" onclick="openDetail('${p._key}')"><span class="mt-check">${isNewPlace(p)?"○":"✓"}</span><span class="mt-name">${esc(p.name)}</span><span class="mt-stars">★ ${p.rate.toFixed(1)}</span></button>`).join("")+`</div>`; }
 
+/* --- KONBINI v2: the placeless 24h corner store. flat USD, no city math — it's open
+   everywhere at once. ECONOMY RED LINE: the feast (restaurant order) stays one-per-night
+   and is the ONLY thing that feeds stats.savedUsd (the filament). snack runs are unlimited
+   and feed stats.snackUsd ONLY — kept-$ stays honest. --- */
+const KB_SUBS = { "HOT CASE":"under the heat lamp", "FRIDGE":"cold to the touch", "SHELF":"crinkles when held", "FREEZER":"−18° and patient" };
+const KB_AISLES = [
+  { sign:"HOT CASE", ic:"🔥", items:[
+    {id:"hc1",ic:"🍢",name:"fish cake skewer",usd:2.50},
+    {id:"hc2",ic:"🌭",name:"corn dog",usd:3.00},
+    {id:"hc3",ic:"🥟",name:"steamed bun",usd:2.50},
+    {id:"hc4",ic:"☕",name:"hot coffee",usd:2.00} ]},
+  { sign:"FRIDGE", ic:"🧊", items:[
+    {id:"fr1",ic:"🥛",name:"banana milk",usd:2.50},
+    {id:"fr2",ic:"🍓",name:"strawberry milk",usd:2.50},
+    {id:"fr3",ic:"🧃",name:"yogurt drink",usd:1.50},
+    {id:"fr4",ic:"🥪",name:"egg sando",usd:3.50},
+    {id:"fr5",ic:"🍙",name:"triangle kimbap · tuna mayo",usd:2.00},
+    {id:"fr6",ic:"🍙",name:"triangle kimbap · spicy pork",usd:2.50},
+    {id:"fr7",ic:"🍜",name:"chilled noodles",usd:5.50} ]},
+  { sign:"SHELF", ic:"🍿", items:[
+    {id:"sh1",ic:"🍤",name:"shrimp chips",usd:2.00},
+    {id:"sh2",ic:"🍫",name:"choco pie",usd:1.50},
+    {id:"sh3",ic:"🍈",name:"melon bread",usd:3.00},
+    {id:"sh4",ic:"🥣",name:"cup ramyeon",usd:1.50},
+    {id:"sh5",ic:"🥔",name:"honey butter chips",usd:2.50},
+    {id:"sh6",ic:"🍡",name:"mochi",usd:2.00} ]},
+  { sign:"FREEZER", ic:"❄️", items:[
+    {id:"fz1",ic:"🍦",name:"ice cream bar",usd:2.00},
+    {id:"fz2",ic:"🧊",name:"ice cup",usd:1.50} ]},
+];
+const KB_ITEMS={}; KB_AISLES.forEach(a=>a.items.forEach(it=>KB_ITEMS[it.id]=it));
+let kbBasket=[];   // session-only; the snack basket is NOT the main cart
+function kbTonight(){ const t=_aGet("carted_snacktab",null); return (t&&t.night===nightKey())?t:{night:nightKey(),usd:0,runs:0}; }
+function openKonbini(){ go("konbini"); }
+function renderKonbini(){
+  const el=$("#konbini-aisles"); if(!el) return;
+  el.innerHTML = KB_AISLES.map(a=>
+    `<div class="kb-aisle"><span class="ka-ic">${a.ic}</span>${a.sign}</div>`+
+    a.items.map(it=>`<div class="kb-item"><div class="kb-ic">${it.ic}</div><div class="kb-mid"><div class="kb-n">${esc(it.name)}</div><div class="kb-sub">${KB_SUBS[a.sign]||""}</div></div><div class="kb-p">${money(it.usd,USD)}</div><button class="kb-add" aria-label="add ${esc(it.name)}" onclick="kbAdd('${it.id}')">＋</button></div>`).join("")
+  ).join("");
+  renderKbBasket();
+}
+function kbAdd(id){ if(kbBasket.length>=24){ toast("the basket's full — run it 🛵"); return; } kbBasket.push(id); snd("pop"); renderKbBasket(); }
+function kbRemove(i){ kbBasket.splice(i,1); snd("pop"); renderKbBasket(); }
+function kbTotal(){ return kbBasket.reduce((s,id)=>s+((KB_ITEMS[id]||{}).usd||0),0); }
+function renderKbBasket(){
+  const bk=$("#kb-basket"); if(!bk) return;
+  if(!kbBasket.length){ bk.style.display="none"; return; }
+  bk.style.display="block";
+  $("#kb-b-items").innerHTML = kbBasket.map((id,i)=>`<button class="kb-b-it" aria-label="remove ${esc((KB_ITEMS[id]||{}).name||"item")}" onclick="kbRemove(${i})">${(KB_ITEMS[id]||{}).ic||"🍬"}</button>`).join("");
+  $("#kb-b-total").textContent = money(kbTotal(),USD);
+}
+function snackRun(){
+  if(!kbBasket.length) return;
+  const sc=$(".screen"); if(!sc || $("#kb-overlay")) return;
+  const total=kbTotal(), n=kbBasket.length;
+  track("snack_run",{n, usd:Math.round(total*100)/100});
+  stats.snackUsd=(stats.snackUsd||0)+total;                     // NEVER stats.savedUsd — the filament stays feast-only
+  const t=kbTonight(); t.usd+=total; t.runs++; _aSet("carted_snacktab",t);
+  saveStats();
+  const kbGain=capsuleEarnNight("snack", true);
+  kbBasket=[]; renderKbBasket();
+  snd("chime");   // the door chime
+  const LINES=[`🔔 the door says hi to ${esc(ghostName())}`, "the microwave hums for nobody", "he bags it — no bag fee tonight", "the register prints a receipt for zero"];
+  const el=document.createElement("div"); el.id="kb-overlay"; el.className="cup-ov";
+  el.innerHTML=`<div class="cup-scene"><div class="kb-run-mort">👻🛵</div><div class="kb-run-line" id="kb-run-line">${LINES[0]}</div></div>`;
+  sc.appendChild(el);
+  let i=0; const rot=setInterval(()=>{ i++; const l=$("#kb-run-line"); if(!l||i>=LINES.length){ clearInterval(rot); return; } l.textContent=LINES[i]; }, 2100);
+  const fin=()=>{ clearInterval(rot); if(!$("#kb-overlay")) return; snd("whoosh");
+    el.innerHTML=`<div class="cup-scene">
+      <div class="cup-emo">🏪</div>
+      <div class="kb-reveal-line">the snacks were never real.<br>${money(total,USD)} stays in your pocket.</div>
+      <div class="kb-tab-line">tonight's snack tab: ${money(t.usd,USD)} dodged${t.runs>1?` · run ${t.runs}`:""}</div>
+      ${kbGain?`<div class="kb-tab-line" style="cursor:pointer" onclick="closeSnackRun();openGacha()">🪙 a capsule token — for showing up tonight</div>`:""}
+      <button class="cta secondary" style="position:static;margin-top:22px" onclick="closeSnackRun()">back to the shelves</button>
+    </div>`;
+  };
+  setTimeout(fin, matchMedia("(prefers-reduced-motion: reduce)").matches?1200:6800);
+}
+function closeSnackRun(){ const el=$("#kb-overlay"); if(el) el.remove(); }
+
 /* ---- boot ---- */
 CITIES.forEach((c,i)=>{ CITY_INDEX[c.id]=i; });
 migrateSaved(); loadAccount(); loadHome(); loadActsSaved();
@@ -2919,6 +3357,15 @@ acceptBuddyFromUrl();
 renderFeatured();
 if(stats.pushOptIn && "Notification" in window && Notification.permission==="granted") scheduleGhostNudge();
 document.addEventListener("pointerdown", e=>{ const sc=document.querySelector(".screen"); if(!sc) return; const r=sc.getBoundingClientRect(); lastTap={x:e.clientX-r.left, y:e.clientY-r.top}; if(asmrOn && !asmrNode) startAsmr(); }, true);
+/* mort care: after two or more missed nights, one line — a kept seat, never a guilt trip */
+(function mortCare(){ try{
+  const last=stats.lastNight; if(!last) return;
+  const tonight=nightKey();
+  if(last===tonight || last===nightShift(tonight,-1) || last===nightShift(tonight,-2)) return;
+  if(localStorage.getItem("carted_care")===tonight) return;
+  localStorage.setItem("carted_care", tonight);
+  setTimeout(()=>toast(`👻 ${esc(ghostName())} was out on deliveries. kept your seat.`), 1800);
+}catch(e){} })();
 trackOpen();
 if(!localStorage.getItem("carted_onboard")){ setTimeout(showOnboard, 500); }
 document.addEventListener("keydown", e=>{ if(e.key==="Enter" && document.activeElement && document.activeElement.id==="composer-input") postFromComposer(); });
