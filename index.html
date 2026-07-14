@@ -2360,7 +2360,7 @@ function renderRoom(){
         <div class="post${p.mine?' mine':''}">
           <div class="phead"><span class="pic">🛋️</span><div class="pmeta">${p.mine?'<span class="mine-tag">'+esc(p.handle||"you")+'</span>':'<b>'+esc(p.handle||"someone")+'</b>'} · tonight${p.local?' · this side only':''}</div></div>
           <div class="ptext">${esc(p.text)}</div>
-          ${(!p.mine&&p.liveId)?`<div class="reacts"><button class="chip" onclick="reportBoothPost(${i})" aria-label="report">🚩</button></div>`:""}
+          ${(!p.mine&&p.liveId)?`<div class="reacts"><button class="chip" onclick="boothActions(${i})" aria-label="report or mute">🚩</button></div>`:""}
         </div>`).join("") : `<div class="booth-empty">nobody's sat down yet tonight. say something — or hand the link to someone who's up.</div>`}`;
     renderRoomMeta();
     return;
@@ -2373,7 +2373,7 @@ function renderRoom(){
     <div class="post${p.mine?' mine':''}${p.ghost?' ghostp':''}">
       <div class="phead"><span class="pic">${p.ic}</span><div class="pmeta">${p.mine?'<span class="mine-tag">you</span>':(p.ghost?`<span class="gtag">👻 ${esc(p.ghost)}</span>${p.sched?` · round here ${p.sched}`:""} · ${esc(p.city)}`:'<b>anon</b> · '+esc(p.city))} · ${p.ago}</div></div>
       ${(function(){ const m=String(p.text).match(/^(🏮 )?↪ "([^"]{1,40})" ?([\s\S]*)$/); return m?`<div class="p-quote">↪ ${esc(m[2])}</div><div class="ptext" onclick="replyTo(${i})">${esc((m[1]||"")+m[3])}</div>`:`<div class="ptext" onclick="replyTo(${i})">${esc(p.text)}</div>`; })()}
-      <div class="reacts">${["hug","me","hold"].map(t=>`<button class="chip r-${t}${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')" aria-label="${REACT_LBL[t]}" title="${REACT_LBL[t]}">${REACT_META[t]}${i===0?reactLbl(t):""}${p.r[t]>0?`<span class="cnt">${p.r[t]}</span>`:""}</button>`).join("")}${p.live?`<button class="chip" onclick="reportPost(${i})" aria-label="report">🚩</button>`:""}</div>
+      <div class="reacts">${["hug","me","hold"].map(t=>`<button class="chip r-${t}${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')" aria-label="${REACT_LBL[t]}" title="${REACT_LBL[t]}">${REACT_META[t]}${i===0?reactLbl(t):""}${p.r[t]>0?`<span class="cnt">${p.r[t]}</span>`:""}</button>`).join("")}${p.live?`<button class="chip" onclick="postActions(${i})" aria-label="report or mute">🚩</button>`:""}</div>
     </div>`).join("");
   }
   renderRoomMeta();
@@ -2584,7 +2584,7 @@ function fetchBooth(){ const b=boothState(); if(!(roomBoothMode && b && beOn()))
     if(r.boothReady===false){ boothPosts=boothLocal().map(p=>({text:p.text, handle:p.handle, mine:true, local:true})); if(roomBoothMode) renderRoom(); return; }
     if(r.posts){
       // MERGE, never replace: in-flight local echoes and server-rejected notes keep their seat til sunrise
-      const server=r.posts.filter(p=>!_boothReported.has(p.id)).map(p=>({liveId:p.id, text:p.text, handle:p.handle||"someone", mine:!!p.mine, r:p}));
+      const server=r.posts.filter(p=>!_boothReported.has(p.id) && !(p.who && mutedWho().includes(p.who))).map(p=>({liveId:p.id, text:p.text, handle:p.handle||"someone", mine:!!p.mine, who:p.who||null, r:p}));
       const localKeep=boothPosts.filter(p=>p.local && !server.some(sp=>sp.text===p.text));
       const stored=boothLocal().filter(l=>!server.some(sp=>sp.text===l.text) && !localKeep.some(k=>k.text===l.text)).map(l=>({text:l.text, handle:l.handle, mine:true, local:true}));
       boothPosts=[...localKeep, ...stored, ...server];
@@ -2601,6 +2601,11 @@ function makeBoothPost(text){ const b=boothState(); if(!b) return;
       if(r.reason==="handle"){ const bb=boothState(); if(bb){ bb.handle=null; saveBooth(bb); } toast("that name won't fly at this table — you'll pick another on your next post 🛋️"); return; }
       toast(r.reason==="booth-not-ready" ? "the booth isn't fully wired yet — your note sits at the table til sunrise, on this end 🛋️" : (r.reason==="filtered" ? "that one stays between us tonight — gentler words travel further 🤍" : (r.reason||"the booth didn't catch that 🌙"))); }
   }); }
+function boothActions(i){ const p=boothPosts[i]; if(!p || !p.liveId) return;
+  showModal(`<div class="m-emoji">🚩</div><div class="m-title">this note</div>
+    <button class="cta secondary" style="position:static" onclick="closeModal();reportBoothPost(${i})">🚩 report it — a human will look</button>
+    ${p.who?`<button class="cta secondary" style="position:static;margin-top:8px" onclick="closeModal();muteWho('${p.who}')">🔇 mute them for me</button>`:""}
+    <button class="cta secondary" style="position:static;margin-top:8px" onclick="closeModal()">never mind</button>`); }
 function reportBoothPost(i){ const p=boothPosts[i]; if(!p||!p.liveId) return; _boothReported.add(p.liveId); bePost("room",{action:"report", post_id:p.liveId, device_id:deviceId()}); boothPosts.splice(i,1); renderRoom(); toast("reported — a human will look. thank you 🤍"); }
 /* live-room fetch: merge tonight's real posts (60s throttle; no-op while ROOM_LIVE=false) */
 let _roomFetchT=0;
@@ -2609,6 +2614,13 @@ function capRoom(n){ // evict fiction first — real night owls and your own pos
     for(let j=room.length-1;j>=0;j--){ if(!room[j].live && !room[j].mine){ i=j; break; } }
     room.splice(i>=0?i:room.length-1,1); } }
 let _roomHumans=null, _roomCups=null, _roomNods=null;
+/* mute (App Store 1.2 "block users"): the server sends an opaque author tag per post — never a
+   device id. muting stores the tag on THIS device and filters that author out, now and forever. */
+function mutedWho(){ try{ return JSON.parse(localStorage.getItem("carted_muted")||"[]"); }catch(e){ return []; } }
+function muteWho(who){ if(!who) return; try{ const m=mutedWho(); if(!m.includes(who)){ m.push(who); localStorage.setItem("carted_muted", JSON.stringify(m.slice(-200))); } }catch(e){}
+  for(let j=room.length-1;j>=0;j--){ if(room[j].who===who) room.splice(j,1); }
+  for(let j=boothPosts.length-1;j>=0;j--){ if(boothPosts[j].who===who) boothPosts.splice(j,1); }
+  renderRoom(); toast("muted — you won't see them again 🌙"); }
 function fetchLiveRoom(){ if(!(ROOM_LIVE && beOn())) return; const now=Date.now(); if(now-_roomFetchT<60000) return; _roomFetchT=now;
   bePost("room",{action:"list", night:nightKey(), device_id:deviceId()}).then(r=>{ if(!(r && r.posts)) return;
     if(typeof r.humans==="number") _roomHumans=r.humans;   // real presence (devices seen in the last 10 min); null until the backend has the table
@@ -2618,8 +2630,9 @@ function fetchLiveRoom(){ if(!(ROOM_LIVE && beOn())) return; const now=Date.now(
     let added=false;
     r.posts.forEach(p=>{ if(seen.has(p.id)) return; added=true;
       if(p.ghost){ room.unshift({liveId:p.id, ic:p.ic||"🤍", ghost:p.ghost, text:p.text, city:"the room", ago:"just now", r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0, hold:p.holds||0}, reacted:{}}); }   // disclosed resident-ghost reply, near the top (it's a reply)
-      else { let at=0; while(at<room.length && room[at].liveId && room[at].ghost) at++;   // real humans slot in right under the freshest ghost replies — never buried under fiction, never evicted first
-             room.splice(at,0,{liveId:p.id, ic:p.ic||"🌙", text:p.text, city:"night owl", ago:"tonight", streak:p.streak||0, live:true, r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0, hold:p.holds||0}, reacted:{}}); }
+      else { if(p.who && mutedWho().includes(p.who)) return;   // muted authors never render
+             let at=0; while(at<room.length && room[at].liveId && room[at].ghost) at++;   // real humans slot in right under the freshest ghost replies — never buried under fiction, never evicted first
+             room.splice(at,0,{liveId:p.id, ic:p.ic||"🌙", text:p.text, city:"night owl", ago:"tonight", streak:p.streak||0, live:true, who:p.who||null, r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0, hold:p.holds||0}, reacted:{}}); }
     });
     capRoom(60);
     fetchMineCounts();
@@ -2640,6 +2653,11 @@ function fetchMineCounts(){ if(!(ROOM_LIVE && beOn())) return; const now=Date.no
     });
     if(changed && $("#view-room").classList.contains("active")) renderRoom();
   }); }
+function postActions(i){ const p=room[i]; if(!p || !p.liveId) return;
+  showModal(`<div class="m-emoji">🚩</div><div class="m-title">this post</div>
+    <button class="cta secondary" style="position:static" onclick="closeModal();reportPost(${i})">🚩 report it — a human will look</button>
+    ${p.who?`<button class="cta secondary" style="position:static;margin-top:8px" onclick="closeModal();muteWho('${p.who}')">🔇 mute this night owl for me</button>`:""}
+    <button class="cta secondary" style="position:static;margin-top:8px" onclick="closeModal()">never mind</button>`); }
 function reportPost(i){ const p=room[i]; if(!p || !p.liveId) return; bePost("room",{action:"report", post_id:p.liveId, device_id:deviceId()}); room.splice(i,1); renderRoom(); toast("reported — a human will look. thank you 🤍"); }
 /* ===== community rules gate (App Store Guideline 1.2: agree to terms before posting to live UGC) =====
    only gates when ROOM_LIVE (posts are visible to others). device-local posting needs no agreement. */
