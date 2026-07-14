@@ -2394,9 +2394,12 @@ function renderRoomMeta(){
   const ra2=$("#room-ash"); if(ra2){ let ash=null; try{ ash=JSON.parse(localStorage.getItem("carted_ash")||"null"); }catch(e){}
     let shown=false; try{ shown=localStorage.getItem("carted_ash_shown")===nightKey(); }catch(e){}
     if(ash && ash.night!==nightKey() && !shown && !roomBoothMode){
-      const what = ash.hold>0 ? `held by ${ash.hold} til the end` : (ash.warm>0 ? `${ash.warm} sat with ${ash.posts>1?"them":"it"} before ${ash.posts>1?"they":"it"} went` : `${ash.posts>1?"they":"it"} made it all the way`);
+      const noun=`your post${ash.posts>1?"s":""}`;
+      const line = ash.hold>0 ? `${noun} ${ash.posts>1?"were":"was"} held by ${ash.hold} til the end`
+        : (ash.warm>0 ? `${ash.warm} sat with ${noun} before ${ash.posts>1?"they":"it"} went`
+        : `${noun} made it all the way`);
       const when = ash.night===nightShift(nightKey(),-1) ? "last night" : "your last night here";
-      ra2.innerHTML=`<button class="ash-line" onclick="sweepAsh()">🌅 ${when} burned at 4:00 — your post${ash.posts>1?"s were":" was"} ${what}.</button>`;
+      ra2.innerHTML=`<button class="ash-line" onclick="sweepAsh()">🌅 ${when} burned at 4:00 — ${line}.</button>`;
     } else ra2.innerHTML="";
   }
 }
