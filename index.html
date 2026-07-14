@@ -59,11 +59,11 @@
   /* strip the old sticker treatment app-wide: hairline warm seams, tonal depth, no hard offset shadows */
   .card, .tier-card, .feat-banner, .post, .cup-bar, .composer input, .signin-btn,
   .kclosed, .quests, .passport, .prompts, .drawer .dr-head, .hud .pill, .live-pill, .ebanner,
-  .tk-line, .quiet-panel, .morts-pick, .buddy-nudge, .ghost-quip, .silence-btn, .feed-identity, .track-skip {
+  .tk-line, .quiet-panel, .morts-pick, .buddy-nudge, .ghost-quip, .silence-btn, .track-skip {
     box-shadow: none !important; border-color: var(--border) !important;
   }
   .card, .tier-card, .feat-banner, .post, .cup-bar, .composer input, .kclosed,
-  .quests, .passport, .prompts, .hud .pill, .live-pill, .tk-line, .feed-identity { border-width: 1px !important; }
+  .quests, .passport, .prompts, .hud .pill, .live-pill, .tk-line { border-width: 1px !important; }
   /* film grain — the analog fingerprint (CSS-only SVG fractal noise) */
   .screen::after { content:""; position:absolute; inset:0; z-index:1; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
@@ -103,6 +103,7 @@
   .brand { padding: 6px 2px 12px; position: relative; }
   .brand h1 { margin: 0; font-size: 34px; font-weight: 800; letter-spacing: -.5px; font-family: var(--bodyf); color: var(--cyan); text-shadow: 0 0 18px rgba(77,227,255,.45), 0 0 42px rgba(77,227,255,.20); }
   .brand .sub { color: var(--muted); font-size: 12.5px; margin-top: 3px; font-weight: 700; }
+  .brand h1 .wm-ed { color: var(--pink); text-shadow: 0 0 18px rgba(255,77,158,.45), 0 0 42px rgba(255,77,158,.20); }
 
   .presence { margin: 2px 0 14px; padding: 12px 14px; background: var(--card); border: 2px solid var(--ink); border-radius: 18px; box-shadow: 3px 3px 0 var(--ink); }
   .presence .live { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 800; }
@@ -139,7 +140,7 @@
   .thumb { width: 118px; height: 118px; flex: 0 0 118px; align-self: center; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 34px; background: var(--card-hi); border: 2.5px solid var(--ink); overflow: hidden; box-shadow: 2px 2px 0 var(--ink); }
   .thumb .ph-img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .hero .ph-img { width: 100%; height: 100%; object-fit: cover; border-radius: 22px; display: block; }
-  .meta { flex: 1; min-width: 0; padding-right: 48px; display: flex; flex-direction: column; overflow: hidden; }
+  .meta { flex: 1; min-width: 0; padding-right: 60px; display: flex; flex-direction: column; overflow: hidden; }
   .meta .name { font-size: 19.5px; font-weight: 500; font-family: var(--disp); line-height: 1.1; color: var(--text); }
   .meta .name .en { color: var(--muted); font-weight: 500; font-size: 12.5px; text-transform: capitalize; font-family: var(--bodyf); }
   .meta .shop { font-size: 12.5px; color: var(--muted); margin-top: 3px; font-weight: 600; }
@@ -149,7 +150,7 @@
   .meta .row .rate { color: #EFD9A0; font-weight: 800; }
   .meta .price { margin-top: auto; padding-top: 7px; font-size: 16px; font-weight: 700; font-family: var(--disp); color: var(--pink-txt); white-space: nowrap; }
   .meta .price .p-eta { color: var(--muted); font-family: var(--bodyf); font-weight: 500; font-size: 12.5px; }
-  .qadd { position: absolute; top: 50%; right: 11px; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 13px; border: 2px solid var(--ink); background: var(--grad); color: #0A0E1A; font-size: 24px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; line-height: 1; transition: transform .1s, box-shadow .1s; }
+  .qadd { position: absolute; top: 50%; right: 11px; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 13px; border: 2px solid var(--ink); background: var(--pink); color: #14060F; font-size: 24px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; line-height: 1; transition: transform .1s, box-shadow .1s; }
   .qadd:active { transform: translateY(-50%) translate(1px,2px) scale(.96); box-shadow: 0 0 0 var(--ink); }
   .fav.on { color: var(--hot); }
 
@@ -242,7 +243,6 @@
   .reveal .sub { color: var(--muted); font-size: 14px; line-height: 1.5; max-width: 300px; margin-left: auto; margin-right: auto; }
   .track-skip { margin-top: 14px; background: transparent; border: none; color: var(--muted); font-family: var(--disp); font-weight: 600; font-size: 12.5px; cursor: pointer; text-decoration: underline; }
   /* feed identity band — first-night-only premise line (lifecycle-gated) */
-  .feed-identity { display: flex; align-items: center; gap: 7px; justify-content: center; text-align: center; background: linear-gradient(90deg, rgba(77,227,255,.07), rgba(255,77,158,.07)); border: 1px solid var(--border); border-radius: 14px; padding: 9px 12px; margin: 2px 0 14px; font-family: var(--disp); font-style: italic; font-weight: 500; font-size: 12.5px; color: var(--text); }
   /* ----- globe: international flight route ----- */
   .globe-box { height: 234px; margin: 6px 0 14px; position: relative; overflow: hidden; }
   .globe-box .land polygon { fill: #22304E; stroke: #35476B; stroke-width: .5; stroke-linejoin: round; }
@@ -269,6 +269,8 @@
   .composer input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow); }
   .composer input::placeholder { color: var(--muted); }
   .composer button { border: none; background: var(--grad); color: #0A0E1A; font-weight: 700; font-size: 14px; padding: 0 20px; border-radius: 14px; cursor: pointer; }
+  .p-quote { font-size: 11px; color: var(--muted); font-style: italic; font-family: var(--disp); border-left: 2px solid var(--border); padding-left: 7px; margin-bottom: 3px; }
+  .post .ptext { cursor: pointer; }
   .table-line { display:block; width:100%; text-align:left; background:transparent; border:none; cursor:pointer; font-family:var(--disp); font-style:italic; font-size:14px; line-height:1.4; color:var(--muted); padding:2px 2px 8px; }
   .table-line b { color:var(--text); font-weight:600; font-style:italic; }
   .composer.lamp input { border-color:var(--yell); box-shadow:0 0 12px rgba(255,210,77,.28); }
@@ -316,12 +318,12 @@
   .reacts .chip .rlbl { font-size: 11px; font-weight: 800; color: var(--muted); margin: 0 4px 0 4px; }
   .reacts .chip.on .rlbl { color: inherit; }
   /* the noodle cup — entry bar + the break overlay (our version of damta's cigarette) */
-  .cup-bar { width: 100%; display: flex; align-items: center; gap: 11px; background: var(--card-hi); border: 1px solid var(--border); border-radius: 16px; padding: 12px 13px; margin: 2px 0 12px; cursor: pointer; text-align: left; color: var(--text); }
+  .cup-bar { width: 100%; display: flex; align-items: center; gap: 13px; background: linear-gradient(120deg, rgba(77,227,255,.08), rgba(255,77,158,.05)), var(--card-hi); border: 1px solid rgba(77,227,255,.35); border-radius: 18px; padding: 18px 15px; margin: 2px 0 14px; cursor: pointer; text-align: left; color: var(--text); box-shadow: 0 0 18px rgba(77,227,255,.10); }
   .cup-bar:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
-  .cup-bar .cbr-ic { font-size: 24px; }
+  .cup-bar .cbr-ic { font-size: 34px; }
   .cup-bar .cbr-txt { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-  .cup-bar .cbr-txt b { font-family: var(--disp); font-weight: 600; font-size: 14px; }
-  .cup-bar .cbr-sub { font-size: 11px; color: var(--muted); font-weight: 500; }
+  .cup-bar .cbr-txt b { font-family: var(--disp); font-weight: 600; font-size: 19.5px; line-height: 1.2; }
+  .cup-bar .cbr-sub { font-size: 12.5px; color: var(--muted); font-weight: 500; margin-top: 2px; }
   .cup-bar .cbr-go { font-size: 24px; font-weight: 800; }
   .silence-btn { width: 100%; background: transparent; border: 2px dashed var(--ink); border-radius: 14px; padding: 9px; margin: 0 0 12px; font-family: var(--disp); font-weight: 600; font-size: 12.5px; color: var(--muted); cursor: pointer; }
   .room-rules-line { font-size: 11px; color: var(--muted); font-weight: 700; margin: -8px 0 14px; text-align: center; }
@@ -587,7 +589,7 @@
   .kb-n { font-weight: 700; font-size: 14px; color: var(--kb-head); }
   .kb-sub { color: var(--kb-mut); font-size: 11px; font-weight: 600; }
   .kb-p { font-family: var(--bodyf); font-weight: 800; font-size: 14px; color: var(--kb-pink-t); }
-  .kb-add { width: 36px; height: 36px; border-radius: 11px; border: 1px solid rgba(77,227,255,.4); background: var(--kb-hi); color: var(--kb-cyan-t); font-size: 19.5px; cursor: pointer; flex: 0 0 auto; }
+  .kb-add { width: 36px; height: 36px; border-radius: 11px; border: 1px solid rgba(255,77,158,.45); background: var(--kb-hi); color: var(--kb-pink-t); font-size: 19.5px; cursor: pointer; flex: 0 0 auto; }
   .kb-add:active { transform: scale(.92); }
   .kb-fic { text-align: center; color: var(--kb-mut); font-size: 12.5px; margin: 14px 0 8px; }
   .kb-basket { position: sticky; bottom: 64px; z-index: 5; background: var(--kb-ground); border: 1px solid var(--kb-line); border-radius: 16px; padding: 10px; margin-top: 10px; box-shadow: 0 -10px 30px rgba(4,7,15,.6); }
@@ -622,7 +624,7 @@
   .mname { font-size: 14px; font-weight: 800; line-height: 1.2; }
   .mblurb { font-size: 11px; font-style: italic; font-weight: 600; color: var(--muted); line-height: 1.3; margin-top: 3px; }
   .mprice { font-family: var(--disp); font-weight: 600; font-size: 14px; color: var(--pink-txt); white-space: nowrap; margin-top: auto; padding-top: 6px; }
-  .madd { width: 36px; height: 36px; flex: 0 0 36px; align-self: center; border-radius: 11px; border: 2px solid var(--ink); background: var(--grad); color: #0A0E1A; font-size: 19.5px; line-height: 1; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; }
+  .madd { width: 36px; height: 36px; flex: 0 0 36px; align-self: center; border-radius: 11px; border: 2px solid var(--ink); background: var(--pink); color: #14060F; font-size: 19.5px; line-height: 1; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; }
   .madd:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
   /* ----- stats modal ----- */
   .stats-list { text-align: left; margin: 4px 0 10px; max-height: 42vh; overflow-y: auto; }
@@ -677,7 +679,7 @@
   /* ----- coupons + new badge + spotlight ----- */
   .thumb { position: relative; }
   .coupon-rib { position: absolute; bottom: -2px; left: -2px; background: var(--hot); color: #14060F; font-family: var(--disp); font-weight: 700; font-size: 11px; padding: 2px 6px; border: 2px solid var(--ink); border-radius: 9px 9px 9px 4px; box-shadow: 1px 1px 0 var(--ink); white-space: nowrap; }
-  .new-chip { display: inline-block; background: var(--grad); color: #0A0E1A; font-weight: 800; font-size: 11px; padding: 1px 6px; border-radius: 8px; border: 1.5px solid var(--ink); margin-left: 4px; vertical-align: middle; }
+  .new-chip { display: inline-block; background: var(--pink); color: #14060F; font-weight: 800; font-size: 11px; padding: 1px 6px; border-radius: 8px; border: 1.5px solid var(--ink); margin-left: 4px; vertical-align: middle; }
   .spotlight.done { opacity: .78; box-shadow: 3px 3px 0 var(--ink); }
   /* big photo banner */
   .spotlight .sp-photo .ph-img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -836,7 +838,7 @@
         <!-- FEED -->
         <section class="view active" id="view-feed">
           <div class="brand">
-            <h1>Carted</h1>
+            <h1>Cart<span class="wm-ed">ed</span></h1>
             <div class="sub">the 2 am room</div>
             <div class="live-pill"><span class="dot"></span><span class="lp-count" id="live-count">night owls are up</span></div>
           </div>
@@ -859,7 +861,6 @@
 
           <!-- consolidated feed controls (was: seg + filters + feed-head) -->
           <div class="feed-controls" id="feed-controls">
-            <div class="feed-identity" id="feed-identity">nobody's delivering tonight. order anyway — see what the ghost does.</div>
             <div class="section-label feed-craving" id="feed-section-label">craving right now</div>
           </div>
 
@@ -1283,7 +1284,7 @@ function applyNight(){ document.body.classList.toggle("night", isNight()); }
 /* ---- state ---- */
 let cart = [], liveBase = 1247, courierTimers = [], room = [], lastOrderItems = [], pendingOrder = null;
 let curIdx = 0, currentDetailKey = null, GEO_SEQ = 0;
-let account = null, stats = { savedUsd:0, snackUsd:0, orders:0, streak:0, conversions:0, xp:0, cuisines:[], cities:[], maxCombo:0, earned:[], freezes:1, lastNight:null, quests:null, capsuleTokens:0, capsuleOwned:[], capsuleMilestone:0, capsuleLastNight:null, pitySince:0, capsuleMigrated:0 }, handoffTarget = null, combo = 0;
+let account = null, stats = { savedUsd:0, snackUsd:0, orders:0, streak:0, conversions:0, xp:0, cuisines:[], cities:[], maxCombo:0, earned:[], freezes:1, lastNight:null, quests:null, feastNight:null, capsuleTokens:0, capsuleOwned:[], capsuleMilestone:0, capsuleLastNight:null, pitySince:0, capsuleMigrated:0 }, handoffTarget = null, combo = 0;
 let sndOn = (localStorage.getItem("carted_snd")!=null) ? localStorage.getItem("carted_snd")!=="off" : false, lastTap = {x:195, y:420}, lastShare = null;   // sounds default OFF at night
 const placeByKey = {}, CITY_INDEX = {};
 
@@ -1536,6 +1537,7 @@ function renderHud(){
   /* HUD = the identity spine only: streak + lifetime dodged. levels/XP live on the profile. */
   el.innerHTML = `
     <button class="pill flame${done?' on':''}" onclick="go('profile')">🔥 <b>${stats.streak||0}</b> · <b>$${Math.round(stats.savedUsd).toLocaleString()}</b> <span class="hint">never spent</span></button>
+    ${(stats.capsuleTokens||0)>0?`<button class="pill" onclick="openGacha()" aria-label="the capsule machine">🪙 <b>${stats.capsuleTokens}</b></button>`:""}
     <button class="pill" onclick="toggleSnd()">${sndOn?"🔊":"🔇"}</button>`;
 }
 /* ---- stats: money dodged broken out by currency, total in USD ---- */
@@ -1871,7 +1873,7 @@ function cardHTML(p, saved){
     <div class="meta">
       <div class="name">${esc(p.name)}${isNew?'<span class="new-chip">new</span>':''}</div>
       <div class="shop"><span class="en">${where}</span> · ${esc(niceHood(p))}</div>
-      <div class="row"><span class="rate">★ ${p.rate.toFixed(1)}</span><span>(${p.n.toLocaleString()})</span><span> · ${"$".repeat(p.lvl||2)} · ${etaStr(p)}</span></div>
+      <div class="row"><span class="rate">★ ${p.rate.toFixed(1)}</span><span>(${p.n>=1000?(Math.round(p.n/100)/10)+"k":p.n})</span><span> · ${"$".repeat(p.lvl||2)} · ${etaStr(p)}</span></div>
     </div>
     <button class="qadd" onclick="quickAdd('${p._key}',event)">＋</button>
   </div>`;
@@ -1881,7 +1883,6 @@ function renderFeed(){
   const c=curCity();
   refreshDiscovery();
   $("#feed-section-label").textContent = `craving in ${esc(c.name)} right now`;
-  { const fi=$("#feed-identity"); if(fi) fi.style.display=(stats.orders||0)>0?"none":""; }
   if(!c._state || c._state==="loading"){ $("#feed-list").innerHTML = `<div class="loading"><div class="ghost-emo" style="font-size:34px">👻</div><div style="margin-top:10px">summoning the kitchens of ${esc(c.name)}…</div><span style="color:var(--muted);font-size:12.5px;font-weight:600">ghost-run establishments only</span></div>`; return; }
   if(c._state==="error"){ $("#feed-list").innerHTML = `<div class="empty"><div class="big">📡</div>couldn't reach OpenStreetMap.<br><span style="font-size:12.5px">${esc(c._err)}</span><br><br><button class="cta secondary" style="position:static" onclick="loadCity(curCity(),true)">retry</button></div>`; return; }
   if(c._state==="empty"){ $("#feed-list").innerHTML = `<div class="empty"><div class="big">🗺️</div>no places found here.<br>try another city.</div>`; return; }
@@ -2013,10 +2014,10 @@ function renderCart(){
     <div class="boss"><span class="bossic">👹</span><span><b style="color:var(--hot)">${money(cartFees(),USD)}</b> in junk fees — dodge him.</span></div>
     <div class="deliver-to">${multi?`✈️ a ghost plane will hit all ${cityIds.length} cities, then you`:(fl?`✈️ flying <b>${esc(c.name)} → ${esc(HOME.label)}</b> · real flight time ${fl.label}`:`🛵 delivering nearby in ${esc(HOME.label)}`)} · <span class="dt-change" onclick="cityModal(true)">change</span></div>
     ${orderedTonight()
-      ? `<div class="kclosed">🌙 kitchen's closed till tomorrow — tonight's feast is banked<div class="kc-sub">the corner store never closes — <span class="kb-link" onclick="openKonbini()">snack run 🏪</span></div></div>`
+      ? `<div class="kclosed">🌙 tonight's feast is banked — reruns ride free<div class="kc-sub">the corner store never closes — <span class="kb-link" onclick="openKonbini()">snack run 🏪</span></div></div><button class="cta secondary" style="position:static;margin-top:8px" onclick="placeOrder()">run it again 👻 — banks nothing</button>`
       : `<button class="cta" onclick="placeOrder()">place order ${fl?"✈️":"🚗"}</button>`}
     <button class="cta secondary" onclick="go('feed')">keep browsing</button>
-    <div style="text-align:center;color:var(--muted);font-size:12.5px;margin-top:12px">${orderedTonight()?"tonight's dodge is banked 🔥 see you at the next open.":"the button looks real. nothing gets charged."}</div>`;
+    <div style="text-align:center;color:var(--muted);font-size:12.5px;margin-top:12px">${orderedTonight()?"reruns are for the ride — tonight's dodge is already banked.":"the button looks real. nothing gets charged."}</div>`;
     /* DEMO/PRE-AFFILIATE: real-money handoff removed until partner programs are live.
        Re-enable: <button class="order-real" onclick="orderForReal('cart')">…or just order it for real on a delivery app →</button> */
 }
@@ -2064,14 +2065,14 @@ function buildFlightStages(route){
   return stages;
 }
 function placeOrder(){
-  if(orderedTonight()){ snd("pop"); toast(`🌙 kitchen's closed till tomorrow — the corner store's still open 🏪`); return; }
+  const rerun=orderedTonight();   // feast already banked: reruns get the full ride and bank NOTHING
   const c=curCity(), gd=rollDriver();
   const cities=[...new Set(cart.map(p=>p._cityId))];
   const route=buildRoute(cart, HOME);
   const isFlight = route.slice(0,-1).some(s=>havKm(s, HOME) >= 150);   // flight if any stop is >150km from home (cart-derived)
   const multi = route.length>2;
   const flight = isFlight ? { mins: routeMinutes(route), label: fmtFlight(routeMinutes(route)), multi: multi } : null;
-  pendingOrder = { items: cart.slice(), total: cartAllIn(), city: c, cities: cities, flight: flight, route: route, driver: gd.n, gachaDriver: gd };
+  pendingOrder = { items: cart.slice(), total: cartAllIn(), city: c, cities: cities, flight: flight, route: route, driver: gd.n, gachaDriver: gd, rerun: rerun };
   track("place_order",{cities:cities.length,flight:isFlight,usd:Math.round(cartAllIn())});
   snd("pop");
   $("#track-reveal").style.display="none"; $("#track-live").style.display="block";
@@ -2107,17 +2108,21 @@ function placeOrder(){
 }
 function revealTruth(){
   const po=pendingOrder; if(!po) return;
-  track("reveal",{usd:Math.round(po.total||0)});
+  const rerun=!!po.rerun;
+  track("reveal",{usd:Math.round(po.total||0), rerun:rerun?1:0});
   lastOrderItems=po.items;
-  /* streak = real calendar nights (4am cutoff), with a freeze to forgive one missed night */
+  /* streak = real calendar nights (4am cutoff), with a freeze to forgive one missed night.
+     RERUNS (2nd+ order of the night) touch NO ledger: no streak, no kept-$, no tokens. */
   const tonight=nightKey(); let streakGrew=false, usedFreeze=false;
-  if(stats.lastNight!==tonight){
+  if(!rerun && stats.lastNight!==tonight){
     if(stats.lastNight===nightShift(tonight,-1)){ stats.streak=(stats.streak||0)+1; }
     else if(stats.lastNight===nightShift(tonight,-2) && (stats.freezes||0)>0){ stats.freezes--; stats.streak=(stats.streak||0)+1; usedFreeze=true; }
     else if(!stats.lastNight && stats.streak>0){ stats.streak++; }
     else { stats.streak=1; }
     streakGrew=true; stats.lastNight=tonight;
   }
+  if(!rerun){
+  stats.feastNight=tonight;                            // the kitchen closes on a real feast, nothing else
   stats.orders++; stats.savedUsd += po.total;          // po.total is already USD
   bumpTonight(po.total); buddyPing(); bumpWeek(po.total, po.city.id, (po.items[0]||{}).ic);
   stats.maxStreak=maxStreakEver();
@@ -2137,12 +2142,13 @@ function revealTruth(){
   if(po.city.id===featuredCity().id && sp && parentKeys.includes(sp._key) && !(stats.spotDone||[]).includes(spotKey(po.city.id))){ stats.spotDone=stats.spotDone||[]; stats.spotDone.push(spotKey(po.city.id)); stats.freezes=Math.min(3,(stats.freezes||0)+1); }
   stats.nudgeHour=new Date().getHours();                 // habitual-hour anchor for the gentle nudge
   saveStats();
-  const cgNight = capsuleEarnNight("feast", true), cgMile = capsuleEarnMilestones();
+  }
+  const cgNight = rerun?0:capsuleEarnNight("feast", true), cgMile = rerun?0:capsuleEarnMilestones();
   const capsuleGain = cgNight + cgMile;
   if(NATIVE && stats.pushOptIn) nativeNudge();           // re-arm for tomorrow (never re-fires tonight)
   let milestone="";
   if(streakGrew && [3,7,14,30,50,100,200].includes(stats.streak)){ milestone=`🔥 ${stats.streak} nights, together`; if(stats.streak>=7){ stats.freezes=Math.min(3,(stats.freezes||0)+1); saveStats(); } }
-  if(po.city.id===curCity().id)
+  if(!rerun && po.city.id===curCity().id)
   lastShare = { usd: po.total, label: money(po.total, USD), streak: stats.streak, city: (po.cities&&po.cities.length>1)?`${po.cities.length} cities`:po.city.name };
   if(po.flight){ globeProgress(100); $("#track-live").style.display="none"; }
   else { const rd=$("#rider"); const mort=rd.querySelector(".mort"); if(mort) mort.textContent="👻"; const veh=rd.querySelector(".veh"); if(veh) veh.textContent="💨"; rd.style.left="120%"; rd.style.top="-12%"; rd.style.opacity="0"; routeProgress(100); const mp=$("#track-map"); if(mp) mp.classList.add("arrive"); $("#track-live").style.display="none"; }
@@ -2153,10 +2159,10 @@ function revealTruth(){
   const r=$("#track-reveal"); r.style.display="block"; r.className="reveal";
   r.innerHTML = `
     ${mortReveal(po.total, false)}
-    <div class="ghost-quip">the driver was never real. neither was the bill.</div>
-    <div class="saved" id="reveal-saved">${money(0,USD)} saved</div>
+    <div class="ghost-quip">${rerun?"a rerun — the ghost rides for free.":"the driver was never real. neither was the bill."}</div>
+    ${rerun?`<div class="sub" style="margin-top:8px">would've been <b>${money(po.total,USD)}</b> — tonight's dodge is already banked. this one was for the ride 👻</div>`:`<div class="saved" id="reveal-saved">${money(0,USD)} saved</div>
     <div class="sub">${(po.cities&&po.cities.length>1)?`dinner across ${po.cities.length} cities, all dodged`:(po.flight?`dinner in ${esc(po.city.name)}, a ${po.flight.label} flight that never took off`:`what tonight in ${esc(po.city.name)} would've cost`)} — it stayed in your pocket.</div>
-    <div class="sub" style="color:#EFD9A0;font-weight:800;margin-top:6px">🔥 night ${stats.streak}${usedFreeze?' · 🧊 a freeze caught your miss':''}</div>
+    <div class="sub" style="color:#EFD9A0;font-weight:800;margin-top:6px">🔥 night ${stats.streak}${usedFreeze?' · 🧊 a freeze caught your miss':''}</div>`}
     ${milestone?`<div class="milestone">${milestone}</div>`:""}
     ${capsuleGain?`<div class="milestone" style="cursor:pointer" onclick="openGacha()">🪙 ${capsuleGain===1?"a capsule token":capsuleGain+" capsule tokens"} — ${cgNight&&cgMile?"for showing up + $100 kept":(cgMile?"every $100 kept mints one":"for showing up tonight")}. ${esc(ghostName())}'s machine is by the door</div>`:""}
     <div style="margin-top:22px">
@@ -2164,7 +2170,7 @@ function revealTruth(){
       <button class="cta secondary" style="position:static" onclick="shareReceipt()">🧾 the receipt</button>
     </div>
     <div class="sub" style="margin-top:14px;text-align:center"><span onclick="goodnight()" style="color:var(--muted);cursor:pointer">good night 🌙</span></div>`;
-  animateMoney($("#reveal-saved"), po.total, USD);
+  if(!rerun) animateMoney($("#reveal-saved"), po.total, USD);
   setTimeout(()=>snd("chime"), 850);
   renderHud();
   cart=[]; updateBadge();
@@ -2296,6 +2302,7 @@ function maybeThreshold(){
   el.addEventListener("pointerdown", rm);
 }
 /* podium deleted 2026-07-09 — the room is a leveler; even a fictional ranking fights the co-presence job */
+function replyTo(i){ const p=room[i]; if(!p) return; const snip=String(p.text||"").replace(/^🏮 /,"").replace(/^↪ "[^"]*" ?/,"").slice(0,24); const inp=$("#composer-input"); if(!inp) return; inp.value=`↪ "${snip}" `; inp.focus(); snd("pop"); }
 function renderRoom(){
   if(!localStorage.getItem("carted_room_intro")){ try{ localStorage.setItem("carted_room_intro","1"); }catch(e){}
     showModal(`<div class="m-emoji">🌙</div><div class="m-title">welcome to the break room</div><div class="m-body" style="text-align:left">ghosts marked 👻 are friendly fiction. you post anonymously — no name, no account. everything burns at 4am — deleted, not archived.</div><button class="cta" style="position:static" onclick="closeModal()">got it</button>`); }
@@ -2303,6 +2310,7 @@ function renderRoom(){
     room.unshift({ic:"🫂", ghost:"Bea", sched:"~2:40", text:"first dodge. we saw. welcome in 🫂", city:"the stoop", ago:"now", r:{hug:3,me:1,go:0}, reacted:{}});
   }
   fetchLiveRoom();
+  try{ if(!localStorage.getItem("carted_reply_taught")){ localStorage.setItem("carted_reply_taught","1"); setTimeout(()=>toast("tap any post to pass it back ↪"), 2600); } }catch(e){}
   const tk=tonightsKitchen(), tf=featuredCity(); if(!tk) ensureKitchenLoaded();
   /* the room is a leveler — no leaderboard, no "biggest dodge" competition. just the shared
      kitchen (we're all here for the same one) and the murmur. */
@@ -2316,7 +2324,7 @@ function renderRoom(){
     $("#room-feed").innerHTML = (_lt?`<div class="post ghostp letter"><div class="phead"><span class="pic">💌</span><div class="pmeta">tonight's letter · <span class="gtag">👻 ${esc(_lt.ghost)}</span></div></div><div class="ptext">${esc(_lt.text)}</div><div class="l-ack">— ${esc(_lt.ack)}</div></div>`:"") + room.map((p,i)=>`
     <div class="post${p.mine?' mine':''}${p.ghost?' ghostp':''}">
       <div class="phead"><span class="pic">${p.ic}</span><div class="pmeta">${p.mine?'<span class="mine-tag">you</span>':(p.ghost?`<span class="gtag">👻 ${esc(p.ghost)}</span>${p.sched?` · round here ${p.sched}`:""} · ${esc(p.city)}`:'<b>anon</b> · '+esc(p.city))} · ${p.ago}</div></div>
-      <div class="ptext">${esc(p.text)}</div>
+      ${(function(){ const m=String(p.text).match(/^(🏮 )?↪ "([^"]{1,40})" ?([\s\S]*)$/); return m?`<div class="p-quote">↪ ${esc(m[2])}</div><div class="ptext" onclick="replyTo(${i})">${esc((m[1]||"")+m[3])}</div>`:`<div class="ptext" onclick="replyTo(${i})">${esc(p.text)}</div>`; })()}
       <div class="reacts">${["hug","me","hold"].map(t=>`<button class="chip r-${t}${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')" aria-label="${REACT_LBL[t]}" title="${REACT_LBL[t]}">${REACT_META[t]}${i===0?reactLbl(t):""}${p.r[t]>0?`<span class="cnt">${p.r[t]}</span>`:""}</button>`).join("")}${p.live?`<button class="chip" onclick="reportPost(${i})" aria-label="report">🚩</button>`:""}</div>
     </div>`).join("");
   }
@@ -2782,7 +2790,7 @@ function buddyPing(){ if(!(stats.buddy && beOn())) return; bePost("buddy", { act
 function msToSunrise(){ const now=new Date(), r=new Date(now); r.setHours(4,0,0,0); if(now.getHours()>=4) r.setDate(r.getDate()+1); return r-now; }
 function burnLabel(){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); return `🌅 posts burn in ${h}h ${String(m).padStart(2,"0")}m`; }
 /* one ghost order a night (4am cutoff) — hard scarcity is what turns a toy into a ritual */
-function orderedTonight(){ return (stats.orders||0)>0 && stats.lastNight===nightKey(); }
+function orderedTonight(){ return stats.feastNight===nightKey(); }   // FEAST-specific stamp: room visits move lastNight (showing up) but must never close the kitchen
 function reopenLabel(){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); return h>0?`${h}h ${String(m).padStart(2,"0")}m`:`${m}m`; }
 
 /* ============================================================
@@ -3005,11 +3013,12 @@ function capsuleOwnedId(id){ capsuleMigrate(); return (stats.capsuleOwned||[]).i
 /* +1 the FIRST ritual each night — showing up, never time-in-app.
    sources: "feast" (revealTruth) · "room" (makeMine) · "snack" (snack-run reveal).
    NOT the cup — its screen promises "no points, nothing owed" and the ledger keeps that promise. */
+function capsuleHalfDay(){ const s=new Date(Date.now()-4*3600*1000); const p=n=>String(n).padStart(2,"0"); return `${s.getFullYear()}-${p(s.getMonth()+1)}-${p(s.getDate())}·${s.getHours()<12?"a":"b"}`; }
 function capsuleEarnNight(src, quiet){
   capsuleMigrate();
-  const n=nightKey(); if(stats.capsuleLastNight===n) return 0;
+  const n=capsuleHalfDay(); if(stats.capsuleLastNight===n) return 0;   // restocks at 4am and 4pm — two shifts a day
   stats.capsuleLastNight=n; stats.capsuleTokens=(stats.capsuleTokens||0)+1; saveStats();
-  track("capsule_token",{src});
+  track("capsule_token",{src}); renderHud();
   if(!quiet) setTimeout(()=>toast("🪙 a capsule token — for showing up tonight"), 900);
   return 1;
 }
@@ -3062,7 +3071,7 @@ function openGacha(){
     <div class="gm-tokens" id="gm-tokens"></div>
     <div class="gm-odds"><span class="gm-dot t-c"></span>common <b>60%</b> · <span class="gm-dot t-u"></span>uncommon <b>30%</b><br><span class="gm-dot t-r"></span>rare <b>9%</b> · <span class="gm-dot t-s"></span>secret <b>1%</b>
       <div class="gm-pity" id="gm-pity"></div></div>
-    <div class="gm-fine">odds are real. no money goes in — tokens come from nights showed up and money kept.<br>${esc(ghostName())} never hands you the same thing twice.</div>`}
+    <div class="gm-fine">odds are real. no money goes in — tokens come from showing up (the machine restocks at 4am &amp; 4pm) and every $100 kept.<br>${esc(ghostName())} never hands you the same thing twice.</div>`}
   </div>`;
   sc.appendChild(el); snd("door");
   gachaHud();
@@ -3107,7 +3116,7 @@ function gachaReveal(item){
   snd(item.tier==="s" ? "fanfare" : "chime");
 }
 function reopenGacha(){ closeGacha(); openGacha(); }
-function closeGacha(){ __gachaT.forEach(clearTimeout); __gachaT=[]; __gachaBusy=false; const el=$("#gacha-overlay"); if(el) el.remove(); if($("#view-profile").classList.contains("active")) renderProfile(); }
+function closeGacha(){ __gachaT.forEach(clearTimeout); __gachaT=[]; __gachaBusy=false; const el=$("#gacha-overlay"); if(el) el.remove(); renderHud(); if($("#view-profile").classList.contains("active")) renderProfile(); }
 /* --- the collection book: the whole catalog, owned bright / unowned a dimmed ? --- */
 function renderCollection(){
   capsuleMigrate();
