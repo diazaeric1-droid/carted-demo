@@ -273,6 +273,7 @@
   .composer button { border: none; background: var(--grad); color: #0A0E1A; font-weight: 700; font-size: 14px; padding: 0 20px; border-radius: 14px; cursor: pointer; }
   .p-quote { font-size: 11px; color: var(--muted); font-style: italic; font-family: var(--disp); border-left: 2px solid var(--border); padding-left: 7px; margin-bottom: 3px; }
   .post .ptext { cursor: pointer; }
+  .ash-line { display:block; width:100%; text-align:left; background:transparent; border:none; cursor:pointer; font-family:var(--disp); font-style:italic; font-size:12.5px; line-height:1.5; color:var(--muted); padding:2px 2px 10px; }
   .table-line { display:block; width:100%; text-align:left; background:transparent; border:none; cursor:pointer; font-family:var(--disp); font-style:italic; font-size:14px; line-height:1.4; color:var(--muted); padding:2px 2px 8px; }
   .table-line b { color:var(--text); font-weight:600; font-style:italic; }
   .composer.lamp input { border-color:var(--pink); box-shadow:0 0 12px rgba(255,77,158,.26); }
@@ -327,6 +328,15 @@
   .cup-bar .cbr-txt b { font-family: var(--disp); font-weight: 600; font-size: 19.5px; line-height: 1.2; }
   .cup-bar .cbr-sub { font-size: 12.5px; color: var(--muted); font-weight: 500; margin-top: 2px; }
   .cup-bar .cbr-go { font-size: 24px; font-weight: 800; }
+  .booth-bar { width: 100%; display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid rgba(255,77,158,.3); border-radius: 14px; padding: 11px 13px; margin: 0 0 10px; cursor: pointer; text-align: left; color: var(--text); font-size: 12.5px; }
+  .booth-bar b { font-family: var(--disp); font-weight: 600; font-size: 14px; }
+  .booth-bar .bb-sub { flex: 1; min-width: 0; color: var(--muted); font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .booth-bar .bb-go { color: var(--muted); font-size: 19.5px; }
+  #view-room.booth .cup-bar, #view-room.booth .table-line, #view-room.booth .prompts, #view-room.booth .notice, #view-room.booth .silence-btn, #view-room.booth #room-ash, #view-room.booth #room-nod, #view-room.booth .booth-bar, #view-room.booth .live2, #view-room.booth .ghost-note { display: none; }
+  .booth-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 12.5px; color: var(--text); font-weight: 700; margin: 2px 2px 4px; }
+  .booth-head .bh-acts button { background: none; border: none; color: var(--cyan-txt); font-size: 12.5px; font-weight: 700; cursor: pointer; padding: 0; }
+  .booth-note { font-family: var(--disp); font-style: italic; font-size: 12.5px; color: var(--muted); margin: 0 2px 12px; }
+  .booth-empty { text-align: center; color: var(--muted); font-size: 12.5px; padding: 26px 12px; font-family: var(--disp); font-style: italic; }
   .silence-btn { width: 100%; background: transparent; border: 2px dashed var(--ink); border-radius: 14px; padding: 9px; margin: 0 0 12px; font-family: var(--disp); font-weight: 600; font-size: 12.5px; color: var(--muted); cursor: pointer; }
   .room-rules-line { font-size: 11px; color: var(--muted); font-weight: 700; margin: -8px 0 14px; text-align: center; }
   .room-rules-line a { color: inherit; text-decoration: underline; }
@@ -403,6 +413,24 @@
   .gr-tier { font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-top: 3px; }
   .gr-tier.t-c { color: var(--cap-c); } .gr-tier.t-u { color: #9BD2E8; } .gr-tier.t-r { color: #F2A9C4; } .gr-tier.t-s { color: #EFD9A0; }
   .gr-line { font-size: 12.5px; color: var(--muted); margin-top: 8px; font-style: italic; font-family: var(--disp); }
+  .gm-pack { width: 100%; max-width: 240px; margin: 12px auto 0; display: block; border: 1px solid rgba(255,77,158,.45); background: var(--card-hi); color: var(--pink-txt); font-family: var(--bodyf); font-weight: 800; font-size: 14px; padding: 11px; border-radius: 12px; cursor: pointer; }
+  .gm-pack:disabled { opacity: .4; cursor: default; }
+  .gm-pack-sub { font-size: 11px; color: var(--muted); margin-top: 5px; }
+  .pk-pack { width: 132px; height: 176px; margin: 26px auto 10px; border-radius: 14px; border: 2px solid transparent; background: linear-gradient(var(--card-hi),var(--card-hi)) padding-box, linear-gradient(135deg,#4DE3FF,#FF4D9E) border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; animation: pkWob 1.4s ease-in-out infinite; }
+  @keyframes pkWob { 0%,100%{ transform: rotate(-2deg);} 50%{ transform: rotate(2deg);} }
+  .pk-pack.rip { animation: pkRip .8s ease-in forwards; }
+  @keyframes pkRip { 40%{ transform: scale(1.15) rotate(3deg); } 100%{ transform: scale(0) rotate(-12deg); opacity: 0; } }
+  .pk-p-top { font-family: var(--bodyf); font-weight: 800; font-size: 12.5px; letter-spacing: 2px; color: var(--cyan-txt); }
+  .pk-p-mort { font-size: 34px; }
+  .pk-p-sub { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: var(--pink-txt); }
+  .pk-cards { display: flex; flex-direction: column; gap: 9px; margin-top: 14px; width: 100%; max-width: 250px; margin-left: auto; margin-right: auto; }
+  .pk-card { display: flex; align-items: center; gap: 11px; background: var(--card); border: 2px solid var(--cap-c); border-radius: 13px; padding: 10px 13px; cursor: pointer; animation: pkIn .45s ease both; animation-delay: var(--d,0ms); text-align: left; }
+  .pk-card.t-u { border-color: var(--cap-u); } .pk-card.t-r { border-color: var(--cap-r); box-shadow: 0 0 16px rgba(255,77,158,.22); } .pk-card.t-s { border-color: var(--cap-s); box-shadow: 0 0 20px rgba(255,210,77,.28); }
+  @keyframes pkIn { from { opacity: 0; transform: translateY(12px) scale(.92); } to { opacity: 1; transform: none; } }
+  .pk-hat { font-size: 24px; }
+  .pk-n { flex: 1; font-family: var(--disp); font-size: 14px; color: var(--text); }
+  .pk-card .pk-t { margin-top: 0; }
+  @media (prefers-reduced-motion: reduce) { .pk-pack, .pk-pack.rip, .pk-card { animation: none; } }
   .gm-confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
   .gm-confetti span { position: absolute; top: -20px; font-size: 12.5px; color: var(--cap-s); animation: fall 1.7s ease-in forwards; }
   @media (prefers-reduced-motion: reduce) { .gm-machine.cranking .gm-crank, .gm-machine.cranking .gm-cap, .gm-ball.drop, .gm-ball.wobble, .gm-ball.crack { animation: none; } .gm-confetti { display: none; } }
@@ -902,12 +930,14 @@
           </div>
           <div id="room-podium"></div>
           <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a 3-minute break</span><span class="cbr-shelf" id="cup-shelf"></span></span><span class="cbr-go">›</span></button>
+          <button class="booth-bar" id="booth-bar" onclick="openBooth()">🛋️ <b>the booth</b> <span class="bb-sub" id="booth-sub">a private table for your people</span><span class="bb-go">›</span></button>
           <button id="silence-toggle" class="silence-btn" onclick="toggleSilence()">🤫 quiet corner</button>
           <button class="table-line" id="table-line" onclick="tableToComposer()"></button>
           <div class="composer"><input id="composer-input" aria-label="say something to the room" placeholder="say it quietly — it burns at sunrise" maxlength="90" /><button onclick="postFromComposer()">post</button></div>
           <div class="prompts"><button class="pchip" onclick="quickConfess('🍕')">🍕</button><button class="pchip" onclick="quickConfess('🍜')">🍜</button><button class="pchip" onclick="quickConfess('🍣')">🍣</button><button class="pchip" onclick="quickConfess('🌮')">🌮</button><button class="pchip" onclick="quickConfess('🍔')">🍔</button><button class="pchip" onclick="quickConfess('🍰')">🍰</button></div>
           <div class="room-rules-line">be kind · <a href="terms.html" target="_blank" rel="noopener">rules</a> · 🚩 report</div>
           <div class="notice" id="room-notice"></div>
+          <div id="room-ash"></div>
           <div id="room-feed"></div>
           <div class="osm-credit" id="room-burn">🌅 posts burn at sunrise</div>
         </section>
@@ -2311,14 +2341,30 @@ function renderRoom(){
   if(localStorage.getItem("carted_first_dodge")==="1"){ try{ localStorage.removeItem("carted_first_dodge"); }catch(e){}
     room.unshift({ic:"🫂", ghost:"Bea", sched:"~2:40", text:"first dodge. we saw. welcome in 🫂", city:"the stoop", ago:"now", r:{hug:3,me:1,go:0}, reacted:{}});
   }
-  fetchLiveRoom();
+  if(!roomBoothMode) fetchLiveRoom();   // booth-only sitters never touch main-room presence
   try{ if(!localStorage.getItem("carted_reply_taught")){ localStorage.setItem("carted_reply_taught","1"); setTimeout(()=>toast("tap any post to pass it back ↪"), 2600); } }catch(e){}
   const tk=tonightsKitchen(), tf=featuredCity(); if(!tk) ensureKitchenLoaded();
   /* the room is a leveler — no leaderboard, no "biggest dodge" competition. just the shared
      kitchen (we're all here for the same one) and the murmur. */
   const _ev=eventNight();
   { const rp=$("#room-podium"); if(rp) rp.innerHTML = _ev?`<div class="tk-line">🌙 ${esc(_ev.banner)}</div>`:""; }
-  const vr=$("#view-room"); if(vr) vr.classList.toggle("quiet", roomSilent);
+  const vr=$("#view-room"); if(vr){ vr.classList.toggle("quiet", roomSilent&&!roomBoothMode); vr.classList.toggle("booth", roomBoothMode); }
+  if(roomBoothMode){
+    const b=boothState()||{code:"?"};
+    fetchBooth();
+    $("#room-feed").innerHTML = `
+      <div class="booth-head"><span>🛋️ the booth · <b>${esc(b.code)}</b></span>
+        <span class="bh-acts"><button onclick="shareBoothLink()">invite</button> · <button onclick="leaveBoothMode()">back to the room</button></span></div>
+      <div class="booth-note">just your people here — no ghosts past the door. burns at sunrise.</div>
+      ${boothPosts.length ? boothPosts.map((p,i)=>`
+        <div class="post${p.mine?' mine':''}">
+          <div class="phead"><span class="pic">🛋️</span><div class="pmeta">${p.mine?'<span class="mine-tag">'+esc(p.handle||"you")+'</span>':'<b>'+esc(p.handle||"someone")+'</b>'} · tonight${p.local?' · this side only':''}</div></div>
+          <div class="ptext">${esc(p.text)}</div>
+          ${(!p.mine&&p.liveId)?`<div class="reacts"><button class="chip" onclick="reportBoothPost(${i})" aria-label="report">🚩</button></div>`:""}
+        </div>`).join("") : `<div class="booth-empty">nobody's sat down yet tonight. say something — or hand the link to someone who's up.</div>`}`;
+    renderRoomMeta();
+    return;
+  }
   if(roomSilent){
     $("#room-feed").innerHTML = `<div class="quiet-panel"><div class="qp-emo">🌙</div><div class="qp-title">quiet corner</div><div class="qp-sub">no one's talking here. the ghosts are around, and so are you.<br>nothing to do, nothing owed. just breathe — the room will hold.</div></div>`;
   } else {
@@ -2337,13 +2383,24 @@ function renderRoom(){
 function renderRoomMeta(){
   const rb=$("#room-burn"); if(rb) rb.innerHTML=`${burnLabel()}${crisisLine()}`;
   const rbt=$("#room-burn-top"); if(rbt){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); rbt.textContent=`🌅 ${h}h ${String(m).padStart(2,"0")}m`; }
-  const ra=$("#room-awake"); if(ra) ra.textContent = kitchenLight() ? "🏮 the kitchen light is on — 2:00 to 2:15" : ((_roomHumans!=null && _roomHumans>=2) ? `${_roomHumans} night owls here right now` : "the room's awake");
+  const ra=$("#room-awake"); if(ra) ra.textContent = windDown() ? "🌅 the room banks down at 4:00 — cups finishing" : (kitchenLight() ? "🏮 the kitchen light is on — 2:00 to 2:15" : ((_roomHumans!=null && _roomHumans>=2) ? `${_roomHumans} night owls here right now` : "the room's awake"));
   const tl=$("#table-line"); if(tl){ const t=tonightsTable(); if(tl.dataset.t!==t){ tl.dataset.t=t; tl.innerHTML=`tonight's table: <b>${esc(t)}</b>`; } }
-  const cw=document.querySelector("#view-room .composer"); if(cw) cw.classList.toggle("lamp", kitchenLight());
-  const ci=$("#composer-input"); if(ci) ci.maxLength = kitchenLight()?87:90;   // the 🏮 prefix costs 3 units — the author trims, not the room
+  const cw=document.querySelector("#view-room .composer"); if(cw) cw.classList.toggle("lamp", kitchenLight()&&!roomBoothMode);
+  const bs=$("#booth-sub"); if(bs){ const b=boothState(); bs.textContent = b ? `code ${b.code} — tap to sit down` : "a private table for your people"; }
+  const ci=$("#composer-input"); if(ci) ci.maxLength = (kitchenLight()&&!roomBoothMode)?87:90;   // the 🏮 prefix costs 3 units — the author trims, not the room
   const cbs=document.querySelector(".cbr-sub"); if(cbs) cbs.textContent = (_roomCups!=null && _roomCups>=2) ? `${_roomCups} cups steeped tonight` : "a 3-minute break";
   renderShelf(); renderNotice(); renderNod(); markUsualChip();
+  /* morning ash: one quiet payoff line for last night's burn — shown once, tap to sweep it */
+  const ra2=$("#room-ash"); if(ra2){ let ash=null; try{ ash=JSON.parse(localStorage.getItem("carted_ash")||"null"); }catch(e){}
+    let shown=false; try{ shown=localStorage.getItem("carted_ash_shown")===nightKey(); }catch(e){}
+    if(ash && ash.night!==nightKey() && !shown && !roomBoothMode){
+      const what = ash.hold>0 ? `held by ${ash.hold} til the end` : (ash.warm>0 ? `${ash.warm} sat with ${ash.posts>1?"them":"it"} before ${ash.posts>1?"they":"it"} went` : `${ash.posts>1?"they":"it"} made it all the way`);
+      const when = ash.night===nightShift(nightKey(),-1) ? "last night" : "your last night here";
+      ra2.innerHTML=`<button class="ash-line" onclick="sweepAsh()">🌅 ${when} burned at 4:00 — your post${ash.posts>1?"s were":" was"} ${what}.</button>`;
+    } else ra2.innerHTML="";
+  }
 }
+function sweepAsh(){ try{ localStorage.setItem("carted_ash_shown", nightKey()); localStorage.removeItem("carted_ash"); }catch(e){} const el=$("#room-ash"); if(el) el.innerHTML=""; snd("pop"); }
 /* the shelf: a pack is finite — that's where a cigarette's value lives. seven cups a week,
    one per night, restocks sunday. never loss-framed: an untaken cup just stays on the shelf. */
 function renderShelf(){ const el=$("#cup-shelf"); if(!el) return;
@@ -2393,6 +2450,8 @@ function tableToComposer(){ const inp=$("#composer-input"); if(!inp) return; if(
 /* the kitchen light: 2:00–2:15am LOCAL. a window you can be in, never a countdown — the room doesn't nag.
    outside it, the only mention is one line in the goodnight overlay. never claims people are there. */
 function kitchenLight(){ const d=new Date(); return d.getHours()===2 && d.getMinutes()<15; }
+/* the wind-down: 3:45-4:00, the room tucks itself in — a beat, never a threat */
+function windDown(){ const d=new Date(); return d.getHours()===3 && d.getMinutes()>=45; }
 /* the notice board: a maintained PLACE has weight — nightly one-liner from dispatch, in ops voice */
 const NOTICES=[
   "kettle descaled. quiet night expected.",
@@ -2455,10 +2514,18 @@ function react(i,t){ const p=room[i]; if(!p) return; if(!p.reacted) p.reacted={}
   snd("pop");
   if(p.liveId && ROOM_LIVE && beOn()) bePost("room",{action:"react", post_id:p.liveId, kind:(t==="me"?"metoo":t==="hold"?"hold":"hug")}); }
 function saveMinePost(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); all.unshift({ic:post.ic,text:post.text,streak:post.streak||0,night:nightKey(),r:{...(post.rBase||post.r)},seen:!!post.seenDone,liveId:post.liveId||null}); localStorage.setItem("carted_room_mine", JSON.stringify(all.slice(0,12))); }catch(e){} }
-function updateMineStored(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); const m=all.find(p=>p.night===nightKey()&&p.text===post.text); if(m){ m.r={...(post.rBase||post.r)}; m.seen=!!post.seenDone; m.liveId=post.liveId||m.liveId||null; localStorage.setItem("carted_room_mine", JSON.stringify(all)); } }catch(e){} }
+function updateMineStored(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); const m=all.find(p=>p.night===nightKey()&&p.text===post.text); if(m){ m.r={...(post.rBase||post.r)}; if(post.realCounts) m.real={...post.realCounts}; m.seen=!!post.seenDone; m.liveId=post.liveId||m.liveId||null; localStorage.setItem("carted_room_mine", JSON.stringify(all)); } }catch(e){} }
 /* counts come back exactly as stored — a number that changed by itself between two opens is the
    one dishonesty a user can catch. real reactions arrive via action:"mine" and stack on top. */
-function loadMinePosts(){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); const live=all.filter(p=>p.night===nightKey()); if(live.length!==all.length){ try{ localStorage.setItem("carted_room_mine", JSON.stringify(live)); }catch(e){} } return live.map(p=>({ic:p.ic,text:p.text,streak:p.streak,city:"you",ago:"tonight",mine:true,liveId:p.liveId||null,seenDone:!!p.seen,rBase:{hug:0,me:0,go:0,hold:0,...(p.r||{})},r:{hug:0,me:0,go:0,hold:0,...(p.r||{})},reacted:{}})); }catch(e){ return []; } }
+function loadMinePosts(){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); const live=all.filter(p=>p.night===nightKey());
+  if(live.length!==all.length){
+    /* morning ash: sum up what last night's posts carried before they burn out of storage */
+    try{ const stale=all.filter(p=>p.night!==nightKey()); if(stale.length){
+      const gone=stale.filter(p=>p.night===stale[0].night);   // only the most recent old night — no aggregating across absences
+      const sum=k=>gone.reduce((a,p)=>a+((p.real||{})[k]||0),0);   // REAL humans only; the ghost-ambience base never launders into a morning fact
+      localStorage.setItem("carted_ash", JSON.stringify({night:gone[0].night, posts:gone.length, hold:sum("hold"), warm:sum("hug")+sum("me")}));
+    } }catch(e){}
+    try{ localStorage.setItem("carted_room_mine", JSON.stringify(live)); }catch(e){} } return live.map(p=>({ic:p.ic,text:p.text,streak:p.streak,city:"you",ago:"tonight",mine:true,liveId:p.liveId||null,seenDone:!!p.seen,rBase:{hug:0,me:0,go:0,hold:0,...(p.r||{})},r:{hug:0,me:0,go:0,hold:0,...(p.r||{})},reacted:{}})); }catch(e){ return []; } }
 function makeMine(ic, text){
   if(kitchenLight() && !/^🏮/.test(text)) text="🏮 "+String(text).slice(0,87).replace(/[\uD800-\uDBFF]$/,"");   // born under the kitchen light — the lamp travels in the text and burns with the post; composer maxlength drops to 87 in the window so nothing is cut silently
   const post={ic, text, city:"you", ago:"now", mine:true, streak:stats.streak||0, r:{hug:0,me:0,go:0,hold:0}, rBase:{hug:0,me:0,go:0,hold:0}, reacted:{}}; room.unshift(post); saveMinePost(post); renderRoom(); beSeen(post); track("room_post"); capsuleEarnNight("room");
@@ -2476,6 +2543,65 @@ function show988(){ const body = isNA()
     ? `<a class="cta" style="position:static;display:block;text-decoration:none;text-align:center" href="tel:988">call or text 988</a>`
     : `<a class="cta" style="position:static;display:block;text-decoration:none;text-align:center" href="https://findahelpline.com" target="_blank" rel="noopener">find your local helpline</a>`;
   showModal(`<div class="m-emoji">🤍</div><div class="m-title">rough night?</div><div class="m-body">${body}</div>${link}<button class="cta secondary" style="position:static" onclick="closeModal()">back to the room</button>`); }
+/* ===== THE BOOTH: a friends-only side room off an invite link. text-only, same 90 chars,
+   same moderation pipe, burns at sunrise. no ghosts past the door — presence is your people
+   or nothing. photos and stranger DMs stay out by design. ===== */
+let roomBoothMode=false, boothPosts=[], _boothFetchT=0;
+function boothState(){ try{ return JSON.parse(localStorage.getItem("carted_booth")||"null"); }catch(e){ return null; } }
+function saveBooth(b){ try{ localStorage.setItem("carted_booth", JSON.stringify(b)); }catch(e){} }
+function boothLocal(){ try{ return (JSON.parse(localStorage.getItem("carted_booth_local")||"[]")).filter(p=>p.night===nightKey()); }catch(e){ return []; } }
+function acceptBoothFromUrl(){ const m=location.search.match(/[?&]booth=([A-Z0-9]{4,8})/i); if(!m) return;
+  const code=m[1].toUpperCase(); const cur=boothState();
+  if(!cur || cur.code!==code){ saveBooth({code, handle:(cur&&cur.handle)||null}); track("booth_join"); setTimeout(()=>toast("🛋️ you're in the booth — it's in the room, left of the composer"), 1600); } }
+function boothLink(){ const b=boothState(); if(!b) return ""; return location.origin+location.pathname+"?booth="+b.code; }
+function shareBoothLink(){ const link=boothLink(); if(!link) return;
+  if(navigator.share){ navigator.share({title:"our booth on Carted", text:"a private table in the 2 am room — burns at sunrise. come sit.", url:link}).catch(()=>{}); }
+  else { try{ navigator.clipboard.writeText(link); toast("link copied — hand it to your people 🛋️"); }catch(e){ prompt("your booth link:", link); } } }
+function openBooth(){
+  const b=boothState();
+  if(!b){ showModal(`<div class="m-emoji">🛋️</div><div class="m-title">the booth</div><div class="m-body">a private table off the 2 am room — just you and whoever holds the link. text only, burns at sunrise, no ghosts past the door.</div>
+      <button class="cta" style="position:static" onclick="createBooth()">start a booth</button>
+      <button class="cta secondary" style="position:static;margin-top:8px" onclick="joinBoothPrompt()">i have a code</button>
+      <button class="cta secondary" style="position:static;margin-top:8px" onclick="closeModal()">not tonight</button>`); return; }
+  roomBoothMode=true; _boothFetchT=0; fetchBooth(); renderRoom(); track("booth_enter");
+}
+function createBooth(){ closeModal(); const abc="ABCDEFGHJKMNPQRSTUVWXYZ23456789"; let code=""; for(let i=0;i<6;i++) code+=abc[Math.floor(Math.random()*abc.length)];
+  saveBooth({code, handle:null}); track("booth_create"); openBooth(); setTimeout(shareBoothLink, 600); }
+function joinBoothPrompt(){ closeModal(); const c=(prompt("the booth code (6 characters):")||"").trim().toUpperCase();
+  if(!/^[A-Z0-9]{4,8}$/.test(c)){ if(c) toast("that code doesn't look right"); return; }
+  saveBooth({code:c, handle:null}); track("booth_join"); openBooth(); }
+function leaveBoothMode(){ roomBoothMode=false; renderRoom(); }
+function ensureHandle(cb){ const b=boothState(); if(!b) return; if(b.handle){ cb(); return; }
+  showModal(`<div class="m-emoji">🛋️</div><div class="m-title">what do your people call you?</div><div class="m-body">just for the booth — the main room stays nameless.</div>
+    <input id="bh-input" class="city-search" maxlength="12" placeholder="12 characters, tops" autocomplete="off">
+    <button class="cta" style="position:static" onclick="setHandle()">that's me</button>`);
+  setTimeout(()=>{ const i=$("#bh-input"); if(i) i.focus(); }, 200); window.__handleCb=cb; }
+function setHandle(){ const i=$("#bh-input"); const h=(i&&i.value||"").trim().slice(0,12); if(!h){ toast("give them something to call you"); return; }
+  const b=boothState(); b.handle=h; saveBooth(b); closeModal(); const cb=window.__handleCb; window.__handleCb=null; if(cb) cb(); }
+let _boothReported=new Set();
+function fetchBooth(){ const b=boothState(); if(!(roomBoothMode && b && beOn())) return; const now=Date.now(); if(now-_boothFetchT<30000) return; _boothFetchT=now;
+  bePost("room",{action:"list", night:nightKey(), device_id:deviceId(), booth:b.code}).then(r=>{ if(!r) return;
+    if(r.boothReady===false){ boothPosts=boothLocal().map(p=>({text:p.text, handle:p.handle, mine:true, local:true})); if(roomBoothMode) renderRoom(); return; }
+    if(r.posts){
+      // MERGE, never replace: in-flight local echoes and server-rejected notes keep their seat til sunrise
+      const server=r.posts.filter(p=>!_boothReported.has(p.id)).map(p=>({liveId:p.id, text:p.text, handle:p.handle||"someone", mine:!!p.mine, r:p}));
+      const localKeep=boothPosts.filter(p=>p.local && !server.some(sp=>sp.text===p.text));
+      const stored=boothLocal().filter(l=>!server.some(sp=>sp.text===l.text) && !localKeep.some(k=>k.text===l.text)).map(l=>({text:l.text, handle:l.handle, mine:true, local:true}));
+      boothPosts=[...localKeep, ...stored, ...server];
+      if(roomBoothMode) renderRoom();
+    } }); }
+function makeBoothPost(text){ const b=boothState(); if(!b) return;
+  const post={text, handle:b.handle, mine:true, local:true}; boothPosts.unshift(post); renderRoom(); track("booth_post");
+  try{ const all=(JSON.parse(localStorage.getItem("carted_booth_local")||"[]")).filter(p=>p.night===nightKey()); all.unshift({night:nightKey(), text, handle:b.handle}); localStorage.setItem("carted_booth_local", JSON.stringify(all.slice(0,20))); }catch(e){}
+  if(beOn()) bePost("room",{action:"post", device_id:deviceId(), night:nightKey(), ic:"🛋️", text, streak:0, hour:new Date().getHours(), booth:b.code, handle:b.handle}).then(r=>{
+    if(!r) return;
+    if(r.crisis) show988();
+    if(r.id){ post.liveId=r.id; post.local=false; if(roomBoothMode) renderRoom(); }
+    if(r.ok===false){
+      if(r.reason==="handle"){ const bb=boothState(); if(bb){ bb.handle=null; saveBooth(bb); } toast("that name won't fly at this table — you'll pick another on your next post 🛋️"); return; }
+      toast(r.reason==="booth-not-ready" ? "the booth isn't fully wired yet — your note sits at the table til sunrise, on this end 🛋️" : (r.reason==="filtered" ? "that one stays between us tonight — gentler words travel further 🤍" : (r.reason||"the booth didn't catch that 🌙"))); }
+  }); }
+function reportBoothPost(i){ const p=boothPosts[i]; if(!p||!p.liveId) return; _boothReported.add(p.liveId); bePost("room",{action:"report", post_id:p.liveId, device_id:deviceId()}); boothPosts.splice(i,1); renderRoom(); toast("reported — a human will look. thank you 🤍"); }
 /* live-room fetch: merge tonight's real posts (60s throttle; no-op while ROOM_LIVE=false) */
 let _roomFetchT=0;
 function capRoom(n){ // evict fiction first — real night owls and your own posts are the last to go
@@ -2508,6 +2634,8 @@ function fetchMineCounts(){ if(!(ROOM_LIVE && beOn())) return; const now=Date.no
     r.posts.forEach(sp=>{ const p=room.find(q=>q.mine && q.liveId===sp.id); if(!p) return;
       const base=p.rBase||p.r;
       const merged={hug:(base.hug||0)+(sp.hugs||0), me:(base.me||0)+(sp.metoo||0), go:(base.go||0)+(sp.sendit||0), hold:(base.hold||0)+(sp.holds||0)};
+      p.realCounts={hug:sp.hugs||0, me:sp.metoo||0, hold:sp.holds||0};   // the REAL humans, kept apart from the disclosed ghost base — morning ash reads only these
+      updateMineStored(p);
       if(merged.hug!==p.r.hug || merged.me!==p.r.me || merged.go!==p.r.go || merged.hold!==p.r.hold){ p.r=merged; changed=true; }
     });
     if(changed && $("#view-room").classList.contains("active")) renderRoom();
@@ -2521,7 +2649,7 @@ function withRoomTerms(cb){ if(!ROOM_LIVE || agreedRoomTerms()){ cb(); return; }
   window.__pendingPost = cb;
 }
 function acceptRoomTerms(){ try{ localStorage.setItem("carted_terms","1"); }catch(e){} closeModal(); const cb=window.__pendingPost; window.__pendingPost=null; if(typeof cb==="function") cb(); }
-function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; withRoomTerms(()=>{ makeMine("🌙", v); inp.value=""; snd("chime"); }); }
+function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return; withRoomTerms(()=>{ if(roomBoothMode){ ensureHandle(()=>{ makeBoothPost(v); inp.value=""; snd("chime"); }); } else { makeMine("🌙", v); inp.value=""; snd("chime"); } }); }
 const CONFESS = ["almost got me. it didn't. 💪","called my name at 2am. i let it ring.","was THIS close. wallet's still shut.","tempted me for 20 whole minutes. survived."];
 function quickConfess(e){ withRoomTerms(()=>{ makeMine(e, `${e} ${pick(CONFESS)}`); snd("chime"); }); }
 function shareToRoom(){ withRoomTerms(()=>{
@@ -3035,11 +3163,12 @@ function capsuleEarnMilestones(){
 function capsuleUnownedIn(t){ return CAPSULE_CATALOG.filter(i=>i.tier===t && !capsuleOwnedId(i.id)); }
 /* published odds 60/30/9/1 · pity: rare+ guaranteed within 10 pulls · never a duplicate
    (unowned-only pools; an exhausted tier escalates UP, a spent top shelf hands down) */
-function capsuleDraw(){
+function capsuleDraw(minU){
   capsuleMigrate();
   if(!CAPSULE_CATALOG.some(i=>!capsuleOwnedId(i.id))) return null;   // collection complete
   const order=["c","u","r","s"]; let tier;
   if((stats.pitySince||0)>=9 && (capsuleUnownedIn("r").length || capsuleUnownedIn("s").length)) tier=capsuleUnownedIn("r").length?"r":"s";
+  else if(minU){ const x=Math.random(); tier = x<0.75?"u" : x<0.975?"r" : "s"; }   // pack slot 3: 30/9/1 renormalized, no commons
   else { const x=Math.random(); tier = x<0.60?"c" : x<0.90?"u" : x<0.99?"r" : "s"; }
   let ti=order.indexOf(tier), pool=capsuleUnownedIn(order[ti]);
   while(!pool.length && ti<order.length-1){ ti++; pool=capsuleUnownedIn(order[ti]); }
@@ -3071,6 +3200,8 @@ function openGacha(){
       <div class="gm-body"><button class="gm-crank" id="gm-crank" onclick="gachaPull()" aria-label="turn the crank">◉</button><div class="gm-slot" id="gm-slot"></div></div>
     </div>
     <div class="gm-tokens" id="gm-tokens"></div>
+    <button class="gm-pack" id="gm-pack" onclick="packPull()">🎴 midnight pack — 3 capsules · 🪙3</button>
+    <div class="gm-pack-sub">${(capsuleUnownedIn("u").length+capsuleUnownedIn("r").length+capsuleUnownedIn("s").length>0)?`series 1: the late crowd · the last capsule is uncommon or better when the first two aren't`:`series 1: the late crowd · counter stock only — the good shelves are cleared`}</div>
     <div class="gm-odds"><span class="gm-dot t-c"></span>common <b>60%</b> · <span class="gm-dot t-u"></span>uncommon <b>30%</b><br><span class="gm-dot t-r"></span>rare <b>9%</b> · <span class="gm-dot t-s"></span>secret <b>1%</b>
       <div class="gm-pity" id="gm-pity"></div></div>
     <div class="gm-fine">odds are real. no money goes in — tokens come from showing up (the machine restocks at 4am &amp; 4pm) and every $100 kept.<br>${esc(ghostName())} never hands you the same thing twice.</div>`}
@@ -3079,6 +3210,7 @@ function openGacha(){
   gachaHud();
 }
 function gachaHud(){ const t=$("#gm-tokens"), p=$("#gm-pity"); const n=stats.capsuleTokens||0;
+  const pk=$("#gm-pack"); if(pk) pk.disabled=n<3;
   if(t) t.textContent=`🪙 ${n} token${n===1?"":"s"}`;
   const topLeft=capsuleUnownedIn("r").length+capsuleUnownedIn("s").length;
   if(p) p.textContent = topLeft ? `a rare or better is guaranteed within 10 pulls · pulls since last rare: ${stats.pitySince||0}`
@@ -3101,6 +3233,41 @@ function gachaPull(){
   __gachaT.push(setTimeout(()=>{ const b=$("#gm-ball"); if(b){ b.classList.remove("drop"); b.classList.add("wobble"); } }, 2800));
   __gachaT.push(setTimeout(()=>{ const b=$("#gm-ball"); if(b){ b.classList.remove("wobble"); b.classList.add("crack"); snd("pop"); } }, 5400));
   __gachaT.push(setTimeout(()=>{ if(m) m.classList.remove("cranking"); __gachaBusy=false; gachaReveal(item); }, 6200));
+}
+function packPull(){
+  capsuleMigrate();
+  if(__gachaBusy) return;
+  if((stats.capsuleTokens||0)<3){ snd("pop"); toast("a pack takes 🪙3 — showing up mints more 🌙"); return; }
+  const items=[];
+  for(let i=0;i<3;i++){ const it=capsuleDraw(i===2 && !items.some(x=>x.tier!=="c") && (capsuleUnownedIn("u").length+capsuleUnownedIn("r").length+capsuleUnownedIn("s").length>0)); if(!it) break; items.push(it); }
+  if(!items.length){ closeGacha(); openGacha(); return; }
+  track("gacha_pack",{n:items.length, tiers:items.map(i=>i.tier).join("")});
+  gachaHud(); renderHud();
+  let reduce=false; try{ reduce=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
+  if(reduce){ packReveal(items); return; }
+  __gachaBusy=true;
+  const el=$("#gacha-overlay"); if(!el){ __gachaBusy=false; packReveal(items); return; }
+  el.querySelector(".cup-scene").innerHTML=`
+    <button class="cup-x" onclick="closeGacha()" aria-label="step away from the machine">✕</button>
+    <div class="pk-pack" id="pk-pack"><div class="pk-p-top">MIDNIGHT PACK</div><div class="pk-p-mort">👻</div><div class="pk-p-sub">SERIES 1 · THE LATE CROWD</div></div>
+    <div class="gr-line">hold it… he wrapped these himself</div>`;
+  snd("pop");
+  __gachaT.push(setTimeout(()=>{ const p=$("#pk-pack"); if(p) p.classList.add("rip"); snd("ding"); }, 1600));
+  __gachaT.push(setTimeout(()=>{ __gachaBusy=false; packReveal(items); }, 2500));
+}
+function packReveal(items){
+  const el=$("#gacha-overlay"); if(!el) return;
+  const left=stats.capsuleTokens||0;
+  const secret=items.some(i=>i.tier==="s");
+  const cards=items.map((it,i)=>`<button class="pk-card t-${it.tier}" style="--d:${i*450}ms" onclick="equipFit('${it.id}')"><span class="pk-hat">${it.hat}</span><span class="pk-n">${esc(it.name)}</span><span class="pk-t gr-tier t-${it.tier}">${CAPSULE_TIER_NAME[it.tier]}</span></button>`).join("");
+  el.querySelector(".cup-scene").innerHTML=`${secret?`<div class="gm-confetti">${Array.from({length:14},(_,i)=>`<span style="left:${i*7+2}%;animation-delay:${(i%5)*0.12}s">${["✦","✧","·"][i%3]}</span>`).join("")}</div>`:""}
+    <button class="cup-x" onclick="closeGacha()" aria-label="step away from the machine">✕</button>
+    <div class="cup-others">the rip · series 1</div>
+    <div class="pk-cards">${cards}</div>
+    <div class="gr-line">tap one to wear it — ${esc(ghostName())} never hands you the same thing twice.</div>
+    ${left>=3?`<button class="cta secondary" style="position:static;margin-top:14px" onclick="reopenGacha()">another pack — 🪙 ${left} left</button>`:""}
+    <button class="cta secondary" style="position:static;margin-top:8px" onclick="closeGacha()">into the collection</button>`;
+  snd(secret?"fanfare":"chime");
 }
 function gachaReveal(item){
   const el=$("#gacha-overlay"); if(!el) return;
@@ -3129,7 +3296,7 @@ function renderCollection(){
       return own
         ? `<button class="wd-fit tier-${i.tier}${eq?' eq':''}" onclick="equipFit('${i.id}')"><span class="wd-hat">${i.hat}</span><span class="wd-name">${esc(i.name)}</span></button>`
         : `<div class="wd-fit lock" aria-label="not collected yet"><span class="wd-hat">?</span></div>`; }).join("");
-  return `<div class="coll-head"><span>${esc(ghostName())}'s collection</span><b>${got}/${total} collected</b></div>`
+  return `<div class="coll-head"><span>${esc(ghostName())}'s collection · series 1: the late crowd</span><b>${got}/${total}</b></div>`
     + `<button class="gm-open" onclick="openGacha()">🪙 the capsule machine${n?` — ${n} token${n===1?"":"s"} to turn`:""}</button>`
     + `<div class="wardrobe"><div class="wd-ghost">${ghostAvatar(70)}</div><div class="wd-grid">${tiles}</div></div>`
     + renderSouvenirs();
@@ -3365,6 +3532,7 @@ initDrawers(); refreshTonightHead(); setInterval(rotateTonight, 4200);
 if((stats.orders||0)>0) go('room');
 renderBanners(); setInterval(renderBanners, 60000);
 acceptBuddyFromUrl();
+acceptBoothFromUrl();
 renderFeatured();
 if(stats.pushOptIn && "Notification" in window && Notification.permission==="granted") scheduleGhostNudge();
 document.addEventListener("pointerdown", e=>{ const sc=document.querySelector(".screen"); if(!sc) return; const r=sc.getBoundingClientRect(); lastTap={x:e.clientX-r.left, y:e.clientY-r.top}; if(asmrOn && !asmrNode) startAsmr(); }, true);

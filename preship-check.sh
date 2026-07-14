@@ -38,5 +38,7 @@ import re
 print(re.findall(r"<script>(.*?)</script>", open("index.html").read(), re.S)[0])
 PY
 node --check /tmp/carted_check.js 2>/dev/null || say "index.html script block has a syntax error"
+# Python \U escapes are not JavaScript — they ship as literal text (v60 lesson)
+grep -q '\\U000' index.html && say "un-decoded Python \\U escape in index.html (writes literal text at runtime)"
 
 if [ "$fail" -eq 0 ]; then echo "✓ preship checks pass"; else echo "PRESHIP CHECKS FAILED"; exit 1; fi
