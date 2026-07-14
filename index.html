@@ -18,6 +18,8 @@
   2. DENSITY, two laws: ORDER surfaces (feed/detail/cart/konbini) pass "would DoorDash at 2am show
      this?" — pastiche fidelity is charm (★ratings, receipts, fee line-items stay). ROOM
      surfaces pass damta density — the lamp does the talking; first post above the fold.
+  2b. LABELS: cuisine/type labels under restaurant names render Capitalized (CSS transform,
+     2026-07-13 founder rule); the app voice everywhere else stays lowercase.
   3. EMOJI: an emoji is either a taught system-noun (👻 🥡 🌅 🚩 🤍 🤝, one 🔥) or DATA
      (dish glyphs, one flag). Never trailing a sentence that already works. NEVER inside a
      Newsreader/serif line. 🌙 has 3 homes, total.
@@ -118,7 +120,7 @@
   .city-bar::-webkit-scrollbar { display: none; }
   .show-all { display:block; width:100%; background:none; border:1px dashed rgba(223,233,255,.18); color:var(--muted); border-radius:12px; padding:10px; font-size:12.5px; margin-top:8px; cursor:pointer; }
   /* DEPARTURES strip — the city-line as a split-flap board tease (text-size ⇒ tints, no glow) */
-  .dep-bar { display: flex; align-items: center; gap: 6px; width: 100%; min-width: 0; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; margin: 2px 0 10px; cursor: pointer; text-align: left; font-family: var(--bodyf); font-weight: 800; font-size: 12.5px; letter-spacing: 1.1px; color: var(--cyan-txt); white-space: nowrap; overflow: hidden; }
+  .dep-bar { display: flex; align-items: center; gap: 6px; width: 100%; min-width: 0; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; margin: 2px 0 2px; cursor: pointer; text-align: left; font-family: var(--bodyf); font-weight: 800; font-size: 12.5px; letter-spacing: 1.1px; color: var(--cyan-txt); white-space: nowrap; overflow: hidden; }
   .dep-bar .db-plane { color: var(--cyan-txt); letter-spacing: 0; }
   .dep-bar .db-city { color: var(--head); letter-spacing: .3px; overflow: hidden; text-overflow: ellipsis; }
   .dep-bar .db-change { margin-left: auto; flex: 0 0 auto; color: var(--pink-txt); font-size: 11px; letter-spacing: 1.1px; text-transform: uppercase; }
@@ -143,7 +145,7 @@
   .meta { flex: 1; min-width: 0; padding-right: 60px; display: flex; flex-direction: column; overflow: hidden; }
   .meta .name { font-size: 19.5px; font-weight: 500; font-family: var(--disp); line-height: 1.1; color: var(--text); }
   .meta .name .en { color: var(--muted); font-weight: 500; font-size: 12.5px; text-transform: capitalize; font-family: var(--bodyf); }
-  .meta .shop { font-size: 12.5px; color: var(--muted); margin-top: 3px; font-weight: 600; }
+  .meta .shop { font-size: 12.5px; color: var(--muted); margin-top: 3px; font-weight: 600; text-transform: capitalize; }
   .meta .cprow { margin-top: 7px; overflow: hidden; }
   .meta .cpchip { display: inline-flex; align-items: center; gap: 4px; background: var(--hot); color: #14060F; font-family: var(--disp); font-weight: 700; font-size: 11px; padding: 3px 9px; border: 2px solid var(--ink); border-radius: 10px; box-shadow: 1.5px 1.5px 0 var(--ink); white-space: nowrap; }
   .meta .row { display: flex; align-items: center; gap: 7px; margin-top: 7px; font-size: 12.5px; color: var(--muted); font-weight: 600; white-space: nowrap; }
@@ -756,11 +758,11 @@
   .drawer .dr-body > div:empty { display: none; }
   .drawer .dr-body .feat-banner, .drawer .dr-body .drawer .dr-body .morts-pick, .drawer .dr-body .buddy-nudge, .drawer .dr-body .drawer .dr-body .tally { margin-bottom: 10px; }
   .drawer .dr-body > *:last-child { margin-bottom: 0; }
-  .feed-controls { margin-bottom: 8px; }
+  .feed-controls { margin-bottom: 4px; }
   .feed-controls .seg { margin-bottom: 8px; }
   .feed-controls .fc-row { display: flex; align-items: flex-start; gap: 8px; }
   .feed-controls .fc-row #feed-filters { flex: 1; margin: 0; padding-bottom: 4px; }
-  .feed-controls .feed-craving { margin: 9px 2px 2px; }
+  .feed-controls .feed-craving { margin: 4px 2px 2px; color: var(--pink-txt); }
   /* ----- explore (things to do) ----- */
   .ex-city { background: var(--card); border: 2.5px solid var(--ink); border-radius: 16px; padding: 10px 14px; font-family: var(--disp); font-weight: 600; font-size: 16px; color: var(--text); box-shadow: 3px 3px 0 var(--ink); cursor: pointer; margin: 2px 0 4px; }
   .ex-city:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
