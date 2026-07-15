@@ -61,7 +61,7 @@
   /* strip the old sticker treatment app-wide: hairline warm seams, tonal depth, no hard offset shadows */
   .card, .tier-card, .feat-banner, .post, .cup-bar, .composer input, .signin-btn,
   .kclosed, .quests, .passport, .prompts, .drawer .dr-head, .hud .pill, .live-pill, .ebanner,
-  .tk-line, .quiet-panel, .morts-pick, .buddy-nudge, .ghost-quip, .silence-btn, .track-skip {
+  .tk-line, .morts-pick, .buddy-nudge, .ghost-quip, .track-skip {
     box-shadow: none !important; border-color: var(--border) !important;
   }
   .card, .tier-card, .feat-banner, .post, .cup-bar, .composer input, .kclosed,
@@ -273,9 +273,47 @@
   .composer button { border: none; background: var(--grad); color: #0A0E1A; font-weight: 700; font-size: 14px; padding: 0 20px; border-radius: 14px; cursor: pointer; }
   .p-quote { font-size: 11px; color: var(--muted); font-style: italic; font-family: var(--disp); border-left: 2px solid var(--border); padding-left: 7px; margin-bottom: 3px; }
   .post .ptext { cursor: pointer; }
+  /* ===== THE COUNTER (S1): the room as a mounted scene; the feed lives in a drawer ===== */
+  .hbtn { background:none; border:none; font-size:12.5px; cursor:pointer; padding:0 3px; opacity:.85; }
+  .mort-ln { font-family:var(--disp); font-style:italic; font-size:12.5px; color:var(--cyan-txt); margin:0 2px 8px; min-height:17px; }
+  .rscene { position:relative; border:1px solid rgba(77,227,255,.14); border-radius:16px; overflow:hidden; background:#0C1322; transition:background 2s ease, box-shadow 2s ease; margin-bottom:10px; }
+  .rscene.lt-dim { background: radial-gradient(120% 90% at 72% 8%, rgba(77,227,255,.06), transparent 55%), #0C1322; }
+  .rscene.lt-day { background: radial-gradient(120% 90% at 72% 8%, rgba(77,227,255,.09), transparent 55%), #0E1626; }
+  .rscene.lt-lamp { background: radial-gradient(130% 100% at 50% 0%, rgba(255,77,158,.16), transparent 62%), #101223; box-shadow: inset 0 0 40px rgba(255,77,158,.08); }
+  .rscene.lt-ember { background: radial-gradient(120% 90% at 50% 100%, rgba(255,122,77,.08), transparent 55%), #0A0D18; }
+  .rs-wall { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; padding:10px 12px 6px; }
+  .rs-window { width:52px; height:38px; border:1px solid rgba(77,227,255,.28); border-radius:6px; background:linear-gradient(180deg,#101B33,#0B1120); display:flex; align-items:center; justify-content:center; font-size:16px; flex:0 0 auto; }
+  .rs-clock { text-align:center; font-size:11px; color:var(--muted); flex:0 0 auto; }
+  .rs-clock b { display:block; font-size:16px; color:var(--text); font-weight:700; letter-spacing:1px; font-variant-numeric:tabular-nums; }
+  .rs-notice { font-size:11px; color:var(--muted); background:#121B30; border:1px solid var(--line); border-radius:4px; padding:4px 6px; max-width:118px; transform:rotate(1.5deg); line-height:1.3; overflow:hidden; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; }
+  .rs-door { font-size:11px; color:var(--pink-txt); background:none; border:1px solid rgba(255,77,158,.3); border-radius:6px; padding:7px 6px 4px; text-align:center; cursor:pointer; flex:0 0 auto; }
+  .rs-door span { display:block; font-size:14px; }
+  .rs-air { position:relative; min-height:84px; padding:4px 12px; }
+  .rbub { position:absolute; left:14px; right:64px; bottom:6px; background:#141E38; border:1px solid rgba(77,227,255,.22); border-radius:12px 12px 12px 3px; padding:8px 11px; font-size:12.5px; color:var(--text); cursor:pointer; animation:rbRise 12s ease forwards; }
+  .rbub i { font-style:normal; font-size:11px; color:var(--cyan-txt); font-weight:700; }
+  @keyframes rbRise { 0%{ opacity:0; transform:translateY(14px);} 6%{ opacity:1; transform:translateY(0);} 82%{ opacity:1; transform:translateY(-26px);} 100%{ opacity:0; transform:translateY(-40px);} }
+  .rbub.still { animation:none; opacity:.96; }
+  @media (prefers-reduced-motion: reduce){ .rbub { animation:none; opacity:.96; } }
+  .rs-counter { display:flex; align-items:flex-end; justify-content:space-around; gap:8px; border-top:2px solid rgba(255,210,77,.22); background:linear-gradient(180deg,#111A30,#0D1426); padding:8px 8px 6px; }
+  .rs-obj { text-align:center; font-size:16px; background:none; border:none; color:var(--muted); }
+  .rs-obj span { display:block; font-size:11px; margin-top:1px; }
+  .rs-candle { text-shadow:0 0 10px rgba(255,210,77,.55); }
+  .rs-table { background:#18223D; border:1px solid rgba(255,210,77,.3); border-radius:8px; padding:5px 9px; font-size:11px; color:var(--yell-txt); max-width:150px; font-family:var(--disp); font-style:italic; cursor:pointer; text-align:left; line-height:1.35; }
+  .rs-table b { font-weight:600; color:var(--text); }
+  .rs-stools { display:flex; justify-content:space-around; padding:9px 6px 11px; background:#0A0F1E; border-top:1px solid var(--line); }
+  .stool { text-align:center; font-size:16px; line-height:1.1; min-width:0; }
+  .stool i { display:block; font-style:normal; font-size:9px; color:var(--muted); max-width:44px; overflow:hidden; }
+  .stool.empty { opacity:.28; }
+  .stool.you i { color:var(--cyan-txt); font-weight:700; }
+  .stool.ghost i { color:var(--pink-txt); }
+  .drawer-h { display:flex; justify-content:space-between; width:100%; background:none; border:1px dashed var(--line); border-radius:10px; padding:8px 12px; margin:0 0 10px; font-size:12.5px; color:var(--muted); cursor:pointer; }
+  #room-drawer { position:absolute; inset:0; z-index:65; background:rgba(4,7,14,.6); display:flex; align-items:flex-end; animation:fade .2s ease; }
+  #room-drawer .ds-inner { width:100%; max-height:72%; background:var(--screen); border-top:1px solid var(--line); border-radius:18px 18px 0 0; display:flex; flex-direction:column; }
+  #room-drawer .ds-head { display:flex; justify-content:space-between; align-items:center; padding:12px 16px 8px; font-size:12.5px; color:var(--muted); font-weight:700; }
+  #room-drawer .ds-head button { background:none; border:none; color:var(--muted); font-size:14px; cursor:pointer; }
+  #room-drawer #room-feed { overflow-y:auto; padding:0 14px 20px; }
+  #view-room.booth #room-scene, #view-room.booth .drawer-h, #view-room.booth .cup-bar, #view-room.booth .prompts, #view-room.booth #room-ash, #view-room.booth #room-nod, #view-room.booth .mort-ln, #view-room.booth #room-podium, #view-room.booth .live2 { display:none; }
   .ash-line { display:block; width:100%; text-align:left; background:transparent; border:none; cursor:pointer; font-family:var(--disp); font-style:italic; font-size:12.5px; line-height:1.5; color:var(--muted); padding:2px 2px 10px; }
-  .table-line { display:block; width:100%; text-align:left; background:transparent; border:none; cursor:pointer; font-family:var(--disp); font-style:italic; font-size:14px; line-height:1.4; color:var(--muted); padding:2px 2px 8px; }
-  .table-line b { color:var(--text); font-weight:600; font-style:italic; }
   .composer.lamp input { border-color:var(--pink); box-shadow:0 0 12px rgba(255,77,158,.26); }
   .composer.lamp input:focus { border-color:var(--pink); box-shadow:0 0 0 3px rgba(255,77,158,.2), 0 0 14px rgba(255,77,158,.28); }
   .reacts .chip.r-hold.on { box-shadow: 0 0 10px rgba(255,77,158,.32), 2px 2px 0 var(--ink); }
@@ -328,23 +366,13 @@
   .cup-bar .cbr-txt b { font-family: var(--disp); font-weight: 600; font-size: 19.5px; line-height: 1.2; color: var(--pink); text-shadow: 0 0 14px rgba(255,77,158,.3); }
   .cup-bar .cbr-sub { font-size: 12.5px; color: var(--muted); font-weight: 500; margin-top: 2px; }
   .cup-bar .cbr-go { font-size: 24px; font-weight: 800; }
-  .booth-bar { width: 100%; display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid rgba(255,77,158,.3); border-radius: 14px; padding: 11px 13px; margin: 0 0 10px; cursor: pointer; text-align: left; color: var(--text); font-size: 12.5px; }
-  .booth-bar b { font-family: var(--disp); font-weight: 600; font-size: 14px; }
-  .booth-bar .bb-sub { flex: 1; min-width: 0; color: var(--muted); font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .booth-bar .bb-go { color: var(--muted); font-size: 19.5px; }
-  #view-room.booth .cup-bar, #view-room.booth .table-line, #view-room.booth .prompts, #view-room.booth .notice, #view-room.booth .silence-btn, #view-room.booth #room-ash, #view-room.booth #room-nod, #view-room.booth .booth-bar, #view-room.booth .live2, #view-room.booth .ghost-note { display: none; }
   .booth-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 12.5px; color: var(--text); font-weight: 700; margin: 2px 2px 4px; }
   .booth-head .bh-acts button { background: none; border: none; color: var(--cyan-txt); font-size: 12.5px; font-weight: 700; cursor: pointer; padding: 0; }
   .booth-note { font-family: var(--disp); font-style: italic; font-size: 12.5px; color: var(--muted); margin: 0 2px 12px; }
   .booth-empty { text-align: center; color: var(--muted); font-size: 12.5px; padding: 26px 12px; font-family: var(--disp); font-style: italic; }
-  .silence-btn { width: 100%; background: transparent; border: 2px dashed var(--ink); border-radius: 14px; padding: 9px; margin: 0 0 12px; font-family: var(--disp); font-weight: 600; font-size: 12.5px; color: var(--muted); cursor: pointer; }
   .room-rules-line { font-size: 11px; color: var(--muted); font-weight: 700; margin: -8px 0 14px; text-align: center; }
   .room-rules-line a { color: inherit; text-decoration: underline; }
-  #view-room.quiet .prompts, #view-room.quiet .composer, #view-room.quiet .tk-line, #view-room.quiet .table-line { display: none; }
-  .quiet-panel { text-align: center; padding: 40px 20px; color: var(--muted); }
-  .quiet-panel .qp-emo { font-size: 34px; }
-  .quiet-panel .qp-title { font-family: var(--disp); font-weight: 600; font-size: 19.5px; color: var(--text); margin: 10px 0 8px; }
-  .quiet-panel .qp-sub { font-size: 12.5px; font-weight: 700; line-height: 1.5; }
+  #view-room.quiet .prompts, #view-room.quiet .composer, #view-room.quiet .tk-line, #view-room.quiet .rs-air, #view-room.quiet .drawer-h { display: none; }
   .cup-ov { position: absolute; inset: 0; z-index: 120; background: #0A0E1A; background-image: radial-gradient(90% 62% at 50% 42%, #16203A 0%, #0D1426 54%, #060912 100%); display: flex; align-items: center; justify-content: center; animation: fade .3s ease; }
   .cup-emo, .cup-scene .cup-emo { filter: drop-shadow(0 14px 30px rgba(0,0,0,.5)) drop-shadow(0 0 34px rgba(77,227,255,.12)); }
   .cup-scene { text-align: center; color: var(--text); width: 100%; padding: 24px; position: relative; }
@@ -924,21 +952,34 @@
         <section class="view" id="view-room">
           <div class="brand">
             <h1 style="font-size:24px">the 2 am <span class="wm-ed">room</span></h1>
-            <div class="live2"><span class="dot"></span> <b style="color:var(--slate);font-weight:700" id="room-awake">the room's awake</b> · <span id="room-burn-top">🌅 —</span></div>
-            <div class="ghost-note">👻 = friendly fiction, not people.</div>
+            <div class="live2"><span class="dot"></span> <b style="color:var(--slate);font-weight:700" id="room-awake">the room's awake</b> · <span id="room-burn-top">🌅 —</span> <button class="hbtn" onclick="toggleSilence()" aria-label="quiet corner">🤫</button><button class="hbtn" onclick="ghostLegend()" aria-label="what the ghost tag means">👻</button></div>
             <div id="room-nod"></div>
           </div>
           <div id="room-podium"></div>
-          <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a 3-minute break</span><span class="cbr-shelf" id="cup-shelf"></span></span><span class="cbr-go">›</span></button>
-          <button class="booth-bar" id="booth-bar" onclick="openBooth()">🛋️ <b>the booth</b> <span class="bb-sub" id="booth-sub">a private table for your people</span><span class="bb-go">›</span></button>
-          <button id="silence-toggle" class="silence-btn" onclick="toggleSilence()">🤫 quiet corner</button>
-          <button class="table-line" id="table-line" onclick="tableToComposer()"></button>
-          <div class="composer"><input id="composer-input" aria-label="say something to the room" placeholder="say it quietly — it burns at sunrise" maxlength="90" /><button onclick="postFromComposer()">post</button></div>
+          <div class="mort-ln" id="mort-line"></div>
+          <div class="rscene lt-dim" id="room-scene" aria-label="the counter — the room as a place">
+            <div class="rs-wall">
+              <div class="rs-window" aria-hidden="true">🌃</div>
+              <div class="rs-clock"><b id="rs-clock-t">--:--</b><span>the wall clock</span></div>
+              <div class="rs-notice" id="room-notice"></div>
+              <button class="rs-door" onclick="openBooth()" aria-label="the booth — a private table for your people">🛋️<span>booth</span></button>
+            </div>
+            <div class="rs-air" id="rs-air" aria-live="polite"></div>
+            <div class="rs-counter">
+              <div class="rs-obj" title="the kettle's on">🫖<span>kettle on</span></div>
+              <div class="rs-obj rs-candle" title="held lines rest here til the burn">🕯️<span>the flame keeps</span></div>
+              <button class="rs-table" id="rs-table" onclick="tableToComposer()" aria-label="tonight's table — tap to answer"></button>
+              <div class="rs-obj" id="rs-cupspot" style="display:none">🥡<span>steeping</span></div>
+            </div>
+            <div class="rs-stools" id="rs-stools"></div>
+          </div>
+          <button class="drawer-h" id="drawer-h" onclick="toggleRoomDrawer()">earlier tonight › <span>burns at 4:00</span></button>
+          <div id="booth-panel" style="display:none"></div>
+          <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup at the counter</b><span class="cbr-sub">a 3-minute break</span><span class="cbr-shelf" id="cup-shelf"></span></span><span class="cbr-go">›</span></button>
+          <div class="composer"><input id="composer-input" aria-label="say something to the room" placeholder="say it to the counter — it drifts, then burns" maxlength="90" /><button onclick="postFromComposer()">post</button></div>
           <div class="prompts"><button class="pchip" onclick="quickConfess('🍕')">🍕</button><button class="pchip" onclick="quickConfess('🍜')">🍜</button><button class="pchip" onclick="quickConfess('🍣')">🍣</button><button class="pchip" onclick="quickConfess('🌮')">🌮</button><button class="pchip" onclick="quickConfess('🍔')">🍔</button><button class="pchip" onclick="quickConfess('🍰')">🍰</button></div>
           <div class="room-rules-line">be kind · <a href="terms.html" target="_blank" rel="noopener">rules</a> · 🚩 report</div>
-          <div class="notice" id="room-notice"></div>
           <div id="room-ash"></div>
-          <div id="room-feed"></div>
           <div class="osm-credit" id="room-burn">🌅 posts burn at sunrise</div>
         </section>
 
@@ -1787,6 +1828,7 @@ function go(view){ track("view",{v:view});
   $("#nav-cart").classList.toggle("on", view==="cart");
   document.body.classList.toggle("hud-off", view==="room" || view==="track");   // the room is a leveler; the reveal is the money shot — keep both frames clean
   document.body.classList.toggle("in-room", view==="room");   // dims the page background for the room's calm palette
+  if(view!=="room" && typeof toggleRoomDrawer==="function") toggleRoomDrawer(false);
   if(view==="room") markShownUp(true);   // coming to the room counts as showing up (once/night)
   if(view==="cart") renderCart();
   if(view==="room"){ renderRoom(); maybeThreshold(); }
@@ -2334,59 +2376,137 @@ function maybeThreshold(){
   el.addEventListener("pointerdown", rm);
 }
 /* podium deleted 2026-07-09 — the room is a leveler; even a fictional ranking fights the co-presence job */
-function replyTo(i){ const p=room[i]; if(!p) return; const snip=String(p.text||"").replace(/^🏮 /,"").replace(/^↪ "[^"]*" ?/,"").slice(0,24); const inp=$("#composer-input"); if(!inp) return; inp.value=`↪ "${snip}" `; inp.focus(); snd("pop"); }
+function replyTo(i){ const p=room[i]; if(!p) return; toggleRoomDrawer(false); const snip=String(p.text||"").replace(/^🏮 /,"").replace(/^↪ "[^"]*" ?/,"").slice(0,24); const inp=$("#composer-input"); if(!inp) return; inp.value=`↪ "${snip}" `; inp.focus(); snd("pop"); }
 function renderRoom(){
+  const vr=$("#view-room"); if(!vr) return;
   if(!localStorage.getItem("carted_room_intro")){ try{ localStorage.setItem("carted_room_intro","1"); }catch(e){}
     showModal(`<div class="m-emoji">🌙</div><div class="m-title">welcome to the break room</div><div class="m-body" style="text-align:left">ghosts marked 👻 are friendly fiction. you post anonymously — no name, no account. everything burns at 4am — deleted, not archived.</div><button class="cta" style="position:static" onclick="closeModal()">got it</button>`); }
   if(localStorage.getItem("carted_first_dodge")==="1"){ try{ localStorage.removeItem("carted_first_dodge"); }catch(e){}
-    room.unshift({ic:"🫂", ghost:"Bea", sched:"~2:40", text:"first dodge. we saw. welcome in 🫂", city:"the stoop", ago:"now", r:{hug:3,me:1,go:0}, reacted:{}});
+    const bea={ic:"🫂", ghost:"Bea", sched:"~2:40", text:"first dodge. we saw. welcome in 🫂", city:"the stoop", ago:"now", r:{hug:3,me:1,go:0,hold:0}, reacted:{}};
+    room.unshift(bea); roomBubble(bea);
   }
   if(!roomBoothMode) fetchLiveRoom();   // booth-only sitters never touch main-room presence
-  try{ if(!localStorage.getItem("carted_reply_taught")){ localStorage.setItem("carted_reply_taught","1"); setTimeout(()=>toast("tap any post to pass it back ↪"), 2600); } }catch(e){}
-  const tk=tonightsKitchen(), tf=featuredCity(); if(!tk) ensureKitchenLoaded();
-  /* the room is a leveler — no leaderboard, no "biggest dodge" competition. just the shared
-     kitchen (we're all here for the same one) and the murmur. */
+  try{ if(!localStorage.getItem("carted_reply_taught")){ localStorage.setItem("carted_reply_taught","1"); setTimeout(()=>toast("words drift over the counter — the drawer keeps them til 4:00"), 2600); } }catch(e){}
+  const tk=tonightsKitchen(); if(!tk) ensureKitchenLoaded();
+  /* the room is a leveler — no leaderboard, no "biggest dodge" competition. */
   const _ev=eventNight();
   { const rp=$("#room-podium"); if(rp) rp.innerHTML = _ev?`<div class="tk-line">🌙 ${esc(_ev.banner)}</div>`:""; }
-  const vr=$("#view-room"); if(vr){ vr.classList.toggle("quiet", roomSilent&&!roomBoothMode); vr.classList.toggle("booth", roomBoothMode); }
-  if(roomBoothMode){
-    const b=boothState()||{code:"?"};
-    fetchBooth();
-    $("#room-feed").innerHTML = `
-      <div class="booth-head"><span>🛋️ the booth · <b>${esc(b.code)}</b></span>
-        <span class="bh-acts"><button onclick="shareBoothLink()">invite</button> · <button onclick="leaveBoothMode()">back to the room</button></span></div>
-      <div class="booth-note">just your people here — no ghosts past the door. burns at sunrise.</div>
-      ${boothPosts.length ? boothPosts.map((p,i)=>`
-        <div class="post${p.mine?' mine':''}">
-          <div class="phead"><span class="pic">🛋️</span><div class="pmeta">${p.mine?'<span class="mine-tag">'+esc(p.handle||"you")+'</span>':'<b>'+esc(p.handle||"someone")+'</b>'} · tonight${p.local?' · this side only':''}</div></div>
-          <div class="ptext">${esc(p.text)}</div>
-          ${(!p.mine&&p.liveId)?`<div class="reacts"><button class="chip" onclick="boothActions(${i})" aria-label="report or mute">🚩</button></div>`:""}
-        </div>`).join("") : `<div class="booth-empty">nobody's sat down yet tonight. say something — or hand the link to someone who's up.</div>`}`;
-    renderRoomMeta();
-    return;
+  vr.classList.toggle("quiet", roomSilent&&!roomBoothMode);
+  vr.classList.toggle("booth", roomBoothMode);
+  if(roomBoothMode){ renderBoothPanel(); renderRoomMeta(); return; }
+  const bp=$("#booth-panel"); if(bp) bp.style.display="none";
+  renderScene(); mortLine();
+  renderDrawer();
+  renderRoomMeta();
+}
+/* the booth keeps its own panel — never inside the archive drawer */
+function renderBoothPanel(){
+  const bp=$("#booth-panel"); if(!bp) return; bp.style.display="block";
+  const b=boothState()||{code:"?"};
+  fetchBooth();
+  bp.innerHTML = `
+    <div class="booth-head"><span>🛋️ the booth · <b>${esc(b.code)}</b></span>
+      <span class="bh-acts"><button onclick="shareBoothLink()">invite</button> · <button onclick="leaveBoothMode()">back to the room</button></span></div>
+    <div class="booth-note">just your people here — no ghosts past the door. burns at sunrise.</div>
+    ${boothPosts.length ? boothPosts.map((p,i)=>`
+      <div class="post${p.mine?' mine':''}">
+        <div class="phead"><span class="pic">🛋️</span><div class="pmeta">${p.mine?'<span class="mine-tag">'+esc(p.handle||"you")+'</span>':'<b>'+esc(p.handle||"someone")+'</b>'} · tonight${p.local?' · this side only':''}</div></div>
+        <div class="ptext">${esc(p.text)}</div>
+        ${(!p.mine&&p.liveId)?`<div class="reacts"><button class="chip" onclick="boothActions(${i})" aria-label="report or mute">🚩</button></div>`:""}
+      </div>`).join("") : `<div class="booth-empty">nobody's sat down yet tonight. say something — or hand the link to someone who's up.</div>`}`;
+}
+/* ===== the scene: mounted once in HTML, only its numbers move ===== */
+let _roomTick=null;
+function renderScene(){
+  const sc=$("#room-scene"); if(!sc) return;
+  const hr=new Date().getHours();
+  sc.classList.remove("lt-lamp","lt-ember","lt-dim","lt-day");
+  sc.classList.add(kitchenLight()?"lt-lamp":windDown()?"lt-ember":(hr>=20||hr<6)?"lt-dim":"lt-day");
+  const d=new Date(); const ct=$("#rs-clock-t"); if(ct) ct.textContent=`${d.getHours()%12||12}:${String(d.getMinutes()).padStart(2,"0")}`;
+  const tb=$("#rs-table"); if(tb){ const t=tonightsTable(); if(tb.dataset.t!==t){ tb.dataset.t=t; tb.innerHTML=`tonight's table<br><b>${esc(t)}</b>`; } }
+  const cs=$("#rs-cupspot"); if(cs){ let steeped=false; try{ steeped=localStorage.getItem("carted_cup")===nightKey(); }catch(e){} cs.style.display=(steeped||cupTimer)?"":"none"; }
+  renderStools();
+  if(!_roomTick){ _roomTick=setInterval(()=>{ if(document.hidden) return; const v=$("#view-room"); if(!v||!v.classList.contains("active")||roomBoothMode) return; renderScene(); mortLine(); }, 30000); }
+}
+/* who's at the counter: you always take the rightmost stool. ghosts sit their true signature-hour
+   windows with the 👻 tag ON the token (a seated ghost is a stronger illusion than a posting one).
+   real owls appear only from a real presence count (post-SQL) — never invented. */
+function ghostsAwake(){ const seen=new Set(); const out=[]; for(const g of INCOMING){ if(g.ghost && !seen.has(g.ghost) && ghostAwakeNow(g)){ seen.add(g.ghost); out.push(g); if(out.length>=3) break; } } return out; }
+function renderStools(){
+  const el=$("#rs-stools"); if(!el) return;
+  const gh=ghostsAwake();
+  const owls=(_roomHumans!=null&&_roomHumans>=2)?Math.min(_roomHumans-1, 6-gh.length):0;
+  let cells=[];
+  gh.forEach(g=>cells.push(`<div class="stool ghost" title="friendly fiction, not people"><span>👻</span><i>${esc(g.ghost)}${g.sched?` · ${esc(g.sched)}`:""}</i></div>`));
+  for(let i=0;i<owls;i++) cells.push(`<div class="stool owl"><span>🦉</span><i>night owl</i></div>`);
+  while(cells.length<7) cells.push(`<div class="stool empty" aria-hidden="true"><span>🪑</span></div>`);
+  cells=cells.slice(0,7);
+  cells.push(`<div class="stool you"><span>🌙</span><i>your usual spot</i></div>`);
+  const html=cells.join(""); if(el.dataset.h!==html){ el.dataset.h=html; el.innerHTML=html; }
+}
+/* mort narrates from behind the counter: beats, the next beat coming, the dispatch murmur */
+function nextBeat(){ const d=new Date(); const mins=d.getHours()*60+d.getMinutes();
+  const beats=[[120,"the kitchen light"],[225,"wind-down"],[240,"the burn"]];
+  let best=null; for(const [m,label] of beats){ let dm=m-mins; if(dm<=0) dm+=1440; if(!best||dm<best.mins) best={label,mins:dm}; }
+  return best; }
+function mortLine(){
+  const el=$("#mort-line"); if(!el) return;
+  let sTxt;
+  if(kitchenLight()) sTxt="the kitchen light's on til 2:15 🏮";
+  else if(windDown()) sTxt="banking the room down — the burn's at 4:00";
+  else {
+    const ev=eventNight(); const tk=tonightsKitchen(); const nb=nextBeat();
+    const base = ev ? ev.banner : ((hash(nightKey()+"mortslot")%2===0 && tk) ? `tonight's kitchen: ${tk.name} — we're all dodging the same menu` : NOTICES[hash(nightKey()+"mort")%NOTICES.length]);
+    const owls=(_roomHumans!=null&&_roomHumans>=2)?`${_roomHumans} night owls in · `:"";
+    sTxt=`${owls}${base}${nb&&nb.mins<=30?` · ${nb.label} in ${nb.mins}m`:""}`;
   }
-  if(roomSilent){
-    $("#room-feed").innerHTML = `<div class="quiet-panel"><div class="qp-emo">🌙</div><div class="qp-title">quiet corner</div><div class="qp-sub">no one's talking here. the ghosts are around, and so are you.<br>nothing to do, nothing owed. just breathe — the room will hold.</div></div>`;
-  } else {
-    const _hr=new Date().getHours(); const _lt=(_hr>=2&&_hr<4)?LETTERS[hash(nightKey()+"letter")%LETTERS.length]:null; _letterShown=!!_lt;
-    $("#room-feed").innerHTML = (_lt?`<div class="post ghostp letter"><div class="phead"><span class="pic">💌</span><div class="pmeta">tonight's letter · <span class="gtag">👻 ${esc(_lt.ghost)}</span></div></div><div class="ptext">${esc(_lt.text)}</div><div class="l-ack">— ${esc(_lt.ack)}</div></div>`:"") + room.map((p,i)=>`
+  const line=`mort: ${sTxt}`; if(el.dataset.t!==line){ el.dataset.t=line; el.textContent=line; }
+}
+/* speech is weather: one bubble at a time rises from the counter and dissolves.
+   every line also files into the drawer — nothing is lost before the burn. */
+let _bubT=null;
+function roomBubble(p){
+  if(roomSilent||roomBoothMode||!p) return;
+  const air=$("#rs-air"); if(!air) return;
+  if(air.querySelector(".rbub")) return;   // one at a time — the rest waits in the drawer
+  let reduce=false; try{ reduce=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
+  const el=document.createElement("div"); el.className="rbub"+(reduce?" still":"");
+  el.innerHTML=`${p.ghost?`<i>👻 ${esc(p.ghost)}</i> · `:(p.mine?`<i>you</i> · `:`<i>night owl</i> · `)}${esc(String(p.text).replace(/^🏮 /,""))}`;
+  el.onclick=()=>toggleRoomDrawer(true);
+  air.appendChild(el);
+  setTimeout(()=>{ try{ el.remove(); }catch(e){} }, reduce?26000:12500);
+}
+/* the drawer: the old feed, demoted. default closed, no badge, forever. */
+let roomDrawerOpen=false;
+function toggleRoomDrawer(open){
+  roomDrawerOpen = open===true?true:open===false?false:!roomDrawerOpen;
+  const sc=document.querySelector(".screen"); if(!sc) return;
+  let ov=$("#room-drawer");
+  if(!roomDrawerOpen){ if(ov) ov.remove(); return; }
+  if(!ov){ ov=document.createElement("div"); ov.id="room-drawer";
+    ov.innerHTML=`<div class="ds-inner"><div class="ds-head"><span>earlier tonight — burns at 4:00</span><button onclick="toggleRoomDrawer(false)" aria-label="close the drawer">✕</button></div><div id="room-feed"></div></div>`;
+    ov.addEventListener("click",e=>{ if(e.target===ov) toggleRoomDrawer(false); });
+    sc.appendChild(ov); }
+  renderDrawer(); snd("pop");
+}
+function renderDrawer(){
+  const rf=$("#room-feed"); if(!rf||!roomDrawerOpen) return;
+  const _hr=new Date().getHours(); const _lt=(_hr>=2&&_hr<4)?LETTERS[hash(nightKey()+"letter")%LETTERS.length]:null; _letterShown=!!_lt;
+  rf.innerHTML = (_lt?`<div class="post ghostp letter"><div class="phead"><span class="pic">💌</span><div class="pmeta">tonight's letter · <span class="gtag">👻 ${esc(_lt.ghost)}</span></div></div><div class="ptext">${esc(_lt.text)}</div><div class="l-ack">— ${esc(_lt.ack)}</div></div>`:"") + (room.length ? room.map((p,i)=>`
     <div class="post${p.mine?' mine':''}${p.ghost?' ghostp':''}">
       <div class="phead"><span class="pic">${p.ic}</span><div class="pmeta">${p.mine?'<span class="mine-tag">you</span>':(p.ghost?`<span class="gtag">👻 ${esc(p.ghost)}</span>${p.sched?` · round here ${p.sched}`:""} · ${esc(p.city)}`:'<b>anon</b> · '+esc(p.city))} · ${p.ago}</div></div>
       ${(function(){ const m=String(p.text).match(/^(🏮 )?↪ "([^"]{1,40})" ?([\s\S]*)$/); return m?`<div class="p-quote">↪ ${esc(m[2])}</div><div class="ptext" onclick="replyTo(${i})">${esc((m[1]||"")+m[3])}</div>`:`<div class="ptext" onclick="replyTo(${i})">${esc(p.text)}</div>`; })()}
       <div class="reacts">${["hug","me","hold"].map(t=>`<button class="chip r-${t}${p.reacted&&p.reacted[t]?' on':''}" onclick="react(${i},'${t}')" aria-label="${REACT_LBL[t]}" title="${REACT_LBL[t]}">${REACT_META[t]}${i===0?reactLbl(t):""}${p.r[t]>0?`<span class="cnt">${p.r[t]}</span>`:""}</button>`).join("")}${p.live?`<button class="chip" onclick="postActions(${i})" aria-label="report or mute">🚩</button>`:""}</div>
-    </div>`).join("");
-  }
-  renderRoomMeta();
+    </div>`).join("") : `<div class="booth-empty">nothing said yet tonight — the counter's listening.</div>`);
 }
-/* header presence + cup counter: real numbers the moment they exist, non-falsifiable phrases below
+function ghostLegend(){ showModal(`<div class="m-emoji">👻</div><div class="m-title">the ghosts</div><div class="m-body">anyone marked 👻 is friendly fiction — a resident of the room, not a person. real night owls are never invented.</div><button class="cta" style="position:static" onclick="closeModal()">got it</button>`); }
+/* header presence + cup counter:/* header presence + cup counter: real numbers the moment they exist, non-falsifiable phrases below
    that. never a specific number unless the backend actually measured it. */
 function renderRoomMeta(){
   const rb=$("#room-burn"); if(rb) rb.innerHTML=`${burnLabel()}${crisisLine()}`;
   const rbt=$("#room-burn-top"); if(rbt){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); rbt.textContent=`🌅 ${h}h ${String(m).padStart(2,"0")}m`; }
   const ra=$("#room-awake"); if(ra) ra.textContent = windDown() ? "🌅 the room banks down at 4:00 — cups finishing" : (kitchenLight() ? "🏮 the kitchen light is on — 2:00 to 2:15" : ((_roomHumans!=null && _roomHumans>=2) ? `${_roomHumans} night owls here right now` : "the room's awake"));
-  const tl=$("#table-line"); if(tl){ const t=tonightsTable(); if(tl.dataset.t!==t){ tl.dataset.t=t; tl.innerHTML=`tonight's table: <b>${esc(t)}</b>`; } }
   const cw=document.querySelector("#view-room .composer"); if(cw) cw.classList.toggle("lamp", kitchenLight()&&!roomBoothMode);
-  const bs=$("#booth-sub"); if(bs){ const b=boothState(); bs.textContent = b ? `code ${b.code} — tap to sit down` : "a private table for your people"; }
   const ci=$("#composer-input"); if(ci) ci.maxLength = (kitchenLight()&&!roomBoothMode)?87:90;   // the 🏮 prefix costs 3 units — the author trims, not the room
   const cbs=document.querySelector(".cbr-sub"); if(cbs) cbs.textContent = (_roomCups!=null && _roomCups>=2) ? `${_roomCups} cups steeped tonight` : "a 3-minute break";
   renderShelf(); renderNotice(); renderNod(); markUsualChip();
@@ -2475,11 +2595,9 @@ const NOTICES=[
 /* ONE ambient slot below the composer: the kitchen line and the dispatch notice alternate
    nightly — a maintained place murmurs, it doesn't stack memos. */
 function renderNotice(){ const el=$("#room-notice"); if(!el) return;
-  const tk=tonightsKitchen(), tf=featuredCity();
-  if(tk && hash(nightKey()+"slot")%2===0){ el.textContent=`tonight's kitchen: ${tk.name} · ${tf.name} — we're all dodging the same menu`; return; }
   const winter=document.body.classList.contains("winter");
   const line=winter&&(hash(nightKey())%3===0) ? "tent's heated tonight. shake the cold off." : NOTICES[hash(nightKey()+"ntc")%NOTICES.length];
-  el.textContent=`${line} — dispatch`; }
+  el.textContent=`📌 ${line}`; }
 
 /* the nod: how smokers acknowledge each other — no words. only offered when REAL people are
    here (humans ≥2), and the count is real (analytics events), or it isn't shown at all. */
@@ -2511,8 +2629,8 @@ function react(i,t){ const p=room[i]; if(!p) return; if(!p.reacted) p.reacted={}
   const first=(function(){ try{ if(!localStorage.getItem("carted_reacted")){ localStorage.setItem("carted_reacted","1"); return true; } }catch(e){} return false; })();
   // full re-render on the first-ever reaction (labels retire); targeted chip bump otherwise —
   // children index offset by 1 when tonight's letter is pinned
-  const post=$("#room-feed").children[i+(_letterShown?1:0)];
-  if(first || !post){ renderRoom(); }
+  const rf=$("#room-feed"); const post=rf?rf.children[i+(_letterShown?1:0)]:null;
+  if(first || !post){ renderRoom(); renderDrawer(); }
   else { const chip=post.querySelectorAll(".reacts .chip")[{hug:0,me:1,hold:2}[t]]; if(chip){ chip.classList.add("on"); let cnt=chip.querySelector(".cnt"); if(!cnt){ cnt=document.createElement("span"); cnt.className="cnt"; chip.appendChild(cnt); } cnt.textContent=p.r[t]; } }
   snd("pop");
   if(p.liveId && ROOM_LIVE && beOn()) bePost("room",{action:"react", post_id:p.liveId, kind:(t==="me"?"metoo":t==="hold"?"hold":"hug")}); }
@@ -2531,7 +2649,7 @@ function loadMinePosts(){ try{ const all=JSON.parse(localStorage.getItem("carted
     try{ localStorage.setItem("carted_room_mine", JSON.stringify(live)); }catch(e){} } return live.map(p=>({ic:p.ic,text:p.text,streak:p.streak,city:"you",ago:"tonight",mine:true,liveId:p.liveId||null,seenDone:!!p.seen,rBase:{hug:0,me:0,go:0,hold:0,...(p.r||{})},r:{hug:0,me:0,go:0,hold:0,...(p.r||{})},reacted:{}})); }catch(e){ return []; } }
 function makeMine(ic, text){
   if(kitchenLight() && !/^🏮/.test(text)) text="🏮 "+String(text).slice(0,87).replace(/[\uD800-\uDBFF]$/,"");   // born under the kitchen light — the lamp travels in the text and burns with the post; composer maxlength drops to 87 in the window so nothing is cut silently
-  const post={ic, text, city:"you", ago:"now", mine:true, streak:stats.streak||0, r:{hug:0,me:0,go:0,hold:0}, rBase:{hug:0,me:0,go:0,hold:0}, reacted:{}}; room.unshift(post); saveMinePost(post); renderRoom(); beSeen(post); track("room_post"); capsuleEarnNight("room");
+  const post={ic, text, city:"you", ago:"now", mine:true, streak:stats.streak||0, r:{hug:0,me:0,go:0,hold:0}, rBase:{hug:0,me:0,go:0,hold:0}, reacted:{}}; room.unshift(post); saveMinePost(post); roomBubble(post); renderRoom(); beSeen(post); track("room_post"); capsuleEarnNight("room");
   if(ROOM_LIVE && beOn()){ bePost("room",{action:"post", device_id:deviceId(), night:nightKey(), ic:post.ic, text:post.text, streak:post.streak||0, hour:new Date().getHours()}).then(r=>{
     if(!r) return;   // offline: the post lives on this device; nothing to correct
     if(r.crisis) show988();
@@ -2694,7 +2812,7 @@ function beSeen(post){ if(post.seenDone) return;
 let lastIncoming=-1;
 function streamIncoming(){ if(roomSilent || !$("#view-room").classList.contains("active")) return;
   const awake=INCOMING.filter(ghostAwakeNow); if(!awake.length) return;   // only ghosts near their hour show up — schedules are honest
-  const s=pick(awake); room.unshift({ic:s.ic,ghost:s.ghost,sched:s.sched,text:s.text,city:s.city,ago:"now",streak:Math.random()<.4?2+Math.floor(Math.random()*19):0,r:{hug:Math.floor(Math.random()*6),me:Math.floor(Math.random()*9),go:Math.floor(Math.random()*3),hold:Math.random()<.25?1:0},reacted:{}}); capRoom(40); renderRoom(); }
+  const s=pick(awake); const gp={ic:s.ic,ghost:s.ghost,sched:s.sched,text:s.text,city:s.city,ago:"now",streak:Math.random()<.4?2+Math.floor(Math.random()*19):0,r:{hug:Math.floor(Math.random()*6),me:Math.floor(Math.random()*9),go:Math.floor(Math.random()*3),hold:Math.random()<.25?1:0},reacted:{}}; room.unshift(gp); capRoom(40); roomBubble(gp); renderRoom(); }
 
 /* ===== the 3-minute noodle cup — damta's cigarette, translated =====
    a sanctioned, self-ending break: steep cup ramen with the ghosts. the cup IS the
@@ -2818,8 +2936,7 @@ function closeCup(early){ const el=$("#cup-overlay"); if(el) el.remove(); clearI
 
 /* ---- quiet corner (침묵의 방): presence-only, the stream pauses, no one's talking ---- */
 let roomSilent=false;
-function toggleSilence(){ roomSilent=!roomSilent; snd("pop"); renderRoom();
-  const b=$("#silence-toggle"); if(b) b.textContent = roomSilent ? "🔊 rejoin the murmur" : "🤫 quiet corner"; }
+function toggleSilence(){ roomSilent=!roomSilent; snd("pop"); renderRoom(); toast(roomSilent?"quiet corner — nothing to do, nothing owed 🤫":"back in the murmur"); }
 
 /* presence numbers are the DISCLOSED resident-ghost fiction (the house-rules card says so).
    presence is now a NON-FALSIFIABLE phrase, not a precise fake headcount — a specific number next
