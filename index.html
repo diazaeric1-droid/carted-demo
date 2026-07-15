@@ -1538,6 +1538,8 @@ const OB = [
   { e:"🌙", h:"for whoever's up at 2am", s:"there's a quiet room where the other night owls are. a cup of noodles that steeps in three minutes. nobody knows your name here." },
   { e:"🛒", h:"arrive by ordering nothing", s:"fill a cart with whatever's calling you at 1am — real dishes, fictional kitchens — and send a ghost instead of your money." },
   { e:"💸", h:"the driver was never real", s:"filled the cart. closed the app. you keep every dollar — that's the whole point. 👻" },
+  { e:"🪙", h:"showing up pays in coins", s:"your first move each shift — a snack run, an order, a word in the room — mints a coin. the machine restocks at 4am and 4pm, so a day visit and a night visit is two." },
+  { e:"🎴", h:"coins open capsules", s:"one coin turns the crank. save three and rip a midnight pack — costumes for Mort, your ghost. odds printed on the machine, never a duplicate, never real money." },
   { e:"🍜", h:"the room keeps your seat", s:"come back tomorrow night. the kettle's on, the ghosts wait up, and everything said here burns at sunrise." },
 ];
 let obIdx=0;
@@ -3373,6 +3375,8 @@ function capsuleDraw(minU){
 let __gachaBusy=false, __gachaT=[];
 function openGacha(){
   capsuleMigrate();
+  if(!localStorage.getItem("carted_gacha_intro")){ try{ localStorage.setItem("carted_gacha_intro","1"); }catch(e){}
+    showModal(`<div class="m-emoji">🪙</div><div class="m-title">how the machine works</div><div class="m-body" style="text-align:left">show up, get a coin — your first snack run, order, or room post each shift mints one (restocks 4am &amp; 4pm).<br><br><b>example:</b> run a banana milk tonight → 🪙1. grab a coffee after 4pm tomorrow → 🪙2. one more tomorrow night → 🪙3 = a <b>midnight pack</b>: three capsules, costumes for ${esc(ghostName())}.<br><br>odds are printed on the machine. no duplicates, no purchases — it only takes nights.</div><button class="cta" style="position:static" onclick="closeModal();openGacha()">show me the machine</button>`); return; }
   if($("#gacha-overlay")) return;
   const sc=document.querySelector(".screen"); if(!sc) return;
   track("gacha_open");
