@@ -1,4 +1,4 @@
-const CACHE = "carted-v68";
+const CACHE = "carted-v69";
 const SHELL = [
   "./",
   "index.html",

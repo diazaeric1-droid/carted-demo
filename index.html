@@ -139,7 +139,7 @@
 
   .card { position: relative; display: flex; gap: 13px; padding: 11px; margin-bottom: 14px; background: var(--card); border: 2.5px solid var(--ink); border-radius: 20px; cursor: pointer; transition: transform .12s ease, background .15s, box-shadow .12s; box-shadow: 5px 5px 0 var(--ink); }
   .card:active { transform: translate(2px,3px); box-shadow: 1px 2px 0 var(--ink); background: var(--card-hi); }
-  .thumb { width: 118px; height: 118px; flex: 0 0 118px; align-self: center; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 34px; background: var(--card-hi); border: 2.5px solid var(--ink); overflow: hidden; box-shadow: 2px 2px 0 var(--ink); }
+  .thumb { width: 128px; height: 128px; flex: 0 0 128px; align-self: center; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 34px; background: var(--card-hi); border: 2.5px solid var(--ink); overflow: hidden; box-shadow: 2px 2px 0 var(--ink); }
   .thumb .ph-img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .hero .ph-img { width: 100%; height: 100%; object-fit: cover; border-radius: 22px; display: block; }
   .meta { flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden; }
@@ -152,8 +152,6 @@
   .meta .row .rate { color: #9BD2E8; font-weight: 800; }
   .meta .price { margin-top: auto; padding-top: 7px; font-size: 16px; font-weight: 700; font-family: var(--disp); color: var(--pink-txt); white-space: nowrap; }
   .meta .price .p-eta { color: var(--muted); font-family: var(--bodyf); font-weight: 500; font-size: 12.5px; }
-  .qadd { flex: 0 0 40px; align-self: center; width: 40px; height: 40px; border-radius: 13px; border: 2px solid var(--ink); background: var(--pink); color: #14060F; font-size: 24px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); display: flex; align-items: center; justify-content: center; line-height: 1; transition: transform .1s, box-shadow .1s; }
-  .qadd:active { transform: translate(1px,2px) scale(.96); box-shadow: 0 0 0 var(--ink); }
   .fav.on { color: var(--hot); }
 
   .loading { text-align: center; padding: 50px 20px; color: var(--text); font-weight: 700; }
@@ -1637,7 +1635,6 @@ function flyToCart(ev, emo){
   requestAnimationFrame(()=>{ d.style.left=(c.left-r.left+c.width/2-15)+"px"; d.style.top=(c.top-r.top+6)+"px"; d.style.transform="scale(.3)"; d.style.opacity="0"; });
   setTimeout(()=>d.remove(), 720);
 }
-function quickAdd(key, ev){ ev.stopPropagation(); addToCart(key, ev); }
 
 /* ---- shareable win card (canvas → native share / download) ---- */
 function shareWin(mode){ track("share",{k:"win"});
@@ -1957,7 +1954,6 @@ function cardHTML(p, saved){
       <div class="shop"><span class="en">${where}</span> · ${esc(niceHood(p))}</div>
       <div class="row"><span class="rate">★ ${p.rate.toFixed(1)}</span><span>(${p.n>=1000?(Math.round(p.n/100)/10)+"k":p.n})</span><span> · ${"$".repeat(p.lvl||2)} · ${etaStr(p)}</span></div>
     </div>
-    <button class="qadd" onclick="quickAdd('${p._key}',event)">＋</button>
   </div>`;
 }
 function renderFeed(){
