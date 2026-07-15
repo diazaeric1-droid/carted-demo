@@ -530,6 +530,7 @@
   .hud .pill { display: flex; align-items: center; gap: 5px; background: var(--card); border: 2px solid var(--ink); border-radius: 13px; padding: 7px 10px; font-weight: 600; font-size: 12.5px; font-family: var(--disp); color: var(--text); cursor: pointer; box-shadow: 2px 2px 0 var(--ink); flex: 0 0 auto; transition: transform .08s, box-shadow .08s; }
   .hud .pill:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
   .hud .pill.flame.on { background: var(--accent2); }
+  .hud .pill.pack { border-color: var(--pink); color: var(--pink-txt); box-shadow: 0 0 12px rgba(255,77,158,.35), 2px 2px 0 var(--ink); }
   .hud .pill .hint { font-size: 11px; color: var(--muted); font-family: var(--bodyf); font-weight: 700; }
   .hud .pill.lvl { flex: 1 1 auto; min-width: 0; }
   .minibar { flex: 1; height: 8px; background: var(--soft); border-radius: 5px; overflow: hidden; min-width: 24px; border: 1.5px solid var(--ink); }
@@ -1500,7 +1501,7 @@ const OB = [
   { e:"🌙", h:"for whoever's up at 2am", s:"little rooms full of strangers who are also awake. pick one, talk, disappear — nobody knows your name here." },
   { e:"🛒", h:"arrive by ordering nothing", s:"fill a cart with whatever's calling you at 1am — real dishes, fictional kitchens — and send a ghost instead of your money." },
   { e:"💸", h:"the driver was never real", s:"filled the cart. closed the app. you keep every dollar — that's the whole point. 👻" },
-  { e:"🪙", h:"showing up pays in coins", s:"your first move each shift — a snack run, an order, a word in the room — mints a coin. the machine restocks at 4am and 4pm, so a day visit and a night visit is two." },
+  { e:"🪙", h:"showing up pays in coins", s:"walk in, get a coin — just opening the door counts. the machine restocks at 4am and 4pm, so a day visit and a night visit is two." },
   { e:"🎴", h:"coins open capsules", s:"one coin turns the crank. save three and rip a midnight pack — costumes for Mort, your ghost. odds printed on the machine, never a duplicate, never real money." },
   { e:"🍜", h:"the room keeps your seat", s:"come back tomorrow night. the kettle's on, the ghosts wait up, and everything said here burns at sunrise." },
 ];
@@ -1580,7 +1581,7 @@ function renderHud(){
   /* HUD = the identity spine only: streak + lifetime dodged. levels/XP live on the profile. */
   el.innerHTML = `
     <button class="pill flame${done?' on':''}" onclick="go('profile')">🔥 <b>${stats.streak||0}</b> · <b>$${Math.round(stats.savedUsd).toLocaleString()}</b> <span class="hint">never spent</span></button>
-    <button class="pill" onclick="openGacha()" aria-label="mort's capsule machine">🪙 <b>${stats.capsuleTokens||0}</b></button>
+    <button class="pill${(stats.capsuleTokens||0)>=3?' pack':''}" onclick="openGacha()" aria-label="mort's capsule machine">${(stats.capsuleTokens||0)>=3?`🎴 <b>pack ready</b>`:`🪙 <b>${stats.capsuleTokens||0}</b>`}</button>
     <button class="pill" onclick="toggleSnd()">${sndOn?"🔊":"🔇"}</button>`;
 }
 /* ---- stats: money dodged broken out by currency, total in USD ---- */
@@ -3295,7 +3296,7 @@ let __gachaBusy=false, __gachaT=[];
 function openGacha(){
   capsuleMigrate();
   if(!localStorage.getItem("carted_gacha_intro")){ try{ localStorage.setItem("carted_gacha_intro","1"); }catch(e){}
-    showModal(`<div class="m-emoji">🪙</div><div class="m-title">how the machine works</div><div class="m-body" style="text-align:left">show up, get a coin — your first snack run, order, or room post each shift mints one (restocks 4am &amp; 4pm).<br><br><b>example:</b> run a banana milk tonight → 🪙1. grab a coffee after 4pm tomorrow → 🪙2. one more tomorrow night → 🪙3 = a <b>midnight pack</b>: three capsules, costumes for ${esc(ghostName())}.<br><br>odds are printed on the machine. no duplicates, no purchases — it only takes nights.</div><button class="cta" style="position:static" onclick="closeModal();openGacha()">show me the machine</button>`); return; }
+    showModal(`<div class="m-emoji">🪙</div><div class="m-title">how the machine works</div><div class="m-body" style="text-align:left">show up, get a coin — walking in the door each shift mints one (restocks 4am &amp; 4pm).<br><br><b>example:</b> open the app tonight → 🪙1. drop by after 4pm tomorrow → 🪙2. tomorrow night → 🪙3 = a <b>midnight pack</b>: three capsules, costumes for ${esc(ghostName())}.<br><br>odds are printed on the machine. no duplicates, no purchases — it only takes nights.</div><button class="cta" style="position:static" onclick="closeModal();openGacha()">show me the machine</button>`); return; }
   if($("#gacha-overlay")) return;
   const sc=document.querySelector(".screen"); if(!sc) return;
   track("gacha_open");
@@ -3647,6 +3648,14 @@ acceptBoothFromUrl();
 renderFeatured();
 if(stats.pushOptIn && "Notification" in window && Notification.permission==="granted") scheduleGhostNudge();
 document.addEventListener("pointerdown", e=>{ const sc=document.querySelector(".screen"); if(!sc) return; const r=sc.getBoundingClientRect(); lastTap={x:e.clientX-r.left, y:e.clientY-r.top}; if(asmrOn && !asmrNode) startAsmr(); }, true);
+/* the daily reward beat: your shift coin mints the moment you walk in — opening the door counts
+   as showing up. one per shift (4am / 4pm restocks); the chip up top announces pack money. */
+setTimeout(()=>{ try{
+  const g=capsuleEarnNight("open", true);
+  if(g){ const n=stats.capsuleTokens||0;
+    toast(n>=3 ? "🎴 that's pack money — 3 coins. rip it at Mort's machine" : "🪙 tonight's coin is in — for showing up");
+    renderHud(); }
+}catch(e){} }, 1600);
 /* mort care: after two or more missed nights, one line — a kept seat, never a guilt trip */
 (function mortCare(){ try{
   const last=stats.lastNight; if(!last) return;
