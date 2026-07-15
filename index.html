@@ -292,8 +292,15 @@
   .rbub { position:absolute; left:14px; right:64px; bottom:6px; background:#141E38; border:1px solid rgba(77,227,255,.22); border-radius:12px 12px 12px 3px; padding:8px 11px; font-size:12.5px; color:var(--text); cursor:pointer; animation:rbRise 12s ease forwards; }
   .rbub i { font-style:normal; font-size:11px; color:var(--cyan-txt); font-weight:700; }
   @keyframes rbRise { 0%{ opacity:0; transform:translateY(14px);} 6%{ opacity:1; transform:translateY(0);} 82%{ opacity:1; transform:translateY(-26px);} 100%{ opacity:0; transform:translateY(-40px);} }
+  .rbub.p2 { left:auto; right:14px; left:64px; bottom:auto; top:4px; border-radius:12px 12px 3px 12px; }
   .rbub.still { animation:none; opacity:.96; }
   @media (prefers-reduced-motion: reduce){ .rbub { animation:none; opacity:.96; } }
+  #rs-napkin { position:absolute; left:10px; right:10px; bottom:96px; z-index:4; background:#1A2440; border:1px solid rgba(255,210,77,.4); border-radius:12px; padding:10px 12px; box-shadow:0 10px 30px rgba(0,0,0,.5); animation:fade .2s ease; }
+  #rs-napkin .nk-txt { font-size:12.5px; color:var(--text); margin-bottom:8px; }
+  #rs-napkin .nk-txt i { font-style:normal; font-size:11px; color:var(--pink-txt); font-weight:700; }
+  #rs-napkin .nk-acts { display:flex; gap:6px; }
+  #rs-napkin .nk-acts button { flex:1; background:var(--card); border:1px solid var(--line); border-radius:9px; color:var(--text); font-size:11px; font-weight:700; padding:7px 4px; cursor:pointer; }
+  #rs-napkin .nk-acts .nk-x { flex:0 0 34px; color:var(--muted); }
   .rs-counter { display:flex; align-items:flex-end; justify-content:space-around; gap:8px; border-top:2px solid rgba(255,210,77,.22); background:linear-gradient(180deg,#111A30,#0D1426); padding:8px 8px 6px; }
   .rs-obj { text-align:center; font-size:16px; background:none; border:none; color:var(--muted); }
   .rs-obj span { display:block; font-size:11px; margin-top:1px; }
@@ -2426,7 +2433,9 @@ function renderScene(){
   const d=new Date(); const ct=$("#rs-clock-t"); if(ct) ct.textContent=`${d.getHours()%12||12}:${String(d.getMinutes()).padStart(2,"0")}`;
   const tb=$("#rs-table"); if(tb){ const t=tonightsTable(); if(tb.dataset.t!==t){ tb.dataset.t=t; tb.innerHTML=`tonight's table<br><b>${esc(t)}</b>`; } }
   const cs=$("#rs-cupspot"); if(cs){ let steeped=false; try{ steeped=localStorage.getItem("carted_cup")===nightKey(); }catch(e){} cs.style.display=(steeped||cupTimer)?"":"none"; }
+  const cd=document.querySelector(".rs-candle span"); if(cd){ const heldN=room.filter(p=>p.r&&(p.r.hold||0)>0).length; const cdt=heldN?`${heldN} held tonight`:"the flame keeps"; if(cd.textContent!==cdt) cd.textContent=cdt; }
   renderStools();
+  airLoop(); airNext();
   if(!_roomTick){ _roomTick=setInterval(()=>{ if(document.hidden) return; const v=$("#view-room"); if(!v||!v.classList.contains("active")||roomBoothMode) return; renderScene(); mortLine(); }, 30000); }
 }
 /* who's at the counter: you always take the rightmost stool. ghosts sit their true signature-hour
@@ -2463,19 +2472,56 @@ function mortLine(){
   }
   const line=`mort: ${sTxt}`; if(el.dataset.t!==line){ el.dataset.t=line; el.textContent=line; }
 }
-/* speech is weather: one bubble at a time rises from the counter and dissolves.
-   every line also files into the drawer — nothing is lost before the burn. */
-let _bubT=null;
-function roomBubble(p){
-  if(roomSilent||roomBoothMode||!p) return;
+/* THE MURMUR: the conversation never leaves the room — tonight's lines cycle through the
+   airspace continuously (newest jump the queue), up to two afloat at once, damta-style.
+   the drawer stays the archive; the AIR is where the room talks. tap a line to catch it. */
+let _airTimer=null, _airIdx=0, _airAlt=false;
+function airLoop(){ if(_airTimer) return; _airTimer=setInterval(airNext, 9000); }
+function airNext(){
+  const v=$("#view-room"); if(!v||!v.classList.contains("active")||document.hidden||roomSilent||roomBoothMode) return;
   const air=$("#rs-air"); if(!air) return;
-  if(air.querySelector(".rbub")) return;   // one at a time — the rest waits in the drawer
+  if(air.querySelectorAll(".rbub").length>=2) return;
+  const pool=room.slice(0, 12); if(!pool.length) return;
+  const p=pool[_airIdx % pool.length]; _airIdx++;
+  spawnBubble(p, false);
+}
+function spawnBubble(p, fresh){
+  if(roomSilent||roomBoothMode||!p||!p.text) return;
+  const air=$("#rs-air"); if(!air) return;
+  const up=air.querySelectorAll(".rbub");
+  if(up.length>=2){ if(!fresh) return; up[0].remove(); }   // a fresh line always finds air
   let reduce=false; try{ reduce=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
-  const el=document.createElement("div"); el.className="rbub"+(reduce?" still":"");
+  _airAlt=!_airAlt;
+  const el=document.createElement("div"); el.className="rbub"+(_airAlt?" p2":"")+(reduce?" still":"");
   el.innerHTML=`${p.ghost?`<i>👻 ${esc(p.ghost)}</i> · `:(p.mine?`<i>you</i> · `:`<i>night owl</i> · `)}${esc(String(p.text).replace(/^🏮 /,""))}`;
-  el.onclick=()=>toggleRoomDrawer(true);
+  el.onclick=(e)=>{ e.stopPropagation(); catchLine(p); el.remove(); };
   air.appendChild(el);
-  setTimeout(()=>{ try{ el.remove(); }catch(e){} }, reduce?26000:12500);
+  setTimeout(()=>{ try{ el.remove(); }catch(e){} }, reduce?24000:10500);
+}
+function roomBubble(p){ _airIdx=0; spawnBubble(p, true); }
+/* catch a line out of the air: it lands as a napkin with the room's three quiet verbs */
+function catchLine(p){
+  const sc2=$("#room-scene"); if(!sc2||!p) return;
+  const old=$("#rs-napkin"); if(old) old.remove();
+  const idx=()=>room.indexOf(p);
+  const el=document.createElement("div"); el.id="rs-napkin";
+  el.innerHTML=`<div class="nk-txt">${p.ghost?`<i>👻 ${esc(p.ghost)}</i> · `:""}${esc(String(p.text).replace(/^🏮 /,""))}</div>
+    <div class="nk-acts">
+      <button onclick="nkAct(this,'hug')">🫂 hang in</button>
+      <button onclick="nkAct(this,'hold')">🕯️ hold til sunrise</button>
+      <button onclick="nkAct(this,'reply')">↪ pass back</button>
+      <button class="nk-x" onclick="this.closest('#rs-napkin').remove()" aria-label="let it drift">✕</button>
+    </div>`;
+  el._post=p;
+  sc2.appendChild(el); snd("pop");
+  setTimeout(()=>{ try{ el.remove(); }catch(e){} }, 22000);
+}
+function nkAct(btn, kind){
+  const nk=btn.closest("#rs-napkin"); const p=nk&&nk._post; if(!p) return;
+  const i=room.indexOf(p);
+  if(kind==="reply"){ nk.remove(); if(i>=0) replyTo(i); else { const inp=$("#composer-input"); if(inp){ inp.value=`↪ "${String(p.text).slice(0,24)}" `; inp.focus(); } } return; }
+  if(i>=0) react(i, kind==="hug"?"hug":"hold");
+  nk.remove();
 }
 /* the drawer: the old feed, demoted. default closed, no badge, forever. */
 let roomDrawerOpen=false;
@@ -2626,7 +2672,12 @@ function markUsualChip(){ const e=usualChipEmoji(); if(!e) return;
 function isNA(){ try{ return /^America\//.test(Intl.DateTimeFormat().resolvedOptions().timeZone||""); }catch(e){ return false; } }
 function crisisLine(){ return isNA() ? ` · rough night? <a href="tel:988" style="color:inherit;font-weight:800">988</a> is awake too 🤍` : ` · rough night? you don't have to carry it alone 🤍`; }
 let _letterShown=false;
-function react(i,t){ const p=room[i]; if(!p) return; if(!p.reacted) p.reacted={}; if(p.reacted[t]) return; p.reacted[t]=true; p.r[t]=(p.r[t]||0)+1;
+function react(i,t){ const p=room[i]; if(!p) return; if(!p.reacted) p.reacted={}; if(p.reacted[t]) return;
+  if(t==="hold"){ let held=null; try{ held=localStorage.getItem("carted_held"); }catch(e){}
+    if(held===nightKey()){ snd("pop"); toast("you've held one tonight — the candle keeps it 🕯️"); return; }
+    try{ localStorage.setItem("carted_held", nightKey()); }catch(e){}
+    toast("held til sunrise — it rests under the candle 🕯️"); }
+  p.reacted[t]=true; p.r[t]=(p.r[t]||0)+1;
   const first=(function(){ try{ if(!localStorage.getItem("carted_reacted")){ localStorage.setItem("carted_reacted","1"); return true; } }catch(e){} return false; })();
   // full re-render on the first-ever reaction (labels retire); targeted chip bump otherwise —
   // children index offset by 1 when tonight's letter is pinned
@@ -2750,11 +2801,13 @@ function fetchLiveRoom(){ if(!(ROOM_LIVE && beOn())) return; const now=Date.now(
     if(typeof r.nods==="number") _roomNods=r.nods;         // real nods tonight — same honest pattern
     const seen=new Set(room.filter(p=>p.liveId).map(p=>p.liveId));
     let added=false;
+    let _aired=false;
     r.posts.forEach(p=>{ if(seen.has(p.id)) return; added=true;
       if(p.ghost){ room.unshift({liveId:p.id, ic:p.ic||"🤍", ghost:p.ghost, text:p.text, city:"the room", ago:"just now", r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0, hold:p.holds||0}, reacted:{}}); }   // disclosed resident-ghost reply, near the top (it's a reply)
       else { if(p.who && mutedWho().includes(p.who)) return;   // muted authors never render
              let at=0; while(at<room.length && room[at].liveId && room[at].ghost) at++;   // real humans slot in right under the freshest ghost replies — never buried under fiction, never evicted first
-             room.splice(at,0,{liveId:p.id, ic:p.ic||"🌙", text:p.text, city:"night owl", ago:"tonight", streak:p.streak||0, live:true, who:p.who||null, r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0, hold:p.holds||0}, reacted:{}}); }
+             const lp={liveId:p.id, ic:p.ic||"🌙", text:p.text, city:"night owl", ago:"tonight", streak:p.streak||0, live:true, who:p.who||null, r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0, hold:p.holds||0}, reacted:{}};
+             room.splice(at,0,lp); if(!_aired){ _aired=true; roomBubble(lp); } }
     });
     capRoom(60);
     fetchMineCounts();
