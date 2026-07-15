@@ -1026,6 +1026,7 @@
             <div class="kb-open">OPEN 24H</div>
           </div>
           <div id="konbini-aisles"></div>
+          <button class="gm-open" style="margin:14px 0 0" onclick="openGacha()">🪙 mort's capsule machine — series 1 · restocks 4am &amp; 4pm</button>
           <div class="kb-fic">👻 every shelf is fiction — that's why it's free</div>
           <div class="kb-basket" id="kb-basket" style="display:none">
             <div class="kb-b-items" id="kb-b-items"></div>
@@ -1610,7 +1611,7 @@ function renderHud(){
   /* HUD = the identity spine only: streak + lifetime dodged. levels/XP live on the profile. */
   el.innerHTML = `
     <button class="pill flame${done?' on':''}" onclick="go('profile')">🔥 <b>${stats.streak||0}</b> · <b>$${Math.round(stats.savedUsd).toLocaleString()}</b> <span class="hint">never spent</span></button>
-    ${(stats.capsuleTokens||0)>0?`<button class="pill" onclick="openGacha()" aria-label="the capsule machine">🪙 <b>${stats.capsuleTokens}</b></button>`:""}
+    <button class="pill" onclick="openGacha()" aria-label="mort's capsule machine">🪙 <b>${stats.capsuleTokens||0}</b></button>
     <button class="pill" onclick="toggleSnd()">${sndOn?"🔊":"🔇"}</button>`;
 }
 /* ---- stats: money dodged broken out by currency, total in USD ---- */
