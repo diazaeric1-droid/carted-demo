@@ -2432,7 +2432,6 @@ function renderRoomsList(){
   const tk2=stats.capsuleTokens||0;
   el.innerHTML = `
     <button class="roulette" onclick="roomRoulette()">🎲 drop me in a room</button>
-    ${machineBarBtn()}
     ${NIGHT_ROOMS.map(r=>`<button class="rroom${r.code==="MAIN"?' main':''}" onclick="enterRoom('${r.code}')"><span class="ic">${r.ic}</span><span class="mid"><span class="nm">${esc(r.name)}</span><span class="st">${chanLabel(r.code)}</span></span><span class="go">›</span></button>`).join("")}
     <button class="rroom priv" onclick="openBooth()"><span class="ic">🛋️</span><span class="mid"><span class="nm">your booth</span><span class="st">${b?`private · code ${esc(b.code)} — invite by link`:"private — start one, invite by link"}</span></span><span class="go">›</span></button>
     <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a 3-minute break</span><span class="cbr-shelf" id="cup-shelf"></span></span><span class="cbr-go">›</span></button>`;
