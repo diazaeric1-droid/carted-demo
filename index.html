@@ -401,16 +401,30 @@
   .wd-fit.tier-s { border-color: rgba(255,210,77,.55) !important; }
   .wd-fit.lock { border-style: dashed; }
   .gacha-scene .gm-mort { margin-bottom: 4px; }
-  .gm-machine { width: 158px; margin: 0 auto; user-select: none; -webkit-user-select: none; }
-  .gm-dome { height: 92px; border-radius: 79px 79px 10px 10px; background: rgba(223,233,255,.05); border: 1px solid var(--border); position: relative; overflow: hidden; }
+  .gm-machine { width: 168px; margin: 0 auto; user-select: none; -webkit-user-select: none; filter: drop-shadow(0 14px 28px rgba(0,0,0,.45)); }
+  .gm-sign { font-family: var(--bodyf); font-weight: 800; font-size: 12px; letter-spacing: 4px; color: var(--pink-txt); text-shadow: 0 0 12px rgba(255,77,158,.55); background: var(--card); border: 1.5px solid rgba(255,77,158,.5); border-bottom: none; border-radius: 12px 12px 0 0; padding: 5px 0 4px; }
+  .gm-dome { height: 96px; border-radius: 0; background: radial-gradient(130% 110% at 30% 16%, rgba(223,233,255,.18), rgba(223,233,255,.04) 55%, rgba(223,233,255,.02)); border: 1.5px solid rgba(77,227,255,.35); border-bottom: none; position: relative; overflow: hidden; box-shadow: inset 0 -14px 22px rgba(0,0,0,.35), inset 0 6px 14px rgba(223,233,255,.07); }
   .gm-cap { position: absolute; width: 30px; height: 30px; border-radius: 50%; bottom: 6px; border: 1px solid rgba(0,0,0,.4); }
   .gm-cap::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 50%; background: rgba(255,255,255,.78); border-radius: 0 0 15px 15px; }
-  .gm-cap.c1 { left: 12px; background: var(--cap-u); }
-  .gm-cap.c2 { left: 46px; bottom: 11px; background: var(--cap-r); }
-  .gm-cap.c3 { left: 80px; background: var(--cap-s); }
-  .gm-cap.c4 { left: 112px; bottom: 13px; background: var(--cap-c); }
-  .gm-body { background: var(--card); border: 1px solid var(--border); border-radius: 0 0 16px 16px; padding: 12px; display: flex; align-items: center; justify-content: space-between; }
-  .gm-crank { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--muted); background: none; color: var(--text); font-size: 19.5px; cursor: pointer; line-height: 1; }
+  .gm-cap.c1 { left: 8px; background: var(--cap-u); }
+  .gm-cap.c2 { left: 40px; bottom: 12px; background: var(--cap-r); }
+  .gm-cap.c3 { left: 72px; background: var(--cap-s); }
+  .gm-cap.c4 { left: 104px; bottom: 14px; background: var(--cap-c); }
+  .gm-cap.c5 { left: 132px; background: var(--cap-r); width: 26px; height: 26px; }
+  .gm-cap.c6 { left: 26px; bottom: 34px; background: var(--cap-c); width: 24px; height: 24px; transform: rotate(24deg); }
+  .gm-body { background: linear-gradient(160deg, rgba(255,77,158,.16), rgba(77,227,255,.05)), var(--card); border: 1.5px solid rgba(255,77,158,.5); border-radius: 0 0 18px 18px; padding: 12px 11px; display: flex; align-items: center; justify-content: space-between; gap: 8px; box-shadow: 0 0 18px rgba(255,77,158,.14); }
+  .gm-crank { width: 46px; height: 46px; border-radius: 50%; border: 2.5px solid var(--pink); background: radial-gradient(circle at 38% 32%, rgba(255,77,158,.3), rgba(255,77,158,.08)); cursor: pointer; position: relative; flex: 0 0 auto; }
+  .gm-crank::before { content: ""; position: absolute; left: 50%; top: 50%; width: 5px; height: 30px; transform: translate(-50%,-50%); background: var(--pink); border-radius: 3px; box-shadow: 0 0 8px rgba(255,77,158,.5); }
+  .gm-crank::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; transform: translate(-50%,-50%); background: var(--card); border: 2.5px solid var(--pink); border-radius: 50%; }
+  .gm-price { flex: 1; display: flex; flex-direction: column; align-items: center; line-height: 1.2; font-weight: 800; font-size: 13px; color: var(--pink-txt); }
+  .gm-price span { font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .gm-help { background: none; border: 1px solid rgba(223,233,255,.25); color: var(--muted); width: 18px; height: 18px; border-radius: 50%; font-size: 11px; font-weight: 800; line-height: 1; cursor: pointer; vertical-align: 1px; margin-left: 3px; padding: 0; }
+  .gm-steps { display: flex; flex-direction: column; gap: 10px; text-align: left; margin: 10px 0 4px; }
+  .gm-step { display: flex; align-items: center; gap: 11px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 9px 12px; }
+  .gm-step .gs-ic { font-size: 22px; flex: 0 0 auto; }
+  .gm-step b { display: block; font-size: 13px; }
+  .gm-step span { display: block; font-size: 11.5px; color: var(--muted); margin-top: 1px; }
+  .gm-steps-fine { font-size: 10.5px; color: var(--muted); margin-top: 10px; text-align: center; }
   .gm-machine.cranking .gm-crank { animation: gm-crank 1.5s ease-in-out; }
   @keyframes gm-crank { to { transform: rotate(720deg); } }
   .gm-machine.cranking .gm-cap { animation: gm-rattle .55s ease-in-out 3; }
@@ -3393,7 +3407,7 @@ let __gachaBusy=false, __gachaT=[];
 function openGacha(){
   capsuleMigrate();
   if(!localStorage.getItem("carted_gacha_intro")){ try{ localStorage.setItem("carted_gacha_intro","1"); }catch(e){}
-    showModal(`<div class="m-emoji">🪙</div><div class="m-title">how the machine works</div><div class="m-body" style="text-align:left">show up, get a coin — walking in the door each shift mints one (restocks 4am &amp; 4pm).<br><br><b>example:</b> open the app tonight → 🪙1. drop by after 4pm tomorrow → 🪙2. tomorrow night → 🪙3 = a <b>midnight pack</b>: three capsules, costumes for ${esc(ghostName())}.<br><br>coins also reopen the kitchen: <b>🪙2 = a second dinner run</b> tonight.<br><br>odds are printed on the machine. no duplicates, no purchases — it only takes nights.</div><button class="cta" style="position:static" onclick="closeModal();openGacha()">show me the machine</button>`); return; }
+    gachaHelp(); return; }
   if($("#gacha-overlay")) return;
   const sc=document.querySelector(".screen"); if(!sc) return;
   track("gacha_open");
@@ -3401,12 +3415,13 @@ function openGacha(){
   const el=document.createElement("div"); el.id="gacha-overlay"; el.className="cup-ov";
   el.innerHTML=`<div class="cup-scene gacha-scene">
     <button class="cup-x" onclick="closeGacha()" aria-label="step away from the machine">✕</button>
-    <div class="cup-others">${esc(ghostName())}'s capsule machine</div>
+    <div class="cup-others">${esc(ghostName())}'s capsule machine <button class="gm-help" onclick="gachaHelp()" aria-label="how the machine works">?</button></div>
     <div class="gm-mort">${ghostAvatar(40)}</div>
     ${done ? `<div class="gr-name" style="margin-top:18px">collection complete — the machine bows 🙇</div><div class="gr-line">every capsule found a home. ${esc(ghostName())} has nothing left to hand you but the seat he kept.</div>${orderedTonight()?`<button class="gm-pack" style="margin-top:16px" onclick="if(canBuyRun()){buySecondRun();closeGacha();go('cart')}" ${canBuyRun()?"":"disabled"}>🛵 second dinner run — kitchen reopens · 🪙2</button>`:""}<button class="cta secondary" style="position:static;margin-top:22px" onclick="closeGacha()">back to the collection</button>` : `
     <div class="gm-machine" id="gm-machine">
-      <div class="gm-dome"><span class="gm-cap c1"></span><span class="gm-cap c2"></span><span class="gm-cap c3"></span><span class="gm-cap c4"></span></div>
-      <div class="gm-body"><button class="gm-crank" id="gm-crank" onclick="gachaPull()" aria-label="turn the crank">◉</button><div class="gm-slot" id="gm-slot"></div></div>
+      <div class="gm-sign">MORT'S</div>
+      <div class="gm-dome"><span class="gm-cap c1"></span><span class="gm-cap c2"></span><span class="gm-cap c3"></span><span class="gm-cap c4"></span><span class="gm-cap c5"></span><span class="gm-cap c6"></span></div>
+      <div class="gm-body"><button class="gm-crank" id="gm-crank" onclick="gachaPull()" aria-label="turn the crank — one coin"></button><div class="gm-price">🪙1<span>per turn</span></div><div class="gm-slot" id="gm-slot"></div></div>
     </div>
     <div class="gm-tokens" id="gm-tokens"></div>
     <button class="gm-pack" id="gm-pack" onclick="packPull()">🎴 midnight pack — 3 capsules · 🪙3</button>
@@ -3414,10 +3429,21 @@ function openGacha(){
     ${orderedTonight()?`<button class="gm-pack" style="margin-top:6px" onclick="if(canBuyRun()){buySecondRun();closeGacha();go('cart')}" ${canBuyRun()?"":"disabled"}>🛵 second dinner run — kitchen reopens · 🪙2</button>`:""}
     <div class="gm-odds"><span class="gm-dot t-c"></span>common <b>60%</b> · <span class="gm-dot t-u"></span>uncommon <b>30%</b><br><span class="gm-dot t-r"></span>rare <b>9%</b> · <span class="gm-dot t-s"></span>secret <b>1%</b>
       <div class="gm-pity" id="gm-pity"></div></div>
-    <div class="gm-fine">odds are real. no money goes in — tokens come from showing up (the machine restocks at 4am &amp; 4pm) and every $100 kept.<br>${esc(ghostName())} never hands you the same thing twice.</div>`}
+    <div class="gm-fine">odds are real · no duplicates · no money — only nights.</div>`}
   </div>`;
   sc.appendChild(el); snd("door");
   gachaHud();
+}
+function gachaHelp(){
+  showModal(`<div class="m-emoji">🪙</div><div class="m-title">${esc(ghostName())}'s capsule machine</div>
+    <div class="gm-steps">
+      <div class="gm-step"><span class="gs-ic">🌙</span><div><b>show up → get a coin</b><span>one per shift — the shelf restocks at 4am &amp; 4pm. never money.</span></div></div>
+      <div class="gm-step"><span class="gs-ic">🎰</span><div><b>🪙1 turns the crank · 🪙3 rips a pack</b><span>capsules hold costumes. odds are printed right on the machine.</span></div></div>
+      <div class="gm-step"><span class="gs-ic">👻</span><div><b>${esc(ghostName())} wears your pulls</b><span>on every delivery — hat, crown, the works.</span></div></div>
+      <div class="gm-step"><span class="gs-ic">🛵</span><div><b>🪙2 reopens the kitchen</b><span>one more real dinner run, good tonight only.</span></div></div>
+    </div>
+    <div class="gm-steps-fine">no duplicates · a rare or better within every 10 turns · it only takes nights</div>
+    <button class="cta" style="position:static;margin-top:14px" onclick="closeModal();openGacha()">show me the machine</button>`);
 }
 function gachaHud(){ const t=$("#gm-tokens"), p=$("#gm-pity"); const n=stats.capsuleTokens||0;
   const pk=$("#gm-pack"); if(pk) pk.disabled=n<3;
