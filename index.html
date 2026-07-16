@@ -3139,21 +3139,38 @@ function menuPrice(base, mult, place, salt){ const city=cityOf(place), pf=city.p
    match the dish name to a real glyph, fall back to a varied per-course pool. */
 const DISH_EMOJI_MATCH=[[/gyoza|dumpling|momo|pierogi|wonton/,"🥟"],[/edamame|bean/,"🫘"],[/takoyaki|octopus|squid|calamari/,"🐙"],[/shrimp|prawn|tempura|ebi/,"🍤"],[/salad|greens|slaw/,"🥗"],[/soup|broth|miso|bisque/,"🍲"],[/bread|naan|roti|baguette|garlic/,"🥖"],[/cheese|paneer|halloumi/,"🧀"],[/mushroom/,"🍄"],[/corn|elote/,"🌽"],[/skewer|satay|yakitori|kebab|anticucho/,"🍢"],[/wing|chicken|karaage/,"🍗"],[/rice|onigiri/,"🍙"],[/fries|frites|potato|tater|patatas/,"🍟"],[/pickle|kimchi|cucumber/,"🥒"],[/spring roll|summer roll|lumpia/,"🌯"],[/egg|deviled/,"🥚"],[/tea|matcha|chai/,"🍵"],[/coffee|latte|espresso|cortado/,"☕"],[/beer|lager/,"🍺"],[/soda|cola|fizz|ramune|sprite/,"🥤"],[/juice|lemonade|agua|horchata/,"🧃"],[/lassi|smoothie|shake|boba/,"🧋"],[/cake|torte|tres leches/,"🍰"],[/ice cream|gelato|sundae|soft serve|kulfi/,"🍨"],[/mochi|dango/,"🍡"],[/pie|tart|baklava/,"🥧"],[/brownie|chocolate|fondant/,"🍫"],[/donut|doughnut|churro|beignet/,"🍩"],[/flan|custard|pudding|creme|brulee|panna/,"🍮"],[/mango|fruit|melon/,"🥭"]];
 const COURSE_EMOJI={starter:["🥟","🍢","🥗","🍤","🍲"],side:["🍟","🥗","🍙","🌽"],drink:["🥤","🍵","🧃"],dessert:["🍰","🍨","🍡","🥧"]};
+/* photo-rich menus: a photo-less dish borrows a REAL corpus photo when its name shares a
+   clearly-visual food keyword (soup gets soup, tart gets tart) — deterministic, and never a
+   photo already on this menu. Broad proteins are excluded on purpose: a karaage row wearing
+   an alfredo photo reads as broken; a matched emoji is more honest than a wrong photo. */
+let _photoIdx=null;
+function photoIndex(){ if(_photoIdx) return _photoIdx; _photoIdx=[];
+  if(typeof menusData!=="undefined" && menusData && menusData.byCuisine){ for(const k in menusData.byCuisine) for(const d of menusData.byCuisine[k]) if(d.photo) _photoIdx.push({n:d.name.toLowerCase(), p:d.photo}); }
+  return _photoIdx; }
+const DISH_PHOTO_KEYS=["gyoza","dumpling","wonton","soup","salad","noodle","fried rice","rice","cake","brownie","chocolate","tart","pie","pudding","custard","flan","brulee","pancake","crepe","potato","fries","bread","naan","shrimp","prawn","wing","cheese","banana","apple","berry","lemon","mango","coconut","caramel","corn","mushroom","curry"];
+function photoForDish(name, used){
+  const ln=String(name||"").toLowerCase();
+  for(const kw of DISH_PHOTO_KEYS){
+    if(!ln.includes(kw)) continue;
+    const cands=photoIndex().filter(e=>e.n.includes(kw) && !used.has(e.p));
+    if(cands.length){ const c=cands[hash(ln+kw)%cands.length]; used.add(c.p); return BASE+c.p; }
+  }
+  return null; }
 function dishEmoji(name, course){ const n=String(name||"").toLowerCase(); for(const pair of DISH_EMOJI_MATCH){ if(pair[0].test(n)) return pair[1]; } const pool=COURSE_EMOJI[course]||["🍽️"]; return pool[hash(n)%pool.length]; }
 function mkItem(place, name, ic, kind, price, photo){ const k=place._key+"::"+kind+(hash(name)%9999); const it={ _key:k, _cityId:place._cityId, _cityName:place._cityName, _flag:place._flag, _cur:place._cur, ic:ic, name:place.name, hood:place.hood, dish:name, en:place.en, price:price, photo:photo||null, _menuItem:true }; placeByKey[k]=it; return it; }
 function buildMenu(place){
   const key=cuisineKeyOf(place), base=(CUISINE[key]&&CUISINE[key].base)||14;
   const realMains=(menusData && menusData.byCuisine[key]) ? menusData.byCuisine[key] : [];
   const courses=[];
-  let mainsPool=realMains.slice(), sigItem;
+  let mainsPool=realMains.slice(), sigItem; const usedPhotos=new Set(realMains.map(d=>d.photo).filter(Boolean));
   if(mainsPool.length){ const m=mainsPool.splice(hash(place.name+"sig")%mainsPool.length,1)[0]; sigItem=mkItem(place, m.name, place.ic, "sig", place.price, m.photo?BASE+m.photo:null); }
   else { sigItem=mkItem(place, place.dish, place.ic, "sig", place.price, null); }
   courses.push({label:"signature", items:[ sigItem ]});
   if(mainsPool.length){ const mm=mainsPool.slice(0,6); courses.push({label:"🍲 mains", items: mm.map(d=>mkItem(place,d.name, place.ic, "main"+d.id, menuPrice(base,1,place,d.name), d.photo?BASE+d.photo:null)) }); }
-  const st=pickList(STARTERS,key,3,place.name+"s"); if(st.length) courses.push({label:"starters", items: st.map(n=>mkItem(place,n,dishEmoji(n,"starter"),"starter",menuPrice(base,0.5,place,n+place.name))) });
-  const sd=pickList(SIDES,key,2,place.name+"sd"); if(sd.length) courses.push({label:"sides", items: sd.map(n=>mkItem(place,n,dishEmoji(n,"side"),"side",menuPrice(base,0.38,place,n+place.name))) });
+  const st=pickList(STARTERS,key,3,place.name+"s"); if(st.length) courses.push({label:"starters", items: st.map(n=>mkItem(place,n,dishEmoji(n,"starter"),"starter",menuPrice(base,0.5,place,n+place.name),photoForDish(n,usedPhotos))) });
+  const sd=pickList(SIDES,key,2,place.name+"sd"); if(sd.length) courses.push({label:"sides", items: sd.map(n=>mkItem(place,n,dishEmoji(n,"side"),"side",menuPrice(base,0.38,place,n+place.name),photoForDish(n,usedPhotos))) });
   const dr=pickList(DRINKS,key,3,place.name+"dr"); if(dr.length) courses.push({label:"drinks", items: dr.map(n=>mkItem(place,n,dishEmoji(n,"drink"),"drink",menuPrice(base,0.3,place,n+place.name))) });
-  const de=pickList(DESSERTS,key,2,place.name+"de"); if(de.length) courses.push({label:"dessert", items: de.map(n=>mkItem(place,n,dishEmoji(n,"dessert"),"dessert",menuPrice(base,0.5,place,n+place.name))) });
+  const de=pickList(DESSERTS,key,2,place.name+"de"); if(de.length) courses.push({label:"dessert", items: de.map(n=>mkItem(place,n,dishEmoji(n,"dessert"),"dessert",menuPrice(base,0.5,place,n+place.name),photoForDish(n,usedPhotos))) });
   return courses;
 }
 /* dishBlurb(it) — deterministic, hash-seeded appetizing line under each dish */
