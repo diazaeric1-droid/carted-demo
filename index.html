@@ -430,6 +430,9 @@
   .gm-dot.t-c { background: var(--cap-c); } .gm-dot.t-u { background: var(--cap-u); } .gm-dot.t-r { background: var(--cap-r); } .gm-dot.t-s { background: var(--cap-s); }
   .gm-pity { margin-top: 4px; font-size: 11px; color: var(--muted); font-weight: 700; }
   .gm-fine { margin-top: 16px; font-size: 11px; color: var(--muted); font-style: italic; font-family: var(--disp); line-height: 1.6; }
+  .gm-tag { font-size: 11px; font-weight: 700; color: var(--cyan-txt); margin: -2px 0 10px; letter-spacing: .02em; }
+  .gm-machine.nocoin .gm-crank { opacity: .4; }
+  .gm-slot:empty::after { content: "drops\ahere"; white-space: pre; font-size: 8.5px; line-height: 1.3; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; text-align: center; font-weight: 700; }
   .gr-ring { width: 92px; height: 92px; border-radius: 50%; margin: 10px auto; display: flex; align-items: center; justify-content: center; border: 3px solid var(--cap-c); }
   .gr-ring.t-u { border-color: var(--cap-u); box-shadow: 0 0 24px rgba(77,227,255,.22); }
   .gr-ring.t-r { border-color: var(--cap-r); box-shadow: 0 0 24px rgba(255,77,158,.26); }
@@ -483,7 +486,7 @@
   .chip.on { background: var(--accent2); color: var(--ink); font-weight: 800; }
   .chip .cnt { font-variant-numeric: tabular-nums; }
 
-  .nav { position: absolute; bottom: 0; left: 0; right: 0; height: 50px; background: var(--screen); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-around; padding-bottom: 2px; z-index: 30; }
+  .nav { position: absolute; bottom: 0; left: 0; right: 0; height: 50px; background: var(--screen); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: center; gap: 68px; padding-bottom: 2px; z-index: 30; }
   .nav button { background: none; border: none; color: #8A96B5; font-size: 11px; font-weight: 600; font-family: var(--bodyf); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 1px; position: relative; transition: transform .15s; }
   .nav button.on { color: var(--cyan-txt); transform: translateY(-2px); }
   .nav button .gi { font-size: 16px; transition: transform .15s; }
@@ -2439,10 +2442,10 @@ function renderRoomsList(){
   const b=boothState();
   const tk2=stats.capsuleTokens||0;
   el.innerHTML = `
+    <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a 3-minute break</span><span class="cbr-shelf" id="cup-shelf"></span></span><span class="cbr-go">›</span></button>
     <button class="roulette" onclick="roomRoulette()">🎲 drop me in a room</button>
     ${NIGHT_ROOMS.map(r=>`<button class="rroom${r.code==="MAIN"?' main':''}" onclick="enterRoom('${r.code}')"><span class="ic">${r.ic}</span><span class="mid"><span class="nm">${esc(r.name)}</span><span class="st">${chanLabel(r.code)}</span></span><span class="go">›</span></button>`).join("")}
-    <button class="rroom priv" onclick="openBooth()"><span class="ic">🛋️</span><span class="mid"><span class="nm">your booth</span><span class="st">${b?`private · code ${esc(b.code)} — invite by link`:"private — start one, invite by link"}</span></span><span class="go">›</span></button>
-    <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a 3-minute break</span><span class="cbr-shelf" id="cup-shelf"></span></span><span class="cbr-go">›</span></button>`;
+    <button class="rroom priv" onclick="openBooth()"><span class="ic">🛋️</span><span class="mid"><span class="nm">your booth</span><span class="st">${b?`private · code ${esc(b.code)} — invite by link`:"private — start one, invite by link"}</span></span><span class="go">›</span></button>`;
   renderShelf();
   const cbs=document.querySelector(".cbr-sub"); if(cbs&&_roomCups!=null&&_roomCups>=2) cbs.textContent=`${_roomCups} cups steeped tonight`;
 }
@@ -3132,6 +3135,11 @@ const CUISINE_ALIAS = { bbq:"barbecue", diner:"american", bistro:"french", gastr
 function cuisineKeyOf(p){ let k=(p.en||"").toLowerCase().trim().replace(/[\s-]+/g,"_"); k=CUISINE_ALIAS[k]||k; if((menusData && menusData.byCuisine[k]) || STARTERS[k] || DRINKS[k]) return k; return EMOJI_CUISINE[p.ic] || k; }
 function pickList(map, key, n, salt){ const pool=(map[key]||map._||[]).slice(); const out=[]; let h=hash(salt+key); for(let i=0;i<n && pool.length;i++){ h=(h*1103515245+12345)>>>0; out.push(pool.splice(h%pool.length,1)[0]); } return out; }
 function menuPrice(base, mult, place, salt){ const city=cityOf(place), pf=city.pf||1, h=hash(salt); let v=base*mult*pf*(0.8+(h%40)/100); return place._cur.dec===0 ? Math.max(1,Math.round(v)) : Math.round(v*100)/100; }
+/* photo-less menu rows used to repeat one emoji per course (🥢🥢🥢 = "stock placeholder" feel);
+   match the dish name to a real glyph, fall back to a varied per-course pool. */
+const DISH_EMOJI_MATCH=[[/gyoza|dumpling|momo|pierogi|wonton/,"🥟"],[/edamame|bean/,"🫘"],[/takoyaki|octopus|squid|calamari/,"🐙"],[/shrimp|prawn|tempura|ebi/,"🍤"],[/salad|greens|slaw/,"🥗"],[/soup|broth|miso|bisque/,"🍲"],[/bread|naan|roti|baguette|garlic/,"🥖"],[/cheese|paneer|halloumi/,"🧀"],[/mushroom/,"🍄"],[/corn|elote/,"🌽"],[/skewer|satay|yakitori|kebab|anticucho/,"🍢"],[/wing|chicken|karaage/,"🍗"],[/rice|onigiri/,"🍙"],[/fries|frites|potato|tater|patatas/,"🍟"],[/pickle|kimchi|cucumber/,"🥒"],[/spring roll|summer roll|lumpia/,"🌯"],[/egg|deviled/,"🥚"],[/tea|matcha|chai/,"🍵"],[/coffee|latte|espresso|cortado/,"☕"],[/beer|lager/,"🍺"],[/soda|cola|fizz|ramune|sprite/,"🥤"],[/juice|lemonade|agua|horchata/,"🧃"],[/lassi|smoothie|shake|boba/,"🧋"],[/cake|torte|tres leches/,"🍰"],[/ice cream|gelato|sundae|soft serve|kulfi/,"🍨"],[/mochi|dango/,"🍡"],[/pie|tart|baklava/,"🥧"],[/brownie|chocolate|fondant/,"🍫"],[/donut|doughnut|churro|beignet/,"🍩"],[/flan|custard|pudding|creme|brulee|panna/,"🍮"],[/mango|fruit|melon/,"🥭"]];
+const COURSE_EMOJI={starter:["🥟","🍢","🥗","🍤","🍲"],side:["🍟","🥗","🍙","🌽"],drink:["🥤","🍵","🧃"],dessert:["🍰","🍨","🍡","🥧"]};
+function dishEmoji(name, course){ const n=String(name||"").toLowerCase(); for(const pair of DISH_EMOJI_MATCH){ if(pair[0].test(n)) return pair[1]; } const pool=COURSE_EMOJI[course]||["🍽️"]; return pool[hash(n)%pool.length]; }
 function mkItem(place, name, ic, kind, price, photo){ const k=place._key+"::"+kind+(hash(name)%9999); const it={ _key:k, _cityId:place._cityId, _cityName:place._cityName, _flag:place._flag, _cur:place._cur, ic:ic, name:place.name, hood:place.hood, dish:name, en:place.en, price:price, photo:photo||null, _menuItem:true }; placeByKey[k]=it; return it; }
 function buildMenu(place){
   const key=cuisineKeyOf(place), base=(CUISINE[key]&&CUISINE[key].base)||14;
@@ -3141,11 +3149,11 @@ function buildMenu(place){
   if(mainsPool.length){ const m=mainsPool.splice(hash(place.name+"sig")%mainsPool.length,1)[0]; sigItem=mkItem(place, m.name, place.ic, "sig", place.price, m.photo?BASE+m.photo:null); }
   else { sigItem=mkItem(place, place.dish, place.ic, "sig", place.price, null); }
   courses.push({label:"signature", items:[ sigItem ]});
-  const st=pickList(STARTERS,key,3,place.name+"s"); if(st.length) courses.push({label:"starters", items: st.map(n=>mkItem(place,n,"🥢","starter",menuPrice(base,0.5,place,n+place.name))) });
   if(mainsPool.length){ const mm=mainsPool.slice(0,6); courses.push({label:"🍲 mains", items: mm.map(d=>mkItem(place,d.name, place.ic, "main"+d.id, menuPrice(base,1,place,d.name), d.photo?BASE+d.photo:null)) }); }
-  const sd=pickList(SIDES,key,2,place.name+"sd"); if(sd.length) courses.push({label:"sides", items: sd.map(n=>mkItem(place,n,"🍟","side",menuPrice(base,0.38,place,n+place.name))) });
-  const dr=pickList(DRINKS,key,3,place.name+"dr"); if(dr.length) courses.push({label:"drinks", items: dr.map(n=>mkItem(place,n,"🥤","drink",menuPrice(base,0.3,place,n+place.name))) });
-  const de=pickList(DESSERTS,key,2,place.name+"de"); if(de.length) courses.push({label:"dessert", items: de.map(n=>mkItem(place,n,"🍰","dessert",menuPrice(base,0.5,place,n+place.name))) });
+  const st=pickList(STARTERS,key,3,place.name+"s"); if(st.length) courses.push({label:"starters", items: st.map(n=>mkItem(place,n,dishEmoji(n,"starter"),"starter",menuPrice(base,0.5,place,n+place.name))) });
+  const sd=pickList(SIDES,key,2,place.name+"sd"); if(sd.length) courses.push({label:"sides", items: sd.map(n=>mkItem(place,n,dishEmoji(n,"side"),"side",menuPrice(base,0.38,place,n+place.name))) });
+  const dr=pickList(DRINKS,key,3,place.name+"dr"); if(dr.length) courses.push({label:"drinks", items: dr.map(n=>mkItem(place,n,dishEmoji(n,"drink"),"drink",menuPrice(base,0.3,place,n+place.name))) });
+  const de=pickList(DESSERTS,key,2,place.name+"de"); if(de.length) courses.push({label:"dessert", items: de.map(n=>mkItem(place,n,dishEmoji(n,"dessert"),"dessert",menuPrice(base,0.5,place,n+place.name))) });
   return courses;
 }
 /* dishBlurb(it) — deterministic, hash-seeded appetizing line under each dish */
@@ -3394,6 +3402,7 @@ function openGacha(){
   el.innerHTML=`<div class="cup-scene gacha-scene">
     <button class="cup-x" onclick="closeGacha()" aria-label="step away from the machine">✕</button>
     <div class="cup-others">${esc(ghostName())}'s capsule machine <button class="gm-help" onclick="gachaHelp()" aria-label="how the machine works">?</button></div>
+    <div class="gm-tag">show up → coins · coins → capsules · ${esc(ghostName())} wears them</div>
     <div class="gm-mort">${ghostAvatar(40)}</div>
     ${done ? `<div class="gr-name" style="margin-top:18px">collection complete — the machine bows 🙇</div><div class="gr-line">every capsule found a home. ${esc(ghostName())} has nothing left to hand you but the seat he kept.</div>${orderedTonight()?`<button class="gm-pack" style="margin-top:16px" onclick="if(canBuyRun()){buySecondRun();closeGacha();go('cart')}" ${canBuyRun()?"":"disabled"}>🛵 second dinner run — kitchen reopens · 🪙2</button>`:""}<button class="cta secondary" style="position:static;margin-top:22px" onclick="closeGacha()">back to the collection</button>` : `
     <div class="gm-machine" id="gm-machine">
@@ -3425,7 +3434,8 @@ function gachaHelp(){
 }
 function gachaHud(){ const t=$("#gm-tokens"), p=$("#gm-pity"); const n=stats.capsuleTokens||0;
   const pk=$("#gm-pack"); if(pk) pk.disabled=n<3;
-  if(t) t.textContent=`🪙 ${n} token${n===1?"":"s"}`;
+  const m=$("#gm-machine"); if(m) m.classList.toggle("nocoin", n<1);
+  if(t) t.textContent = n<1 ? "no coins — the shelf restocks at 4am & 4pm" : `🪙 ${n} coin${n===1?"":"s"} — one turns the crank`;
   const topLeft=capsuleUnownedIn("r").length+capsuleUnownedIn("s").length;
   if(p) p.textContent = topLeft ? `a rare or better is guaranteed within 10 pulls · pulls since last rare: ${stats.pitySince||0}`
                                 : "top shelf cleared — only counter stock left"; }
