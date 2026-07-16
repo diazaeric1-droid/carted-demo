@@ -300,6 +300,7 @@
   .machine-bar.ready .mb-coins { background:var(--pink); border-color:var(--pink); color:#14060F; }
   @keyframes mbPulse { 0%,100%{ box-shadow:0 0 12px rgba(255,77,158,.25); } 50%{ box-shadow:0 0 22px rgba(255,77,158,.5); } }
   @media (prefers-reduced-motion: reduce){ .machine-bar.ready { animation:none; box-shadow:0 0 16px rgba(255,77,158,.35); } }
+  #feed-machine .machine-bar { margin: 0 0 12px; }
   .ch-head { display:flex; align-items:center; gap:8px; margin:0 0 6px; }
   .ch-head .back { padding:6px 0; flex:0 0 auto; }
   .ch-head b { flex:1; min-width:0; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -738,6 +739,7 @@
   .thumb { position: relative; }
   .coupon-rib { position: absolute; bottom: -2px; left: -2px; background: var(--hot); color: #14060F; font-family: var(--disp); font-weight: 700; font-size: 11px; padding: 2px 6px; border: 2px solid var(--ink); border-radius: 9px 9px 9px 4px; box-shadow: 1px 1px 0 var(--ink); white-space: nowrap; }
   .new-chip { display: inline-block; background: var(--pink); color: #14060F; font-weight: 800; font-size: 11px; padding: 1px 6px; border-radius: 8px; border: 1.5px solid var(--ink); margin-left: 4px; vertical-align: middle; }
+  .pop-chip { display: inline-block; background: linear-gradient(135deg, var(--pink), #FF7A4D); color: #14060F; font-weight: 800; font-size: 11px; padding: 1px 7px; border-radius: 8px; border: 1.5px solid var(--ink); margin-left: 5px; vertical-align: middle; white-space: nowrap; }
   .spotlight.done { opacity: .78; box-shadow: 3px 3px 0 var(--ink); }
   /* big photo banner */
   .spotlight .sp-photo .ph-img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -924,6 +926,7 @@
           </div>
 
           <button class="kb-banner" onclick="openKonbini()"><span class="kb-bn-ic">🏪</span><span class="kb-bn-text"><b>CARTED 24H</b><span class="kb-bn-sub">snack runs · open all night</span></span><span class="kb-bn-go">›</span></button>
+          <div id="feed-machine"></div>
 
           <div id="feed-list"></div>
 
@@ -1598,6 +1601,7 @@ function toggleSnd(){ sndOn=!sndOn; try{ localStorage.setItem("carted_snd", sndO
 
 /* ---- game HUD: streak flame · level · money dodged · sound ---- */
 function renderHud(){
+  { const fm=$("#feed-machine"); if(fm) fm.innerHTML=machineBarBtn(); }   // the feed machine tracks coins live
   const el=$("#hud"); if(!el) return;
   const done=stats.lastNight===nightKey();
   /* HUD = the identity spine only: streak + lifetime dodged. levels/XP live on the profile. */
@@ -1930,13 +1934,23 @@ function upsertNearCity(lat,lng,m,place){
 /* ---- feed ---- */
 /* guard against an address that got over-trimmed to an orphan ordinal ("th Ave") -> show the city instead */
 function niceHood(p){ const h=(p.hood||"").trim(); if(!h || /^(st|nd|rd|th)\b/i.test(h)) return p._cityName||""; return h; }
+/* "popular" is set dressing on FICTIONAL restaurants — derived from the same invented
+   rating/review numbers as the ★ row (top 3 per city, deterministic, stable). it makes no
+   claim about real users; real-people numbers stay honest everywhere else in the app. */
+let _popCache={};
+function isPopular(p){ if(!p||!p._key||!p._cityId) return false;
+  const ci=CITY_INDEX[p._cityId]; if(ci==null) return false; const c=CITIES[ci]; const pls=c&&c._places; if(!pls||pls.length<6) return false;
+  let e=_popCache[p._cityId];
+  if(!e || e.src!==pls){ const top=pls.filter(x=>x.rate>=4.2).sort((a,b)=>(b.rate*Math.log10((b.n||0)+2))-(a.rate*Math.log10((a.n||0)+2))).slice(0,3);
+    e={src:pls, set:new Set(top.map(x=>x._key))}; _popCache[p._cityId]=e; }
+  return e.set.has(p._key); }
 function cardHTML(p, saved){
   const isNew=isNewPlace(p)&&!saved;
   const where = saved ? `${p._flag} ${esc(p._cityName)}` : esc(p.en);
   return `<div class="card" onclick="openDetail('${p._key}')">
     <div class="thumb">${thumbImg(p)}</div>
     <div class="meta">
-      <div class="name">${esc(p.name)}${isNew?'<span class="new-chip">new</span>':''}</div>
+      <div class="name">${esc(p.name)}${(!saved&&isPopular(p))?'<span class="pop-chip">🔥 popular</span>':''}${isNew?'<span class="new-chip">new</span>':''}</div>
       <div class="shop"><span class="en">${where}</span> · ${esc(niceHood(p))}</div>
       <div class="row"><span class="rate">★ ${p.rate.toFixed(1)}</span><span>(${p.n>=1000?(Math.round(p.n/100)/10)+"k":p.n})</span><span> · ${"$".repeat(p.lvl||2)} · ${etaStr(p)}</span></div>
     </div>
@@ -1944,6 +1958,7 @@ function cardHTML(p, saved){
 }
 function renderFeed(){
   renderBanners(); renderFeatured(); const bn=$("#buddy-nudge"); if(bn) bn.innerHTML=buddyNudge();
+  { const fm=$("#feed-machine"); if(fm) fm.innerHTML=machineBarBtn(); }
   const c=curCity();
   refreshDiscovery();
   $("#feed-section-label").textContent = `craving in ${esc(c.name)} right now`;
@@ -1953,6 +1968,8 @@ function renderFeed(){
   let list = applyFilters(c._places);
   const _capN=30, _total=list.length;
   if(!window._showAllCards && _total>_capN) list=list.slice(0,_capN);
+  { const top=list.filter(x=>x.rate>=4.2).sort((a,b)=>(b.rate*Math.log10((b.n||0)+2))-(a.rate*Math.log10((a.n||0)+2))).slice(0,3);
+    _popCache[c.id]={src:c._places, set:new Set(top.map(x=>x._key))}; }   // rank within what's on screen, so the chips are always findable
   if(!list.length){
     $("#feed-list").innerHTML = `<div class="empty"><div class="big">🔍</div>nothing matches those filters.<br><button class="cta secondary" style="position:static;margin-top:12px" onclick="clearFilters()">clear filters</button></div>`;
     return;
@@ -2030,7 +2047,7 @@ function openDetail(key){
   currentDetailKey=key;
   $("#d-hero").innerHTML = thumbImg(p, true)
     + `<div class="city-tag">${p._flag} ${esc(p._cityName)}</div>`
-    + `<div class="hero-name"><div class="hn-title">${esc(p.name)}</div><div class="hn-sub">${esc(p.en)} · ${esc(niceHood(p))}</div></div>`;
+    + `<div class="hero-name"><div class="hn-title">${esc(p.name)}${isPopular(p)?' <span class="pop-chip">🔥 popular</span>':''}</div><div class="hn-sub">${esc(p.en)} · ${esc(niceHood(p))}</div></div>`;
   const dd=$("#d-desc"); const isUsual = stats.usual && cuisineKeyOf(p)===String(stats.usual.en).replace(/[\s-]+/g,"_");
   if(p.desc || isUsual){ dd.textContent=(p.desc||"") + (isUsual?`${p.desc?" — ":""}👻 ${ghostName()}: “the usual, then?”`:""); dd.style.display="block"; } else dd.style.display="none";
   $("#d-stats").innerHTML = `${p.lvl?`<span><b>${"$".repeat(p.lvl)}</b></span>`:""}<span><b>${etaStr(p)}</b></span>`;
@@ -2405,6 +2422,9 @@ function chanLabel(code){
   if(n===1) return "someone's up in here";
   return res?`quiet right now — 👻 ${res.ghost}'s in`:"quiet right now";
 }
+function machineBarBtn(){ const tk=stats.capsuleTokens||0; const ready=tk>=3&&!capsuleDone();
+  const sub = ready?"a pack's sitting in the dome — rip it":(capsuleDone()?"shelf cleared · 🪙2 = second dinner run":"a pack takes 🪙3 · show up = coin");
+  return `<button class="machine-bar${ready?' ready':''}" onclick="openGacha()" aria-label="mort's capsule machine"><span class="mb-dome"><span class="mb-cap c1"></span><span class="mb-cap c2"></span><span class="mb-cap c3"></span></span><span class="mb-txt"><b>mort's capsule machine</b><span class="mb-sub">${sub}</span></span><span class="mb-coins">${ready?"🎴 rip":`🪙 ${tk}`}</span></button>`; }
 function renderRoomsList(){
   const el=$("#rooms-list"); if(!el) return;
   fetchChanStats();
@@ -2412,7 +2432,7 @@ function renderRoomsList(){
   const tk2=stats.capsuleTokens||0;
   el.innerHTML = `
     <button class="roulette" onclick="roomRoulette()">🎲 drop me in a room</button>
-    <button class="machine-bar${(tk2>=3&&!capsuleDone())?' ready':''}" onclick="openGacha()" aria-label="mort's capsule machine"><span class="mb-dome"><span class="mb-cap c1"></span><span class="mb-cap c2"></span><span class="mb-cap c3"></span></span><span class="mb-txt"><b>mort's capsule machine</b><span class="mb-sub">${(tk2>=3&&!capsuleDone())?"a pack's sitting in the dome — rip it":(capsuleDone()?"shelf cleared · 🪙2 = second dinner run":"a pack takes 🪙3 · show up = coin")}</span></span><span class="mb-coins">${(tk2>=3&&!capsuleDone())?"🎴 rip":`🪙 ${tk2}`}</span></button>
+    ${machineBarBtn()}
     ${NIGHT_ROOMS.map(r=>`<button class="rroom${r.code==="MAIN"?' main':''}" onclick="enterRoom('${r.code}')"><span class="ic">${r.ic}</span><span class="mid"><span class="nm">${esc(r.name)}</span><span class="st">${chanLabel(r.code)}</span></span><span class="go">›</span></button>`).join("")}
     <button class="rroom priv" onclick="openBooth()"><span class="ic">🛋️</span><span class="mid"><span class="nm">your booth</span><span class="st">${b?`private · code ${esc(b.code)} — invite by link`:"private — start one, invite by link"}</span></span><span class="go">›</span></button>
     <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a 3-minute break</span><span class="cbr-shelf" id="cup-shelf"></span></span><span class="cbr-go">›</span></button>`;
