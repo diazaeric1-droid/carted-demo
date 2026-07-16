@@ -454,14 +454,30 @@
   .pk-cards { display: flex; flex-direction: column; gap: 9px; margin-top: 14px; width: 100%; max-width: 250px; margin-left: auto; margin-right: auto; }
   .pk-card { display: flex; align-items: center; gap: 11px; background: var(--card); border: 2px solid var(--cap-c); border-radius: 13px; padding: 10px 13px; cursor: pointer; animation: pkIn .45s ease both; animation-delay: var(--d,0ms); text-align: left; }
   .pk-card.t-u { border-color: var(--cap-u); } .pk-card.t-r { border-color: var(--cap-r); box-shadow: 0 0 16px rgba(255,77,158,.22); } .pk-card.t-s { border-color: var(--cap-s); box-shadow: 0 0 20px rgba(255,210,77,.28); }
-  @keyframes pkIn { from { opacity: 0; transform: translateY(12px) scale(.92); } to { opacity: 1; transform: none; } }
+  @keyframes pkIn { from { opacity: 0; transform: translateY(14px) scale(.88); } 70% { transform: translateY(-3px) scale(1.04); } to { opacity: 1; transform: none; } }
   .pk-hat { font-size: 24px; }
   .pk-n { flex: 1; font-family: var(--disp); font-size: 14px; color: var(--text); }
   .pk-card .pk-t { margin-top: 0; }
   @media (prefers-reduced-motion: reduce) { .pk-pack, .pk-pack.rip, .pk-card { animation: none; } }
   .gm-confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
   .gm-confetti span { position: absolute; top: -20px; font-size: 12.5px; color: var(--cap-s); animation: fall 1.7s ease-in forwards; }
-  @media (prefers-reduced-motion: reduce) { .gm-machine.cranking .gm-crank, .gm-machine.cranking .gm-cap, .gm-ball.drop, .gm-ball.wobble, .gm-ball.crack { animation: none; } .gm-confetti { display: none; } }
+  .gm-confetti.t-u span { color: var(--cyan); } .gm-confetti.t-r span { color: var(--pink); } .gm-confetti.t-s span { color: var(--yell); }
+  .gm-flash { position: absolute; inset: 0; pointer-events: none; animation: gmFlash .75s ease-out forwards; }
+  .gm-flash.t-c, .gm-flash.t-u { background: radial-gradient(circle at 50% 36%, rgba(77,227,255,.35), transparent 60%); }
+  .gm-flash.t-r { background: radial-gradient(circle at 50% 36%, rgba(255,77,158,.45), transparent 62%); }
+  .gm-flash.t-s { background: radial-gradient(circle at 50% 36%, rgba(255,210,77,.5), transparent 65%); }
+  @keyframes gmFlash { from { opacity: 1; } to { opacity: 0; } }
+  .gr-banner { font-family: var(--disp); font-weight: 800; font-size: 14px; letter-spacing: 3px; text-transform: uppercase; margin-top: 6px; animation: grStamp .45s cubic-bezier(.2,1.7,.4,1) both; }
+  .gr-banner.t-r { color: var(--pink-txt); text-shadow: 0 0 14px rgba(255,77,158,.5); }
+  .gr-banner.t-s { color: var(--yell-txt); text-shadow: 0 0 16px rgba(255,210,77,.55); letter-spacing: 2px; }
+  @keyframes grStamp { from { opacity: 0; transform: scale(2.2); } 70% { transform: scale(.94); } to { opacity: 1; transform: scale(1); } }
+  .gr-mort { margin-top: 4px; animation: grHop 1.1s ease-in-out infinite; }
+  .gr-mort.spin { animation: grSpin 1.5s ease-in-out infinite; }
+  @keyframes grHop { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px) rotate(-6deg); } }
+  @keyframes grSpin { 0%,100% { transform: translateY(0) rotate(0); } 25% { transform: translateY(-10px) rotate(-14deg); } 75% { transform: translateY(-10px) rotate(14deg); } }
+  .gr-ring.boom { animation: grBoom .55s cubic-bezier(.2,1.7,.4,1) both; }
+  @keyframes grBoom { from { transform: scale(.25); opacity: 0; } 70% { transform: scale(1.12); } to { transform: scale(1); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .gm-machine.cranking .gm-crank, .gm-machine.cranking .gm-cap, .gm-ball.drop, .gm-ball.wobble, .gm-ball.crack { animation: none; } .gm-confetti, .gm-flash { display: none; } .gr-banner, .gr-mort, .gr-ring.boom { animation: none; } }
   .post .ptext { font-size: 14px; line-height: 1.45; margin-bottom: 11px; }
   .reacts { display: flex; gap: 8px; }
   .chip { flex: 1; background: var(--screen); border: 2px solid var(--ink); border-radius: 11px; padding: 8px 4px; font-size: 12.5px; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: transform .1s, background .15s, color .15s; box-shadow: 2px 2px 0 var(--ink); font-weight: 700; }
@@ -3452,31 +3468,47 @@ function packPull(){
 function packReveal(items){
   const el=$("#gacha-overlay"); if(!el) return;
   const left=stats.capsuleTokens||0;
-  const secret=items.some(i=>i.tier==="s");
+  const secret=items.some(i=>i.tier==="s"), rare=items.some(i=>i.tier==="r");
   const cards=items.map((it,i)=>`<button class="pk-card t-${it.tier}" style="--d:${i*450}ms" onclick="equipFit('${it.id}')"><span class="pk-hat">${it.hat}</span><span class="pk-n">${esc(it.name)}</span><span class="pk-t gr-tier t-${it.tier}">${CAPSULE_TIER_NAME[it.tier]}</span></button>`).join("");
-  el.querySelector(".cup-scene").innerHTML=`${secret?`<div class="gm-confetti">${Array.from({length:14},(_,i)=>`<span style="left:${i*7+2}%;animation-delay:${(i%5)*0.12}s">${["✦","✧","·"][i%3]}</span>`).join("")}</div>`:""}
+  const order2=["c","u","r","s"], best=items.reduce((a,b)=>order2.indexOf(b.tier)>order2.indexOf(a.tier)?b:a,items[0]);
+  const bigPack = best && (best.tier==="r"||best.tier==="s");
+  items.forEach((it,i)=>{ __gachaT.push(setTimeout(()=>snd(it.tier==="s"?"fanfare":(it.tier==="r"?"chime":"pop")), 250+i*450)); });
+  el.querySelector(".cup-scene").innerHTML=`${gmConfetti(best?best.tier:"c")}${bigPack?`<div class="gm-flash t-${best.tier}"></div>`:""}
     <button class="cup-x" onclick="closeGacha()" aria-label="step away from the machine">✕</button>
     <div class="cup-others">the rip · series 1</div>
+    ${secret?`<div class="gr-banner t-s">${GR_BANNER.s}</div>`:(rare?`<div class="gr-banner t-r">${GR_BANNER.r}</div>`:"")}
     <div class="pk-cards">${cards}</div>
-    <div class="gr-line">tap one to wear it — ${esc(ghostName())} never hands you the same thing twice.</div>
+    <div class="gr-line">${secret?"…the top shelf. he's speechless.":(rare?"the good shelf tonight 🎉 tap one to wear it.":`tap one to wear it — ${esc(ghostName())} never hands you the same thing twice.`)}</div>
     ${left>=3?`<button class="cta secondary" style="position:static;margin-top:14px" onclick="reopenGacha()">another pack — 🪙 ${left} left</button>`:""}
     <button class="cta secondary" style="position:static;margin-top:8px" onclick="closeGacha()">into the collection</button>`;
   snd(secret?"fanfare":"chime");
 }
+function gmConfetti(tier){
+  const n = tier==="s"?22 : tier==="r"?14 : tier==="u"?8 : 0;
+  if(!n) return "";
+  const glyphs = tier==="s"?["✦","✧","🎉","✨","·"] : (tier==="r"?["✦","💗","✧","·"] : ["✦","·","✧"]);
+  return `<div class="gm-confetti t-${tier}">${Array.from({length:n},(_,i)=>`<span style="left:${(i*97)%100}%;animation-delay:${(i%6)*0.11}s;font-size:${10+(i%3)*4}px">${glyphs[i%glyphs.length]}</span>`).join("")}</div>`;
+}
+const GR_BANNER = { r:"RARE PULL", s:"SECRET — he'd been saving this" };
 function gachaReveal(item){
   const el=$("#gacha-overlay"); if(!el) return;
   const left=stats.capsuleTokens||0;
-  const confetti = item.tier==="s" ? `<div class="gm-confetti">${Array.from({length:14},(_,i)=>`<span style="left:${i*7+2}%;animation-delay:${(i%5)*0.12}s">${["✦","✧","·"][i%3]}</span>`).join("")}</div>` : "";
-  el.querySelector(".cup-scene").innerHTML=`${confetti}
+  const big = item.tier==="r"||item.tier==="s";
+  el.querySelector(".cup-scene").innerHTML=`${gmConfetti(item.tier)}<div class="gm-flash t-${item.tier}"></div>
     <button class="cup-x" onclick="closeGacha()" aria-label="step away from the machine">✕</button>
-    <div class="gr-ring t-${item.tier}"><span class="gr-hat">${item.hat}</span></div>
+    ${big?`<div class="gr-banner t-${item.tier}">${GR_BANNER[item.tier]}</div>`:""}
+    ${big?`<div class="gr-mort${item.tier==="s"?" spin":""}">${ghostAvatar(36)}</div>`:""}
+    <div class="gr-ring boom t-${item.tier}"><span class="gr-hat">${item.hat}</span></div>
     <div class="gr-name">${esc(item.name)}</div>
     <div class="gr-tier t-${item.tier}">${CAPSULE_TIER_NAME[item.tier]}</div>
     <div class="gr-line">${item.tier==="s" ? "…he'd been saving this one." : `${esc(ghostName())} never hands you the same thing twice.`}</div>
     <button class="cta" style="position:static;margin-top:16px" onclick="equipFit('${item.id}');closeGacha()">wear it now</button>
     ${left>0?`<button class="cta secondary" style="position:static;margin-top:8px" onclick="reopenGacha()">turn again — 🪙 ${left} left</button>`:""}
     <button class="cta secondary" style="position:static;margin-top:8px" onclick="closeGacha()">into the collection</button>`;
-  snd(item.tier==="s" ? "fanfare" : "chime");
+  if(item.tier==="s"){ snd("fanfare"); __gachaT.push(setTimeout(()=>snd("chime"),500), setTimeout(()=>snd("ding"),900)); }
+  else if(item.tier==="r"){ snd("fanfare"); }
+  else if(item.tier==="u"){ snd("chime"); }
+  else snd("ding");
 }
 function reopenGacha(){ closeGacha(); openGacha(); }
 function closeGacha(){ __gachaT.forEach(clearTimeout); __gachaT=[]; __gachaBusy=false; const el=$("#gacha-overlay"); if(el) el.remove(); renderHud(); if($("#view-profile").classList.contains("active")) renderProfile(); }
