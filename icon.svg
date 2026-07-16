@@ -1,63 +1,61 @@
-<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img">
-<title>Carted app icon: Mort the ghost riding in a shopping cart</title>
-<desc>A cream smiling ghost sitting inside an amber shopping cart on a warm near-black background under a soft lamp glow — the Warm Analog Midnight icon.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="80%">
+      <stop offset="0%" stop-color="#152040"/>
+      <stop offset="55%" stop-color="#0D1328"/>
+      <stop offset="100%" stop-color="#070B16"/>
+    </radialGradient>
+    <filter id="cy" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="16" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="pk" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="13" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="26" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
 
-<defs><radialGradient id="lamp" cx="50%" cy="38%" r="62%"><stop offset="0%" stop-color="#F0A84A" stop-opacity="0.22"/><stop offset="100%" stop-color="#F0A84A" stop-opacity="0"/></radialGradient></defs>
-<rect x="0" y="0" width="512" height="512" fill="#100C0A"/>
-<rect x="0" y="0" width="512" height="512" fill="url(#lamp)"/>
+  <!-- faint dot grid -->
+  <g fill="#DFE9FF" opacity="0.055">
+    <circle cx="128" cy="128" r="6"/><circle cx="384" cy="128" r="6"/><circle cx="640" cy="128" r="6"/><circle cx="896" cy="128" r="6"/>
+    <circle cx="128" cy="384" r="6"/><circle cx="896" cy="384" r="6"/>
+    <circle cx="128" cy="640" r="6"/><circle cx="896" cy="640" r="6"/>
+    <circle cx="128" cy="896" r="6"/><circle cx="384" cy="896" r="6"/><circle cx="640" cy="896" r="6"/><circle cx="896" cy="896" r="6"/>
+  </g>
 
-<g fill="#2A211B">
-<circle cx="46" cy="46" r="5"/><circle cx="112" cy="46" r="5"/><circle cx="178" cy="46" r="5"/><circle cx="244" cy="46" r="5"/><circle cx="310" cy="46" r="5"/><circle cx="376" cy="46" r="5"/><circle cx="442" cy="46" r="5"/>
-<circle cx="46" cy="112" r="5"/><circle cx="112" cy="112" r="5"/><circle cx="400" cy="112" r="5"/><circle cx="466" cy="112" r="5"/>
-<circle cx="46" cy="400" r="5"/><circle cx="466" cy="400" r="5"/>
-<circle cx="46" cy="466" r="5"/><circle cx="112" cy="466" r="5"/><circle cx="178" cy="466" r="5"/><circle cx="244" cy="466" r="5"/><circle cx="310" cy="466" r="5"/><circle cx="376" cy="466" r="5"/><circle cx="442" cy="466" r="5"/>
-</g>
+  <!-- crescent moon -->
+  <path d="M 838 112 A 58 58 0 1 0 838 224 A 72 72 0 1 1 838 112 Z" fill="#EFD9A0" opacity="0.9" filter="url(#soft)"/>
 
-<g transform="translate(14,16)">
+  <!-- sparkles -->
+  <path d="M258 268 l14 34 34 14 -34 14 -14 34 -14 -34 -34 -14 34 -14 Z" fill="#4DE3FF" opacity="0.85" filter="url(#cy)"/>
+  <path d="M764 396 l9 22 22 9 -22 9 -9 22 -9 -22 -22 -9 22 -9 Z" fill="#FF4D9E" opacity="0.8" filter="url(#pk)"/>
 
-<g fill="rgba(0,0,0,0.55)">
-<path d="M150 168 q-2 -78 78 -84 q80 6 78 84 l0 96 q0 16 -16 12 q-12 -10 -22 2 q-12 12 -24 0 q-12 -12 -24 0 q-12 12 -24 0 q-10 -12 -22 -2 q-16 4 -16 -12 z"/>
-<path d="M122 232 l210 0 l-22 118 q-3 16 -19 16 l-150 0 q-16 0 -19 -16 z"/>
-<rect x="306" y="190" width="58" height="20" rx="10"/>
-<rect x="332" y="190" width="20" height="120" rx="10"/>
-<circle cx="170" cy="392" r="26"/>
-<circle cx="288" cy="392" r="26"/>
-</g>
+  <!-- ghost (cyan aura, soft-white body) -->
+  <g filter="url(#soft)">
+    <path d="M322 470 C322 330 400 244 480 244 C560 244 638 330 638 470 L638 612 C616 586 596 586 576 612 C556 638 536 638 516 612 C496 586 476 586 456 612 C436 638 416 638 396 612 C376 586 356 586 338 612 L322 612 Z" fill="#4DE3FF" opacity="0.35"/>
+  </g>
+  <path d="M322 470 C322 330 400 244 480 244 C560 244 638 330 638 470 L638 612 C616 586 596 586 576 612 C556 638 536 638 516 612 C496 586 476 586 456 612 C436 638 416 638 396 612 C376 586 356 586 338 612 L322 612 Z" fill="#F4F8FF"/>
+  <!-- face -->
+  <ellipse cx="434" cy="428" rx="17" ry="25" fill="#0D1328"/>
+  <ellipse cx="528" cy="428" rx="17" ry="25" fill="#0D1328"/>
+  <path d="M448 486 Q481 514 514 486" stroke="#0D1328" stroke-width="14" stroke-linecap="round" fill="none"/>
+  <circle cx="398" cy="470" r="17" fill="#FF4D9E" opacity="0.55"/>
+  <circle cx="564" cy="470" r="17" fill="#FF4D9E" opacity="0.55"/>
 
-<rect x="105" y="224" width="226" height="28" rx="14" fill="#F6C982" stroke="#100C0A" stroke-width="9"/>
-
-<path d="M120 232 l200 0 l-20 110 q-3 14 -17 14 l-146 0 q-14 0 -17 -14 z" fill="#F0A84A" stroke="#100C0A" stroke-width="9" stroke-linejoin="round"/>
-
-<g stroke="#100C0A" stroke-width="8" stroke-linecap="round">
-<line x1="146" y1="248" x2="138" y2="340"/>
-<line x1="190" y1="248" x2="186" y2="340"/>
-<line x1="234" y1="248" x2="234" y2="340"/>
-<line x1="278" y1="248" x2="282" y2="340"/>
-<line x1="130" y1="278" x2="312" y2="278"/>
-<line x1="126" y1="312" x2="316" y2="312"/>
-</g>
-
-<rect x="318" y="184" width="50" height="20" rx="10" fill="#F6C982" stroke="#100C0A" stroke-width="8"/>
-<rect x="328" y="184" width="20" height="118" rx="10" fill="#F6C982" stroke="#100C0A" stroke-width="8"/>
-
-<circle cx="170" cy="388" r="24" fill="#C96A4A" stroke="#100C0A" stroke-width="9"/>
-<circle cx="170" cy="388" r="7" fill="#EFE4D6"/>
-<circle cx="288" cy="388" r="24" fill="#C96A4A" stroke="#100C0A" stroke-width="9"/>
-<circle cx="288" cy="388" r="7" fill="#EFE4D6"/>
-
-<path d="M146 166 q-2 -74 74 -80 q76 6 74 80 l0 88 q0 14 -14 11 q-11 -9 -21 2 q-11 11 -22 0 q-11 -11 -22 0 q-11 11 -22 0 q-11 -11 -21 -2 q-14 3 -14 -11 z" fill="#EFE4D6" stroke="#100C0A" stroke-width="9" stroke-linejoin="round"/>
-
-<circle cx="196" cy="150" r="9" fill="#100C0A"/>
-<circle cx="244" cy="150" r="9" fill="#100C0A"/>
-<circle cx="199" cy="147" r="3" fill="#EFE4D6"/>
-<circle cx="247" cy="147" r="3" fill="#EFE4D6"/>
-
-<path d="M204 170 q16 16 32 0" fill="none" stroke="#100C0A" stroke-width="7" stroke-linecap="round"/>
-
-<circle cx="178" cy="172" r="9" fill="#D9963A" opacity="0.55"/>
-<circle cx="262" cy="172" r="9" fill="#D9963A" opacity="0.55"/>
-
-<path d="M300 118 l7 16 l16 3 l-12 12 l3 17 l-14 -8 l-14 8 l3 -17 l-12 -12 l16 -3 z" fill="#F0A84A" stroke="#100C0A" stroke-width="6" stroke-linejoin="round"/>
-
-</g>
+  <!-- cart: pink neon line-art -->
+  <g stroke="#FF4D9E" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#pk)">
+    <path d="M296 596 L342 780 L618 780 L664 596 Z"/>
+    <path d="M382 596 L404 780 M480 596 L480 780 M578 596 L556 780"/>
+    <path d="M320 688 L640 688"/>
+    <path d="M664 596 L724 452 L768 452"/>
+  </g>
+  <g stroke="#4DE3FF" stroke-width="20" fill="#0D1328" filter="url(#cy)">
+    <circle cx="404" cy="850" r="30"/>
+    <circle cx="556" cy="850" r="30"/>
+  </g>
 </svg>

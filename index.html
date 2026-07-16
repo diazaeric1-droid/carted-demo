@@ -219,7 +219,8 @@
   .pin.home { left: 86%; top: 18%; } .pin.home .halo { background: rgba(255,77,158,.5); animation: halo 2.2s ease-in-out .6s infinite; }
   @keyframes halo { 0%,100%{ transform: translate(-50%,-50%) scale(.7); opacity: .4; } 50%{ transform: translate(-50%,-50%) scale(1.25); opacity: .85; } }
   .rider { position: absolute; left: 14%; top: 80%; font-size: 34px; z-index: 4; transform: translate(-50%,-58%); transition: left .8s ease, top .8s ease, opacity .55s ease; will-change: left, top; filter: drop-shadow(2px 2px 0 rgba(5,9,18,.35)); }
-  .rider .mort { display: inline-block; animation: bob 1.4s ease-in-out infinite; }
+  .rider .mort { display: inline-block; position: relative; animation: bob 1.4s ease-in-out infinite; }
+  .rider .mort .rider-hat { position: absolute; top: -0.55em; left: 50%; transform: translateX(-50%) rotate(-8deg); font-size: .62em; }
   .rider .veh { position: absolute; left: 62%; bottom: -2px; font-size: 24px; animation: bob 1.4s ease-in-out .2s infinite; }
   @keyframes bob { 0%,100%{ transform: translateY(0) rotate(-3deg); } 50%{ transform: translateY(-4px) rotate(3deg); } }
   .rider .puff { position: absolute; right: 84%; top: 56%; font-size: 14px; opacity: .55; animation: puff 1.1s ease-out infinite; }
@@ -265,7 +266,7 @@
 
   .brand .live2 { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); margin-top: 5px; }
   .composer { display: flex; gap: 8px; margin-bottom: 16px; }
-  .composer input { flex: 1; background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 13px 14px; color: var(--text); font-size: 14px; outline: none; font-family: var(--bodyf); font-weight: 600; }
+  .composer input { flex: 1; background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 13px 14px; color: var(--text); font-size: 16px; outline: none; font-family: var(--bodyf); font-weight: 600; }
   .composer input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow); }
   .composer input::placeholder { color: var(--muted); }
   .composer button { border: none; background: var(--grad); color: #0A0E1A; font-weight: 700; font-size: 14px; padding: 0 20px; border-radius: 14px; cursor: pointer; }
@@ -284,6 +285,21 @@
   .rroom .nm { font-weight:700; font-size:14px; }
   .rroom .st { font-size:11px; color:var(--muted); margin-top:1px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .rroom .go { color:var(--muted); font-size:19.5px; }
+  /* mort's machine: a counter-top capsule machine, deliberately NOT shaped like a room row */
+  .machine-bar { width:100%; display:flex; align-items:center; gap:12px; background:linear-gradient(135deg, rgba(255,77,158,.16), rgba(77,227,255,.07)), var(--card); border:1.5px solid rgba(255,77,158,.5); border-radius:16px; padding:12px 13px; margin:2px 0 16px; cursor:pointer; text-align:left; color:var(--text); box-shadow:0 0 14px rgba(255,77,158,.16); }
+  .machine-bar .mb-dome { position:relative; flex:0 0 38px; height:38px; border-radius:50% 50% 9px 9px; background:radial-gradient(circle at 35% 28%, rgba(223,233,255,.28), rgba(223,233,255,.05)); border:1.5px solid rgba(223,233,255,.35); }
+  .machine-bar .mb-cap { position:absolute; width:11px; height:11px; border-radius:50%; }
+  .machine-bar .c1 { left:5px; bottom:5px; background:var(--cyan); opacity:.85; }
+  .machine-bar .c2 { right:6px; bottom:7px; background:var(--pink); opacity:.85; }
+  .machine-bar .c3 { left:13px; bottom:13px; background:var(--yell); opacity:.75; }
+  .machine-bar .mb-txt { flex:1; min-width:0; display:flex; flex-direction:column; }
+  .machine-bar .mb-txt b { font-size:14px; font-weight:700; }
+  .machine-bar .mb-sub { font-size:11px; color:var(--pink-txt); margin-top:1px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .machine-bar .mb-coins { flex:0 0 auto; font-weight:800; font-size:12.5px; font-family:var(--disp); background:rgba(255,77,158,.14); border:1px solid rgba(255,77,158,.45); color:var(--pink-txt); border-radius:99px; padding:5px 10px; }
+  .machine-bar.ready { border-color:var(--pink); animation:mbPulse 2.4s ease-in-out infinite; }
+  .machine-bar.ready .mb-coins { background:var(--pink); border-color:var(--pink); color:#14060F; }
+  @keyframes mbPulse { 0%,100%{ box-shadow:0 0 12px rgba(255,77,158,.25); } 50%{ box-shadow:0 0 22px rgba(255,77,158,.5); } }
+  @media (prefers-reduced-motion: reduce){ .machine-bar.ready { animation:none; box-shadow:0 0 16px rgba(255,77,158,.35); } }
   .ch-head { display:flex; align-items:center; gap:8px; margin:0 0 6px; }
   .ch-head .back { padding:6px 0; flex:0 0 auto; }
   .ch-head b { flex:1; min-width:0; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -565,7 +581,7 @@
   .boss .bossic { font-size: 24px; }
 
   /* ----- 50-city picker modal ----- */
-  .city-search { width: 100%; box-sizing: border-box; background: var(--screen); border: 2px solid var(--ink); border-radius: 12px; padding: 10px 12px; font-family: var(--bodyf); font-weight: 700; font-size: 14px; color: var(--text); outline: none; margin-bottom: 10px; }
+  .city-search { width: 100%; box-sizing: border-box; background: var(--screen); border: 2px solid var(--ink); border-radius: 12px; padding: 10px 12px; font-family: var(--bodyf); font-weight: 700; font-size: 16px; color: var(--text); outline: none; margin-bottom: 10px; }
   .city-modal-list { max-height: 46vh; overflow-y: auto; text-align: left; }
   .city-modal-list::-webkit-scrollbar { display: none; }
   /* ===== DEPARTURES board — the city modal as a night-flight split-flap board ===== */
@@ -1329,7 +1345,7 @@ function applyNight(){ document.body.classList.toggle("night", isNight()); }
 /* ---- state ---- */
 let cart = [], liveBase = 1247, courierTimers = [], room = [], lastOrderItems = [], pendingOrder = null;
 let curIdx = 0, currentDetailKey = null, GEO_SEQ = 0;
-let account = null, stats = { savedUsd:0, snackUsd:0, orders:0, streak:0, conversions:0, xp:0, cuisines:[], cities:[], maxCombo:0, earned:[], freezes:1, lastNight:null, quests:null, feastNight:null, capsuleTokens:0, capsuleOwned:[], capsuleMilestone:0, capsuleLastNight:null, pitySince:0, capsuleMigrated:0 }, handoffTarget = null, combo = 0;
+let account = null, stats = { savedUsd:0, snackUsd:0, orders:0, streak:0, conversions:0, xp:0, cuisines:[], cities:[], maxCombo:0, earned:[], freezes:1, lastNight:null, quests:null, feastNight:null, runNight:null, runsLeft:0, runsBought:0, capsuleTokens:0, capsuleOwned:[], capsuleMilestone:0, capsuleLastNight:null, pitySince:0, capsuleMigrated:0 }, handoffTarget = null, combo = 0;
 let sndOn = (localStorage.getItem("carted_snd")!=null) ? localStorage.getItem("carted_snd")!=="off" : false, lastTap = {x:195, y:420}, lastShare = null;   // sounds default OFF at night
 const placeByKey = {}, CITY_INDEX = {};
 
@@ -1435,7 +1451,10 @@ function haptic(kind){ if(!NATIVE) return; try{ const H=window.Capacitor.Plugins
 const MIRROR_KEYS = ["carted_stats","carted_nights","carted_first_open","carted_device","carted_named",
   "carted_onboard","carted_room_intro","carted_cup","carted_snd","carted_asmr","carted_saved","carted_acts",
   "carted_home","carted_tonight","carted_room_mine","carted_funnel","carted_events","carted_account",
-  "carted_dr_tonight","carted_dr_more","carted_first_dodge"];
+  "carted_dr_tonight","carted_dr_more","carted_first_dodge",
+  "carted_muted","carted_terms","carted_handle","carted_booth","carted_chan_local","carted_held",
+  "carted_ash","carted_ash_shown","carted_cup_hist","carted_cup_intro","carted_gacha_intro",
+  "carted_room_seen","carted_reacted","carted_nod","carted_cupsnd","carted_care","carted_snacktab","carted_saved_migrated"];
 let _mirrorT = null;
 function mirrorStats(){ if(!NATIVE) return; clearTimeout(_mirrorT); _mirrorT = setTimeout(async ()=>{ try{
   const P = window.Capacitor.Plugins.Preferences; if(!P) return;
@@ -1489,7 +1508,7 @@ function track(ev, props){ try{
   _aQueue.push(Object.assign({ev,t},props||{}));
   if(!_aTimer) _aTimer=setTimeout(_aFlush,4000);
 }catch(e){} }
-function _aFlush(){ _aTimer=null; if(!_aQueue.length || !ANALYTICS_URL) return; const batch=_aQueue.splice(0,_aQueue.length); const body=JSON.stringify({ device:deviceId(), nights:_aGet("carted_nights",[]).length, events:batch });
+function _aFlush(){ _aTimer=null; if(!_aQueue.length || !ANALYTICS_URL) return; const batch=_aQueue.splice(0,_aQueue.length); const body=JSON.stringify({ device:deviceId(), plat:(typeof NATIVE!=="undefined"&&NATIVE)?"ios":"web", nights:_aGet("carted_nights",[]).length, events:batch });
   // plain-string beacon only: a JSON Blob forces a CORS preflight that sendBeacon can't complete
   // (POST dies with ERR_FAILED and every event is silently dropped). A string body is a simple
   // request — no preflight — and the edge function parses the JSON text regardless of content-type.
@@ -1505,7 +1524,7 @@ const OB = [
   { e:"🛒", h:"arrive by ordering nothing", s:"fill a cart with whatever's calling you at 1am — real dishes, fictional kitchens — and send a ghost instead of your money." },
   { e:"💸", h:"the driver was never real", s:"filled the cart. closed the app. you keep every dollar — that's the whole point. 👻" },
   { e:"🪙", h:"showing up pays in coins", s:"walk in, get a coin — just opening the door counts. the machine restocks at 4am and 4pm, so a day visit and a night visit is two." },
-  { e:"🎴", h:"coins open capsules", s:"one coin turns the crank. save three and rip a midnight pack — costumes for Mort, your ghost. odds printed on the machine, never a duplicate, never real money." },
+  { e:"🎴", h:"coins run this place", s:"one coin turns the crank. three rips a midnight pack — costumes your ghost actually wears on deliveries. two reopens the kitchen for a second dinner run. never real money." },
   { e:"🍜", h:"the room keeps your seat", s:"come back tomorrow night. the kettle's on, the ghosts wait up, and everything said here burns at sunrise." },
 ];
 let obIdx=0;
@@ -1584,7 +1603,7 @@ function renderHud(){
   /* HUD = the identity spine only: streak + lifetime dodged. levels/XP live on the profile. */
   el.innerHTML = `
     <button class="pill flame${done?' on':''}" onclick="go('profile')">🔥 <b>${stats.streak||0}</b> · <b>$${Math.round(stats.savedUsd).toLocaleString()}</b> <span class="hint">never spent</span></button>
-    <button class="pill${(stats.capsuleTokens||0)>=3?' pack':''}" onclick="openGacha()" aria-label="mort's capsule machine">${(stats.capsuleTokens||0)>=3?`🎴 <b>pack ready</b>`:`🪙 <b>${stats.capsuleTokens||0}</b>`}</button>
+    <button class="pill${((stats.capsuleTokens||0)>=3&&!capsuleDone())?' pack':''}" onclick="openGacha()" aria-label="mort's capsule machine">${((stats.capsuleTokens||0)>=3&&!capsuleDone())?`🎴 <b>pack ready</b>`:`🪙 <b style="color:var(--pink-txt)">${stats.capsuleTokens||0}</b>`}</button>
     <button class="pill" onclick="toggleSnd()">${sndOn?"🔊":"🔇"}</button>`;
 }
 /* ---- stats: money dodged broken out by currency, total in USD ---- */
@@ -2042,7 +2061,7 @@ function renderCart(){
   const body=$("#cart-body"), c=curCity();
   const cityIds=[...new Set(cart.map(p=>p._cityId))], multi=cityIds.length>1;
   $("#cart-sub").textContent = cart.length ? (multi ? `🌍 ${cityIds.length} cities in your cart · don't check out.` : `from ${cart[0]._cityName||c.name} · don't check out.`) : "fill it up. don't check out.";
-  if(!cart.length){ body.innerHTML = (orderedTonight()?`<div class="kclosed" style="margin-bottom:14px">🌙 kitchen's closed till tomorrow — nicely done<div class="kc-sub">your cart keeps till you're back · the corner store never closes — <span class="kb-link" onclick="openKonbini()">snack run 🏪</span></div></div>`:"") + `<div class="empty"><div class="big">👻</div>your cart is a ghost town.<br>go fill it up.<br><br><button class="cta secondary" style="position:static" onclick="go('feed')">browse places</button></div>`; return; }
+  if(!cart.length){ body.innerHTML = ((orderedTonight()&&secondRunReady())?`<div class="kclosed" style="margin-bottom:14px">🛵 a run's paid — the kitchen's back on<div class="kc-sub">go fill the cart · banks for real</div></div>`:"") + ((orderedTonight()&&!secondRunReady())?`<div class="kclosed" style="margin-bottom:14px">🌙 kitchen's closed till tomorrow — nicely done<div class="kc-sub">your cart keeps till you're back · the corner store never closes — <span class="kb-link" onclick="openKonbini()">snack run 🏪</span>${canBuyRun()?` · <span class="kb-link" onclick="buySecondRun()">🪙2 reopens the kitchen 🛵</span>`:""}</div></div>`:"") + `<div class="empty"><div class="big">👻</div>your cart is a ghost town.<br>go fill it up.<br><br><button class="cta secondary" style="position:static" onclick="go('feed')">browse places</button></div>`; return; }
   const sub=cartSubtotal(), fl=flightInfo(c), quirks=cartQuirkFees();
   body.innerHTML = `
     ${cart.map((p,i)=>`<div class="cart-item"><div class="ci-thumb">${(p._menuItem&&p.photo)?`<img class="ph-img" src="${p.photo}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${p.ic}'))">`:p.ic}</div><div class="nm">${esc(p.dish)}<div style="font-size:11px;color:var(--muted);font-weight:400">${p._flag||""} ${esc(p._cityName||p.name)}</div></div><div class="pr">${money(p.price,p._cur)}${cityPfOf(p)!==1?`<div style="font-size:11px;color:var(--muted);font-weight:600">≈ ${money(usdOf(p),USD)}</div>`:""}</div><button class="rm" onclick="removeFromCart(${i})">✕</button></div>`).join("")}
@@ -2058,11 +2077,11 @@ function renderCart(){
     </div>
     <div class="boss"><span class="bossic">👹</span><span><b style="color:var(--hot)">${money(cartFees(),USD)}</b> in junk fees — dodge him.</span></div>
     <div class="deliver-to">${multi?`✈️ a ghost plane will hit all ${cityIds.length} cities, then you`:(fl?`✈️ flying <b>${esc(c.name)} → ${esc(HOME.label)}</b> · real flight time ${fl.label}`:`🛵 delivering nearby in ${esc(HOME.label)}`)} · <span class="dt-change" onclick="cityModal(true)">change</span></div>
-    ${orderedTonight()
-      ? `<div class="kclosed">🌙 tonight's feast is banked — reruns ride free<div class="kc-sub">the corner store never closes — <span class="kb-link" onclick="openKonbini()">snack run 🏪</span></div></div><button class="cta secondary" style="position:static;margin-top:8px" onclick="placeOrder()">run it again 👻 — banks nothing</button>`
-      : `<button class="cta" onclick="placeOrder()">place order ${fl?"✈️":"🚗"}</button>`}
+    ${orderedTonight() && !secondRunReady()
+      ? `<div class="kclosed">🌙 tonight's feast is banked — reruns ride free<div class="kc-sub">the corner store never closes — <span class="kb-link" onclick="openKonbini()">snack run 🏪</span></div></div>${canBuyRun()?`<button class="cta" style="position:static;margin-top:8px" onclick="buySecondRun()">🪙2 · mort runs it again — banks for real</button>`:""}<button class="cta secondary" style="position:static;margin-top:8px" onclick="placeOrder()">run it again 👻 — banks nothing</button>`
+      : `<button class="cta" onclick="placeOrder()">place order ${fl?"✈️":"🚗"}${orderedTonight()?" · second run 🛵":""}</button>`}
     <button class="cta secondary" onclick="go('feed')">keep browsing</button>
-    <div style="text-align:center;color:var(--muted);font-size:12.5px;margin-top:12px">${orderedTonight()?"reruns are for the ride — tonight's dodge is already banked.":"the button looks real. nothing gets charged."}</div>`;
+    <div style="text-align:center;color:var(--muted);font-size:12.5px;margin-top:12px">${(orderedTonight()&&!secondRunReady())?"reruns are for the ride — tonight's dodge is already banked.":"the button looks real. nothing gets charged."}</div>`;
     /* DEMO/PRE-AFFILIATE: real-money handoff removed until partner programs are live.
        Re-enable: <button class="order-real" onclick="orderForReal('cart')">…or just order it for real on a delivery app →</button> */
 }
@@ -2110,19 +2129,19 @@ function buildFlightStages(route){
   return stages;
 }
 function placeOrder(){
-  const rerun=orderedTonight();   // feast already banked: reruns get the full ride and bank NOTHING
+  const rerun=orderedTonight() && !secondRunReady();   // feast banked + no paid run: rides bank NOTHING
   const c=curCity(), gd=rollDriver();
   const cities=[...new Set(cart.map(p=>p._cityId))];
   const route=buildRoute(cart, HOME);
   const isFlight = route.slice(0,-1).some(s=>havKm(s, HOME) >= 150);   // flight if any stop is >150km from home (cart-derived)
   const multi = route.length>2;
   const flight = isFlight ? { mins: routeMinutes(route), label: fmtFlight(routeMinutes(route)), multi: multi } : null;
-  pendingOrder = { items: cart.slice(), total: cartAllIn(), city: c, cities: cities, flight: flight, route: route, driver: gd.n, gachaDriver: gd, rerun: rerun };
+  pendingOrder = { items: cart.slice(), total: cartAllIn(), city: c, cities: cities, flight: flight, route: route, driver: gd.n, gachaDriver: gd, rerun: rerun, secondRun: (orderedTonight() && !rerun) };
   track("place_order",{cities:cities.length,flight:isFlight,usd:Math.round(cartAllIn())});
   snd("pop");
   $("#track-reveal").style.display="none"; $("#track-live").style.display="block";
   const rd=$("#rider"); rd.style.opacity="1";
-  const mort=rd.querySelector(".mort"); if(mort) mort.textContent="👻";
+  const mort=rd.querySelector(".mort"); if(mort) mort.innerHTML=riderGhost();
   { let veh=rd.querySelector(".veh"); if(!veh){ veh=document.createElement("span"); veh.className="veh"; rd.appendChild(veh); } veh.textContent = (gd && gd.e && gd.e!=="👻") ? gd.e : "💨"; }
   const mp=$("#track-map"); if(mp) mp.classList.remove("arrive");
   $("#dchat").innerHTML="";
@@ -2133,6 +2152,8 @@ function placeOrder(){
   if(useGlobe) globeProgress(0); else routeProgress(0);
   const stages = isFlight ? buildFlightStages(route) : STAGES;
   driverSay(pendingOrder.driver, isFlight ? `tonight's ghost courier. your order is ${flight.label} away by air. i fly free.` : "tonight's ghost courier. i don't exist, but i'm fast.");
+  if(pendingOrder.secondRun) driverSay(pendingOrder.driver, "second run tonight?? respect. the kitchen owes you one 🛵");
+  else { const f=ghostFit(); if(f.hat) driverSay(pendingOrder.driver, `fit check: ${f.hat} ${f.name} — from the capsule machine`); }
   /* first-EVER order gets a near-instant reveal — a cold user must feel the payoff before they
      bounce; the full ~12s courier atmosphere is restored on every later order. */
   const firstOrder = (stats.orders||0)===0;
@@ -2140,7 +2161,7 @@ function placeOrder(){
   const pace = firstOrder ? 850 : 2400, revDelay = firstOrder ? 900 : 2600;
   let i=0;
   const step=()=>{ const s=seq[i];
-    if(useGlobe){ globeProgress(s.p); } else { routeProgress(s.p); if(mort) mort.textContent="👻"; }
+    if(useGlobe){ globeProgress(s.p); } else { routeProgress(s.p); if(mort) mort.innerHTML=riderGhost(); }
     $("#track-stage").textContent=s.txt.replace("{n}", pendingOrder.driver);
     $("#eta-num").textContent = flight ? fmtMins(flight.mins*(1-s.p/100)) : ([14,11,6,2,1][i]||1);
     $(".eta .u").textContent = flight ? " ✈️" : " min";
@@ -2168,6 +2189,7 @@ function revealTruth(){
   }
   if(!rerun){
   stats.feastNight=tonight;                            // the kitchen closes on a real feast, nothing else
+  if(po.secondRun){ runReset(); stats.runsLeft=Math.max(0,(stats.runsLeft||0)-1); }   // the paid run is spent at the reveal, not at checkout
   stats.orders++; stats.savedUsd += po.total;          // po.total is already USD
   bumpTonight(po.total); buddyPing(); bumpWeek(po.total, po.city.id, (po.items[0]||{}).ic);
   stats.maxStreak=maxStreakEver();
@@ -2188,7 +2210,10 @@ function revealTruth(){
   stats.nudgeHour=new Date().getHours();                 // habitual-hour anchor for the gentle nudge
   saveStats();
   }
-  const cgNight = rerun?0:capsuleEarnNight("feast", true), cgMile = rerun?0:capsuleEarnMilestones();
+  /* a PAID run banks kept-$ but skips milestone minting — otherwise 2 coins could farm back 2+
+     off a big cart and coins would quietly buy coins. the milestone watermark still advances. */
+  if(po.secondRun){ stats.capsuleMilestone=Math.max(stats.capsuleMilestone||0, Math.floor((stats.savedUsd||0)/100)); saveStats(); }
+  const cgNight = rerun?0:capsuleEarnNight("feast", true), cgMile = (rerun||po.secondRun)?0:capsuleEarnMilestones();
   const capsuleGain = cgNight + cgMile;
   if(NATIVE && stats.pushOptIn) nativeNudge();           // re-arm for tomorrow (never re-fires tonight)
   let milestone="";
@@ -2196,7 +2221,7 @@ function revealTruth(){
   if(!rerun && po.city.id===curCity().id)
   lastShare = { usd: po.total, label: money(po.total, USD), streak: stats.streak, city: (po.cities&&po.cities.length>1)?`${po.cities.length} cities`:po.city.name };
   if(po.flight){ globeProgress(100); $("#track-live").style.display="none"; }
-  else { const rd=$("#rider"); const mort=rd.querySelector(".mort"); if(mort) mort.textContent="👻"; const veh=rd.querySelector(".veh"); if(veh) veh.textContent="💨"; rd.style.left="120%"; rd.style.top="-12%"; rd.style.opacity="0"; routeProgress(100); const mp=$("#track-map"); if(mp) mp.classList.add("arrive"); $("#track-live").style.display="none"; }
+  else { const rd=$("#rider"); const mort=rd.querySelector(".mort"); if(mort) mort.innerHTML=riderGhost(); const veh=rd.querySelector(".veh"); if(veh) veh.textContent="💨"; rd.style.left="120%"; rd.style.top="-12%"; rd.style.opacity="0"; routeProgress(100); const mp=$("#track-map"); if(mp) mp.classList.add("arrive"); $("#track-live").style.display="none"; }
   /* QUIET RECEIPT — a moment of relief, not a jackpot. no XP, no confetti, no cascade of toasts. */
   snd("whoosh");
   const firstEver = stats.orders===1;
@@ -2204,12 +2229,13 @@ function revealTruth(){
   const r=$("#track-reveal"); r.style.display="block"; r.className="reveal";
   r.innerHTML = `
     ${mortReveal(po.total, false)}
-    <div class="ghost-quip">${rerun?"a rerun — the ghost rides for free.":"the driver was never real. neither was the bill."}</div>
+    <div class="ghost-quip">${rerun?"a rerun — the ghost rides for free.":(po.secondRun?"second run, same ghost — banked again 🪙":"the driver was never real. neither was the bill.")}</div>
     ${rerun?`<div class="sub" style="margin-top:8px">would've been <b>${money(po.total,USD)}</b> — tonight's dodge is already banked. this one was for the ride 👻</div>`:`<div class="saved" id="reveal-saved">${money(0,USD)} saved</div>
     <div class="sub">${(po.cities&&po.cities.length>1)?`dinner across ${po.cities.length} cities, all dodged`:(po.flight?`dinner in ${esc(po.city.name)}, a ${po.flight.label} flight that never took off`:`what tonight in ${esc(po.city.name)} would've cost`)} — it stayed in your pocket.</div>
     <div class="sub" style="color:#F2A9C4;font-weight:800;margin-top:6px">🔥 night ${stats.streak}${usedFreeze?' · 🧊 a freeze caught your miss':''}</div>`}
     ${milestone?`<div class="milestone">${milestone}</div>`:""}
     ${capsuleGain?`<div class="milestone" style="cursor:pointer" onclick="openGacha()">🪙 ${capsuleGain===1?"a capsule token":capsuleGain+" capsule tokens"} — ${cgNight&&cgMile?"for showing up + $100 kept":(cgMile?"every $100 kept mints one":"for showing up tonight")}. ${esc(ghostName())}'s machine is by the door</div>`:""}
+    ${(!rerun&&canBuyRun())?`<div class="milestone" style="cursor:pointer" onclick="buySecondRun();go('feed')">🛵 still hungry? 🪙2 — ${esc(ghostName())} makes a second run tonight</div>`:""}
     <div style="margin-top:22px">
       <button class="cta gold" style="position:static" onclick="shareToRoom()">${firstEver?"🌙 meet the others in the room":"🌙 come sit in the room"}</button>
       <button class="cta secondary" style="position:static" onclick="shareReceipt()">🧾 the receipt</button>
@@ -2363,11 +2389,13 @@ function renderRoom(){
   if(activeRoom){ if(lst) lst.style.display="none"; if(ch) ch.style.display="block"; renderChat(); }
   else { if(lst) lst.style.display="block"; if(ch) ch.style.display="none"; renderRoomsList(); }
   renderRoomMeta();
-  if(!_roomTick){ _roomTick=setInterval(()=>{ if(document.hidden) return; const v=$("#view-room"); if(!v||!v.classList.contains("active")) return;
+  if(!_roomTick){ _tickNight=nightKey(); _roomTick=setInterval(()=>{ if(document.hidden) return;
+    if(_tickNight!==nightKey()){ _tickNight=nightKey(); room.length=0; Object.keys(channelPosts).forEach(k=>delete channelPosts[k]); }   // the burn happens on screen too
+    const v=$("#view-room"); if(!v||!v.classList.contains("active")) return;
     if(activeRoom && activeRoom!=="MAIN") fetchChannel(activeRoom);
     renderRoom(); }, 30000); }
 }
-let _roomTick=null;
+let _roomTick=null, _tickNight=null;
 /* ---- the rooms list: honest labels, never invented counts ---- */
 function chanLabel(code){
   if(code==="MAIN"){ if(_roomHumans!=null&&_roomHumans>=2) return `${_roomHumans} in tonight`; return room.some(p=>p.live)?"talking tonight":"the main room — always on"; }
@@ -2384,7 +2412,7 @@ function renderRoomsList(){
   const tk2=stats.capsuleTokens||0;
   el.innerHTML = `
     <button class="roulette" onclick="roomRoulette()">🎲 drop me in a room</button>
-    <button class="rroom" onclick="openGacha()"><span class="ic">🪙</span><span class="mid"><span class="nm">mort's machine</span><span class="st">${tk2>=3?"🎴 pack ready — rip it":`${tk2} coin${tk2===1?"":"s"} · a pack takes 3 · show up = coin`}</span></span><span class="go">›</span></button>
+    <button class="machine-bar${(tk2>=3&&!capsuleDone())?' ready':''}" onclick="openGacha()" aria-label="mort's capsule machine"><span class="mb-dome"><span class="mb-cap c1"></span><span class="mb-cap c2"></span><span class="mb-cap c3"></span></span><span class="mb-txt"><b>mort's capsule machine</b><span class="mb-sub">${(tk2>=3&&!capsuleDone())?"a pack's sitting in the dome — rip it":(capsuleDone()?"shelf cleared · 🪙2 = second dinner run":"a pack takes 🪙3 · show up = coin")}</span></span><span class="mb-coins">${(tk2>=3&&!capsuleDone())?"🎴 rip":`🪙 ${tk2}`}</span></button>
     ${NIGHT_ROOMS.map(r=>`<button class="rroom${r.code==="MAIN"?' main':''}" onclick="enterRoom('${r.code}')"><span class="ic">${r.ic}</span><span class="mid"><span class="nm">${esc(r.name)}</span><span class="st">${chanLabel(r.code)}</span></span><span class="go">›</span></button>`).join("")}
     <button class="rroom priv" onclick="openBooth()"><span class="ic">🛋️</span><span class="mid"><span class="nm">your booth</span><span class="st">${b?`private · code ${esc(b.code)} — invite by link`:"private — start one, invite by link"}</span></span><span class="go">›</span></button>
     <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a 3-minute break</span><span class="cbr-shelf" id="cup-shelf"></span></span><span class="cbr-go">›</span></button>`;
@@ -2426,6 +2454,7 @@ function mortRoomLine(){
   let sTxt;
   if(kitchenLight()) sTxt="the kitchen light's on til 2:15 🏮";
   else if(windDown()) sTxt="banking the rooms down — the burn's at 4:00";
+  else if((stats.capsuleTokens||0)>=3) sTxt="three coins on the counter — that's a pack. machine's by the door 🎴";
   else { const nb=nextBeat(); sTxt=NOTICES[hash(nightKey()+"mort")%NOTICES.length]+((nb&&nb.mins<=30)?` · ${nb.label} in ${nb.mins}m`:""); }
   return `mort: ${sTxt}`; }
 function msgHTML(m, tap){
@@ -2612,7 +2641,7 @@ function makeMine(ic, text){
     if(!r) return;   // offline: the post lives on this device; nothing to correct
     if(r.crisis) show988();
     if(r.id){ post.liveId=r.id; updateMineStored(post); }
-    if(r.ok===false){ post.localOnly=true; toast(r.reason==="filtered" ? "that one stays between us tonight — gentler words travel further 🤍" : (r.reason||"the room didn't catch that — it's kept on your device 🌙")); }
+    if(r.ok===false){ post.local=true; toast(r.reason==="filtered" ? "that one stays between us tonight — gentler words travel further 🤍" : (r.reason||"the room didn't catch that — it's kept on your device 🌙")); }
   }); }
   return post; }
 function show988(){ const body = isNA()
@@ -2627,7 +2656,7 @@ function show988(){ const body = isNA()
 const NIGHT_ROOMS=[
   {code:"MAIN", ic:"🌙", name:"the 2 am room"},
   {code:"NOSLEEP", ic:"😴", name:"can't sleep"},
-  {code:"LATESHIFT", ic:"🌃", name:"late shift"},
+  {code:"LATESHFT", ic:"🌃", name:"late shift"},
   {code:"HEARTBRK", ic:"💔", name:"up thinking about someone"},
   {code:"SNACKS", ic:"🍜", name:"midnight snacks"},
 ];
@@ -2716,7 +2745,8 @@ function muteWho(who){ if(!who) return; try{ const m=mutedWho(); if(!m.includes(
   for(let j=room.length-1;j>=0;j--){ if(room[j].who===who) room.splice(j,1); }
   Object.keys(channelPosts).forEach(c=>{ const l=channelPosts[c]; for(let j=l.length-1;j>=0;j--){ if(l[j].who===who) l.splice(j,1); } });
   renderRoom(); toast("muted — you won't see them again 🌙"); }
-function fetchLiveRoom(){ if(!(ROOM_LIVE && beOn())) return; if(activeRoom&&activeRoom!=="MAIN") return;   // channel sitters never touch main-room presence const now=Date.now(); if(now-_roomFetchT<60000) return; _roomFetchT=now;
+function fetchLiveRoom(){ if(!(ROOM_LIVE && beOn())) return; if(activeRoom&&activeRoom!=="MAIN") return;   // channel sitters never touch main-room presence
+  const now=Date.now(); if(now-_roomFetchT<60000) return; _roomFetchT=now;
   bePost("room",{action:"list", night:nightKey(), device_id:deviceId()}).then(r=>{ if(!(r && r.posts)) return;
     if(typeof r.humans==="number") _roomHumans=r.humans;   // real presence (devices seen in the last 10 min); null until the backend has the table
     if(typeof r.cups==="number") _roomCups=r.cups;         // real cups steeped tonight, from analytics events
@@ -2773,7 +2803,7 @@ function shareToRoom(){ withRoomTerms(()=>{
   const po=pendingOrder, c=po?po.city:curCity(); const place=lastOrderItems[0];
   const sum = lastOrderItems.length>1 ? `${place.name} +${lastOrderItems.length-1} more` : (place?place.name:"late-night food");
   const flightBit = po&&po.flight ? ` (a ${po.flight.label} flight away)` : "";
-  makeMine(place?place.ic:"🌙", `almost spent ${money(po?po.total:0,c.cur)} at ${sum} in ${c.name}${flightBit}. closed the app instead 🌙`);
+  makeMine(place?place.ic:"🌙", `almost spent ${money(po?po.total:0,USD)} at ${sum} in ${c.name}${flightBit}. closed the app instead 🌙`);
   go("room"); snd("chime");
 }); }
 /* disclosed ghost ambience on your own post: fires ONCE per post ever, sequence seeded by the
@@ -2830,7 +2860,7 @@ function openCup(){
       ${bestCup()?`<div class="cup-flavor">steeping: ${esc(bestCup().name)} — from the machine</div>`:""}
       <div class="cup-clock" id="cup-clock">3:00</div>
       <div class="cup-hint" id="cup-hint">hold the cup to blow on it — it helps (it doesn't)</div>
-      <div class="cup-ghostline" id="cup-ghostline">${CUP_LINES[0]}</div>
+      <div class="cup-ghostline" id="cup-ghostline">${CUP_LINES[hash(nightKey()+"cup")%CUP_LINES.length]}</div>
     </div>`;
   sc.appendChild(el);
   cupEnd=Date.now()+180000;
@@ -2877,7 +2907,7 @@ function cupTick(){
   const left=Math.max(0,cupEnd-Date.now());
   const m=Math.floor(left/60000), s=Math.floor((left%60000)/1000);
   const ck=$("#cup-clock"); if(ck) ck.textContent=`${m}:${String(s).padStart(2,"0")}`;
-  const gl=$("#cup-ghostline"); if(gl){ const line=CUP_LINES[Math.floor((180000-left)/20000)%CUP_LINES.length]; if(gl.textContent!==line) gl.textContent=line; }
+  const gl=$("#cup-ghostline"); if(gl){ const line=CUP_LINES[(hash(nightKey()+"cup")+Math.floor((180000-left)/20000))%CUP_LINES.length]; if(gl.textContent!==line) gl.textContent=line; }
   if(left<=0){ clearInterval(cupTimer); cupServe(); }
 }
 let cupEpilogueT=null;
@@ -3040,6 +3070,21 @@ function msToSunrise(){ const now=new Date(), r=new Date(now); r.setHours(4,0,0,
 function burnLabel(){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); return `🌅 posts burn in ${h}h ${String(m).padStart(2,"0")}m`; }
 /* one ghost order a night (4am cutoff) — hard scarcity is what turns a toy into a ritual */
 function orderedTonight(){ return stats.feastNight===nightKey(); }   // FEAST-specific stamp: room visits move lastNight (showing up) but must never close the kitchen
+/* MORT'S SECOND RUN — coins reopen the kitchen for one more REAL feast tonight (house limit: 2 extra).
+   coins are minted by showing up, never by money or time-in-app, so a paid run stays inside the covenant. */
+function runReset(){ const n=nightKey(); if(stats.runNight!==n){ stats.runNight=n; stats.runsLeft=0; stats.runsBought=0; } }
+function secondRunReady(){ runReset(); return (stats.runsLeft||0)>0; }
+function canBuyRun(){ runReset(); return orderedTonight() && !secondRunReady() && (stats.runsBought||0)<2 && (stats.capsuleTokens||0)>=2 && msToSunrise()>10*60000; }
+function buySecondRun(){ runReset();
+  if(!orderedTonight()){ toast("the kitchen's open — no coin needed 🌙"); return; }
+  if(secondRunReady()){ snd("pop"); toast("a run's already paid for — cart up and place the order 🛵"); go("cart"); return; }
+  if((stats.runsBought||0)>=2){ snd("pop"); toast("two extra runs is the house limit — even ghosts clock out 👻"); return; }
+  if((stats.capsuleTokens||0)<2){ snd("pop"); toast("a second run costs 🪙2 — showing up mints more"); return; }
+  stats.capsuleTokens-=2; stats.runsBought=(stats.runsBought||0)+1; stats.runsLeft=(stats.runsLeft||0)+1; saveStats();
+  track("second_run",{n:stats.runsBought}); snd("chime"); toast("🛵 the kitchen flickers back on — one more real run, good tonight only");
+  renderHud(); if($("#view-cart").classList.contains("active")) renderCart(); }
+/* the rider wears tonight's fit — capsule costumes ride every delivery */
+function riderGhost(){ const f=ghostFit(); return `👻${f.hat?`<span class="rider-hat">${f.hat}</span>`:""}`; }
 function reopenLabel(){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); return h>0?`${h}h ${String(m).padStart(2,"0")}m`:`${m}m`; }
 
 /* ============================================================
@@ -3134,8 +3179,8 @@ function ghostStage(){ const n=_aGet("carted_nights",[]).length; let s=GHOST_STA
   return { name:s.name, nights:n, next }; }
 function maybeNameGhost(){
   try{ if(localStorage.getItem("carted_named")) return; }catch(e){ return; }
-  if(localStorage.getItem("carted_onboard")!=="2" || $("#modal").style.display==="flex"){ setTimeout(maybeNameGhost, 8000); return; }
-  showModal(`<div class="m-emoji">👻</div><div class="m-title">he needs a name</div><div class="m-body">this little ghost runs your deliveries, roasts your cart, and waits up with you.<br>he's yours now — what do you call him?</div><input id="ghost-name-inp" maxlength="14" placeholder="Mort" style="width:100%;background:var(--card);border:2px solid var(--ink);border-radius:12px;padding:12px;font-size:14px;font-weight:700;font-family:var(--bodyf);text-align:center;margin:6px 0 12px;outline:none"><button class="cta" style="position:static" onclick="nameGhost()">that's his name</button><button class="cta secondary" style="position:static" onclick="nameGhost(true)">Mort is fine</button>`);
+  if(!localStorage.getItem("carted_onboard") || $("#modal").style.display==="flex"){ setTimeout(maybeNameGhost, 8000); return; }
+  showModal(`<div class="m-emoji">👻</div><div class="m-title">he needs a name</div><div class="m-body">this little ghost runs your deliveries, roasts your cart, and waits up with you.<br>he's yours now — what do you call him?</div><input id="ghost-name-inp" maxlength="14" placeholder="Mort" style="width:100%;background:var(--card);border:2px solid var(--ink);border-radius:12px;padding:12px;font-size:16px;font-weight:700;font-family:var(--bodyf);text-align:center;margin:6px 0 12px;outline:none"><button class="cta" style="position:static" onclick="nameGhost()">that's his name</button><button class="cta secondary" style="position:static" onclick="nameGhost(true)">Mort is fine</button>`);
 }
 function nameGhost(keepDefault){
   const inp=$("#ghost-name-inp"); const v=keepDefault?"":(((inp&&inp.value)||"").trim());
@@ -3215,6 +3260,7 @@ const CAPSULE_CATALOG = [
 const CUP_FLAVORS=["cup_gold","cup_miso","cup_spicy","cup_shoyu"];
 function bestCup(){ for(const id of CUP_FLAVORS){ if(capsuleOwnedId(id)){ const c=CAPSULE_BY_ID[id]; return {id, hat:c.hat, name:c.name}; } } return null; }
 const CAPSULE_BY_ID = {}; CAPSULE_CATALOG.forEach(i=>CAPSULE_BY_ID[i.id]=i);
+function capsuleDone(){ return !CAPSULE_CATALOG.some(i=>!capsuleOwnedId(i.id)); }
 const CAPSULE_TIER_NAME = { c:"common", u:"uncommon", r:"rare", s:"secret" };
 function ghostFit(){ const id=stats.fit||"none"; if(id.startsWith("city:")){ const cid=id.slice(5); return {id, hat:CITY_HAT[cid]||"", name:((CITIES[CITY_INDEX[cid]]||{}).name||"city")+" souvenir"}; } const c=CAPSULE_BY_ID[id]; return c ? {id, hat:c.hat, name:c.name} : {id:"none", hat:"", name:"just vibes"}; }
 function ghostAvatar(size){ size=size||40; const f=ghostFit(); return `<span class="ghost-av" style="font-size:${size}px;width:${size}px;height:${size}px">👻${f.hat?`<span class="gh-hat" style="font-size:${Math.round(size*0.6)}px">${f.hat}</span>`:""}</span>`; }
@@ -3312,7 +3358,7 @@ let __gachaBusy=false, __gachaT=[];
 function openGacha(){
   capsuleMigrate();
   if(!localStorage.getItem("carted_gacha_intro")){ try{ localStorage.setItem("carted_gacha_intro","1"); }catch(e){}
-    showModal(`<div class="m-emoji">🪙</div><div class="m-title">how the machine works</div><div class="m-body" style="text-align:left">show up, get a coin — walking in the door each shift mints one (restocks 4am &amp; 4pm).<br><br><b>example:</b> open the app tonight → 🪙1. drop by after 4pm tomorrow → 🪙2. tomorrow night → 🪙3 = a <b>midnight pack</b>: three capsules, costumes for ${esc(ghostName())}.<br><br>odds are printed on the machine. no duplicates, no purchases — it only takes nights.</div><button class="cta" style="position:static" onclick="closeModal();openGacha()">show me the machine</button>`); return; }
+    showModal(`<div class="m-emoji">🪙</div><div class="m-title">how the machine works</div><div class="m-body" style="text-align:left">show up, get a coin — walking in the door each shift mints one (restocks 4am &amp; 4pm).<br><br><b>example:</b> open the app tonight → 🪙1. drop by after 4pm tomorrow → 🪙2. tomorrow night → 🪙3 = a <b>midnight pack</b>: three capsules, costumes for ${esc(ghostName())}.<br><br>coins also reopen the kitchen: <b>🪙2 = a second dinner run</b> tonight.<br><br>odds are printed on the machine. no duplicates, no purchases — it only takes nights.</div><button class="cta" style="position:static" onclick="closeModal();openGacha()">show me the machine</button>`); return; }
   if($("#gacha-overlay")) return;
   const sc=document.querySelector(".screen"); if(!sc) return;
   track("gacha_open");
@@ -3322,7 +3368,7 @@ function openGacha(){
     <button class="cup-x" onclick="closeGacha()" aria-label="step away from the machine">✕</button>
     <div class="cup-others">${esc(ghostName())}'s capsule machine</div>
     <div class="gm-mort">${ghostAvatar(40)}</div>
-    ${done ? `<div class="gr-name" style="margin-top:18px">collection complete — the machine bows 🙇</div><div class="gr-line">every capsule found a home. ${esc(ghostName())} has nothing left to hand you but the seat he kept.</div><button class="cta secondary" style="position:static;margin-top:22px" onclick="closeGacha()">back to the collection</button>` : `
+    ${done ? `<div class="gr-name" style="margin-top:18px">collection complete — the machine bows 🙇</div><div class="gr-line">every capsule found a home. ${esc(ghostName())} has nothing left to hand you but the seat he kept.</div>${orderedTonight()?`<button class="gm-pack" style="margin-top:16px" onclick="if(canBuyRun()){buySecondRun();closeGacha();go('cart')}" ${canBuyRun()?"":"disabled"}>🛵 second dinner run — kitchen reopens · 🪙2</button>`:""}<button class="cta secondary" style="position:static;margin-top:22px" onclick="closeGacha()">back to the collection</button>` : `
     <div class="gm-machine" id="gm-machine">
       <div class="gm-dome"><span class="gm-cap c1"></span><span class="gm-cap c2"></span><span class="gm-cap c3"></span><span class="gm-cap c4"></span></div>
       <div class="gm-body"><button class="gm-crank" id="gm-crank" onclick="gachaPull()" aria-label="turn the crank">◉</button><div class="gm-slot" id="gm-slot"></div></div>
@@ -3330,6 +3376,7 @@ function openGacha(){
     <div class="gm-tokens" id="gm-tokens"></div>
     <button class="gm-pack" id="gm-pack" onclick="packPull()">🎴 midnight pack — 3 capsules · 🪙3</button>
     <div class="gm-pack-sub">${(capsuleUnownedIn("u").length+capsuleUnownedIn("r").length+capsuleUnownedIn("s").length>0)?`series 1: the late crowd · the last capsule is uncommon or better when the first two aren't`:`series 1: the late crowd · counter stock only — the good shelves are cleared`}</div>
+    ${orderedTonight()?`<button class="gm-pack" style="margin-top:6px" onclick="if(canBuyRun()){buySecondRun();closeGacha();go('cart')}" ${canBuyRun()?"":"disabled"}>🛵 second dinner run — kitchen reopens · 🪙2</button>`:""}
     <div class="gm-odds"><span class="gm-dot t-c"></span>common <b>60%</b> · <span class="gm-dot t-u"></span>uncommon <b>30%</b><br><span class="gm-dot t-r"></span>rare <b>9%</b> · <span class="gm-dot t-s"></span>secret <b>1%</b>
       <div class="gm-pity" id="gm-pity"></div></div>
     <div class="gm-fine">odds are real. no money goes in — tokens come from showing up (the machine restocks at 4am &amp; 4pm) and every $100 kept.<br>${esc(ghostName())} never hands you the same thing twice.</div>`}
@@ -3613,7 +3660,7 @@ function snackRun(){
   snd("chime");   // the door chime
   const LINES=[`🔔 the door says hi to ${esc(ghostName())}`, "the microwave hums for nobody", "he bags it — no bag fee tonight", "the register prints a receipt for zero"];
   const el=document.createElement("div"); el.id="kb-overlay"; el.className="cup-ov";
-  el.innerHTML=`<div class="cup-scene"><div class="kb-run-mort">👻🛵</div><div class="kb-run-line" id="kb-run-line">${LINES[0]}</div></div>`;
+  el.innerHTML=`<div class="cup-scene"><div class="kb-run-mort">${ghostAvatar(72)}🛵</div><div class="kb-run-line" id="kb-run-line">${LINES[0]}</div></div>`;
   sc.appendChild(el);
   let i=0; const rot=setInterval(()=>{ i++; const l=$("#kb-run-line"); if(!l||i>=LINES.length){ clearInterval(rot); return; } l.textContent=LINES[i]; }, 2100);
   const fin=()=>{ clearInterval(rot); if(!$("#kb-overlay")) return; snd("whoosh");
@@ -3669,7 +3716,7 @@ document.addEventListener("pointerdown", e=>{ const sc=document.querySelector(".
 setTimeout(()=>{ try{
   const g=capsuleEarnNight("open", true);
   if(g){ const n=stats.capsuleTokens||0;
-    toast(n>=3 ? "🎴 that's pack money — 3 coins. rip it at Mort's machine" : "🪙 tonight's coin is in — for showing up");
+    toast((n>=3&&!capsuleDone()) ? "🎴 that's pack money — 3 coins. rip it at Mort's machine" : (capsuleDone()?"🪙 tonight's coin is in — good for a second dinner run 🛵":"🪙 tonight's coin is in — for showing up"));
     renderHud(); }
 }catch(e){} }, 1600);
 /* mort care: after two or more missed nights, one line — a kept seat, never a guilt trip */
