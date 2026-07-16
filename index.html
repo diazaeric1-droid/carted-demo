@@ -274,6 +274,7 @@
   /* ===== NIGHT ROOMS ===== */
   .hbtn { background:none; border:none; font-size:12.5px; cursor:pointer; padding:0 3px; opacity:.85; }
   .mort-ln { font-family:var(--disp); font-style:italic; font-size:12.5px; color:var(--cyan-txt); margin:0 2px 8px; min-height:17px; }
+  #view-room.inroom .brand, #view-room.inroom #room-podium, #view-room.inroom #room-ash { display: none; }
   .roulette { display:block; width:100%; text-align:center; background:linear-gradient(135deg,#4DE3FF,#FF4D9E); color:#0A0E1A; font-weight:800; font-size:14px; border:none; border-radius:13px; padding:12px; margin:2px 0 12px; cursor:pointer; box-shadow:0 10px 26px -14px rgba(255,77,158,.5); }
   .rroom { width:100%; display:flex; align-items:center; gap:11px; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px 13px; margin-bottom:9px; cursor:pointer; text-align:left; color:var(--text); }
   .rroom.main { border-color:rgba(77,227,255,.35); }
@@ -368,6 +369,7 @@
   .cup-steam span:nth-child(3) { animation-delay: 1.7s; }
   .cup-steam.blown span { animation-duration: .7s; opacity: .25; }
   @keyframes steam { 0% { transform: translateY(10px) scaleX(1); opacity: 0; } 30% { opacity: .85; } 100% { transform: translateY(-16px) scaleX(1.4); opacity: 0; } }
+  .cup-flavor { margin-top:8px; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--pink-txt); }
   .cup-clock { font-family: var(--disp); font-size: 34px; font-weight: 500; margin-top: 12px; letter-spacing: 1px; color: var(--cyan); text-shadow: 0 0 26px rgba(77,227,255,.22); }
   .cup-hint { font-size: 12.5px; color: var(--muted); font-weight: 400; margin-top: 6px; font-style: italic; font-family: var(--disp); }
   .cup-ghostline { margin-top: 24px; font-size: 14px; font-weight: 700; color: #D6E4F5; opacity: .9; min-height: 20px; }
@@ -450,10 +452,10 @@
   .chip.on { background: var(--accent2); color: var(--ink); font-weight: 800; }
   .chip .cnt { font-variant-numeric: tabular-nums; }
 
-  .nav { position: absolute; bottom: 0; left: 0; right: 0; height: 58px; background: var(--screen); border-top: 2.5px solid var(--ink); display: flex; align-items: center; justify-content: space-around; padding-bottom: 6px; z-index: 30; }
-  .nav button { background: none; border: none; color: #8A96B5; font-size: 11px; font-weight: 600; font-family: var(--disp); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; position: relative; transition: transform .15s; }
+  .nav { position: absolute; bottom: 0; left: 0; right: 0; height: 50px; background: var(--screen); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-around; padding-bottom: 2px; z-index: 30; }
+  .nav button { background: none; border: none; color: #8A96B5; font-size: 11px; font-weight: 600; font-family: var(--bodyf); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 1px; position: relative; transition: transform .15s; }
   .nav button.on { color: var(--cyan-txt); transform: translateY(-2px); }
-  .nav button .gi { font-size: 19.5px; transition: transform .15s; }
+  .nav button .gi { font-size: 16px; transition: transform .15s; }
   .nav button.on .gi { transform: scale(1.2) rotate(-6deg); filter: drop-shadow(0 0 8px rgba(77,227,255,.5)); }
   .badge { position: absolute; top: -4px; right: -8px; background: var(--hot); color: #14060F; font-size: 11px; font-weight: 800; min-width: 17px; height: 17px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 4px; border: 1.5px solid var(--ink); }
 
@@ -845,9 +847,10 @@
     .notch, .statusbar { display: none; }
     .screen { border-radius: 0; }
     .hud { padding-top: calc(env(safe-area-inset-top, 10px) + 4px); }
+    body.hud-off .body { padding-top: calc(env(safe-area-inset-top, 10px) + 8px); }
     .body { padding-top: 4px; }
-    .view { padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
-    .nav { height: calc(58px + env(safe-area-inset-bottom, 0px)); padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px)); }
+    .view { padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)); }
+    .nav { height: calc(50px + env(safe-area-inset-bottom, 0px)); padding-bottom: calc(2px + env(safe-area-inset-bottom, 0px)); }
     .toast { bottom: calc(74px + env(safe-area-inset-bottom, 0px)); }
   }
   /* first-run onboarding overlay */
@@ -934,7 +937,7 @@
         <section class="view" id="view-room">
           <div class="brand">
             <h1 style="font-size:24px">night <span class="wm-ed">rooms</span></h1>
-            <div class="live2"><span class="dot"></span> <b style="color:var(--slate);font-weight:700">strangers who are also up — no contacts, no history</b> · <span id="room-burn-top">🌅 —</span> <button class="hbtn" onclick="ghostLegend()" aria-label="what the ghost tag means">👻</button></div>
+            <div class="live2"><span class="dot"></span> <b style="color:var(--slate);font-weight:700">strangers only · burns at sunrise</b> · <span id="room-burn-top">🌅 —</span> <button class="hbtn" onclick="ghostLegend()" aria-label="what the ghost tag means">👻</button></div>
             <div id="room-nod"></div>
           </div>
           <div id="room-podium"></div>
@@ -945,7 +948,7 @@
             <button class="ch-pin" id="ch-pin"></button>
             <div id="chat-msgs"></div>
             <div class="composer"><input id="composer-input" aria-label="say something to the room" placeholder="say something — it burns at sunrise" maxlength="90" /><button onclick="postFromComposer()">send</button></div>
-            <div class="room-rules-line">anonymous · no DMs · be kind · <a href="terms.html" target="_blank" rel="noopener">rules</a> · tap a note to 🚩</div>
+            <div class="room-rules-line">be kind · <a href="terms.html" target="_blank" rel="noopener">rules</a> · tap a note to 🚩</div>
           </div>
           <div id="room-ash"></div>
           <div class="osm-credit" id="room-burn">🌅 everything burns at sunrise</div>
@@ -2355,6 +2358,7 @@ function renderRoom(){
   if(activeRoom==="MAIN") fetchLiveRoom();
   const _ev=eventNight();
   { const rp=$("#room-podium"); if(rp) rp.innerHTML = (_ev&&!activeRoom)?`<div class="tk-line">🌙 ${esc(_ev.banner)}</div>`:""; }
+  vr.classList.toggle("inroom", !!activeRoom);
   const lst=$("#rooms-list"), ch=$("#room-chat");
   if(activeRoom){ if(lst) lst.style.display="none"; if(ch) ch.style.display="block"; renderChat(); }
   else { if(lst) lst.style.display="block"; if(ch) ch.style.display="none"; renderRoomsList(); }
@@ -2377,8 +2381,10 @@ function renderRoomsList(){
   const el=$("#rooms-list"); if(!el) return;
   fetchChanStats();
   const b=boothState();
+  const tk2=stats.capsuleTokens||0;
   el.innerHTML = `
     <button class="roulette" onclick="roomRoulette()">🎲 drop me in a room</button>
+    <button class="rroom" onclick="openGacha()"><span class="ic">🪙</span><span class="mid"><span class="nm">mort's machine</span><span class="st">${tk2>=3?"🎴 pack ready — rip it":`${tk2} coin${tk2===1?"":"s"} · a pack takes 3 · show up = coin`}</span></span><span class="go">›</span></button>
     ${NIGHT_ROOMS.map(r=>`<button class="rroom${r.code==="MAIN"?' main':''}" onclick="enterRoom('${r.code}')"><span class="ic">${r.ic}</span><span class="mid"><span class="nm">${esc(r.name)}</span><span class="st">${chanLabel(r.code)}</span></span><span class="go">›</span></button>`).join("")}
     <button class="rroom priv" onclick="openBooth()"><span class="ic">🛋️</span><span class="mid"><span class="nm">your booth</span><span class="st">${b?`private · code ${esc(b.code)} — invite by link`:"private — start one, invite by link"}</span></span><span class="go">›</span></button>
     <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a 3-minute break</span><span class="cbr-shelf" id="cup-shelf"></span></span><span class="cbr-go">›</span></button>`;
@@ -2451,7 +2457,7 @@ function ghostLegend(){ showModal(`<div class="m-emoji">👻</div><div class="m-
 /* header presence + cup counter:/* header presence + cup counter: real numbers the moment they exist, non-falsifiable phrases below
    that. never a specific number unless the backend actually measured it. */
 function renderRoomMeta(){
-  const rb=$("#room-burn"); if(rb) rb.innerHTML=`${burnLabel()}${crisisLine()}`;
+  const rb=$("#room-burn"); if(rb) rb.innerHTML = activeRoom ? crisisLine().replace(/^ · /,"") : `${burnLabel()}${crisisLine()}`;
   const rbt=$("#room-burn-top"); if(rbt){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); rbt.textContent=`🌅 ${h}h ${String(m).padStart(2,"0")}m`; }
   const cw=document.querySelector("#view-room .composer"); if(cw) cw.classList.toggle("lamp", kitchenLight()&&activeRoom==="MAIN");
   const ci=$("#composer-input"); if(ci) ci.maxLength = (kitchenLight()&&activeRoom==="MAIN")?87:90;   // the 🏮 prefix costs 3 units — the author trims, not the room
@@ -2805,6 +2811,8 @@ const CUP_LINES=[
   "the ghosts are waiting by the window",
 ];
 function openCup(){
+  if(!localStorage.getItem("carted_cup_intro")){ try{ localStorage.setItem("carted_cup_intro","1"); }catch(e){}
+    showModal(`<div class="m-emoji">🥡</div><div class="m-title">the noodle cup</div><div class="m-body" style="text-align:left">a 3-minute break — like stepping outside for air, except it's noodles. the timer runs, you hold the cup to blow on it, and when it's done you eat. nothing is scored, nothing is owed. night owls everywhere steep at the same 3:00.</div><button class="cta" style="position:static" onclick="closeModal();openCup()">steep one</button><button class="cta secondary" style="position:static;margin-top:8px" onclick="closeModal()">not right now</button>`); return; }
   if($("#cup-overlay")) return;
   track("cup_open");
   const sc=document.querySelector(".screen"); if(!sc) return;
@@ -2817,8 +2825,9 @@ function openCup(){
       <button class="cup-snd" onclick="shareBack3()" title="a note for whoever wonders where you went">🚪 tell them you're on a break</button>
       <div class="cup-stage" id="cup-stage">
         <div class="cup-steam" id="cup-steam"><span>♨</span><span>♨</span><span>♨</span></div>
-        <div class="cup-emo" id="cup-emo">🥡</div>
+        <div class="cup-emo" id="cup-emo">${(bestCup()||{hat:"🥡"}).hat}</div>
       </div>
+      ${bestCup()?`<div class="cup-flavor">steeping: ${esc(bestCup().name)} — from the machine</div>`:""}
       <div class="cup-clock" id="cup-clock">3:00</div>
       <div class="cup-hint" id="cup-hint">hold the cup to blow on it — it helps (it doesn't)</div>
       <div class="cup-ghostline" id="cup-ghostline">${CUP_LINES[0]}</div>
@@ -3183,6 +3192,8 @@ const CAPSULE_CATALOG = [
   {id:"lantern",   hat:"🏮", name:"aisle lantern",          tier:"u"},
   {id:"storecat",  hat:"🐈‍⬛", name:"the store cat",          tier:"u"},
   {id:"naruto",    hat:"🍥", name:"narutomaki pin",         tier:"u"},
+  {id:"cup_spicy",  hat:"🌶️", name:"2am fire cup",           tier:"u"},
+  {id:"cup_shoyu",  hat:"🍜", name:"shoyu cup",              tier:"c"},
   // rare — 9% · the good shelf
   {id:"tophat",    hat:"🎩", name:"fancy top hat",          tier:"r"},
   {id:"halo",      hat:"😇", name:"saint of savings",       tier:"r"},
@@ -3192,12 +3203,17 @@ const CAPSULE_CATALOG = [
   {id:"love",      hat:"💘", name:"valenghost",             tier:"r"},
   {id:"cupcrown",  hat:"🍜", name:"cup-noodle crown",       tier:"r"},
   {id:"disco",     hat:"🪩", name:"midnight disco",         tier:"r"},
+  {id:"cup_miso",   hat:"🍥", name:"miso cup",               tier:"r"},
   // secret — 1% · he's been saving these
   {id:"crown",     hat:"👑", name:"dopamine crown",         tier:"s"},
   {id:"storekey",  hat:"🗝️", name:"key to the store",       tier:"s"},
   {id:"moon",      hat:"🌕", name:"the moon, on loan",      tier:"s"},
   {id:"ghostjr",   hat:"👻", name:"a little ghost of his own", tier:"s"},
+  {id:"cup_gold",   hat:"✨", name:"golden broth",           tier:"s"},
 ];
+/* cup flavors upgrade the steep itself: your best-shelf owned cup shows at the counter */
+const CUP_FLAVORS=["cup_gold","cup_miso","cup_spicy","cup_shoyu"];
+function bestCup(){ for(const id of CUP_FLAVORS){ if(capsuleOwnedId(id)){ const c=CAPSULE_BY_ID[id]; return {id, hat:c.hat, name:c.name}; } } return null; }
 const CAPSULE_BY_ID = {}; CAPSULE_CATALOG.forEach(i=>CAPSULE_BY_ID[i.id]=i);
 const CAPSULE_TIER_NAME = { c:"common", u:"uncommon", r:"rare", s:"secret" };
 function ghostFit(){ const id=stats.fit||"none"; if(id.startsWith("city:")){ const cid=id.slice(5); return {id, hat:CITY_HAT[cid]||"", name:((CITIES[CITY_INDEX[cid]]||{}).name||"city")+" souvenir"}; } const c=CAPSULE_BY_ID[id]; return c ? {id, hat:c.hat, name:c.name} : {id:"none", hat:"", name:"just vibes"}; }
