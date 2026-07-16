@@ -285,22 +285,6 @@
   .rroom .nm { font-weight:700; font-size:14px; }
   .rroom .st { font-size:11px; color:var(--muted); margin-top:1px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .rroom .go { color:var(--muted); font-size:19.5px; }
-  /* mort's machine: a counter-top capsule machine, deliberately NOT shaped like a room row */
-  .machine-bar { width:100%; display:flex; align-items:center; gap:12px; background:linear-gradient(135deg, rgba(255,77,158,.16), rgba(77,227,255,.07)), var(--card); border:1.5px solid rgba(255,77,158,.5); border-radius:16px; padding:12px 13px; margin:2px 0 16px; cursor:pointer; text-align:left; color:var(--text); box-shadow:0 0 14px rgba(255,77,158,.16); }
-  .machine-bar .mb-dome { position:relative; flex:0 0 38px; height:38px; border-radius:50% 50% 9px 9px; background:radial-gradient(circle at 35% 28%, rgba(223,233,255,.28), rgba(223,233,255,.05)); border:1.5px solid rgba(223,233,255,.35); }
-  .machine-bar .mb-cap { position:absolute; width:11px; height:11px; border-radius:50%; }
-  .machine-bar .c1 { left:5px; bottom:5px; background:var(--cyan); opacity:.85; }
-  .machine-bar .c2 { right:6px; bottom:7px; background:var(--pink); opacity:.85; }
-  .machine-bar .c3 { left:13px; bottom:13px; background:var(--yell); opacity:.75; }
-  .machine-bar .mb-txt { flex:1; min-width:0; display:flex; flex-direction:column; }
-  .machine-bar .mb-txt b { font-size:14px; font-weight:700; }
-  .machine-bar .mb-sub { font-size:11px; color:var(--pink-txt); margin-top:1px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .machine-bar .mb-coins { flex:0 0 auto; font-weight:800; font-size:12.5px; font-family:var(--disp); background:rgba(255,77,158,.14); border:1px solid rgba(255,77,158,.45); color:var(--pink-txt); border-radius:99px; padding:5px 10px; }
-  .machine-bar.ready { border-color:var(--pink); animation:mbPulse 2.4s ease-in-out infinite; }
-  .machine-bar.ready .mb-coins { background:var(--pink); border-color:var(--pink); color:#14060F; }
-  @keyframes mbPulse { 0%,100%{ box-shadow:0 0 12px rgba(255,77,158,.25); } 50%{ box-shadow:0 0 22px rgba(255,77,158,.5); } }
-  @media (prefers-reduced-motion: reduce){ .machine-bar.ready { animation:none; box-shadow:0 0 16px rgba(255,77,158,.35); } }
-  #feed-machine .machine-bar { margin: 0 0 12px; }
   .ch-head { display:flex; align-items:center; gap:8px; margin:0 0 6px; }
   .ch-head .back { padding:6px 0; flex:0 0 auto; }
   .ch-head b { flex:1; min-width:0; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -956,7 +940,6 @@
           </div>
 
           <button class="kb-banner" onclick="openKonbini()"><span class="kb-bn-ic">🏪</span><span class="kb-bn-text"><b>CARTED 24H</b><span class="kb-bn-sub">snack runs · open all night</span></span><span class="kb-bn-go">›</span></button>
-          <div id="feed-machine"></div>
 
           <div id="feed-list"></div>
 
@@ -1631,7 +1614,6 @@ function toggleSnd(){ sndOn=!sndOn; try{ localStorage.setItem("carted_snd", sndO
 
 /* ---- game HUD: streak flame · level · money dodged · sound ---- */
 function renderHud(){
-  { const fm=$("#feed-machine"); if(fm) fm.innerHTML=machineBarBtn(); }   // the feed machine tracks coins live
   const el=$("#hud"); if(!el) return;
   const done=stats.lastNight===nightKey();
   /* HUD = the identity spine only: streak + lifetime dodged. levels/XP live on the profile. */
@@ -1988,7 +1970,6 @@ function cardHTML(p, saved){
 }
 function renderFeed(){
   renderBanners(); renderFeatured(); const bn=$("#buddy-nudge"); if(bn) bn.innerHTML=buddyNudge();
-  { const fm=$("#feed-machine"); if(fm) fm.innerHTML=machineBarBtn(); }
   const c=curCity();
   refreshDiscovery();
   $("#feed-section-label").textContent = `craving in ${esc(c.name)} right now`;
@@ -2452,9 +2433,6 @@ function chanLabel(code){
   if(n===1) return "someone's up in here";
   return res?`quiet right now — 👻 ${res.ghost}'s in`:"quiet right now";
 }
-function machineBarBtn(){ const tk=stats.capsuleTokens||0; const ready=tk>=3&&!capsuleDone();
-  const sub = ready?"a pack's sitting in the dome — rip it":(capsuleDone()?"shelf cleared · 🪙2 = second dinner run":"a pack takes 🪙3 · show up = coin");
-  return `<button class="machine-bar${ready?' ready':''}" onclick="openGacha()" aria-label="mort's capsule machine"><span class="mb-dome"><span class="mb-cap c1"></span><span class="mb-cap c2"></span><span class="mb-cap c3"></span></span><span class="mb-txt"><b>mort's capsule machine</b><span class="mb-sub">${sub}</span></span><span class="mb-coins">${ready?"🎴 rip":`🪙 ${tk}`}</span></button>`; }
 function renderRoomsList(){
   const el=$("#rooms-list"); if(!el) return;
   fetchChanStats();
