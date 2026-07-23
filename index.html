@@ -1462,7 +1462,7 @@ function fmtFlight(mins){ const h=Math.floor(mins/60), m=Math.round(mins%60); re
 function flightInfo(city){
   if(!city || city.lat==null) return null;
   const km = havKm(city, HOME);
-  if(km < 150) return null;                       // same metro → normal courier
+  if(!isFinite(km) || km < 150) return null;      // same metro (or unknown home) → normal courier
   const mins = Math.round(km/14.2) + 50;          // ~850 km/h cruise + taxi/takeoff/landing
   return { km: Math.round(km), mins, label: fmtFlight(mins) };
 }
