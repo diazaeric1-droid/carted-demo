@@ -2284,7 +2284,8 @@ function revealTruth(){
     ${capsuleGain?`<div class="milestone" style="cursor:pointer" onclick="openGacha()">🪙 ${capsuleGain===1?"a capsule token":capsuleGain+" capsule tokens"} — ${cgNight&&cgMile?"for showing up + $100 kept":(cgMile?"every $100 kept mints one":"for showing up tonight")}. ${esc(ghostName())}'s machine is by the door</div>`:""}
     ${(!rerun&&canBuyRun())?`<div class="milestone" style="cursor:pointer" onclick="buySecondRun();go('feed')">🛵 still hungry? 🪙2 — ${esc(ghostName())} makes a second run tonight</div>`:""}
     <div style="margin-top:22px">
-      <button class="cta gold" style="position:static" onclick="shareToRoom()">${firstEver?"🌙 meet the others in the room":"🌙 come sit in the room"}</button>
+      <button class="cta gold" style="position:static" onclick="visitRoom()">${firstEver?"🌙 visit the 2 am room":"🌙 come sit in the room"}</button>
+      <button class="cta secondary" style="position:static" onclick="offerShareDodge()">🌙 share tonight's dodge</button>
       <button class="cta secondary" style="position:static" onclick="shareReceipt()">🧾 the receipt</button>
     </div>
     <div class="sub" style="margin-top:14px;text-align:center"><span onclick="goodnight()" style="color:var(--muted);cursor:pointer">good night 🌙</span></div>`;
@@ -2845,13 +2846,37 @@ function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.t
   else { withRoomTerms(()=>{ makeMine("🌙", v); inp.value=""; snd("chime"); }); } }
 const CONFESS = ["almost got me. it didn't. 💪","called my name at 2am. i let it ring.","was THIS close. wallet's still shut.","tempted me for 20 whole minutes. survived."];
 function quickConfess(e){ withRoomTerms(()=>{ makeMine(e, `${e} ${pick(CONFESS)}`); snd("chime"); }); }
-function shareToRoom(){ withRoomTerms(()=>{
+/* Entering and posting are SEPARATE acts. The reveal's primary CTA only walks you in — it never
+   publishes. Sharing is opt-in, shows you the exact text first, is editable, and only then asks
+   for the community terms. (Before v86 the "come sit in the room" button called shareToRoom(),
+   which posted a prewritten note and *then* navigated — people were broadcasting without meaning to.) */
+function visitRoom(){ go("room"); snd("door"); track("reveal_room_cta"); }
+
+function dodgeDraft(){
   const po=pendingOrder, c=po?po.city:curCity(); const place=lastOrderItems[0];
   const sum = lastOrderItems.length>1 ? `${place.name} +${lastOrderItems.length-1} more` : (place?place.name:"late-night food");
   const flightBit = po&&po.flight ? ` (a ${po.flight.label} flight away)` : "";
-  makeMine(place?place.ic:"🌙", `almost spent ${money(po?po.total:0,USD)} at ${sum} in ${c.name}${flightBit}. closed the app instead 🌙`);
-  go("room"); snd("chime");
-}); }
+  return { ic: place?place.ic:"🌙",
+           text: `almost spent ${money(po?po.total:0,USD)} at ${sum} in ${c.name}${flightBit}. closed the app instead 🌙` };
+}
+/* editable preview + explicit confirm — nothing reaches the room until "post it" is tapped */
+function offerShareDodge(){
+  const d=dodgeDraft(); track("share_preview");
+  showModal(`<div class="m-emoji">${d.ic}</div><div class="m-title">share tonight's dodge?</div>
+    <div class="m-body" style="text-align:left">this is what the room would see. edit it, or don't send it at all.
+      <textarea id="dodge-text" maxlength="90" style="width:100%;margin-top:10px;min-height:76px;font:inherit;font-size:16px;padding:10px;border-radius:12px;border:1.5px solid rgba(77,227,255,.3);background:var(--card);color:var(--text);resize:vertical">${esc(d.text)}</textarea>
+      <div class="sub" style="margin-top:8px">anonymous · no name · burns at sunrise</div></div>
+    <button class="cta" style="position:static" onclick="confirmShareDodge('${d.ic}')">post it 🌙</button>
+    <button class="cta secondary" style="position:static" onclick="closeModal()">keep it to myself</button>`);
+}
+function confirmShareDodge(ic){
+  const ta=$("#dodge-text"); const v=(ta&&ta.value.trim())||"";
+  if(!v) return;
+  closeModal();
+  withRoomTerms(()=>{ makeMine(ic||"🌙", v); track("share_confirmed"); go("room"); snd("chime"); });
+}
+/* kept so any older entry point still works, but it now routes through the consent flow */
+function shareToRoom(){ offerShareDodge(); }
 /* disclosed ghost ambience on your own post: fires ONCE per post ever, sequence seeded by the
    post itself (stable across reloads), and the final counts are persisted — never re-rolled. */
 function beSeen(post){ if(post.seenDone) return;

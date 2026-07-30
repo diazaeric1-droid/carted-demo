@@ -13,7 +13,7 @@
 </head>
 <body>
 <h1>👻 Carted — Privacy Policy</h1>
-<p class="muted">Effective: July 9, 2026</p>
+<p class="muted">Effective: July 29, 2026 · <span style="opacity:.7">previous version July 9, 2026</span></p>
 
 <p>Carted is a simulated "window shopping" experience: you browse fictional restaurants, place orders that are never real, and keep your money. Our privacy posture matches the product: <b>we want as little of your data as possible.</b></p>
 
@@ -32,15 +32,26 @@
 <h2>What we never do</h2>
 <ul>
   <li>No tracking across other apps or websites; no advertising SDKs; no data brokers.</li>
-  <li>No selling, renting, or sharing of any data with third parties.</li>
+  <li><b>We never sell or rent your data, and we never share it for anyone else's purposes.</b></li>
   <li>No third-party analytics SDKs — the beacon above is our own, hosted on Supabase (our database provider, acting as our processor).</li>
 </ul>
+
+<h2>The only companies that touch your data</h2>
+<p>We use two service providers, and only to run Carted itself. They process data on our instructions and may not use it for their own purposes:</p>
+<ul>
+  <li><b>Supabase</b> — our database and server host. Analytics events and room posts are stored here.</li>
+  <li><b>OpenAI</b> — <b>the text of a room post is sent to OpenAI's moderation service before it publishes</b>, to screen for abuse and for content indicating someone may be in crisis. Only the post text is sent — never your device identifier, and never anything else about you. OpenAI does not use content submitted through this API to train its models. If the check is unavailable, the post falls back to our own keyword filter.</li>
+</ul>
+<p>That is the complete list. Nothing else leaves our systems.</p>
 
 <h2>Notifications</h2>
 <p>If you opt in, the app schedules a single local "last call" notification on your device at your usual hour. It's generated on-device and never fires on a night you've already played. Turn it off any time in iOS Settings.</p>
 
 <h2>The 2 AM Room</h2>
-<p>Posts labeled "resident ghost" are fictional content written by us. When you post in the room, your post text is sent to our server (Supabase, acting as our processor) together with the same random device identifier described above — <b>no name, no email, nothing that identifies you</b> — so that other people in the room can see it that night. Posts are filtered for abusive content before they appear, can be reported by anyone, and <b>burn at sunrise: room posts are automatically deleted from our server within 48 hours</b>. Nothing you write in the room is archived, profiled, or shared. A copy of your own posts also lives in your device's local storage until sunrise so the room works offline.</p>
+<p>Posts labeled "resident ghost" are fictional content written by us. When you post in the room, your post text is sent to our server (Supabase, acting as our processor) together with the same random device identifier described above — <b>no name, no email, nothing that identifies you</b> — so that other people in the room can see it that night.</p>
+<p><b>Before a post publishes</b>, its text passes two screens: our own keyword filter for abuse, and OpenAI's moderation service (see above). A separate check looks for language suggesting the writer may be in crisis; if it fires, we show <i>that writer</i> a card with crisis-line details. We never notify anyone else, and we never act on it beyond showing that card.</p>
+<p><b>Posts burn at sunrise</b> — room posts are automatically deleted from our server within 48 hours. A copy of your own posts also lives in your device's local storage until sunrise so the room works offline.</p>
+<p><b>One exception, and we want to be plain about it.</b> If a post is reported, it is hidden immediately and then <b>kept for up to 90 days instead of being deleted at sunrise</b>, so it can be reviewed by a human and, where the law requires it, preserved and reported to the authorities (in the U.S., 18 U.S.C. §2258A imposes this duty for certain material). Reported posts are the <i>only</i> content that outlives the sunrise burn. Nothing you write is otherwise archived, profiled, or shared.</p>
 
 <h2>Children</h2>
 <p>Carted is not directed at children under 13 and collects no personal information from anyone.</p>
