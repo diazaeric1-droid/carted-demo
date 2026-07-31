@@ -1523,15 +1523,18 @@ let _aQueue=[], _aTimer=null;
 /* measurement context (2026-07-30): every event carries IANA timezone, app version, and an
    internal flag — the cohort SQL keys nights off tz and excludes internal/QA devices.
    Mark a founder device once via ?internal=1 (persists in localStorage). */
-const APP_V="88";
+const APP_V="89";
 const APP_TZ=(()=>{ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone||""; }catch(e){ return ""; } })();
 function isInternal(){ try{ return localStorage.getItem("carted_internal")==="1"; }catch(e){ return false; } }
 function track(ev, props){ try{
   const t=Date.now();
   const f=_aGet("carted_funnel",{}); f[ev]=(f[ev]||0)+1; _aSet("carted_funnel",f);
+  // ctx is assigned LAST so a caller's props can never clobber reserved keys (ev/t/tz/v/internal).
+  // Learned the hard way: track("view",{v:view}) was overwriting the app version with a view name.
   const ctx={ev,t,tz:APP_TZ,v:APP_V}; if(isInternal()) ctx.internal="1";
-  const log=_aGet("carted_events",[]); log.push(Object.assign({},ctx,props||{})); while(log.length>150) log.shift(); _aSet("carted_events",log);
-  _aQueue.push(Object.assign({},ctx,props||{}));
+  const row=Object.assign({},props||{},ctx);
+  const log=_aGet("carted_events",[]); log.push(row); while(log.length>150) log.shift(); _aSet("carted_events",log);
+  _aQueue.push(row);
   if(!_aTimer) _aTimer=setTimeout(_aFlush,4000);
 }catch(e){} }
 function _aFlush(){ _aTimer=null; if(!_aQueue.length || !ANALYTICS_URL) return; const batch=_aQueue.splice(0,_aQueue.length); const body=JSON.stringify({ device:deviceId(), plat:(typeof NATIVE!=="undefined"&&NATIVE)?"ios":"web", nights:_aGet("carted_nights",[]).length, events:batch });
@@ -1836,7 +1839,7 @@ function loadCity(city, force){
 }
 
 /* ---- navigation ---- */
-function go(view){ track("view",{v:view});
+function go(view){ track("view",{view:view});   // key is "view", NOT "v" — "v" is the reserved app-version context key
   document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
   $("#view-"+view).classList.add("active");
   $("#body").scrollTop = 0;
@@ -2859,8 +2862,11 @@ function dodgeDraft(){
   const po=pendingOrder, c=po?po.city:curCity(); const place=lastOrderItems[0];
   const sum = lastOrderItems.length>1 ? `${place.name} +${lastOrderItems.length-1} more` : (place?place.name:"late-night food");
   const flightBit = po&&po.flight ? ` (a ${po.flight.label} flight away)` : "";
+  // clamp to the composer's own 90-char ceiling: maxlength only limits typing, not an injected
+  // default, so a long place name + flight suffix could otherwise post 96 chars into the room
+  const t=`almost spent ${money(po?po.total:0,USD)} at ${sum} in ${c.name}${flightBit}. closed the app instead 🌙`;
   return { ic: place?place.ic:"🌙",
-           text: `almost spent ${money(po?po.total:0,USD)} at ${sum} in ${c.name}${flightBit}. closed the app instead 🌙` };
+           text: t.length>90 ? t.slice(0,89).replace(/[\uD800-\uDBFF]$/,"")+"…" : t };
 }
 /* editable preview + explicit confirm — nothing reaches the room until "post it" is tapped */
 function offerShareDodge(){
@@ -3851,12 +3857,18 @@ if(stats.pushOptIn && "Notification" in window && Notification.permission==="gra
 document.addEventListener("pointerdown", e=>{ const sc=document.querySelector(".screen"); if(!sc) return; const r=sc.getBoundingClientRect(); lastTap={x:e.clientX-r.left, y:e.clientY-r.top}; if(asmrOn && !asmrNode) startAsmr(); }, true);
 /* the daily reward beat: your shift coin mints the moment you walk in — opening the door counts
    as showing up. one per shift (4am / 4pm restocks); the chip up top announces pack money. */
-setTimeout(()=>{ try{
-  const g=capsuleEarnNight("open", true);
-  if(g){ const n=stats.capsuleTokens||0;
-    toast((n>=3&&!capsuleDone()) ? "🎴 that's pack money — 3 coins. rip it at Mort's machine" : (capsuleDone()?"🪙 tonight's coin is in — good for a second dinner run 🛵":"🪙 tonight's coin is in — for showing up"));
-    renderHud(); }
-}catch(e){} }, 1600);
+/* wait for the onboarding overlay to be gone before announcing the coin — on a first open the
+   toast used to fire at 1600ms UNDER the intro, so the one moment coins are explained was
+   invisible. (Matters more now that onboarding is 3 slides and coins teach in context.) */
+(function coinBeat(tries){
+  if($("#onboard") && $("#onboard").style.display!=="none"){ if((tries||0)<40) return setTimeout(()=>coinBeat((tries||0)+1), 800); }
+  setTimeout(()=>{ try{
+    const g=capsuleEarnNight("open", true);
+    if(g){ const n=stats.capsuleTokens||0;
+      toast((n>=3&&!capsuleDone()) ? "🎴 that's pack money — 3 coins. rip it at Mort's machine" : (capsuleDone()?"🪙 tonight's coin is in — good for a second dinner run 🛵":"🪙 tonight's coin is in — for showing up"));
+      renderHud(); }
+  }catch(e){} }, 1200);
+})(0);
 /* mort care: after two or more missed nights, one line — a kept seat, never a guilt trip */
 (function mortCare(){ try{
   const last=stats.lastNight; if(!last) return;
