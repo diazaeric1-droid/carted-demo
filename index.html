@@ -918,7 +918,7 @@
           <div class="brand">
             <h1>Cart<span class="wm-ed">ed</span></h1>
             <div class="sub">the 2 am room</div>
-            <div class="live-pill"><span class="dot"></span><span class="lp-count" id="live-count">night owls are up</span></div>
+            <div class="live-pill"><span class="dot"></span><span class="lp-count" id="live-count">the room is always on</span></div>
           </div>
 
           <!-- #1+2 consolidated: the 5 "tonight" nudges collapse behind one rotating teaser -->
@@ -1453,7 +1453,7 @@ function flightInfo(city){
 function cityOf(p){ const i = CITY_INDEX[p._cityId]; return i!=null ? CITIES[i] : curCity(); }
 /* per-restaurant flight time = city base ± a deterministic jitter, so each place reads a bit different */
 function placeFlight(p){ const fl=flightInfo(cityOf(p)); if(!fl) return null; const mins=Math.max(35, fl.mins + ((hash(p.name)%61)-20)); return { mins, label: fmtFlight(mins) }; }
-function etaStr(p){ const fl = placeFlight(p); return fl ? fl.label : `${etaFor(p)} min`; }
+function etaStr(p){ const fl = placeFlight(p); return fl ? `✈ ${fl.label}` : `${etaFor(p)} min`; }   // ✈ so "13h 34m" reads as a joke flight, never a broken delivery ETA
 /* photo layer: baked Google photo when available, keyworded stock fallback, emoji last resort */
 const BASE = location.pathname.includes("/carted-demo") ? "/carted-demo/" : "/";
 const DATA_V = "fic2";   // bump when baked data changes — busts HTTP caches on places/activities/menus JSON
@@ -1520,11 +1520,18 @@ const ANALYTICS_URL = (CARTED_BE && CARTED_BE.url) ? CARTED_BE.url + "/track" : 
 function _aGet(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } }
 function _aSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} mirrorStats(); }
 let _aQueue=[], _aTimer=null;
+/* measurement context (2026-07-30): every event carries IANA timezone, app version, and an
+   internal flag — the cohort SQL keys nights off tz and excludes internal/QA devices.
+   Mark a founder device once via ?internal=1 (persists in localStorage). */
+const APP_V="88";
+const APP_TZ=(()=>{ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone||""; }catch(e){ return ""; } })();
+function isInternal(){ try{ return localStorage.getItem("carted_internal")==="1"; }catch(e){ return false; } }
 function track(ev, props){ try{
   const t=Date.now();
   const f=_aGet("carted_funnel",{}); f[ev]=(f[ev]||0)+1; _aSet("carted_funnel",f);
-  const log=_aGet("carted_events",[]); log.push(Object.assign({ev,t},props||{})); while(log.length>150) log.shift(); _aSet("carted_events",log);
-  _aQueue.push(Object.assign({ev,t},props||{}));
+  const ctx={ev,t,tz:APP_TZ,v:APP_V}; if(isInternal()) ctx.internal="1";
+  const log=_aGet("carted_events",[]); log.push(Object.assign({},ctx,props||{})); while(log.length>150) log.shift(); _aSet("carted_events",log);
+  _aQueue.push(Object.assign({},ctx,props||{}));
   if(!_aTimer) _aTimer=setTimeout(_aFlush,4000);
 }catch(e){} }
 function _aFlush(){ _aTimer=null; if(!_aQueue.length || !ANALYTICS_URL) return; const batch=_aQueue.splice(0,_aQueue.length); const body=JSON.stringify({ device:deviceId(), plat:(typeof NATIVE!=="undefined"&&NATIVE)?"ios":"web", nights:_aGet("carted_nights",[]).length, events:batch });
@@ -1538,13 +1545,13 @@ function trackOpen(){ const n=nightKey(); const nights=_aGet("carted_nights",[])
 window.cartedReport = function(){ const nights=_aGet("carted_nights",[]); const r={ firstOpen:_aGet("carted_first_open",null), distinctNights:nights.length, returnedAnotherNight:nights.length>=2, funnel:_aGet("carted_funnel",{}), nights }; console.log("📊 Carted report:", r); return r; };
 
 /* ===== first-run onboarding: 3 punchy sticker-pop beats (for cold TikTok traffic) ===== */
+/* Three slides, not six (2026-07-30 conversion pass): room -> fake order -> money kept.
+   Coins, capsules, and the kettle teach themselves in context (their in-app intros already
+   exist) — the door should cost three taps, not six. */
 const OB = [
   { e:"🌙", h:"for whoever's up at 2am", s:"little rooms full of strangers who are also awake. pick one, talk, disappear — nobody knows your name here." },
   { e:"🛒", h:"arrive by ordering nothing", s:"fill a cart with whatever's calling you at 1am — real dishes, fictional kitchens — and send a ghost instead of your money." },
   { e:"💸", h:"the driver was never real", s:"filled the cart. closed the app. you keep every dollar — that's the whole point. 👻" },
-  { e:"🪙", h:"showing up pays in coins", s:"walk in, get a coin — just opening the door counts. the machine restocks at 4am and 4pm, so a day visit and a night visit is two." },
-  { e:"🎴", h:"coins run this place", s:"one coin turns the crank. three rips a midnight pack — costumes your ghost actually wears on deliveries. two reopens the kitchen for a second dinner run. never real money." },
-  { e:"🍜", h:"the room keeps your seat", s:"come back tomorrow night. the kettle's on, the ghosts wait up, and everything said here burns at sunrise." },
 ];
 let obIdx=0;
 function showOnboard(){ obIdx=0; let el=$("#onboard"); if(!el){ el=document.createElement("div"); el.className="onboard"; el.id="onboard"; const sc=$(".screen")||document.body; sc.appendChild(el); } el.style.display="flex"; renderOnboard(); track("onboard_start"); }
@@ -2256,7 +2263,7 @@ function revealTruth(){
   /* QUIET RECEIPT — a moment of relief, not a jackpot. no XP, no confetti, no cascade of toasts. */
   snd("whoosh");
   const firstEver = stats.orders===1;
-  if(firstEver){ try{ localStorage.setItem("carted_first_dodge","1"); }catch(e){} setTimeout(maybeNameGhost, 1400); }   // name him now that he's flown for you
+  if(firstEver){ try{ localStorage.setItem("carted_first_dodge","1"); }catch(e){} setTimeout(maybeNameGhost, 6500); }   // name him AFTER the reveal lands — the money number and the room door get their moment first
   const r=$("#track-reveal"); r.style.display="block"; r.className="reveal";
   r.innerHTML = `
     ${mortReveal(po.total, false)}
@@ -2272,6 +2279,10 @@ function revealTruth(){
       <button class="cta secondary" style="position:static" onclick="offerShareDodge()">🌙 share tonight's dodge</button>
       <button class="cta secondary" style="position:static" onclick="shareReceipt()">🧾 the receipt</button>
     </div>
+    ${outcomeAsked()?"":`<div class="sub" id="outcome-row" style="margin-top:16px;text-align:center;color:var(--muted)">did tonight change the real craving?
+      <span style="white-space:nowrap"><span onclick="answerOutcome('less')" style="cursor:pointer;text-decoration:underline">less likely to order</span> ·
+      <span onclick="answerOutcome('same')" style="cursor:pointer;text-decoration:underline">same</span> ·
+      <span onclick="answerOutcome('more')" style="cursor:pointer;text-decoration:underline">more</span></span></div>`}
     <div class="sub" style="margin-top:14px;text-align:center"><span onclick="goodnight()" style="color:var(--muted);cursor:pointer">good night 🌙</span></div>`;
   if(!rerun) animateMoney($("#reveal-saved"), po.total, USD);
   setTimeout(()=>snd("chime"), 850);
@@ -2411,7 +2422,7 @@ function renderRoom(){
   if(!localStorage.getItem("carted_room_intro")){ try{ localStorage.setItem("carted_room_intro","1"); }catch(e){}
     showModal(`<div class="m-emoji">🌙</div><div class="m-title">welcome to night rooms</div><div class="m-body" style="text-align:left">little rooms of strangers who are also up. pick one, say what you want — nobody knows your name, no accounts, no DMs. residents marked 👻 are friendly fiction. everything burns at 4am — deleted, not archived.</div><button class="cta" style="position:static" onclick="closeModal()">got it</button>`); }
   if(localStorage.getItem("carted_first_dodge")==="1"){ try{ localStorage.removeItem("carted_first_dodge"); }catch(e){}
-    room.unshift({ic:"🫂", ghost:"Bea", sched:"~2:40", text:"first dodge. we saw. welcome in 🫂", city:"the stoop", ago:"now", r:{hug:3,me:1,go:0,hold:0}, reacted:{}});
+    room.unshift({ic:"🫂", ghost:"Bea", sched:"~2:40", text:"first dodge. it counts. welcome in 🫂", city:"the stoop", ago:"now", r:{hug:3,me:1,go:0,hold:0}, reacted:{}});
   }
   if(activeRoom==="MAIN") fetchLiveRoom();
   const _ev=eventNight();
@@ -2830,6 +2841,14 @@ function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.t
   else { withRoomTerms(()=>{ makeMine("🌙", v); inp.value=""; snd("chime"); }); } }
 const CONFESS = ["almost got me. it didn't. 💪","called my name at 2am. i let it ring.","was THIS close. wallet's still shut.","tempted me for 20 whole minutes. survived."];
 function quickConfess(e){ withRoomTerms(()=>{ makeMine(e, `${e} ${pick(CONFESS)}`); snd("chime"); }); }
+/* one-tap self-report (external-review suggestion): does the gag change the real craving?
+   once per night, fully optional, and the answer is the only thing sent. */
+function outcomeAsked(){ try{ return localStorage.getItem("carted_outcome_"+nightKey())==="1"; }catch(e){ return true; } }
+function answerOutcome(a){
+  try{ localStorage.setItem("carted_outcome_"+nightKey(),"1"); }catch(e){}
+  track("outcome",{a}); const el=$("#outcome-row"); if(el) el.innerHTML="noted. thanks for the honesty 🤍";
+  snd("pop");
+}
 /* Entering and posting are SEPARATE acts. The reveal's primary CTA only walks you in — it never
    publishes. Sharing is opt-in, shows you the exact text first, is editable, and only then asks
    for the community terms. (Before v86 the "come sit in the room" button called shareToRoom(),
@@ -2849,7 +2868,7 @@ function offerShareDodge(){
   showModal(`<div class="m-emoji">${d.ic}</div><div class="m-title">share tonight's dodge?</div>
     <div class="m-body" style="text-align:left">this is what the room would see. edit it, or don't send it at all.
       <textarea id="dodge-text" maxlength="90" style="width:100%;margin-top:10px;min-height:76px;font:inherit;font-size:16px;padding:10px;border-radius:12px;border:1.5px solid rgba(77,227,255,.3);background:var(--card);color:var(--text);resize:vertical">${esc(d.text)}</textarea>
-      <div class="sub" style="margin-top:8px">anonymous · no name · burns at sunrise</div></div>
+      <div class="sub" style="margin-top:8px">no name · no account · burns at sunrise</div></div>
     <button class="cta" style="position:static" onclick="confirmShareDodge('${d.ic}')">post it 🌙</button>
     <button class="cta secondary" style="position:static" onclick="closeModal()">keep it to myself</button>`);
 }
@@ -3808,7 +3827,15 @@ loadCity(CITIES[0]);
     text:SEED_LINES[hash(nightKey()+"line"+k)%SEED_LINES.length],
     r:{hug:hash(nightKey()+"h"+k)%6, me:hash(nightKey()+"m"+k)%8, go:hash(nightKey()+"g"+k)%3}, reacted:{}});
 } })();
+try{ if(new URLSearchParams(location.search).get("internal")==="1"){ localStorage.setItem("carted_internal","1"); } }catch(e){}
 applyNight();   // night is permanent — one apply at boot
+/* honest presence line: "night owls are up" is only CLAIMED at night. Days get a true
+   statement instead — the room being always-on is fact; who's awake is not ours to assert. */
+(function livePillTruth(){
+  const el=$("#live-count"); if(!el) return;
+  const h=new Date().getHours();
+  el.textContent = (h>=21||h<5) ? "night owls are up" : "the room is always on";
+})();
 { const mo=new Date().getMonth()+1; if(mo>=11||mo<=2) document.body.classList.add("winter"); }   // the tent is warmest when the night is coldest
 /* naming moment is triggered by the FIRST reveal (where "he waited up / roasted your cart" is
    finally earned), not a cold timer on the browse feed — see revealTruth's firstEver branch */
