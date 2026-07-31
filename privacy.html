@@ -13,7 +13,7 @@
 </head>
 <body>
 <h1>👻 Carted — Privacy Policy</h1>
-<p class="muted">Effective: July 29, 2026 · <span style="opacity:.7">previous version July 9, 2026</span></p>
+<p class="muted">Effective: July 30, 2026 · <span style="opacity:.7">previous version July 9, 2026</span></p>
 
 <p>Carted is a simulated "window shopping" experience: you browse fictional restaurants, place orders that are never real, and keep your money. Our privacy posture matches the product: <b>we want as little of your data as possible.</b></p>
 
@@ -23,11 +23,14 @@
 <h2>What we do collect</h2>
 <p>To understand whether people come back (and nothing else), the app sends anonymous usage analytics to our server:</p>
 <ul>
-  <li>a random app-generated device identifier (not your Apple ID, not your advertising ID, not linkable to you),</li>
+  <li>a random app-generated device identifier (pseudonymous — not your Apple ID, not your advertising ID, and it cannot name you),</li>
   <li>event names (e.g. "opened the app", "placed a pretend order") with timestamps,</li>
   <li>a count of distinct nights the app has been opened.</li>
 </ul>
-<p>That's the whole list. No name, no email, no contacts, no photos, no precise location (the optional "Near me" feature uses your location transiently in the app and never sends or stores it), no purchase history — there is nothing to purchase.</p>
+<p>That's the whole list. No name, no email, no contacts, no photos, no purchase history — there is nothing to purchase. <b>Honesty note on the identifier:</b> it is pseudonymous rather than perfectly anonymous — it cannot name you, but events from the same device do link together. We keep it random and app-generated precisely so it can't be joined to your Apple ID, advertising ID, or anything else.</p>
+
+<h2>"Near me" and your location</h2>
+<p>If you tap "Near me," your device asks for permission and then <b>your coordinates are sent to OpenStreetMap's services</b> — Nominatim (to turn them into a neighborhood name) and Overpass (to find real places near you to fictionalize). Those services see the coordinates and your IP address, as any website you visit does; they run under the OpenStreetMap Foundation's privacy policy. <b>We never send your location to our own server, never store it, and never attach it to analytics.</b> Skip the feature and no location ever leaves the device.</p>
 
 <h2>What we never do</h2>
 <ul>
@@ -36,13 +39,16 @@
   <li>No third-party analytics SDKs — the beacon above is our own, hosted on Supabase (our database provider, acting as our processor).</li>
 </ul>
 
-<h2>The only companies that touch your data</h2>
-<p>We use two service providers, and only to run Carted itself. They process data on our instructions and may not use it for their own purposes:</p>
+<h2>Service providers we use</h2>
+<p>These are all of them, and what each one sees. Providers process data to run Carted, not for their own purposes (public services like OpenStreetMap operate under their own policies):</p>
 <ul>
-  <li><b>Supabase</b> — our database and server host. Analytics events and room posts are stored here.</li>
-  <li><b>OpenAI</b> — <b>the text of a room post is sent to OpenAI's moderation service before it publishes</b>, to screen for abuse and for content indicating someone may be in crisis. Only the post text is sent — never your device identifier, and never anything else about you. OpenAI does not use content submitted through this API to train its models. If the check is unavailable, the post falls back to our own keyword filter.</li>
+  <li><b>GitHub Pages</b> — hosts the web version. Like any web host, it sees standard request logs (your IP address, pages loaded).</li>
+  <li><b>Supabase</b> — our database and server host. Analytics events and room posts live here.</li>
+  <li><b>OpenAI</b> — <b>the text of a room post is sent to OpenAI's moderation service before it publishes</b>, to screen for abuse and for content indicating someone may be in crisis. Only the post text is sent — never your device identifier. OpenAI does not train its models on this API content, but under its standard API policy it <b>may retain inputs for up to ~30 days for abuse monitoring</b>. If the check is unavailable, the post falls back to our own keyword filter.</li>
+  <li><b>OpenStreetMap services</b> (Nominatim, Overpass) — only if you use "Near me" or search for a place; see the location section above.</li>
+  <li><b>TheMealDB</b> — dish photos are loaded from its image host, which (like any image host) sees your IP when pictures load.</li>
 </ul>
-<p>That is the complete list. Nothing else leaves our systems.</p>
+<p>That is the complete list. Nothing else leaves your device.</p>
 
 <h2>Notifications</h2>
 <p>If you opt in, the app schedules a single local "last call" notification on your device at your usual hour. It's generated on-device and never fires on a night you've already played. Turn it off any time in iOS Settings.</p>
@@ -51,7 +57,7 @@
 <p>Posts labeled "resident ghost" are fictional content written by us. When you post in the room, your post text is sent to our server (Supabase, acting as our processor) together with the same random device identifier described above — <b>no name, no email, nothing that identifies you</b> — so that other people in the room can see it that night.</p>
 <p><b>Before a post publishes</b>, its text passes two screens: our own keyword filter for abuse, and OpenAI's moderation service (see above). A separate check looks for language suggesting the writer may be in crisis; if it fires, we show <i>that writer</i> a card with crisis-line details. We never notify anyone else, and we never act on it beyond showing that card.</p>
 <p><b>Posts burn at sunrise</b> — room posts are automatically deleted from our server within 48 hours. A copy of your own posts also lives in your device's local storage until sunrise so the room works offline.</p>
-<p><b>One exception, and we want to be plain about it.</b> If a post is reported, it is hidden immediately and then <b>kept for up to 90 days instead of being deleted at sunrise</b>, so it can be reviewed by a human and, where the law requires it, preserved and reported to the authorities (in the U.S., 18 U.S.C. §2258A imposes this duty for certain material). Reported posts are the <i>only</i> content that outlives the sunrise burn. Nothing you write is otherwise archived, profiled, or shared.</p>
+<p><b>One exception, and we want to be plain about it.</b> If a post is reported, it is hidden immediately and held out of the sunrise burn: <b>ordinarily up to 90 days</b> so a human can review it. If content is of the kind the law requires us to report (in the U.S., to NCMEC's CyberTipline under 18 U.S.C. §2258A), it is <b>preserved for as long as the law requires — currently one year after such a report</b> — and provided to the authorities. Reported posts are the <i>only</i> content that outlives the sunrise burn. Nothing you write is otherwise archived, profiled, or shared.</p>
 
 <h2>Children</h2>
 <p>Carted is not directed at children under 13 and collects no personal information from anyone.</p>
