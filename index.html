@@ -409,22 +409,6 @@
   .gm-step b { display: block; font-size: 13px; }
   .gm-step span { display: block; font-size: 11.5px; color: var(--muted); margin-top: 1px; }
   .gm-steps-fine { font-size: 10.5px; color: var(--muted); margin-top: 10px; text-align: center; }
-  /* the collector's shelf (v1.1 preview) */
-  .shop-scene { max-width: 340px; }
-  .shop-mort { margin: 6px 0 2px; }
-  .shop-mort-line { font-size: 11.5px; color: var(--muted); font-style: italic; font-family: var(--disp); margin-bottom: 10px; }
-  .shop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin: 4px 0 10px; }
-  .shop-item { background: var(--card); border: 1.5px solid rgba(77,227,255,.3); border-radius: 13px; padding: 10px 6px 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--text); }
-  .shop-item .sh-hat { font-size: 26px; }
-  .shop-item .sh-name { font-size: 10.5px; font-weight: 700; line-height: 1.15; }
-  .shop-item .sh-price { font-size: 11px; font-weight: 800; color: var(--cyan-txt); font-family: var(--disp); }
-  .shop-bundle { width: 100%; background: var(--card-hi); border: 1.5px solid rgba(77,227,255,.45); border-radius: 13px; padding: 10px; color: var(--text); cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin-bottom: 8px; }
-  .shop-bundle span { color: var(--muted); font-size: 12px; }
-  .shop-plus { width: 100%; background: linear-gradient(135deg, rgba(255,77,158,.2), rgba(77,227,255,.08)), var(--card); border: 1.5px solid var(--pink); border-radius: 15px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: 0 0 18px rgba(255,77,158,.2); color: var(--text); }
-  .shop-plus .sp-t { font-family: var(--bodyf); font-weight: 800; letter-spacing: 3px; font-size: 15px; color: var(--pink-txt); }
-  .shop-plus .sp-s { font-size: 10.5px; color: var(--muted); }
-  .shop-plus .sp-p { font-size: 14px; font-weight: 800; font-family: var(--disp); color: var(--pink-txt); }
-  .shop-fine { margin-top: 12px; font-size: 10.5px; color: var(--muted); font-style: italic; font-family: var(--disp); line-height: 1.5; }
   .gm-machine.cranking .gm-crank { animation: gm-crank 1.5s ease-in-out; }
   @keyframes gm-crank { to { transform: rotate(720deg); } }
   .gm-machine.cranking .gm-cap { animation: gm-rattle .55s ease-in-out 3; }
@@ -3355,41 +3339,10 @@ function bestCup(){ for(const id of CUP_FLAVORS){ if(capsuleOwnedId(id)){ const 
 const CAPSULE_BY_ID = {}; CAPSULE_CATALOG.forEach(i=>CAPSULE_BY_ID[i.id]=i);
 function capsuleDone(){ return !CAPSULE_CATALOG.some(i=>!capsuleOwnedId(i.id)); }
 const CAPSULE_TIER_NAME = { c:"common", u:"uncommon", r:"rare", s:"secret" };
-const SERIES_C = [
-  {id:"sc_kitsune", hat:"🦊", name:"kitsune mask",    price:"$1.99"},
-  {id:"sc_arcade",  hat:"👾", name:"arcade ghost",    price:"$1.99"},
-  {id:"sc_violin",  hat:"🎻", name:"midnight violin", price:"$1.99"},
-  {id:"sc_frog",    hat:"🐸", name:"frog beanie",     price:"$1.99"},
-  {id:"sc_fan",     hat:"🪭", name:"paper fan",       price:"$1.99"},
-  {id:"sc_parasol", hat:"🌂", name:"night parasol",   price:"$1.99"},
-];
-let _shopPreviewHat=null;
-function openShop(){
-  if($("#shop-overlay")) return;
-  const sc=document.querySelector(".screen"); if(!sc) return;
-  const el=document.createElement("div"); el.id="shop-overlay"; el.className="cup-ov";
-  el.innerHTML=`<div class="cup-scene shop-scene">
-    <button class="cup-x" onclick="closeShop()" aria-label="leave the shelf">✕</button>
-    <div class="cup-others">the collector's shelf · series c</div>
-    <div class="gm-tag">you see exactly what you buy — no packs, no odds. the machine stays coins-only.</div>
-    <div class="shop-mort" id="shop-mort">${ghostAvatar(56)}</div>
-    <div class="shop-mort-line" id="shop-mort-line">tap anything — ${esc(ghostName())} models it, no charge</div>
-    <div class="shop-grid">${SERIES_C.map(i=>`
-      <button class="shop-item" onclick="shopTryOn('${i.id}')"><span class="sh-hat">${i.hat}</span><span class="sh-name">${esc(i.name)}</span><span class="sh-price">${i.price}</span></button>`).join("")}
-    </div>
-    <button class="shop-bundle" onclick="shopSoon()"><b>the whole shelf</b><span>all six · $6.99</span></button>
-    <button class="shop-plus" onclick="shopSoon()"><span class="sp-t">CARTED+</span><span class="sp-s">the shelf · 2 exclusive themes · the gold receipt · one-time</span><span class="sp-p">$3.99</span></button>
-    <div class="shop-fine">arriving in v1.1 — nothing is for sale tonight. coins still come only from showing up; packs still cost only nights.</div>
-  </div>`;
-  sc.appendChild(el); snd("door"); track("shop_preview_open");
-}
-function shopTryOn(id){ const it=SERIES_C.find(x=>x.id===id); if(!it) return;
-  _shopPreviewHat = (_shopPreviewHat===it.hat) ? null : it.hat;
-  const m=$("#shop-mort"); if(m) m.innerHTML=`<span class="ghost-av" style="font-size:56px;width:56px;height:56px">👻${_shopPreviewHat?`<span class="gh-hat" style="font-size:34px">${_shopPreviewHat}</span>`:""}</span>`;
-  const l=$("#shop-mort-line"); if(l) l.textContent=_shopPreviewHat?`${esc(ghostName())} in the ${it.name} — a look`:`tap anything — ${esc(ghostName())} models it, no charge`;
-  snd("pop"); }
-function shopSoon(){ snd("chime"); toast("v1.1 — after launch night 🌙 nothing's for sale yet"); }
-function closeShop(){ const el=$("#shop-overlay"); if(el) el.remove(); _shopPreviewHat=null; }
+/* The "collector's shelf" (?shop=1 dormant monetization preview) was REMOVED 2026-07-29.
+   App Review guideline 2.3.1(a) names "hidden, dormant, or undocumented" features verbatim, and a
+   price-tagged shop reachable only by URL param — even one where nothing is purchasable — is that
+   exact shape. If a shop ever ships it ships visibly, in the reviewed build. (git has the code.) */
 function ghostFit(){ const id=stats.fit||"none"; if(id.startsWith("city:")){ const cid=id.slice(5); return {id, hat:CITY_HAT[cid]||"", name:((CITIES[CITY_INDEX[cid]]||{}).name||"city")+" souvenir"}; } const c=CAPSULE_BY_ID[id]; return c ? {id, hat:c.hat, name:c.name} : {id:"none", hat:"", name:"just vibes"}; }
 function ghostAvatar(size){ size=size||40; const f=ghostFit(); return `<span class="ghost-av" style="font-size:${size}px;width:${size}px;height:${size}px">👻${f.hat?`<span class="gh-hat" style="font-size:${Math.round(size*0.6)}px">${f.hat}</span>`:""}</span>`; }
 /* Post-delivery Mort scene: floats up with the (empty) bag, wiggles, emits a $-scaled puff. */
@@ -3856,7 +3809,6 @@ loadCity(CITIES[0]);
     r:{hug:hash(nightKey()+"h"+k)%6, me:hash(nightKey()+"m"+k)%8, go:hash(nightKey()+"g"+k)%3}, reacted:{}});
 } })();
 applyNight();   // night is permanent — one apply at boot
-try{ if(new URLSearchParams(location.search).get("shop")==="1") setTimeout(openShop, 900); }catch(e){}
 { const mo=new Date().getMonth()+1; if(mo>=11||mo<=2) document.body.classList.add("winter"); }   // the tent is warmest when the night is coldest
 /* naming moment is triggered by the FIRST reveal (where "he waited up / roasted your cart" is
    finally earned), not a cold timer on the browse feed — see revealTruth's firstEver branch */
