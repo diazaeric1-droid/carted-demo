@@ -1515,7 +1515,10 @@ const ROOM_LIVE = true;
 /* RED LINE (lever 11): the comeback loop — room access, reactions, the burn, notifications —
    is FREE, forever. monetize identity/cosmetics around the ritual if ever; never the loop,
    never the fake spend. (every paid US clone inverted the category's one promise and died.) */
-function deviceId(){ let d=localStorage.getItem("carted_device"); if(!d){ d="d"+Math.random().toString(36).slice(2)+Date.now().toString(36); try{ localStorage.setItem("carted_device", d); }catch(e){} } return d; }
+let _deviceIdMem=null;   // private-mode fallback: ONE id per session even when nothing persists
+function deviceId(){ try{ const d=localStorage.getItem("carted_device"); if(d) return d; }catch(e){}
+  if(!_deviceIdMem){ _deviceIdMem="d"+Math.random().toString(36).slice(2)+Date.now().toString(36); try{ localStorage.setItem("carted_device", _deviceIdMem); }catch(e){} }
+  return _deviceIdMem; }
 function bePost(fn, body){ return fetch(CARTED_BE.url+"/"+fn, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)}).then(r=>r.json()).catch(()=>null); }
 
 /* ===== lightweight analytics: funnel counts + return-night tracking (the retention signal) + best-effort beacon ===== */
@@ -1526,7 +1529,7 @@ let _aQueue=[], _aTimer=null;
 /* measurement context (2026-07-30): every event carries IANA timezone, app version, and an
    internal flag — the cohort SQL keys nights off tz and excludes internal/QA devices.
    Mark a founder device once via ?internal=1 (persists in localStorage). */
-const APP_V="90";
+const APP_V="91";
 const APP_TZ=(()=>{ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone||""; }catch(e){ return ""; } })();
 function isInternal(){ try{ return localStorage.getItem("carted_internal")==="1"; }catch(e){ return false; } }
 /* FIRST-TOUCH acquisition source, captured once and never overwritten. Without this "436 views ->
@@ -1555,9 +1558,10 @@ function track(ev, props){ try{
   const f=_aGet("carted_funnel",{}); f[ev]=(f[ev]||0)+1; _aSet("carted_funnel",f);
   // ctx is assigned LAST so a caller's props can never clobber reserved keys (ev/t/tz/v/internal).
   // Learned the hard way: track("view",{v:view}) was overwriting the app version with a view name.
-  const ctx={ev,t,tz:APP_TZ,v:APP_V,ab:abBucket()};
-  if(isInternal()) ctx.internal="1";
-  const _src=firstTouch(); if(_src) ctx.src=_src;
+  // EVERY reserved key set unconditionally — a conditional reserved key is a hole a caller's
+  // props leak through (capsule_token's {src:"open"} was landing in the ACQUISITION field on
+  // unattributed devices). "" / "0" are the explicit empties.
+  const ctx={ev,t,tz:APP_TZ,v:APP_V,ab:abBucket(),src:firstTouch(),internal:isInternal()?"1":"0"};
   const row=Object.assign({},props||{},ctx);
   const log=_aGet("carted_events",[]); log.push(row); while(log.length>150) log.shift(); _aSet("carted_events",log);
   _aQueue.push(row);
@@ -2306,7 +2310,7 @@ function revealTruth(){
     <div style="margin-top:22px">
       ${abBucket()==="room_first"
         ? `<button class="cta gold" style="position:static" onclick="visitRoom()">🌙 ${esc(tableName())} is open — go sit down</button>
-           <div class="sub" style="margin:-4px 0 10px;text-align:center;color:var(--muted)">${_roomHumans>0?`${_roomHumans} ${_roomHumans===1?"person is":"people are"} awake in there`:"quiet in there right now"}</div>`
+           <div class="sub" id="rf-presence" style="margin:-4px 0 10px;text-align:center;color:var(--muted)">the kettle's on either way</div>`
         : `<button class="cta gold" style="position:static" onclick="visitRoom()">${firstEver?"🌙 visit the 2 am room":"🌙 come sit in the room"}</button>`}
       <button class="cta secondary" style="position:static" onclick="offerShareDodge()">🌙 share tonight's dodge</button>
       <button class="cta secondary" style="position:static" onclick="shareReceipt()">🧾 the receipt</button>
@@ -2317,6 +2321,15 @@ function revealTruth(){
       <span onclick="answerOutcome('more')" style="cursor:pointer;text-decoration:underline">more</span></span></div>`}
     <div class="sub" style="margin-top:14px;text-align:center"><span onclick="goodnight()" style="color:var(--muted);cursor:pointer">good night 🌙</span></div>`;
   if(!rerun) animateMoney($("#reveal-saved"), po.total, USD);
+  /* room_first arm: fetch real presence and only then make a claim. The line starts neutral
+     ("the kettle's on either way") because _roomHumans is null until the room fetch runs —
+     claiming "quiet" with no data was both false-when-wrong and anti-selling the arm's own room. */
+  if(abBucket()==="room_first" && typeof fetchLiveRoom==="function"){
+    try{ fetchLiveRoom(); }catch(e){}
+    setTimeout(()=>{ const el=$("#rf-presence");
+      if(el && _roomHumans!=null && _roomHumans>0) el.textContent=`${_roomHumans} ${_roomHumans===1?"person is":"people are"} awake in there right now`;
+    }, 1800);
+  }
   setTimeout(()=>snd("chime"), 850);
   renderHud();
   cart=[]; updateBadge();
@@ -2452,7 +2465,9 @@ function replyTo(i){ const p=room[i]; if(!p) return; const snip=String(p.text||"
 function renderRoom(){
   const vr=$("#view-room"); if(!vr) return;
   if(!localStorage.getItem("carted_room_intro")){ try{ localStorage.setItem("carted_room_intro","1"); }catch(e){}
-    showModal(`<div class="m-emoji">🌙</div><div class="m-title">welcome to night rooms</div><div class="m-body" style="text-align:left">little rooms of strangers who are also up. pick one, say what you want — nobody knows your name, no accounts, no DMs. residents marked 👻 are friendly fiction. everything burns at 4am — deleted, not archived.</div><button class="cta" style="position:static" onclick="closeModal()">got it</button>`); }
+    showModal(ROOMS_MODE==="one_table"
+      ? `<div class="m-emoji">🌙</div><div class="m-title">welcome to tonight's table</div><div class="m-body" style="text-align:left">one table, whoever's up. say what you want — no accounts, no DMs, nobody knows your name. residents marked 👻 are friendly fiction. everything burns at 4am — deleted, not archived.</div><button class="cta" style="position:static" onclick="closeModal()">got it</button>`
+      : `<div class="m-emoji">🌙</div><div class="m-title">welcome to night rooms</div><div class="m-body" style="text-align:left">little rooms of strangers who are also up. pick one, say what you want — nobody knows your name, no accounts, no DMs. residents marked 👻 are friendly fiction. everything burns at 4am — deleted, not archived.</div><button class="cta" style="position:static" onclick="closeModal()">got it</button>`); }
   if(localStorage.getItem("carted_first_dodge")==="1"){ try{ localStorage.removeItem("carted_first_dodge"); }catch(e){}
     room.unshift({ic:"🫂", ghost:"Bea", sched:"~2:40", text:"first dodge. it counts. welcome in 🫂", city:"the stoop", ago:"now", r:{hug:3,me:1,go:0,hold:0}, reacted:{}});
   }
@@ -2505,8 +2520,12 @@ function leaveRoom(){ activeRoom=null; renderRoom(); const bd=$("#body"); if(bd)
 function roomResidents(code){ const seen=new Set(); const out=[];
   for(const g of INCOMING){ if(!g.ghost||seen.has(g.ghost)) continue; seen.add(g.ghost);
     if(!ghostAwakeNow(g)) continue;
-    const idx=1+hash(g.ghost+nightKey())%(NIGHT_ROOMS.length-1);
-    if(NIGHT_ROOMS[idx].code===code){ out.push(g); if(out.length>=2) break; } }
+    /* ALL_NIGHT_ROOMS, not NIGHT_ROOMS: in one_table mode NIGHT_ROOMS.length-1 === 0 and %0 is
+       NaN -> NIGHT_ROOMS[NaN].code threw on every booth render whenever any ghost was awake
+       (19:35-06:21 — i.e. the app's entire night). Residents assigned to gated codes simply never
+       match a booth/table code, which is the pre-v90 behavior exactly. (v90 adversarial verify) */
+    const idx=1+hash(g.ghost+nightKey())%(ALL_NIGHT_ROOMS.length-1);
+    if(ALL_NIGHT_ROOMS[idx].code===code){ out.push(g); if(out.length>=2) break; } }
   return out; }
 /* deterministic small talk: same lines on every device (seed = room + 15-min slot) */
 function residentLines(code){
@@ -2756,8 +2775,12 @@ function roomDef(code){ return NIGHT_ROOMS.find(r=>r.code===code) || {code, ic:"
 function boothState(){ try{ return JSON.parse(localStorage.getItem("carted_booth")||"null"); }catch(e){ return null; } }
 function saveBooth(b){ try{ localStorage.setItem("carted_booth", JSON.stringify(b)); }catch(e){} }
 function chanLocal(code){ try{ return (JSON.parse(localStorage.getItem("carted_chan_local")||"[]")).filter(p=>p.night===nightKey()&&p.code===code); }catch(e){ return []; } }
+// gated legacy room codes are NOT booth codes: ?booth=NOSLEEP would land in the old PUBLIC
+// channel bucket while the UI called it "your booth · private". (v90 adversarial verify)
+function isGatedRoomCode(c){ return ALL_NIGHT_ROOMS.some(r=>r.code===String(c||"").toUpperCase()); }
 function acceptBoothFromUrl(){ const m=location.search.match(/[?&]booth=([A-Z0-9]{4,8})/i); if(!m) return;
-  const code=m[1].toUpperCase(); const cur=boothState();
+  const code=m[1].toUpperCase(); if(isGatedRoomCode(code)) return;
+  const cur=boothState();
   if(!cur || cur.code!==code){ saveBooth({code, handle:(cur&&cur.handle)||null}); track("booth_join"); setTimeout(()=>toast("🛋️ your booth is waiting in night rooms"), 1600); } }
 function boothLink(){ const b=boothState(); if(!b) return ""; return location.origin+location.pathname+"?booth="+b.code; }
 function shareBoothLink(){ const link=boothLink(); if(!link) return;
@@ -2774,7 +2797,7 @@ function openBooth(){
 function createBooth(){ closeModal(); const abc="ABCDEFGHJKMNPQRSTUVWXYZ23456789"; let code=""; for(let i=0;i<6;i++) code+=abc[Math.floor(Math.random()*abc.length)];
   saveBooth({code, handle:boothState()&&boothState().handle||null}); track("booth_create"); enterRoom(code); setTimeout(shareBoothLink, 600); }
 function joinBoothPrompt(){ closeModal(); const c=(prompt("the booth code (6 characters):")||"").trim().toUpperCase();
-  if(!/^[A-Z0-9]{4,8}$/.test(c)){ if(c) toast("that code doesn't look right"); return; }
+  if(!/^[A-Z0-9]{4,8}$/.test(c) || isGatedRoomCode(c)){ if(c) toast("that code doesn't look right"); return; }
   saveBooth({code:c, handle:boothState()&&boothState().handle||null}); track("booth_join"); enterRoom(c); }
 /* one self-chosen handle for all rooms — no accounts, 12 chars, same filter as posts */
 function handleState(){ try{ let h=localStorage.getItem("carted_handle")||""; if(!h){ const b=boothState(); if(b&&b.handle){ h=b.handle; localStorage.setItem("carted_handle",h); } } return h; }catch(e){ return ""; } }
@@ -2787,8 +2810,9 @@ function setHandle(){ const i=$("#bh-input"); const h=(i&&i.value||"").trim().sl
   try{ localStorage.setItem("carted_handle", h); }catch(e){}
   const b=boothState(); if(b){ b.handle=h; saveBooth(b); }
   closeModal(); const cb=window.__handleCb; window.__handleCb=null; if(cb) cb(); }
-function fetchChanStats(){ if(!beOn()) return; const now=Date.now(); if(now-_chanStatsT<60000) return; _chanStatsT=now;
-  bePost("room",{action:"channels", night:nightKey(), codes:NIGHT_ROOMS.filter(r=>r.code!=="MAIN").map(r=>r.code)}).then(r=>{ if(r&&"channels" in r){ _chanStats=r.channels; const v=$("#view-room"); if(!activeRoom&&v&&v.classList.contains("active")) renderRoomsList(); } }); }
+function fetchChanStats(){ if(!beOn()) return; const codes=NIGHT_ROOMS.filter(r=>r.code!=="MAIN").map(r=>r.code); if(!codes.length) return;   // one_table: nothing to ask
+  const now=Date.now(); if(now-_chanStatsT<60000) return; _chanStatsT=now;
+  bePost("room",{action:"channels", night:nightKey(), codes}).then(r=>{ if(r&&"channels" in r){ _chanStats=r.channels; const v=$("#view-room"); if(!activeRoom&&v&&v.classList.contains("active")) renderRoomsList(); } }); }
 function fetchChannel(code){ if(!beOn()||!code||code==="MAIN") return; const now=Date.now(); if(now-(_chanFetchT[code]||0)<20000) return; _chanFetchT[code]=now;
   bePost("room",{action:"list", night:nightKey(), device_id:deviceId(), booth:code}).then(r=>{ if(!r) return;
     const cur=channelPosts[code]||[];
@@ -3489,7 +3513,7 @@ function capsuleEarnNight(src, quiet){
   capsuleMigrate();
   const n=capsuleHalfDay(); if(stats.capsuleLastNight===n) return 0;   // restocks at 4am and 4pm — two shifts a day
   stats.capsuleLastNight=n; stats.capsuleTokens=(stats.capsuleTokens||0)+1; saveStats();
-  track("capsule_token",{src}); renderHud();
+  track("capsule_token",{earn:src}); renderHud();
   if(!quiet) setTimeout(()=>toast("🪙 a capsule token — for showing up tonight"), 900);
   return 1;
 }
