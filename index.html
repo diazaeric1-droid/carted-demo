@@ -276,6 +276,9 @@
   .hbtn { background:none; border:none; font-size:12.5px; cursor:pointer; padding:0 3px; opacity:.85; }
   .mort-ln { font-family:var(--disp); font-style:italic; font-size:12.5px; color:var(--cyan-txt); margin:0 2px 8px; min-height:17px; }
   #view-room.inroom .brand, #view-room.inroom #room-podium, #view-room.inroom #room-ash { display: none; }
+  .qc-row { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .qc { background:var(--card-hi); border:1px solid rgba(77,227,255,.28); color:var(--text); font-family:var(--bodyf); font-size:11.5px; font-weight:700; border-radius:999px; padding:5px 10px; cursor:pointer; }
+  .qc:active { transform:scale(.96); }
   .roulette { display:block; width:100%; text-align:center; background:linear-gradient(135deg,#4DE3FF,#FF4D9E); color:#0A0E1A; font-weight:800; font-size:14px; border:none; border-radius:13px; padding:12px; margin:2px 0 12px; cursor:pointer; box-shadow:0 10px 26px -14px rgba(255,77,158,.5); }
   .rroom { width:100%; display:flex; align-items:center; gap:11px; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px 13px; margin-bottom:9px; cursor:pointer; text-align:left; color:var(--text); }
   .rroom.main { border-color:rgba(77,227,255,.35); }
@@ -1523,15 +1526,38 @@ let _aQueue=[], _aTimer=null;
 /* measurement context (2026-07-30): every event carries IANA timezone, app version, and an
    internal flag — the cohort SQL keys nights off tz and excludes internal/QA devices.
    Mark a founder device once via ?internal=1 (persists in localStorage). */
-const APP_V="89";
+const APP_V="90";
 const APP_TZ=(()=>{ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone||""; }catch(e){ return ""; } })();
 function isInternal(){ try{ return localStorage.getItem("carted_internal")==="1"; }catch(e){ return false; } }
+/* FIRST-TOUCH acquisition source, captured once and never overwritten. Without this "436 views ->
+   single-digit devices" was not a funnel at all: views and devices were separate aggregates with no
+   join key. ?s=<token> on any inbound link (yt-tokyo, tt-fees, reels-la, reddit-sideproject…).
+   Note: YouTube Shorts descriptions and comments render URLs NON-clickable — only the channel
+   profile link is tappable — so the profile link is where tokens actually matter. */
+function firstTouch(){
+  try{
+    const t=(new URLSearchParams(location.search).get("s")||"").slice(0,24).replace(/[^a-z0-9_-]/gi,"");
+    if(t && !localStorage.getItem("carted_src")){ localStorage.setItem("carted_src",t); localStorage.setItem("carted_src_at",new Date().toISOString()); }
+    return localStorage.getItem("carted_src")||"";
+  }catch(e){ return ""; }
+}
+/* Stable A/B bucket assigned once at first run, BEFORE any behavior, so the reveal-path experiment
+   can be analysed intention-to-treat (never conditioned on whether the user actually entered). */
+function abBucket(){
+  try{
+    let b=localStorage.getItem("carted_ab");
+    if(!b){ b=(Math.random()<0.5)?"room_first":"control"; localStorage.setItem("carted_ab",b); }
+    return b;
+  }catch(e){ return "control"; }
+}
 function track(ev, props){ try{
   const t=Date.now();
   const f=_aGet("carted_funnel",{}); f[ev]=(f[ev]||0)+1; _aSet("carted_funnel",f);
   // ctx is assigned LAST so a caller's props can never clobber reserved keys (ev/t/tz/v/internal).
   // Learned the hard way: track("view",{v:view}) was overwriting the app version with a view name.
-  const ctx={ev,t,tz:APP_TZ,v:APP_V}; if(isInternal()) ctx.internal="1";
+  const ctx={ev,t,tz:APP_TZ,v:APP_V,ab:abBucket()};
+  if(isInternal()) ctx.internal="1";
+  const _src=firstTouch(); if(_src) ctx.src=_src;
   const row=Object.assign({},props||{},ctx);
   const log=_aGet("carted_events",[]); log.push(row); while(log.length>150) log.shift(); _aSet("carted_events",log);
   _aQueue.push(row);
@@ -2278,7 +2304,10 @@ function revealTruth(){
     ${capsuleGain?`<div class="milestone" style="cursor:pointer" onclick="openGacha()">🪙 ${capsuleGain===1?"a capsule token":capsuleGain+" capsule tokens"} — ${cgNight&&cgMile?"for showing up + $100 kept":(cgMile?"every $100 kept mints one":"for showing up tonight")}. ${esc(ghostName())}'s machine is by the door</div>`:""}
     ${(!rerun&&canBuyRun())?`<div class="milestone" style="cursor:pointer" onclick="buySecondRun();go('feed')">🛵 still hungry? 🪙2 — ${esc(ghostName())} makes a second run tonight</div>`:""}
     <div style="margin-top:22px">
-      <button class="cta gold" style="position:static" onclick="visitRoom()">${firstEver?"🌙 visit the 2 am room":"🌙 come sit in the room"}</button>
+      ${abBucket()==="room_first"
+        ? `<button class="cta gold" style="position:static" onclick="visitRoom()">🌙 ${esc(tableName())} is open — go sit down</button>
+           <div class="sub" style="margin:-4px 0 10px;text-align:center;color:var(--muted)">${_roomHumans>0?`${_roomHumans} ${_roomHumans===1?"person is":"people are"} awake in there`:"quiet in there right now"}</div>`
+        : `<button class="cta gold" style="position:static" onclick="visitRoom()">${firstEver?"🌙 visit the 2 am room":"🌙 come sit in the room"}</button>`}
       <button class="cta secondary" style="position:static" onclick="offerShareDodge()">🌙 share tonight's dodge</button>
       <button class="cta secondary" style="position:static" onclick="shareReceipt()">🧾 the receipt</button>
     </div>
@@ -2458,8 +2487,8 @@ function renderRoomsList(){
   const tk2=stats.capsuleTokens||0;
   el.innerHTML = `
     <button class="cup-bar" onclick="openCup()"><span class="cbr-ic">🥡</span><span class="cbr-txt"><b>steep a cup of midnight noodles</b><span class="cbr-sub">a 3-minute break</span><span class="cbr-shelf" id="cup-shelf"></span></span><span class="cbr-go">›</span></button>
-    <button class="roulette" onclick="roomRoulette()">🎲 drop me in a room</button>
-    ${NIGHT_ROOMS.map(r=>`<button class="rroom${r.code==="MAIN"?' main':''}" onclick="enterRoom('${r.code}')"><span class="ic">${r.ic}</span><span class="mid"><span class="nm">${esc(r.name)}</span><span class="st">${chanLabel(r.code)}</span></span><span class="go">›</span></button>`).join("")}
+    ${ROOMS_MODE==="one_table" ? "" : `<button class="roulette" onclick="roomRoulette()">🎲 drop me in a room</button>`}
+    ${NIGHT_ROOMS.map(r=>`<button class="rroom${r.code==="MAIN"?' main':''}" onclick="enterRoom('${r.code}')"><span class="ic">${r.ic}</span><span class="mid"><span class="nm">${esc(r.code==="MAIN"&&ROOMS_MODE==="one_table"?tableName():r.name)}</span><span class="st">${chanLabel(r.code)}</span></span><span class="go">›</span></button>`).join("")}
     <button class="rroom priv" onclick="openBooth()"><span class="ic">🛋️</span><span class="mid"><span class="nm">your booth</span><span class="st">${b?`private · code ${esc(b.code)} — invite by link`:"private — start one, invite by link"}</span></span><span class="go">›</span></button>`;
   renderShelf();
   const cbs=document.querySelector(".cbr-sub"); if(cbs&&_roomCups!=null&&_roomCups>=2) cbs.textContent=`${_roomCups} cups steeped tonight`;
@@ -2512,7 +2541,13 @@ function renderChat(){
   const nm=$("#ch-name"); if(nm) nm.textContent=`${def.ic} ${def.name}${def.priv?` · ${esc(activeRoom)}`:""}`;
   const cb2=$("#ch-burn"); if(cb2){ const ms=msToSunrise(), h=Math.floor(ms/3600000), m2=Math.floor((ms%3600000)/60000); cb2.textContent=`🌅 ${h}h ${String(m2).padStart(2,"0")}m`; }
   const ml=$("#mort-line"); if(ml){ const t=mortRoomLine(); if(ml.dataset.t!==t){ ml.dataset.t=t; ml.textContent=t; } }
-  const pin=$("#ch-pin"); if(pin){ const q=roomQuestion(activeRoom); pin.innerHTML=`tonight's question: <b>${esc(q)}</b>`; pin.onclick=()=>{ const inp=$("#composer-input"); if(inp&&!inp.value.trim()){ inp.value=q+" — "; inp.focus(); } }; }
+  const pin=$("#ch-pin"); if(pin){ const q=roomQuestion(activeRoom);
+    /* One-tap answers. Composing a post at 2am is real effort, and requiring it meant the room only
+       ever heard from people willing to write — which at this scale is almost nobody. These are
+       still explicit, still consented, still moderated; they just cost one tap. */
+    pin.innerHTML=`tonight's question: <b>${esc(q)}</b>`
+      + `<span class="qc-row">${ONE_TAP.map((o,i)=>`<button class="qc" onclick="event.stopPropagation();oneTapAnswer(${i})">${o.ic} ${esc(o.label)}</button>`).join("")}</span>`;
+    pin.onclick=()=>{ const inp=$("#composer-input"); if(inp&&!inp.value.trim()){ inp.value=q+" — "; inp.focus(); } }; }
   const inv=$("#ch-invite"); if(inv) inv.style.display=def.priv?"":"none";
   if(activeRoom==="MAIN"){
     const _hr=new Date().getHours(); const _lt=(_hr>=2&&_hr<4)?LETTERS[hash(nightKey()+"letter")%LETTERS.length]:null;
@@ -2524,7 +2559,7 @@ function renderChat(){
     const res=residentLines(activeRoom);
     const bodyMsgs=[...list].reverse();
     el.innerHTML = (res.map(r=>msgHTML(r,"")).join("")) +
-      (bodyMsgs.length?bodyMsgs.map(m=>{ const canTap=(!m.mine&&m.liveId); return msgHTML(m, canTap?` onclick="chanActions('${activeRoom}',${m.liveId})"`:""); }).join(""):(res.length?"":`<div class="ch-empty">quiet in here right now. say something — or 🎲 try another room.</div>`));
+      (bodyMsgs.length?bodyMsgs.map(m=>{ const canTap=(!m.mine&&m.liveId); return msgHTML(m, canTap?` onclick="chanActions('${activeRoom}',${m.liveId})"`:""); }).join(""):(res.length?"":`<div class="ch-empty">quiet in here right now. say something — it burns at sunrise.</div>`));
   }
 }
 function ghostLegend(){ showModal(`<div class="m-emoji">👻</div><div class="m-title">the residents</div><div class="m-body">anyone marked 👻 is friendly fiction — a resident who keeps a room warm, not a person. real night owls are never invented, and real counts are never faked.</div><button class="cta" style="position:static" onclick="closeModal()">got it</button>`); }
@@ -2698,13 +2733,24 @@ function show988(){ const body = isNA()
   showModal(`<div class="m-emoji">🤍</div><div class="m-title">rough night?</div><div class="m-body">${body}</div>${link}<button class="cta secondary" style="position:static" onclick="closeModal()">back to the room</button>`); }
 /* ===== NIGHT ROOMS channels: public rooms + the private booth ride the same pipe.
    strangers met ON the app — never contacts. text only, moderated, burns at sunrise. ===== */
-const NIGHT_ROOMS=[
+/* ONE TABLE, NOT FIVE (2026-08-04).
+   Five public rooms + a roulette fragmented presence that doesn't exist yet: with only a handful of
+   humans a night, splitting them five ways guarantees every room reads "quiet right now", which is
+   the one thing that actively teaches people not to come back. So the side rooms are GATED, not
+   deleted — flip ROOMS_MODE to "many" when concurrency can support splitting (see
+   ONE_TABLE_UNLOCK). Removing the 🎲 roulette also removes the single feature most likely to read
+   as Chatroulette to an App Review reader, which is live 1.2 risk while build 2 sits in the queue. */
+const ROOMS_MODE = "one_table";          // "one_table" | "many"
+const ONE_TABLE_UNLOCK = 8;              // sustained humans/night before splitting is worth it
+const ALL_NIGHT_ROOMS=[
   {code:"MAIN", ic:"🌙", name:"the 2 am room"},
   {code:"NOSLEEP", ic:"😴", name:"can't sleep"},
   {code:"LATESHFT", ic:"🌃", name:"late shift"},
   {code:"HEARTBRK", ic:"💔", name:"up thinking about someone"},
   {code:"SNACKS", ic:"🍜", name:"midnight snacks"},
 ];
+const NIGHT_ROOMS = ROOMS_MODE==="one_table" ? ALL_NIGHT_ROOMS.slice(0,1) : ALL_NIGHT_ROOMS;
+function tableName(){ return ROOMS_MODE==="one_table" ? "tonight's table" : "the 2 am room"; }
 let activeRoom=null, channelPosts={}, _chanFetchT={}, _chanReported=new Set(), _chanStats=null, _chanStatsT=0;
 function roomDef(code){ return NIGHT_ROOMS.find(r=>r.code===code) || {code, ic:"🛋️", name:"your booth", priv:true}; }
 function boothState(){ try{ return JSON.parse(localStorage.getItem("carted_booth")||"null"); }catch(e){ return null; } }
@@ -2844,6 +2890,23 @@ function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.t
   else { withRoomTerms(()=>{ makeMine("🌙", v); inp.value=""; snd("chime"); }); } }
 const CONFESS = ["almost got me. it didn't. 💪","called my name at 2am. i let it ring.","was THIS close. wallet's still shut.","tempted me for 20 whole minutes. survived."];
 function quickConfess(e){ withRoomTerms(()=>{ makeMine(e, `${e} ${pick(CONFESS)}`); snd("chime"); }); }
+/* One-tap answers to tonight's question — the low-effort on-ramp. Posts real, consented content
+   (same terms gate, same moderation, same sunrise burn) without demanding composition. */
+const ONE_TAP=[
+  {ic:"🫂", label:"same",        text:"same. still up, still not ordering."},
+  {ic:"😮‍💨", label:"just closed it", text:"had it in the cart. closed the app instead."},
+  {ic:"🍜", label:"eating rice", text:"went home to rice anyway. it was fine."},
+  {ic:"🌙", label:"just here",   text:"nothing to say tonight, just sitting here a while."},
+];
+function oneTapAnswer(i){
+  const o=ONE_TAP[i]; if(!o) return;
+  track("one_tap",{i});
+  withRoomTerms(()=>{
+    if(activeRoom && activeRoom!=="MAIN") ensureRoomHandle(()=>{ makeChannelPost(activeRoom, o.text); snd("chime"); });
+    else makeMine(o.ic, o.text);
+    snd("chime");
+  });
+}
 /* one-tap self-report (external-review suggestion): does the gag change the real craving?
    once per night, fully optional, and the answer is the only thing sent. */
 function outcomeAsked(){ try{ return localStorage.getItem("carted_outcome_"+nightKey())==="1"; }catch(e){ return true; } }
