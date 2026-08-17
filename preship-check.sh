@@ -41,4 +41,14 @@ node --check /tmp/carted_check.js 2>/dev/null || say "index.html script block ha
 # Python \U escapes are not JavaScript — they ship as literal text (v60 lesson)
 grep -q '\\U000' index.html && say "un-decoded Python \\U escape in index.html (writes literal text at runtime)"
 
+# 7) Build 4 community boundary: one table, no public side-room/roulette implementation,
+# no marketing that presents fictional participation as human.
+grep -qE 'ROOMS_MODE|ALL_NIGHT_ROOMS|NIGHT_ROOMS|roomRoulette|roomResidents|residentLines' index.html && say "removed public side-room or fictional-resident code returned"
+grep -qi 'the 2 am room' index.html manifest.json privacy.html terms.html support.html && say "legacy 2 AM Room name returned to shipped copy"
+grep -qi 'falls back to our own keyword filter' privacy.html && say "privacy policy claims moderation fails open"
+
+# 8) analytics version and service-worker release must move together.
+grep -q 'const APP_V="93"' index.html || say "analytics APP_V is not Build 4 release v93"
+grep -q 'const CACHE = "carted-v93"' sw.js || say "service-worker cache is not Build 4 release v93"
+
 if [ "$fail" -eq 0 ]; then echo "✓ preship checks pass"; else echo "PRESHIP CHECKS FAILED"; exit 1; fi

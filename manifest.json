@@ -1,7 +1,7 @@
 {
   "name": "Carted — the no-spend food game",
   "short_name": "Carted",
-  "description": "A quiet room for night owls — cart your craving, keep your money, sit with the others who are up.",
+  "description": "Fill a pretend food cart, send a fictional ghost courier, and see what you kept. Nothing is ordered, charged, or delivered.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
