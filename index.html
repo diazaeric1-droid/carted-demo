@@ -975,7 +975,7 @@
         <section class="view" id="view-room">
           <div class="brand">
             <h1 style="font-size:24px">night <span class="wm-ed">rooms</span></h1>
-            <div class="live2"><span class="dot"></span> <b style="color:var(--slate);font-weight:700">strangers only · burns at sunrise</b> · <span id="room-burn-top">🌅 —</span> <button class="hbtn" onclick="ghostLegend()" aria-label="what the ghost tag means">👻</button></div>
+            <div class="live2"><span class="dot"></span> <b style="color:var(--slate);font-weight:700">community table · moderated before posting</b> · <span id="room-burn-top">🌅 —</span> <button class="hbtn" onclick="ghostLegend()" aria-label="what the ghost tag means">👻</button></div>
             <div id="room-nod"></div>
           </div>
           <div id="room-podium"></div>
@@ -1582,7 +1582,7 @@ window.cartedReport = function(){ const nights=_aGet("carted_nights",[]); const 
    Coins, capsules, and the kettle teach themselves in context (their in-app intros already
    exist) — the door should cost three taps, not six. */
 const OB = [
-  { e:"🌙", h:"for whoever's up at 2am", s:"little rooms full of strangers who are also awake. pick one, talk, disappear — nobody knows your name here." },
+  { e:"🌙", h:"for whoever's up at 2am", s:"a moderated community table for people who are still awake. choose one persistent nickname and join when you want." },
   { e:"🛒", h:"arrive by ordering nothing", s:"fill a cart with whatever's calling you at 1am — real dishes, fictional kitchens — and send a ghost instead of your money." },
   { e:"💸", h:"the driver was never real", s:"filled the cart. closed the app. you keep every dollar — that's the whole point. 👻" },
 ];
@@ -2466,8 +2466,8 @@ function renderRoom(){
   const vr=$("#view-room"); if(!vr) return;
   if(!localStorage.getItem("carted_room_intro")){ try{ localStorage.setItem("carted_room_intro","1"); }catch(e){}
     showModal(ROOMS_MODE==="one_table"
-      ? `<div class="m-emoji">🌙</div><div class="m-title">welcome to tonight's table</div><div class="m-body" style="text-align:left">one table, whoever's up. say what you want — no accounts, no DMs, nobody knows your name. residents marked 👻 are friendly fiction. everything burns at 4am — deleted, not archived.</div><button class="cta" style="position:static" onclick="closeModal()">got it</button>`
-      : `<div class="m-emoji">🌙</div><div class="m-title">welcome to night rooms</div><div class="m-body" style="text-align:left">little rooms of strangers who are also up. pick one, say what you want — nobody knows your name, no accounts, no DMs. residents marked 👻 are friendly fiction. everything burns at 4am — deleted, not archived.</div><button class="cta" style="position:static" onclick="closeModal()">got it</button>`); }
+      ? `<div class="m-emoji">🌙</div><div class="m-title">welcome to tonight's table</div><div class="m-body" style="text-align:left">one moderated community table for people who are up late. choose a persistent nickname before posting; there are no DMs or random matches. residents marked 👻 are friendly fiction. posts expire at 4am.</div><button class="cta" style="position:static" onclick="closeModal()">got it</button>`
+      : `<div class="m-emoji">🌙</div><div class="m-title">welcome to night rooms</div><div class="m-body" style="text-align:left">moderated topic rooms for people who are up late. choose a persistent nickname before posting; there are no DMs or random matches. residents marked 👻 are friendly fiction. posts expire at 4am.</div><button class="cta" style="position:static" onclick="closeModal()">got it</button>`); }
   if(localStorage.getItem("carted_first_dodge")==="1"){ try{ localStorage.removeItem("carted_first_dodge"); }catch(e){}
     room.unshift({ic:"🫂", ghost:"Bea", sched:"~2:40", text:"first dodge. it counts. welcome in 🫂", city:"the stoop", ago:"now", r:{hug:3,me:1,go:0,hold:0}, reacted:{}});
   }
@@ -2488,7 +2488,7 @@ function renderRoom(){
 let _roomTick=null, _tickNight=null;
 /* ---- the rooms list: honest labels, never invented counts ---- */
 function chanLabel(code){
-  if(code==="MAIN"){ if(_roomHumans!=null&&_roomHumans>=2) return `${_roomHumans} in tonight`; return room.some(p=>p.live)?"talking tonight":"the main room — always on"; }
+  if(code==="MAIN"){ if(_roomHumans!=null&&_roomHumans>=2) return `${_roomHumans} in tonight`; return room.some(p=>p.live)?"talking tonight":"the community table — always on"; }
   const res=roomResidents(code)[0];
   const n=_chanStats?(_chanStats[code]||0):null;
   if(n!=null&&n>=2) return `${n} notes tonight`;
@@ -2551,7 +2551,7 @@ function mortRoomLine(){
   else { const nb=nextBeat(); sTxt=NOTICES[hash(nightKey()+"mort")%NOTICES.length]+((nb&&nb.mins<=30)?` · ${nb.label} in ${nb.mins}m`:""); }
   return `mort: ${sTxt}`; }
 function msgHTML(m, tap){
-  const who = m.mine?"you":(m.ghost?`👻 ${esc(m.ghost)} · resident`:(m.handle?esc(m.handle):`night owl${m.city&&m.city!=="you"&&m.city!=="night owl"?" · "+esc(m.city):""}`));
+  const who = m.mine?`you${m.handle?" · "+esc(m.handle):""}`:(m.ghost?`👻 ${esc(m.ghost)} · resident`:(m.handle?esc(m.handle):`night owl${m.city&&m.city!=="you"&&m.city!=="night owl"?" · "+esc(m.city):""}`));
   return `<div class="cmsg${m.mine?' me':''}${m.ghost?' gh':''}"${tap||""}><div class="cwho${m.ghost?' g':''}">${who}${m.local?' · this side only':''}</div><div class="ctx">${esc(String(m.text).replace(/^🏮 /,""))}</div></div>`;
 }
 function renderChat(){
@@ -2720,7 +2720,7 @@ function react(i,t){ const p=room[i]; if(!p) return; if(!p.reacted) p.reacted={}
   else { const chip=post.querySelectorAll(".reacts .chip")[{hug:0,me:1,hold:2}[t]]; if(chip){ chip.classList.add("on"); let cnt=chip.querySelector(".cnt"); if(!cnt){ cnt=document.createElement("span"); cnt.className="cnt"; chip.appendChild(cnt); } cnt.textContent=p.r[t]; } }
   snd("pop");
   if(p.liveId && ROOM_LIVE && beOn()) bePost("room",{action:"react", post_id:p.liveId, kind:(t==="me"?"metoo":t==="hold"?"hold":"hug")}); }
-function saveMinePost(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); all.unshift({ic:post.ic,text:post.text,streak:post.streak||0,night:nightKey(),r:{...(post.rBase||post.r)},seen:!!post.seenDone,liveId:post.liveId||null}); localStorage.setItem("carted_room_mine", JSON.stringify(all.slice(0,12))); }catch(e){} }
+function saveMinePost(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); all.unshift({ic:post.ic,text:post.text,handle:post.handle||handleState(),streak:post.streak||0,night:nightKey(),r:{...(post.rBase||post.r)},seen:!!post.seenDone,liveId:post.liveId||null}); localStorage.setItem("carted_room_mine", JSON.stringify(all.slice(0,12))); }catch(e){} }
 function updateMineStored(post){ try{ const all=JSON.parse(localStorage.getItem("carted_room_mine")||"[]"); const m=all.find(p=>p.night===nightKey()&&p.text===post.text); if(m){ m.r={...(post.rBase||post.r)}; if(post.realCounts) m.real={...post.realCounts}; m.seen=!!post.seenDone; m.liveId=post.liveId||m.liveId||null; localStorage.setItem("carted_room_mine", JSON.stringify(all)); } }catch(e){} }
 /* counts come back exactly as stored — a number that changed by itself between two opens is the
    one dishonesty a user can catch. real reactions arrive via action:"mine" and stack on top. */
@@ -2732,11 +2732,11 @@ function loadMinePosts(){ try{ const all=JSON.parse(localStorage.getItem("carted
       const sum=k=>gone.reduce((a,p)=>a+((p.real||{})[k]||0),0);   // REAL humans only; the ghost-ambience base never launders into a morning fact
       localStorage.setItem("carted_ash", JSON.stringify({night:gone[0].night, posts:gone.length, hold:sum("hold"), warm:sum("hug")+sum("me")}));
     } }catch(e){}
-    try{ localStorage.setItem("carted_room_mine", JSON.stringify(live)); }catch(e){} } return live.map(p=>({ic:p.ic,text:p.text,streak:p.streak,city:"you",ago:"tonight",mine:true,liveId:p.liveId||null,seenDone:!!p.seen,rBase:{hug:0,me:0,go:0,hold:0,...(p.r||{})},r:{hug:0,me:0,go:0,hold:0,...(p.r||{})},reacted:{}})); }catch(e){ return []; } }
+    try{ localStorage.setItem("carted_room_mine", JSON.stringify(live)); }catch(e){} } return live.map(p=>({ic:p.ic,text:p.text,handle:p.handle||handleState(),streak:p.streak,city:"you",ago:"tonight",mine:true,liveId:p.liveId||null,seenDone:!!p.seen,rBase:{hug:0,me:0,go:0,hold:0,...(p.r||{})},r:{hug:0,me:0,go:0,hold:0,...(p.r||{})},reacted:{}})); }catch(e){ return []; } }
 function makeMine(ic, text){
   if(kitchenLight() && !/^🏮/.test(text)) text="🏮 "+String(text).slice(0,87).replace(/[\uD800-\uDBFF]$/,"");   // born under the kitchen light — the lamp travels in the text and burns with the post; composer maxlength drops to 87 in the window so nothing is cut silently
-  const post={ic, text, city:"you", ago:"now", mine:true, streak:stats.streak||0, r:{hug:0,me:0,go:0,hold:0}, rBase:{hug:0,me:0,go:0,hold:0}, reacted:{}}; room.unshift(post); saveMinePost(post); renderRoom(); beSeen(post); track("room_post"); capsuleEarnNight("room");
-  if(ROOM_LIVE && beOn()){ bePost("room",{action:"post", device_id:deviceId(), night:nightKey(), ic:post.ic, text:post.text, streak:post.streak||0, hour:new Date().getHours()}).then(r=>{
+  const post={ic, text, handle:handleState(), city:"you", ago:"now", mine:true, streak:stats.streak||0, r:{hug:0,me:0,go:0,hold:0}, rBase:{hug:0,me:0,go:0,hold:0}, reacted:{}}; room.unshift(post); saveMinePost(post); renderRoom(); beSeen(post); track("room_post"); capsuleEarnNight("room");
+  if(ROOM_LIVE && beOn()){ bePost("room",{action:"post", device_id:deviceId(), night:nightKey(), ic:post.ic, text:post.text, handle:post.handle, streak:post.streak||0, hour:new Date().getHours()}).then(r=>{
     if(!r) return;   // offline: the post lives on this device; nothing to correct
     if(r.crisis) show988();
     if(r.id){ post.liveId=r.id; updateMineStored(post); }
@@ -2750,8 +2750,8 @@ function show988(){ const body = isNA()
     ? `<a class="cta" style="position:static;display:block;text-decoration:none;text-align:center" href="tel:988">call or text 988</a>`
     : `<a class="cta" style="position:static;display:block;text-decoration:none;text-align:center" href="https://findahelpline.com" target="_blank" rel="noopener">find your local helpline</a>`;
   showModal(`<div class="m-emoji">🤍</div><div class="m-title">rough night?</div><div class="m-body">${body}</div>${link}<button class="cta secondary" style="position:static" onclick="closeModal()">back to the room</button>`); }
-/* ===== NIGHT ROOMS channels: public rooms + the private booth ride the same pipe.
-   strangers met ON the app — never contacts. text only, moderated, burns at sunrise. ===== */
+/* ===== NIGHT ROOMS channels: public topic rooms + the private booth ride the same pipe.
+   Persistent nicknames, no random matching, text only, moderated, expires at sunrise. ===== */
 /* ONE TABLE, NOT FIVE (2026-08-04).
    Five public rooms + a roulette fragmented presence that doesn't exist yet: with only a handful of
    humans a night, splitting them five ways guarantees every room reads "quiet right now", which is
@@ -2799,10 +2799,10 @@ function createBooth(){ closeModal(); const abc="ABCDEFGHJKMNPQRSTUVWXYZ23456789
 function joinBoothPrompt(){ closeModal(); const c=(prompt("the booth code (6 characters):")||"").trim().toUpperCase();
   if(!/^[A-Z0-9]{4,8}$/.test(c) || isGatedRoomCode(c)){ if(c) toast("that code doesn't look right"); return; }
   saveBooth({code:c, handle:boothState()&&boothState().handle||null}); track("booth_join"); enterRoom(c); }
-/* one self-chosen handle for all rooms — no accounts, 12 chars, same filter as posts */
+/* one persistent nickname for every community post from this device — no public rename control */
 function handleState(){ try{ let h=localStorage.getItem("carted_handle")||""; if(!h){ const b=boothState(); if(b&&b.handle){ h=b.handle; localStorage.setItem("carted_handle",h); } } return h; }catch(e){ return ""; } }
 function ensureRoomHandle(cb){ if(handleState()){ cb(); return; }
-  showModal(`<div class="m-emoji">🌙</div><div class="m-title">what should the rooms call you?</div><div class="m-body">just a name for tonight's strangers — no account, no sign-up.</div>
+  showModal(`<div class="m-emoji">🌙</div><div class="m-title">choose your community nickname</div><div class="m-body">this persistent nickname appears on every post from this device. there is no public profile.</div>
     <input id="bh-input" class="city-search" maxlength="12" placeholder="12 characters, tops" autocomplete="off">
     <button class="cta" style="position:static" onclick="setHandle()">that's me</button>`);
   setTimeout(()=>{ const i=$("#bh-input"); if(i) i.focus(); }, 200); window.__handleCb=cb; }
@@ -2873,7 +2873,7 @@ function fetchLiveRoom(){ if(!(ROOM_LIVE && beOn())) return; if(activeRoom&&acti
       if(p.ghost){ room.unshift({liveId:p.id, ic:p.ic||"🤍", ghost:p.ghost, text:p.text, city:"the room", ago:"just now", r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0, hold:p.holds||0}, reacted:{}}); }   // disclosed resident-ghost reply, near the top (it's a reply)
       else { if(p.who && mutedWho().includes(p.who)) return;   // muted authors never render
              let at=0; while(at<room.length && room[at].liveId && room[at].ghost) at++;   // real humans slot in right under the freshest ghost replies — never buried under fiction, never evicted first
-             const lp={liveId:p.id, ic:p.ic||"🌙", text:p.text, city:"night owl", ago:"tonight", streak:p.streak||0, live:true, who:p.who||null, r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0, hold:p.holds||0}, reacted:{}};
+             const lp={liveId:p.id, ic:p.ic||"🌙", text:p.text, handle:p.handle||"night owl", city:"night owl", ago:"tonight", streak:p.streak||0, live:true, who:p.who||null, r:{hug:p.hugs||0, me:p.metoo||0, go:p.sendit||0, hold:p.holds||0}, reacted:{}};
              room.splice(at,0,lp); if(!_aired){ _aired=true; } }
     });
     capRoom(60);
@@ -2911,9 +2911,9 @@ function withRoomTerms(cb){ if(!ROOM_LIVE || agreedRoomTerms()){ cb(); return; }
 function acceptRoomTerms(){ try{ localStorage.setItem("carted_terms","1"); }catch(e){} closeModal(); const cb=window.__pendingPost; window.__pendingPost=null; if(typeof cb==="function") cb(); }
 function postFromComposer(){ const inp=$("#composer-input"); const v=inp.value.trim(); if(!v) return;
   if(activeRoom && activeRoom!=="MAIN"){ withRoomTerms(()=>ensureRoomHandle(()=>{ makeChannelPost(activeRoom, v); inp.value=""; snd("chime"); })); }
-  else { withRoomTerms(()=>{ makeMine("🌙", v); inp.value=""; snd("chime"); }); } }
+  else { withRoomTerms(()=>ensureRoomHandle(()=>{ makeMine("🌙", v); inp.value=""; snd("chime"); })); } }
 const CONFESS = ["almost got me. it didn't. 💪","called my name at 2am. i let it ring.","was THIS close. wallet's still shut.","tempted me for 20 whole minutes. survived."];
-function quickConfess(e){ withRoomTerms(()=>{ makeMine(e, `${e} ${pick(CONFESS)}`); snd("chime"); }); }
+function quickConfess(e){ withRoomTerms(()=>ensureRoomHandle(()=>{ makeMine(e, `${e} ${pick(CONFESS)}`); snd("chime"); })); }
 /* One-tap answers to tonight's question — the low-effort on-ramp. Posts real, consented content
    (same terms gate, same moderation, same sunrise burn) without demanding composition. */
 const ONE_TAP=[
@@ -2927,7 +2927,7 @@ function oneTapAnswer(i){
   track("one_tap",{i});
   withRoomTerms(()=>{
     if(activeRoom && activeRoom!=="MAIN") ensureRoomHandle(()=>{ makeChannelPost(activeRoom, o.text); snd("chime"); });
-    else makeMine(o.ic, o.text);
+    else ensureRoomHandle(()=>makeMine(o.ic, o.text));
     snd("chime");
   });
 }
@@ -2961,7 +2961,7 @@ function offerShareDodge(){
   showModal(`<div class="m-emoji">${d.ic}</div><div class="m-title">share tonight's dodge?</div>
     <div class="m-body" style="text-align:left">this is what the room would see. edit it, or don't send it at all.
       <textarea id="dodge-text" maxlength="90" style="width:100%;margin-top:10px;min-height:76px;font:inherit;font-size:16px;padding:10px;border-radius:12px;border:1.5px solid rgba(77,227,255,.3);background:var(--card);color:var(--text);resize:vertical">${esc(d.text)}</textarea>
-      <div class="sub" style="margin-top:8px">no name · no account · burns at sunrise</div></div>
+      <div class="sub" style="margin-top:8px">your persistent nickname appears with this post · expires at sunrise</div></div>
     <button class="cta" style="position:static" onclick="confirmShareDodge('${d.ic}')">post it 🌙</button>
     <button class="cta secondary" style="position:static" onclick="closeModal()">keep it to myself</button>`);
 }
@@ -2969,7 +2969,7 @@ function confirmShareDodge(ic){
   const ta=$("#dodge-text"); const v=(ta&&ta.value.trim())||"";
   if(!v) return;
   closeModal();
-  withRoomTerms(()=>{ makeMine(ic||"🌙", v); track("share_confirmed"); go("room"); snd("chime"); });
+  withRoomTerms(()=>ensureRoomHandle(()=>{ makeMine(ic||"🌙", v); track("share_confirmed"); go("room"); snd("chime"); }));
 }
 /* kept so any older entry point still works, but it now routes through the consent flow */
 function shareToRoom(){ offerShareDodge(); }
