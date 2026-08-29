@@ -13,6 +13,7 @@ grep -l "fbf3e4\|faf3e7" index.html manifest.json icon.svg privacy.html terms.ht
 # 2) the privacy lie must never come back
 grep -q "stays on this device for now" index.html && say "stale 'stays on this device' modal copy in index.html"
 grep -q "not transmitted to us" privacy.html && say "stale device-only room claim in privacy.html"
+grep -qi "everything personal lives on your device" support.html && say "stale device-only deletion claim in support.html"
 
 # 3) night is permanent — no clock-dependent reviewer story
 grep -q "Night Shift" index.html && say "Night Shift copy resurfaced in index.html"
