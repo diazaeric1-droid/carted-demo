@@ -101,8 +101,9 @@ body{display:block;padding:0;min-height:0}
 .mort-message.me .table-speech:before{left:auto;right:-8px;background:#e6dbf4;border:0;border-top:1px solid #cbb5dd;border-right:1px solid #cbb5dd}
 .mort-message .cwho{color:#685176;padding-right:28px;overflow-wrap:anywhere}
 .cmsg.mort-message.me .cwho{color:#685176}
-.cmsg.mort-message .chip{color:#574261;font-weight:600;box-shadow:none}
-.mort-message .table-note-actions{position:absolute;right:3px;top:1px;width:44px;height:36px;border:0;background:transparent;color:#685176;font-weight:700;cursor:pointer}
+.cmsg.mort-message .chip{color:#574261;font-weight:600;box-shadow:none;min-height:44px}
+.cmsg.mort-message .chip .rlbl{color:inherit}
+.mort-message .table-note-actions{position:absolute;right:3px;top:1px;width:44px;height:44px;border:0;background:transparent;color:#685176;font-weight:700;cursor:pointer}
 .mort-message .ctx{position:relative;font-size:16px;line-height:1.5;color:#342b3e;white-space:pre-wrap}
 .table-composer-mort{display:flex;gap:8px;align-items:center;margin:18px 0 5px;color:#4f3b62}
 .table-composer-mort>div{flex:1;min-width:0}.table-composer-mort b{display:block;font-size:13px}.table-composer-mort span:not(.mort-avatar):not(.mort-art):not(.mort-fallback){font-size:11px;line-height:1.5}

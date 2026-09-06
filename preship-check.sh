@@ -48,8 +48,8 @@ grep -qE 'ROOMS_MODE|ALL_NIGHT_ROOMS|NIGHT_ROOMS|roomRoulette|roomResidents|resi
 grep -qi 'the 2 am room' index.html manifest.json privacy.html terms.html support.html && say "legacy 2 AM Room name returned to shipped copy"
 
 # 8) analytics version and service-worker release must move together.
-grep -q 'const APP_V="96", BUILD_COHORT="build6"' index.html || say "analytics APP_V/cohort is not Build 6 release v96"
-grep -q 'const CACHE = "carted-v96"' sw.js || say "service-worker cache is not Build 6 release v96"
+grep -q 'const APP_V="97", BUILD_COHORT="build6"' index.html || say "analytics APP_V/cohort is not Build 6 release v97"
+grep -q 'const CACHE = "carted-v97"' sw.js || say "service-worker cache is not Build 6 release v97"
 node --check mort-system.js || say "Mort script has a syntax error"
 for asset in carted-design.css mort-system.js mort-system.css assets/mort-sprites.png; do
   [ -s "$asset" ] || say "missing Mort asset: $asset"
