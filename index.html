@@ -1586,7 +1586,7 @@ let _aQueue=[], _aTimer=null;
 /* measurement context (2026-07-30): every event carries IANA timezone, app version, and an
    internal flag — the cohort SQL keys nights off tz and excludes internal/QA devices.
    Mark a founder device once via ?internal=1 (persists in localStorage). */
-const APP_V="97", BUILD_COHORT="build6";
+const APP_V="98", BUILD_COHORT="build7";
 const APP_TZ=(()=>{ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone||""; }catch(e){ return ""; } })();
 function isInternal(){ try{ return localStorage.getItem("carted_internal")==="1"; }catch(e){ return false; } }
 /* FIRST-TOUCH acquisition source, captured once and never overwritten. Without this "436 views ->
