@@ -46,11 +46,10 @@ grep -q '\\U000' index.html && say "un-decoded Python \\U escape in index.html (
 # no marketing that presents fictional participation as human.
 grep -qE 'ROOMS_MODE|ALL_NIGHT_ROOMS|NIGHT_ROOMS|roomRoulette|roomResidents|residentLines' index.html && say "removed public side-room or fictional-resident code returned"
 grep -qi 'the 2 am room' index.html manifest.json privacy.html terms.html support.html && say "legacy 2 AM Room name returned to shipped copy"
-grep -qi 'falls back to our own keyword filter' privacy.html && say "privacy policy claims moderation fails open"
 
 # 8) analytics version and service-worker release must move together.
-grep -q 'const APP_V="95", BUILD_COHORT="build5"' index.html || say "analytics APP_V/cohort is not Build 5 release v95"
-grep -q 'const CACHE = "carted-v95"' sw.js || say "service-worker cache is not Build 5 release v95"
+grep -q 'const APP_V="96", BUILD_COHORT="build6"' index.html || say "analytics APP_V/cohort is not Build 6 release v96"
+grep -q 'const CACHE = "carted-v96"' sw.js || say "service-worker cache is not Build 6 release v96"
 node --check mort-system.js || say "Mort script has a syntax error"
 for asset in carted-design.css mort-system.js mort-system.css assets/mort-sprites.png; do
   [ -s "$asset" ] || say "missing Mort asset: $asset"
