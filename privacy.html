@@ -13,21 +13,22 @@
 </head>
 <body>
 <h1>👻 Carted — Privacy Policy</h1>
-<p class="muted">Effective: August 17, 2026 · <span style="opacity:.7">previous version August 4, 2026</span></p>
+<p class="muted">Effective: September 6, 2026 · <span style="opacity:.7">previous version August 17, 2026</span></p>
 
 <p>Carted is a simulated "window shopping" experience: you browse fictional restaurants, place orders that are never real, and keep your money. Our privacy posture matches the product: <b>we want as little of your data as possible.</b></p>
 
-<h2>No accounts</h2>
-<p>Carted has no sign-up, no login, and no user accounts. Your streaks, progress, and ghost name are stored <b>on your device</b>. If you use tonight's community table, your persistent nickname and notes are also sent to our server so other participants can see who wrote each note. See “Tonight's community table” below.</p>
+<h2>No email or password sign-up</h2>
+<p>Mort's name, your quests, earned coins, outfits, scrapbook, counter decorations, and pretend-order progress are stored <b>on your device</b>. They are not a cloud backup. Optional community features use a private, automatically issued connection token so another person cannot claim your notes or nickname just by knowing an analytics identifier. See “Your community connection” below.</p>
 
 <h2>What we do collect</h2>
-<p>To understand whether people come back (and nothing else), the app sends pseudonymous usage analytics to our server:</p>
+<p>To understand which features work and whether people come back, the app sends pseudonymous usage analytics to our server:</p>
 <ul>
-  <li>a random app-generated device identifier (pseudonymous — not your Apple ID, not your advertising ID, and it cannot name you),</li>
+  <li>a random app-generated device identifier (pseudonymous — not your Apple ID or advertising ID),</li>
   <li>event names (e.g. "opened the app", "placed a pretend order") with timestamps, app version, platform, timezone, experiment/cohort label, and first-touch campaign tag when a campaign link supplied one,</li>
+  <li>in-app action details such as the selected city or cuisine, a quest or outfit identifier, and feature-use counts,</li>
   <li>a count of distinct nights the app has been opened.</li>
 </ul>
-<p>That's the whole analytics list. No legal name, email, contacts, photos, or purchase history — there is nothing to purchase. <b>Honesty note on the identifier:</b> it is pseudonymous rather than anonymous — it cannot identify you by itself, but events from the same device do link together. We keep it random and app-generated precisely so it can't be joined to your Apple ID, advertising ID, or anything else.</p>
+<p>Analytics do not include your community connection token, note text, legal name, email, contacts, or photos. Outfits currently use earned in-app coins, not real-money purchases. <b>Honesty note:</b> pseudonymous does not mean fully anonymous; events from the same device link together. We do not connect this identifier to an Apple ID or advertising ID.</p>
 
 <h2>"Near me" and your location</h2>
 <p>If you tap "Near me," your device asks for permission and then <b>your coordinates are sent to OpenStreetMap's services</b> — Nominatim (to turn them into a neighborhood name) and Overpass (to find real places near you to fictionalize). Those services see the coordinates and your IP address, as any website you visit does; they run under the OpenStreetMap Foundation's privacy policy. <b>We never send your location to our own server, never store it, and never attach it to analytics.</b> Skip the feature and no location ever leaves the device.</p>
@@ -43,27 +44,31 @@
 <p>These are all of them, and what each one sees. Providers process data to run Carted, not for their own purposes (public services like OpenStreetMap operate under their own policies):</p>
 <ul>
   <li><b>GitHub Pages</b> — hosts the web version. Like any web host, it sees standard request logs (your IP address, pages loaded).</li>
-  <li><b>Supabase</b> — our database and server host. Analytics events, community nicknames, notes, reactions, and reports live here.</li>
+  <li><b>Supabase</b> — our database and server host. Analytics events, community connection hashes and member identifiers, nicknames, notes, reactions, reports, and optional friend-pair status live here. Web push subscriptions are stored here if you enable browser notifications.</li>
   <li><b>OpenAI</b> — <b>the text of a community note and its nickname are sent to OpenAI's moderation service before publication</b>, to screen for abuse and for content indicating someone may be in crisis. Your device identifier is not included in that moderation request. OpenAI does not train its models on this API content, but under its standard API policy it <b>may retain inputs for up to ~30 days for abuse monitoring</b>. If the check is unavailable, the note does not publish.</li>
   <li><b>OpenStreetMap services</b> (Nominatim, Overpass) — only if you use "Near me" or search for a place; see the location section above.</li>
   <li><b>TheMealDB</b> — dish photos are loaded from its image host, which (like any image host) sees your IP when pictures load.</li>
 </ul>
-<p>That is the complete list. Nothing else leaves your device.</p>
+<p>If you email support, your message and email address are also available to us so we can reply. Please do not send passwords, private connection tokens, or sensitive personal information.</p>
 
 <h2>Notifications</h2>
-<p>If you opt in, the app schedules a single local "last call" notification on your device at your usual hour. It's generated on-device and never fires on a night you've already played. Turn it off any time in iOS Settings.</p>
+<p>If you opt in on iOS, the app schedules a local reminder on your device and reschedules it after you play. In a supported web browser, opting in may instead create a web push subscription stored with our server so a reminder can reach that browser. You can turn notifications off in Carted or in your device/browser settings.</p>
+
+<h2>Your community connection</h2>
+<p>When a community feature needs a connection, our server creates a random member identifier and a private connection token. The token stays in the app's local storage (and its native on-device preferences backup); the server stores a one-way hash, not the token itself. Requests for your community notes, nickname changes, reactions, reports, and friend connections send the token securely to our server. It is separate from the analytics identifier and is never included in analytics or invitation links.</p>
+<p>A connection expires after 365 days and can be revoked earlier for safety. Losing the token or clearing app data creates a new community identity; it does not let anyone reclaim an old identity using an exposed device identifier. Your existing on-device Mort progress is separate. Older friend connections cannot be transferred this way: old invitation links may remain readable, but a new secure invitation is needed to participate. Anyone holding a private Booth link can read that Booth; share invitations only with people you intend to invite.</p>
 
 <h2>Tonight's community table</h2>
-<p>Mort's single nightly line is fictional content shown in a separate card permanently labeled “fictional.” Before your first human note, you choose one persistent community nickname for the device. When you post, that nickname and note are shown to other participants and sent to our server with the same random device identifier described above. You may correct the nickname once immediately; later changes have a 30-day cooldown. We do not collect your legal name or email, and there are no public profiles, direct messages, or random matching.</p>
+<p>Mort's notes, stories, and postcards are authored fictional content, separate from human community notes. Before your first human note, you choose a persistent community nickname. When you post, your nickname and note are shown to participants and stored with your server-issued community member identifier, not your analytics identifier. You may correct the nickname once immediately; later changes have a 30-day cooldown for that community identity. There are no public profiles, direct messages, or random matching. Do not include private personal information in a note.</p>
 <p><b>Before a note publishes</b>, its text and nickname pass our keyword filter and OpenAI's moderation service (see above). If moderation is unavailable, it does not publish. A separate check looks for language suggesting the writer may be in crisis; if it fires, we show <i>that writer</i> a card with crisis-line details. We never notify another participant.</p>
-<p><b>Ordinary community notes are removed from our server within 36 hours.</b> A copy of your own accepted note lives in your device's local storage for the same nightly window. Your community nickname and its cooldown history remain on the server so the same device keeps a consistent identity.</p>
-<p><b>One exception, and we want to be plain about it.</b> If a note is reported, it may be hidden and retained <b>ordinarily up to 90 days</b> so a human can review it. If content is of the kind the law requires us to report (in the U.S., to NCMEC's CyberTipline under 18 U.S.C. §2258A), it is <b>preserved for as long as the law requires — currently one year after such a report</b> — and provided to the authorities. Reported notes are the only community content that may outlive the ordinary 36-hour window.</p>
+<p><b>Ordinary community notes are removed from our server within 36 hours.</b> A copy of your own accepted note lives in your device's local storage for the nightly window. Your community nickname and cooldown history remain on the server so the connection keeps a consistent identity. Connection expiry does not automatically delete all associated records.</p>
+<p><b>Safety exceptions:</b> a report hides a note for the reporter and queues review; it does not automatically hide the note for everyone. Unresolved reported or moderator-hidden content may be retained for up to 90 days for safety review, but is no longer returned in community lists after 36 hours. Content and report records subject to legal preservation are kept for the required period and may be disclosed when legally required.</p>
 
 <h2>Children</h2>
-<p>Carted is not directed at children under 13 and collects no personal information from anyone.</p>
+<p>Carted is not directed at children under 13. Do not use community features to share children's personal information. If you believe a child has provided personal information through Carted, contact us.</p>
 
 <h2>Data retention &amp; deletion</h2>
-<p>The pseudonymous analytics events carry no legal name or contact information. Want the events from your device deleted? Email us the request and delete the app — new events stop immediately.</p>
+<p>To request deletion of server-held data, contact us before clearing the app if possible so we can arrange an ownership check. <b>Do not email your private connection token.</b> Because we do not use email sign-in, an email address alone does not identify your app activity. Deleting the app or clearing website storage removes local progress but does not itself send a server deletion request; safety and legal-preservation exceptions still apply.</p>
 
 <h2>Contact</h2>
 <p>Questions, requests, or concerns: <a href="mailto:localcardhouse@gmail.com">localcardhouse@gmail.com</a></p>

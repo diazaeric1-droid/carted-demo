@@ -1,7 +1,11 @@
-const CACHE = "carted-v93";
+const CACHE = "carted-v95";
 const SHELL = [
   "./",
   "index.html",
+  "carted-design.css",
+  "mort-system.js",
+  "mort-system.css",
+  "assets/mort-sprites.png",
   "manifest.json",
   "icon-192.png",
   "icon-512.png",
